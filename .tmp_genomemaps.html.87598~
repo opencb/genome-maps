@@ -11,18 +11,7 @@
 <!--    	<link rel="stylesheet" type="text/css" href="../../wum/resources/css/style.css"> -->
 		<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/ext-libs/ChemDoodleWeb/install/ChemDoodleWeb.css">
   
-	<!-- Google Analytics -->
-	<script type="text/javascript">
-	  var _gaq = _gaq || [];
-	  _gaq.push(['_setAccount', 'UA-16414504-2']);
-	  _gaq.push(['_trackPageview']);
-
-	  (function() {
-	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-	  })();
-	</script>
+  
   
 	<!-- EXT-LIBS -->
 
@@ -63,25 +52,28 @@
 		<!-- LIBS -->
 	
 		<!-- wum ui-widgets -->
-		<script type="text/javascript" src="../apps/wum/ui-widgets/ux-window.js"></script>
-		<script type="text/javascript" src="../apps/wum/ui-widgets/header-widget.js"></script>
-<!-- 		<script type="text/javascript" src="../apps/wum/ui-widgets/app-viewer.js"></script> -->
-		<script type="text/javascript" src="../apps/wum/ui-widgets/user-list-widget.js"></script>
-		<script type="text/javascript" src="../apps/wum/ui-widgets/job-list-widget.js"></script>
-		<script type="text/javascript" src="../apps/wum/ui-widgets/data-list-widget.js"></script>
-		<script type="text/javascript" src="../apps/wum/ui-widgets/paged-view-list-widget.js"></script>
-		<script type="text/javascript" src="../apps/wum/ui-widgets/user-bar-widget.js"></script>
-		<script type="text/javascript" src="../apps/wum/ui-widgets/upload-widget.js"></script>
-		<script type="text/javascript" src="../apps/wum/ui-widgets/login-widget.js"></script>
-		<script type="text/javascript" src="../apps/wum/ui-widgets/edit-user-widget.js"></script>
-		<script type="text/javascript" src="../apps/wum/ui-widgets/result-widget.js"></script>
-		<script type="text/javascript" src="../apps/wum/ui-widgets/result-table.js"></script>
-		<script type="text/javascript" src="../apps/wum/ui-widgets/browser-data-widget.js"></script>
+		<script type="text/javascript" src="../wum/ui-widgets/ux-window.js"></script>
+		<script type="text/javascript" src="../wum/ui-widgets/header-widget.js"></script>
+<!-- 		<script type="text/javascript" src="../../wum/ui-widgets/app-viewer.js"></script> -->
+		<script type="text/javascript" src="../wum/ui-widgets/user-list-widget.js"></script>
+		<script type="text/javascript" src="../wum/ui-widgets/job-list-widget.js"></script>
+		<script type="text/javascript" src="../wum/ui-widgets/data-list-widget.js"></script>
+		<script type="text/javascript" src="../wum/ui-widgets/paged-view-list-widget.js"></script>
+		<script type="text/javascript" src="../wum/ui-widgets/user-bar-widget.js"></script>
+		<script type="text/javascript" src="../wum/ui-widgets/upload-widget.js"></script>
+		<script type="text/javascript" src="../wum/ui-widgets/login-widget.js"></script>
+		<script type="text/javascript" src="../wum/ui-widgets/edit-user-widget.js"></script>
+		<script type="text/javascript" src="../wum/ui-widgets/result-widget.js"></script>
+		<script type="text/javascript" src="../wum/ui-widgets/result-table.js"></script>
+		<script type="text/javascript" src="../wum/ui-widgets/browser-data-widget.js"></script>
 		
 		<!-- wum ws-manager -->
-		<script type="text/javascript" src="../apps/wum/ws-manager/wum-adapter.js"></script>
-		<script type="text/javascript" src="../apps/wum/ws-manager/wum-rest-adapter.js"></script>
+		<script type="text/javascript" src="../wum/ws-manager/wum-adapter.js"></script>
+		<script type="text/javascript" src="../wum/ws-manager/wum-rest-adapter.js"></script>
 	
+		
+		
+		
 		
 		
 
@@ -222,13 +214,9 @@
 		<script type="text/javascript" src="./config/gm-config.json"  ></script>
 		<script type="text/javascript" src="./config/plugins-config.json"  ></script>
 		<script type="text/javascript" src="./genome-maps.js"  ></script>
-		
-		<!-- genome-maps plugins -->	
+			
 		<script type="text/javascript" src="./plugins/generic-plugin.js"  ></script>
 		<script type="text/javascript" src="./plugins/my-plugin.js"  ></script>
-		<script type="text/javascript" src="./plugins/expression.js"  ></script>
-		<script type="text/javascript" src="./plugins/genotype.js"  ></script>
-		
 		
 	
 	<script>

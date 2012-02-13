@@ -50,6 +50,14 @@ GenericPlugin.prototype.addHtmlElement = function (html) {
 	$("#"+this.container_div).html("html de prueba");
 };
 
+GenericPlugin.prototype.addSenchaElement = function (component) {
+	this.getWindow().add(component);
+};
+
 GenericPlugin.prototype.getWindow = function () {
 	return Ext.getCmp(this.id+'pluginWindow');
+};
+
+GenericPlugin.prototype.closeWindow = function () {
+	Ext.getCmp(this.id+'pluginWindow').close();
 };

@@ -6,25 +6,26 @@ var myPlugin = new GenericPlugin('MyPlugin', {title: 'My first plugin',
 
 
 function aux(){
-	myPlugin.addHtmlElement("html de prueba");
+//	myPlugin.addHtmlElement("html de prueba");
 	
-	
-	win = myPlugin.getWindow();
+//	win = myPlugin.getWindow();
 
 	
 	var pan = Ext.create('Ext.panel.Panel', {
 		title:'Prueba',
 		width:300,
-		height:300,
+		height:300
 	});
 	
 	var pan2 = Ext.create('Ext.panel.Panel', {
 		title:'Prueba',
 		width:300,
-		height:100,
+		height:100
 	});
 	
-	win.add(pan,pan2);
+//	win.add(pan,pan2);
+	myPlugin.addSenchaElement(pan);
+//	myPlugin.addSenchaElement(pan2);
 };
 
 
