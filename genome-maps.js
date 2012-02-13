@@ -51,7 +51,6 @@ function GenomeMaps(targetId,args){
 	
 	//RESIZE EVENT
 	$(window).smartresize(function(a){
-		console.log($(window).width()+'x'+$(window).height());
 		_this.setSize($(window).width(),$(window).height());
 	});
 	
@@ -62,8 +61,8 @@ function GenomeMaps(targetId,args){
 GenomeMaps.prototype.draw = function(){
 	if(this._panel==null){
 		this._panel = Ext.create('Ext.panel.Panel', {
-//			renderTo:this.targetId,
-			renderTo:Ext.getBody(),
+			renderTo:this.targetId,
+//			renderTo:Ext.getBody(),
 //		layout: { type: 'vbox',align: 'stretch'},
 			border:false,
 			width:this.width,
