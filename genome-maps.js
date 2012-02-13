@@ -61,8 +61,8 @@ function GenomeMaps(targetId,args){
 GenomeMaps.prototype.draw = function(){
 	if(this._panel==null){
 		this._panel = Ext.create('Ext.panel.Panel', {
-//			renderTo:this.targetId,
-			renderTo:Ext.getBody(),
+			renderTo:this.targetId,
+//			renderTo:Ext.getBody(),
 //		layout: { type: 'vbox',align: 'stretch'},
 			border:false,
 			width:this.width,
