@@ -1,0 +1,75 @@
+var AVAILABLE_SPECIES = [{"name":"Homo sapiens", "species":"hsa", "icon":""},
+                         {"name":"Mus musculus", "species":"mmu", "icon":""},
+                         {"name":"Danio rerio", "species":"dre", "icon":""}
+                         ];
+
+var AVAILABLE_TRACKS = [{"species":"hsa",
+			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
+			                  {"id":"Cytoband", "checked":true},
+			                  {"id":"Sequence", "checked":true}
+			]},
+			{"species":"mmu",
+			"enabled_tracks":[{"id":"Gene/Transcript", "checked":false},
+				                  {"id":"Cytoband", "checked":false}
+			]},
+			{"species":"dre",
+			"enabled_tracks":[{"id":"Gene/Transcript", "checked":false},
+			                  {"id":"Cytoband", "checked":true}
+			]},
+			];
+
+var DAS_TRACKS = [{"species":"hsa",
+				   "categories":[
+				      {"name":"Core",
+					   "sources":[
+                	        {"name":"GRC Region NCBI_37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":true},
+                	        {"name":"Vega genes","url":"http://das.sanger.ac.uk/das/vega_ens_zv8_genes/features","checked":false}
+                	        ]
+				      },
+				      {"name":"Variation",
+					   "sources":[
+                	        {"name":"Cosmic Mutations NCBI 36","url":"http://das.sanger.ac.uk/das/cosmic_mutations_GRCh37/features","checked":false}
+                	        ]
+				      },
+				      {"name":"Regulatory",
+					   "sources":[]
+				      }
+				   ]
+				},{"species":"mmu",
+				   "categories":[
+				      {"name":"Core",
+					   "sources":[
+                	        {"name":"GRC Region NCBI_37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":false},
+                	        {"name":"Vega genes","url":"http://das.sanger.ac.uk/das/vega_ens_zv8_genes/features","checked":true}
+                	        ]
+				      },
+				      {"name":"Variation",
+					   "sources":[
+                	        {"name":"Cosmic Mutations NCBI 36","url":"http://das.sanger.ac.uk/das/cosmic_mutations_GRCh37/features","checked":false}
+                	        ]
+				      },
+				      {"name":"Regulatory",
+					   "sources":[]
+				      }
+				   ]
+				},{"species":"dre",
+				   "categories":[
+					      {"name":"Core",
+						   "sources":[
+	                	        {"name":"GRC Region NCBI_37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":false},
+	                	        {"name":"Vega genes","url":"http://das.sanger.ac.uk/das/vega_ens_zv8_genes/features","checked":false}
+	                	        ]
+					      },
+					      {"name":"Variation",
+						   "sources":[
+	                	        {"name":"Cosmic Mutations NCBI 36","url":"http://das.sanger.ac.uk/das/cosmic_mutations_GRCh37/features","checked":true}
+	                	        ]
+					      },
+					      {"name":"Regulatory",
+						   "sources":[]
+					      }
+					   ]
+				}
+				];
+
+
