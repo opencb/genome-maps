@@ -51,7 +51,6 @@ function GenomeMaps(targetId,args){
 	
 	//RESIZE EVENT
 	$(window).smartresize(function(a){
-		console.log($(window).width()+'x'+$(window).height());
 		_this.setSize($(window).width(),$(window).height());
 	});
 	
