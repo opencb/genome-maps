@@ -1,11 +1,12 @@
 var expressionPlugin = new GenericPlugin('Expression', {title: 'Expression',
-											  	width: 900,
+											  	width: 1035,
+											  	height: 653,
 											  	launch: function() { auxExpression(); }
 });
 
 
 function auxExpression(){
-	expressionPlugin.closeWindow();
+//	expressionPlugin.closeWindow();
 	var species = genomeMaps.genomeViewer.species;
 	
 	var expressionGenomicAttributesWidget = new ExpressionGenomicAttributesWidget(species);
@@ -18,7 +19,8 @@ function auxExpression(){
 			expressionGenomicAttributesWidget.attributesPanel.sessionFinished();
 		});
 	}
-	expressionGenomicAttributesWidget.draw();
+//	expressionGenomicAttributesWidget.draw();
+	expressionPlugin.addSenchaElement(expressionGenomicAttributesWidget.getMainPanel());
 	expressionGenomicAttributesWidget.onMarkerClicked.addEventListener(function(sender, feature){
 	genomeMaps.goTo(feature.chromosome, feature.start);
 		

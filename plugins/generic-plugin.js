@@ -32,7 +32,8 @@ function GenericPlugin(name, args){
 };
 
 GenericPlugin.prototype.draw = function (){
-	var win = Ext.create('Ext.window.Window',{
+	var _this=this;
+	this.win = Ext.create('Ext.window.Window',{
 		id:this.id+'pluginWindow',
 		title: this.title,
 		resizable: false,
@@ -41,9 +42,21 @@ GenericPlugin.prototype.draw = function (){
 		closable: true,
 		width: this.width,
 		height: this.height,
-		html: '<div id='+this.container_div+'></div>'
+		html: '<div id='+this.container_div+'></div>',
+		buttonAlign:'left',
+		buttons:['->',
+		         {text:'Close', handler: function(){_this.closeWindow();}}],
+ 		listeners: {
+	    	scope: this,
+	    	minimize:function(){
+				this.win.hide();
+	       	},
+	      	destroy: function(){
+	       		delete this.win;
+	      	}
+    	}
 	});
-	win.show();
+	this.win.show();
 };
 
 GenericPlugin.prototype.addHtmlElement = function (html) {
