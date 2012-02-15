@@ -20,6 +20,17 @@ function GenomeMaps(targetId,args){
 	}
 	this.args = args;
 	
+	if (args != null){
+		if (args.width != null) {
+			this.width = args.width;
+		}
+		if (args.height != null) {
+			this.height = args.height;
+		}
+		if (args.wum != null) {
+			this.wum = args.wum;
+		}
+	}
 //	AppViewer.prototype.constructor.call(this, {targetId:args.targetId, wum:args.wum, suiteId:this.suiteId, title: "Genome Maps", description: args.description});
 	
 //	this.genomeViewer = new GenomeViewer(null, {description:"Homo Sapiens", menuBar:this.getMenuBar()});
@@ -60,6 +71,16 @@ function GenomeMaps(targetId,args){
 
 GenomeMaps.prototype.draw = function(){
 	if(this._panel==null){
+		
+		//if no wum is available
+		var items = [];
+		var headerHeight=0;
+		if (this.wum==true){
+			items.push(this.headerWidget.getPanel());
+			headerHeight=this.headerWidget.height;
+		}
+		items.push(this.genomeViewer._getPanel(this.width, this.height-headerHeight));
+		
 		this._panel = Ext.create('Ext.panel.Panel', {
 			renderTo:this.targetId,
 //			renderTo:Ext.getBody(),
@@ -67,15 +88,15 @@ GenomeMaps.prototype.draw = function(){
 			border:false,
 			width:this.width,
 			height:this.height,
-			items: [this.headerWidget.getPanel(),
-			        this.genomeViewer._getPanel(this.width, this.height-this.headerWidget.height)]
+			items:items
 		});
 
 	}
 	
-
-	
-	this.headerWidget.setDescription(this.genomeViewer.speciesName);
+	//again because must be set after render 
+	if (this.wum==true){
+		this.headerWidget.setDescription(this.genomeViewer.speciesName);
+	}
 	
 	this.genomeViewer.setSpecieMenu(AVAILABLE_SPECIES);
 	this._setTracks();
@@ -94,8 +115,7 @@ GenomeMaps.prototype.setSize = function(width,height){
 	this.width=width;
 	this.height=height;
 	
-	this._panel.setWidth(width);
-	this._panel.setHeight(height);
+	this._panel.setSize(width,height);
 	this.genomeViewer.setSize(width,height-this.headerWidget.height);
 	this.headerWidget.setWidth(width);
 };
@@ -166,7 +186,7 @@ GenomeMaps.prototype.getMenuBar = function() {
 						var gffFileWidget = new GFFFileWidget();
 						gffFileWidget.draw();
 						gffFileWidget.onOk.addEventListener(function(sender, args) {
-							_this.genomeViewer.addVCFTrack(args.title, args.dataAdapter);
+							_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
 						});
 	
 					}
@@ -174,7 +194,7 @@ GenomeMaps.prototype.getMenuBar = function() {
 					text : 'BED',
 					disabled : true,
 					handler : function(sender, args) {
-						_this.genomeViewer.addVCFTrack(args.title, args.dataAdapter);
+						_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
 					}
 				},{
 					text : 'VCF',
@@ -182,7 +202,7 @@ GenomeMaps.prototype.getMenuBar = function() {
 						var vcfFileWidget = new VCFFileWidget();
 						vcfFileWidget.draw();
 						vcfFileWidget.onOk.addEventListener(function(sender, args) {
-							_this.genomeViewer.addVCFTrack(args.title, args.dataAdapter);
+							_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
 		
 						});
 					}
@@ -672,7 +692,7 @@ GenomeMaps.prototype.getTracksMenu = function() {
 								});
 							}
 							gffFileWidget.onOk.addEventListener(function(sender, args) {
-								_this.genomeViewer.addVCFTrack(args.title, args.dataAdapter);
+								_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
 							});
 
 						}
@@ -682,7 +702,7 @@ GenomeMaps.prototype.getTracksMenu = function() {
 								var bedFileWidget = new BEDFileWidget();
 								bedFileWidget.draw();
 								bedFileWidget.onOk.addEventListener(function(sender, args) {
-									_this.genomeViewer.addVCFTrack(args.title, args.dataAdapter);
+									_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
 								});
 							}
 						},
@@ -693,7 +713,7 @@ GenomeMaps.prototype.getTracksMenu = function() {
 							var vcfFileWidget = new VCFFileWidget();
 							vcfFileWidget.draw();
 							vcfFileWidget.onOk.addEventListener(function(sender, args) {
-								_this.genomeViewer.addVCFTrack(args.title, args.dataAdapter);
+								_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
 
 							});
 						}
