@@ -5,6 +5,8 @@ function GenomeMaps(targetId,args){
 	this.title="Genome Maps";
 	this.description="RC";
 	this.wum=true;
+
+	this.args = args;
 	
 	this.width =  $(window).width();
 	this.height = $(window).height();
@@ -13,12 +15,11 @@ function GenomeMaps(targetId,args){
 	if (targetId != null){
 		this.targetId=targetId;
 	}
-	if (args != null){
-		if(args.wum != null){
-			this.wum = args.wum;
-		}
-	}
-	this.args = args;
+//	if (args != null){
+//		if(args.wum != null){
+//			this.wum = args.wum;
+//		}
+//	}
 	
 	if (args != null){
 		if (args.width != null) {
@@ -31,29 +32,28 @@ function GenomeMaps(targetId,args){
 			this.wum = args.wum;
 		}
 	}
-//	AppViewer.prototype.constructor.call(this, {targetId:args.targetId, wum:args.wum, suiteId:this.suiteId, title: "Genome Maps", description: args.description});
 	
 //	this.genomeViewer = new GenomeViewer(null, {description:"Homo Sapiens", menuBar:this.getMenuBar()});
 	this.genomeViewer =new GenomeViewer(null, AVAILABLE_SPECIES[0],{
 		menuBar:this.getMenuBar()
 	});
 	
-	if (this.wum==true){
-		this.headerWidget = new HeaderWidget({
-			appname: this.title,
-			description: this.description,
-			suiteId : this.suiteId
-		});
-		
-		/**Atach events i listen**/
-		this.headerWidget.onLogin.addEventListener(function (sender){
-			Ext.example.msg('Welcome', 'You logged in');
-		});
-		
-		this.headerWidget.onLogout.addEventListener(function (sender){
-			Ext.example.msg('Good bye', 'You logged out');
-		});
-	}
+//	if (this.wum==true){
+	this.headerWidget = new HeaderWidget({
+		appname: this.title,
+		description: this.description,
+		suiteId : this.suiteId
+	});
+	
+	/**Atach events i listen**/
+	this.headerWidget.onLogin.addEventListener(function (sender){
+		Ext.example.msg('Welcome', 'You logged in');
+	});
+	
+	this.headerWidget.onLogout.addEventListener(function (sender){
+		Ext.example.msg('Good bye', 'You logged out');
+	});
+//	}
 	
 	//SPECIE EVENT
 	this.genomeViewer.onSpeciesChange.addEventListener(function(sender,data){
@@ -72,14 +72,6 @@ function GenomeMaps(targetId,args){
 GenomeMaps.prototype.draw = function(){
 	if(this._panel==null){
 		
-		//if no wum is available
-		var items = [];
-		var headerHeight=0;
-		if (this.wum==true){
-			items.push(this.headerWidget.getPanel());
-			headerHeight=this.headerWidget.height;
-		}
-		items.push(this.genomeViewer._getPanel(this.width, this.height-headerHeight));
 		
 		this._panel = Ext.create('Ext.panel.Panel', {
 			renderTo:this.targetId,
@@ -88,15 +80,11 @@ GenomeMaps.prototype.draw = function(){
 			border:false,
 			width:this.width,
 			height:this.height,
-			items:items
+			items:[this.headerWidget.getPanel(),this.genomeViewer._getPanel(this.width, this.height-this.headerWidget.height)]
 		});
-
 	}
 	
-	//again because must be set after render 
-	if (this.wum==true){
-		this.headerWidget.setDescription(this.genomeViewer.speciesName);
-	}
+	this.headerWidget.setDescription(this.genomeViewer.speciesName);
 	
 	this.genomeViewer.setSpecieMenu(AVAILABLE_SPECIES);
 	this._setTracks();
@@ -403,9 +391,9 @@ GenomeMaps.prototype.getFeatureSearchMenu = function() {
 					items : [ {
 						text : 'Genes',
 						handler : function() {
-							var inputListWidget = new InputListWidget({title:'Gene List'});
+							var inputListWidget = new InputListWidget({title:'Gene List',genomeViewer:_this.genomeViewer});
 							inputListWidget.onOk.addEventListener(function(evt, geneNames) {
-								_this.genomeViewer.openGOListWidget(geneNames);
+								_this.genomeViewer.openGeneListWidget(geneNames);
 							});
 							inputListWidget.draw();
 						}
@@ -413,9 +401,9 @@ GenomeMaps.prototype.getFeatureSearchMenu = function() {
 					{
 						text : 'Transcript',
 						handler : function() {
-							var inputListWidget = new InputListWidget({title:'Ensembl Transcript'});
-							inputListWidget.onOk.addEventListener(function(evt, snpNames) {
-								_this.genomeViewer.openGOListWidget(snpNames);
+							var inputListWidget = new InputListWidget({title:'Ensembl Transcript',genomeViewer:_this.genomeViewer});
+							inputListWidget.onOk.addEventListener(function(evt, names) {
+								_this.genomeViewer.openTranscriptListWidget(names);
 							});
 							inputListWidget.draw();
 						}
@@ -424,7 +412,7 @@ GenomeMaps.prototype.getFeatureSearchMenu = function() {
 						text : 'Exon',
 						handler : function() {
 							//ENSE00001663727
-							var inputListWidget = new InputListWidget({title:'Ensembl Exon List'});
+							var inputListWidget = new InputListWidget({title:'Ensembl Exon List',genomeViewer:_this.genomeViewer});
 							inputListWidget.onOk.addEventListener(function(evt, geneNames) {
 								_this.genomeViewer.openExonListWidget(geneNames);
 							});
@@ -434,7 +422,7 @@ GenomeMaps.prototype.getFeatureSearchMenu = function() {
 					{
 						text : 'SNP',
 						handler : function() {
-							var inputListWidget = new InputListWidget({title:'SNP List'});
+							var inputListWidget = new InputListWidget({title:'SNP List',genomeViewer:_this.genomeViewer});
 							inputListWidget.onOk.addEventListener(function(evt, snpNames) {
 								_this.genomeViewer.openSNPListWidget(snpNames);
 							});
@@ -445,7 +433,7 @@ GenomeMaps.prototype.getFeatureSearchMenu = function() {
 					{
 						text : 'Protein',
 						handler : function() {
-							var inputListWidget = new InputListWidget({title:'Ensembl Protein'});
+							var inputListWidget = new InputListWidget({title:'Ensembl Protein',genomeViewer:_this.genomeViewer});
 							inputListWidget.onOk.addEventListener(function(evt, snpNames) {
 								_this.genomeViewer.openGOListWidget(snpNames);
 							});
@@ -468,7 +456,7 @@ GenomeMaps.prototype.getFunctionalSearchMenu = function() {
 	        	  {
 						text : 'GO',
 						handler : function() {
-							var inputListWidget = new InputListWidget({title:'Gene Ontology'});
+							var inputListWidget = new InputListWidget({title:'Gene Ontology',genomeViewer:_this.genomeViewer});
 							inputListWidget.onOk.addEventListener(function(evt, snpNames) {
 								_this.genomeViewer.openGOListWidget(snpNames);
 							});
@@ -485,7 +473,7 @@ GenomeMaps.prototype.getFunctionalSearchMenu = function() {
 					{
 						text : 'Interpro',
 						handler : function() {
-							var inputListWidget = new InputListWidget({title:'Protein'});
+							var inputListWidget = new InputListWidget({title:'Protein',genomeViewer:_this.genomeViewer});
 							inputListWidget.onOk.addEventListener(function(evt, snpNames) {
 								_this.genomeViewer.openGOListWidget(snpNames);
 							});

@@ -19,8 +19,8 @@ function auxExpression(){
 			expressionGenomicAttributesWidget.attributesPanel.sessionFinished();
 		});
 	}
-//	expressionGenomicAttributesWidget.draw();
-	expressionPlugin.addSenchaElement(expressionGenomicAttributesWidget.getMainPanel());
+	expressionGenomicAttributesWidget.draw();
+//	expressionPlugin.addSenchaElement(expressionGenomicAttributesWidget.getMainPanel());
 	expressionGenomicAttributesWidget.onMarkerClicked.addEventListener(function(sender, feature){
 	genomeMaps.goTo(feature.chromosome, feature.start);
 		

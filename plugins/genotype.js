@@ -1,16 +1,16 @@
 var genotypePlugin = new GenericPlugin('Genotype', {title: 'Genotype',
 											  	width: 900,
-											  	launch: function() { auxGenotype(); }
+											  	launch: function(sender) { auxGenotype(sender); }
 });
 
 
-function auxGenotype(){
+function auxGenotype(sender){
 	genotypePlugin.closeWindow();
-	var species = genomeMaps.genomeViewer.species;
+	var species = sender.genomeViewer.species;
 	
-	var genotypeGenomicAttributesWidget =  new GenotypeGenomicAttributesWidget(genomeMaps.genomeViewer.species);
+	var genotypeGenomicAttributesWidget =  new GenotypeGenomicAttributesWidget(sender.genomeViewer.species);
 	
-	if (genomeMaps.wum){
+	if (sender.wum){
 		genomeMaps.headerWidget.onLogin.addEventListener(function (sender){
 			genotypeGenomicAttributesWidget.attributesPanel.sessionInitiated();
 		});
