@@ -12,13 +12,13 @@ function aux(){
 
 	
 	var pan = Ext.create('Ext.panel.Panel', {
-		title:'Prueba',
+		title:'Test panel',
 		width:300,
 		height:300
 	});
 	
 	var pan2 = Ext.create('Ext.panel.Panel', {
-		title:'Prueba',
+		title:'Test panel',
 		width:300,
 		height:100
 	});
@@ -27,45 +27,3 @@ function aux(){
 	myPlugin.addSenchaElement(pan);
 //	myPlugin.addSenchaElement(pan2);
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//	myPlugin.setTitle();
-//	myPlugin.setVisible(false);
-//	....
-//	addApplication(win);
-//	myplugin.show();
-		
-//	var win = Ext.create('Ext.window.Window',{
-//		title:'myPlugin',
-//		resizable: false,
-//		minimizable :true,
-//		constrain:true,
-//		closable:true,
-//		width: 800,
-//		height: 400,
-//		html:'hola'
-//	});
-//	
-//	setStatus("");
-//	
-//	win.show();

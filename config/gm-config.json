@@ -15,7 +15,7 @@ var AVAILABLE_TRACKS = [{"species":"hsa",
 			{"species":"dre",
 			"enabled_tracks":[{"id":"Gene/Transcript", "checked":false},
 			                  {"id":"Cytoband", "checked":true}
-			]},
+			]}
 			];
 
 var DAS_TRACKS = [{"species":"hsa",
