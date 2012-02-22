@@ -132,48 +132,6 @@ function aux(){
 	myPlugin.addSenchaElement(pan);
 //	myPlugin.addSenchaElement(pan2);
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//	myPlugin.setTitle();
-//	myPlugin.setVisible(false);
-//	....
-//	addApplication(win);
-//	myplugin.show();
-		
-//	var win = Ext.create('Ext.window.Window',{
-//		title:'myPlugin',
-//		resizable: false,
-//		minimizable :true,
-//		constrain:true,
-//		closable:true,
-//		width: 800,
-//		height: 400,
-//		html:'hola'
-//	});
-//	
-//	setStatus("");
-//	
-//	win.show();
 var genotypePlugin = new GenericPlugin('Genotype', {title: 'Genotype',
 											  	width: 900,
 											  	launch: function(sender) { auxGenotype(sender); }
@@ -302,7 +260,7 @@ GenericPlugin.prototype.draw = function (){
 };
 
 GenericPlugin.prototype.addHtmlElement = function (html) {
-	$("#"+this.container_div).html("html de prueba");
+	$("#"+this.container_div).html(html);
 };
 
 GenericPlugin.prototype.addSenchaElement = function (component) {
@@ -318,7 +276,7 @@ GenericPlugin.prototype.closeWindow = function () {
 };
 function GenomeMaps(targetId,args){
 	var _this=this;
-	this.id = "GenomeMaps#"+ Math.round(Math.random()*10000) +"#";
+	this.id = "GenomeMaps"+ Math.round(Math.random()*10000);
 	this.suiteId = 9;
 	this.title="Genome Maps";
 	this.description="RC";
@@ -404,7 +362,7 @@ GenomeMaps.prototype.draw = function(){
 	
 	this.headerWidget.setDescription(this.genomeViewer.speciesName);
 	
-	this.genomeViewer.setSpecieMenu(AVAILABLE_SPECIES);
+	this.genomeViewer.setSpeciesMenu(AVAILABLE_SPECIES);
 	this._setTracks();
 	this.setTracksMenu();
 	this.setDASMenu();
@@ -709,7 +667,7 @@ GenomeMaps.prototype.getFeatureSearchMenu = function() {
 					items : [ {
 						text : 'Genes',
 						handler : function() {
-							var inputListWidget = new InputListWidget({title:'Gene List',genomeViewer:_this.genomeViewer});
+							var inputListWidget = new InputListWidget({title:'Gene List',viewer:_this.genomeViewer});
 							inputListWidget.onOk.addEventListener(function(evt, geneNames) {
 								_this.genomeViewer.openGeneListWidget(geneNames);
 							});
@@ -719,7 +677,7 @@ GenomeMaps.prototype.getFeatureSearchMenu = function() {
 					{
 						text : 'Transcript',
 						handler : function() {
-							var inputListWidget = new InputListWidget({title:'Ensembl Transcript',genomeViewer:_this.genomeViewer});
+							var inputListWidget = new InputListWidget({title:'Ensembl Transcript',viewer:_this.genomeViewer});
 							inputListWidget.onOk.addEventListener(function(evt, names) {
 								_this.genomeViewer.openTranscriptListWidget(names);
 							});
@@ -730,7 +688,7 @@ GenomeMaps.prototype.getFeatureSearchMenu = function() {
 						text : 'Exon',
 						handler : function() {
 							//ENSE00001663727
-							var inputListWidget = new InputListWidget({title:'Ensembl Exon List',genomeViewer:_this.genomeViewer});
+							var inputListWidget = new InputListWidget({title:'Ensembl Exon List',viewer:_this.genomeViewer});
 							inputListWidget.onOk.addEventListener(function(evt, geneNames) {
 								_this.genomeViewer.openExonListWidget(geneNames);
 							});
@@ -740,7 +698,7 @@ GenomeMaps.prototype.getFeatureSearchMenu = function() {
 					{
 						text : 'SNP',
 						handler : function() {
-							var inputListWidget = new InputListWidget({title:'SNP List',genomeViewer:_this.genomeViewer});
+							var inputListWidget = new InputListWidget({title:'SNP List',viewer:_this.genomeViewer});
 							inputListWidget.onOk.addEventListener(function(evt, snpNames) {
 								_this.genomeViewer.openSNPListWidget(snpNames);
 							});
@@ -751,7 +709,7 @@ GenomeMaps.prototype.getFeatureSearchMenu = function() {
 					{
 						text : 'Protein',
 						handler : function() {
-							var inputListWidget = new InputListWidget({title:'Ensembl Protein',genomeViewer:_this.genomeViewer});
+							var inputListWidget = new InputListWidget({title:'Ensembl Protein',viewer:_this.genomeViewer});
 							inputListWidget.onOk.addEventListener(function(evt, snpNames) {
 								_this.genomeViewer.openGOListWidget(snpNames);
 							});
@@ -774,7 +732,7 @@ GenomeMaps.prototype.getFunctionalSearchMenu = function() {
 	        	  {
 						text : 'GO',
 						handler : function() {
-							var inputListWidget = new InputListWidget({title:'Gene Ontology',genomeViewer:_this.genomeViewer});
+							var inputListWidget = new InputListWidget({title:'Gene Ontology',viewer:_this.genomeViewer});
 							inputListWidget.onOk.addEventListener(function(evt, snpNames) {
 								_this.genomeViewer.openGOListWidget(snpNames);
 							});
@@ -791,7 +749,7 @@ GenomeMaps.prototype.getFunctionalSearchMenu = function() {
 					{
 						text : 'Interpro',
 						handler : function() {
-							var inputListWidget = new InputListWidget({title:'Protein',genomeViewer:_this.genomeViewer});
+							var inputListWidget = new InputListWidget({title:'Protein',viewer:_this.genomeViewer});
 							inputListWidget.onOk.addEventListener(function(evt, snpNames) {
 								_this.genomeViewer.openGOListWidget(snpNames);
 							});
