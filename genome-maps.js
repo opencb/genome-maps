@@ -171,7 +171,7 @@ GenomeMaps.prototype.getMenuBar = function() {
 				menu : [{
 					text : 'GFF',
 					handler : function() {
-						var gffFileWidget = new GFFFileWidget();
+						var gffFileWidget = new GFFFileWidget({viewer:_this.genomeViewer});
 						gffFileWidget.draw();
 						gffFileWidget.onOk.addEventListener(function(sender, args) {
 							_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
@@ -187,7 +187,7 @@ GenomeMaps.prototype.getMenuBar = function() {
 				},{
 					text : 'VCF',
 					handler : function() {
-						var vcfFileWidget = new VCFFileWidget();
+						var vcfFileWidget = new VCFFileWidget({viewer:_this.genomeViewer});
 						vcfFileWidget.draw();
 						vcfFileWidget.onOk.addEventListener(function(sender, args) {
 							_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
@@ -669,7 +669,7 @@ GenomeMaps.prototype.getTracksMenu = function() {
 							handler : function() {
 //							_this.getGFFUploadMenu();
 //							_this.openGFFDialog.show();
-							var gffFileWidget = new GFFFileWidget();
+							var gffFileWidget = new GFFFileWidget({viewer:_this.genomeViewer});
 							gffFileWidget.draw();
 							if (_this.wum){
 								_this.headerWidget.onLogin.addEventListener(function (sender){
@@ -687,7 +687,7 @@ GenomeMaps.prototype.getTracksMenu = function() {
 						}, {
 							text : 'BED',
 							handler : function() {
-								var bedFileWidget = new BEDFileWidget();
+								var bedFileWidget = new BEDFileWidget({viewer:_this.genomeViewer});
 								bedFileWidget.draw();
 								bedFileWidget.onOk.addEventListener(function(sender, args) {
 									_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
@@ -698,7 +698,7 @@ GenomeMaps.prototype.getTracksMenu = function() {
 						{
 							text : 'VCF',
 							handler : function() {
-							var vcfFileWidget = new VCFFileWidget();
+							var vcfFileWidget = new VCFFileWidget({viewer:_this.genomeViewer});
 							vcfFileWidget.draw();
 							vcfFileWidget.onOk.addEventListener(function(sender, args) {
 								_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
