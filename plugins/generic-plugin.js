@@ -60,7 +60,7 @@ GenericPlugin.prototype.draw = function (){
 };
 
 GenericPlugin.prototype.addHtmlElement = function (html) {
-	$("#"+this.container_div).html("html de prueba");
+	$("#"+this.container_div).html(html);
 };
 
 GenericPlugin.prototype.addSenchaElement = function (component) {
