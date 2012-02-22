@@ -6,65 +6,24 @@ var myPlugin = new GenericPlugin('MyPlugin', {title: 'My first plugin',
 
 
 function aux(){
-	myPlugin.addHtmlElement("html de prueba");
+//	myPlugin.addHtmlElement("html de prueba");
 	
-	
-	win = myPlugin.getWindow();
+//	win = myPlugin.getWindow();
 
 	
 	var pan = Ext.create('Ext.panel.Panel', {
-		title:'Prueba',
+		title:'Test panel',
 		width:300,
-		height:300,
+		height:300
 	});
 	
 	var pan2 = Ext.create('Ext.panel.Panel', {
-		title:'Prueba',
+		title:'Test panel',
 		width:300,
-		height:100,
+		height:100
 	});
 	
-	win.add(pan,pan2);
+//	win.add(pan,pan2);
+	myPlugin.addSenchaElement(pan);
+//	myPlugin.addSenchaElement(pan2);
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//	myPlugin.setTitle();
-//	myPlugin.setVisible(false);
-//	....
-//	addApplication(win);
-//	myplugin.show();
-		
-//	var win = Ext.create('Ext.window.Window',{
-//		title:'myPlugin',
-//		resizable: false,
-//		minimizable :true,
-//		constrain:true,
-//		closable:true,
-//		width: 800,
-//		height: 400,
-//		html:'hola'
-//	});
-//	
-//	setStatus("");
-//	
-//	win.show();

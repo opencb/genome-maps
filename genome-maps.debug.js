@@ -1,3 +1,279 @@
+var AVAILABLE_SPECIES = [{"name":"Homo sapiens", "species":"hsa", "icon":""},
+                         {"name":"Mus musculus", "species":"mmu", "icon":""},
+                         {"name":"Danio rerio", "species":"dre", "icon":""}
+                         ];
+
+var AVAILABLE_TRACKS = [{"species":"hsa",
+			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
+			                  {"id":"Cytoband", "checked":true},
+			                  {"id":"Sequence", "checked":true}
+			]},
+			{"species":"mmu",
+			"enabled_tracks":[{"id":"Gene/Transcript", "checked":false},
+				                  {"id":"Cytoband", "checked":false}
+			]},
+			{"species":"dre",
+			"enabled_tracks":[{"id":"Gene/Transcript", "checked":false},
+			                  {"id":"Cytoband", "checked":true}
+			]}
+			];
+
+var DAS_TRACKS = [{"species":"hsa",
+				   "categories":[
+				      {"name":"Core",
+					   "sources":[
+                	        {"name":"GRC Region NCBI_37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":true},
+                	        {"name":"Vega genes","url":"http://das.sanger.ac.uk/das/vega_ens_zv8_genes/features","checked":false}
+                	        ]
+				      },
+				      {"name":"Variation",
+					   "sources":[
+                	        {"name":"Cosmic Mutations NCBI 36","url":"http://das.sanger.ac.uk/das/cosmic_mutations_GRCh37/features","checked":false}
+                	        ]
+				      },
+				      {"name":"Regulatory",
+					   "sources":[]
+				      }
+				   ]
+				},{"species":"mmu",
+				   "categories":[
+				      {"name":"Core",
+					   "sources":[
+                	        {"name":"GRC Region NCBI_37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":false},
+                	        {"name":"Vega genes","url":"http://das.sanger.ac.uk/das/vega_ens_zv8_genes/features","checked":true}
+                	        ]
+				      },
+				      {"name":"Variation",
+					   "sources":[
+                	        {"name":"Cosmic Mutations NCBI 36","url":"http://das.sanger.ac.uk/das/cosmic_mutations_GRCh37/features","checked":false}
+                	        ]
+				      },
+				      {"name":"Regulatory",
+					   "sources":[]
+				      }
+				   ]
+				},{"species":"dre",
+				   "categories":[
+					      {"name":"Core",
+						   "sources":[
+	                	        {"name":"GRC Region NCBI_37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":false},
+	                	        {"name":"Vega genes","url":"http://das.sanger.ac.uk/das/vega_ens_zv8_genes/features","checked":false}
+	                	        ]
+					      },
+					      {"name":"Variation",
+						   "sources":[
+	                	        {"name":"Cosmic Mutations NCBI 36","url":"http://das.sanger.ac.uk/das/cosmic_mutations_GRCh37/features","checked":true}
+	                	        ]
+					      },
+					      {"name":"Regulatory",
+						   "sources":[]
+					      }
+					   ]
+				}
+				];
+
+
+var GENOME_MAPS_REGISTERED_PLUGINS = {};
+
+var GENOME_MAPS_AVAILABLE_PLUGINS = [{"category" : "Test",
+				                      "plugins" : [{"name" : "MyPlugin",
+				                	   		   	  "email" : "yo@cipf.es",
+				                	   		   	  "version" : "1.0",
+				                	   		   	  "description" : "",
+				                	   		   	  "icon" : "",
+				                	   		   	  "permissions" : "",
+				                	   		   	  "available_species" : [{"name:":"hsa", "assembly":"hg19"}]
+									 		 	  }]
+				                     },
+				                     {"category" : "",
+				                      "plugins" : [{"name" : "Expression",
+				               	   		   	  	  	"email" : "imedina@cipf.es",
+				               	   		   	  	  	"version" : "1.0",
+				               	   		   	  	  	"description" : "",
+				               	   		   	  	  	"icon" : "",
+				               	   		   	  	  	"permissions" : "",
+				               	   		   	  	  	"available_species" : [{"name:":"hsa", "assembly":"hg19"}]
+								 		 		  },
+								 		 		  {"name" : "Genotype",
+				                   	   		   	   "email" : "imedina@cipf.es",
+				                   	   		   	   "version" : "1.0",
+				                   	   		   	   "description" : "",
+				                   	   		   	   "icon" : "",
+				                   	   		   	   "permissions" : "",
+				                   	   		   	   "available_species" : [{"name:":"hsa", "assembly":"hg19"}]
+								 		 		  }]
+				                     }];
+
+var myPlugin = new GenericPlugin('MyPlugin', {title: 'My first plugin',
+											  width: 900,
+											  launch: function() { aux(); }
+});
+
+
+function aux(){
+//	myPlugin.addHtmlElement("html de prueba");
+	
+//	win = myPlugin.getWindow();
+
+	
+	var pan = Ext.create('Ext.panel.Panel', {
+		title:'Test panel',
+		width:300,
+		height:300
+	});
+	
+	var pan2 = Ext.create('Ext.panel.Panel', {
+		title:'Test panel',
+		width:300,
+		height:100
+	});
+	
+//	win.add(pan,pan2);
+	myPlugin.addSenchaElement(pan);
+//	myPlugin.addSenchaElement(pan2);
+};
+var genotypePlugin = new GenericPlugin('Genotype', {title: 'Genotype',
+											  	width: 900,
+											  	launch: function(sender) { auxGenotype(sender); }
+});
+
+
+function auxGenotype(sender){
+	genotypePlugin.closeWindow();
+	var species = sender.genomeViewer.species;
+	
+	var genotypeGenomicAttributesWidget =  new GenotypeGenomicAttributesWidget(sender.genomeViewer.species);
+	
+	if (sender.wum){
+		genomeMaps.headerWidget.onLogin.addEventListener(function (sender){
+			genotypeGenomicAttributesWidget.attributesPanel.sessionInitiated();
+		});
+		genomeMaps.headerWidget.onLogout.addEventListener(function (sender){
+			genotypeGenomicAttributesWidget.attributesPanel.sessionFinished();
+		});
+	}
+	
+	genotypeGenomicAttributesWidget.draw();
+	
+	genotypeGenomicAttributesWidget.onMarkerClicked.addEventListener(function(sender, feature){
+		genomeMaps.goTo(feature.chromosome, feature.start);
+	});
+	
+	genotypeGenomicAttributesWidget.onTrackAddAction.addEventListener(function(sender, feature){
+	genomeMaps.addTrackFromFeaturesList(feature);
+		
+	});
+};
+var expressionPlugin = new GenericPlugin('Expression', {title: 'Expression',
+											  	width: 1035,
+											  	height: 653,
+											  	launch: function() { auxExpression(); }
+});
+
+
+function auxExpression(){
+//	expressionPlugin.closeWindow();
+	var species = genomeMaps.genomeViewer.species;
+	
+	var expressionGenomicAttributesWidget = new ExpressionGenomicAttributesWidget(species);
+	
+	if (genomeMaps.wum){
+		genomeMaps.headerWidget.onLogin.addEventListener(function (sender){
+			expressionGenomicAttributesWidget.attributesPanel.sessionInitiated();
+		});
+		genomeMaps.headerWidget.onLogout.addEventListener(function (sender){
+			expressionGenomicAttributesWidget.attributesPanel.sessionFinished();
+		});
+	}
+	expressionGenomicAttributesWidget.draw();
+//	expressionPlugin.addSenchaElement(expressionGenomicAttributesWidget.getMainPanel());
+	expressionGenomicAttributesWidget.onMarkerClicked.addEventListener(function(sender, feature){
+	genomeMaps.goTo(feature.chromosome, feature.start);
+		
+	});
+	
+	expressionGenomicAttributesWidget.onTrackAddAction.addEventListener(function(sender, feature){
+		console.log(feature);
+		genomeMaps.addTrackFromFeaturesList(feature);
+	});
+	
+};
+function GenericPlugin(name, args){
+	var _this=this;
+	this.id = name+"_" + Math.round(Math.random()*10000);
+	
+	this.name = name;
+	this.title = null;
+	this.width = 640;
+	this.height = 480;
+	this.launch = null;
+	
+	this.container_div = this.name+'_plugin_container';
+	
+	if (args != null){
+        if (args.targetId!= null) {
+        	this.targetId = args.targetId;       
+        }
+        if (args.title!= null) {
+        	this.title = args.title;       
+        }
+        if (args.width!= null) {
+        	this.width = args.width;       
+        }
+        if (args.height!= null) {
+        	this.height = args.height;       
+        }
+        if (args.launch!= null) {
+        	this.launch = args.launch;       
+        }
+    }
+	
+	GENOME_MAPS_REGISTERED_PLUGINS[this.name] = this;
+};
+
+GenericPlugin.prototype.draw = function (){
+	var _this=this;
+	this.win = Ext.create('Ext.window.Window',{
+		id:this.id+'pluginWindow',
+		title: this.title,
+		resizable: false,
+		minimizable: true,
+		constrain: true,
+		closable: true,
+		width: this.width,
+		height: this.height,
+		html: '<div id='+this.container_div+'></div>',
+		buttonAlign:'left',
+		buttons:['->',
+		         {text:'Close', handler: function(){_this.closeWindow();}}],
+ 		listeners: {
+	    	scope: this,
+	    	minimize:function(){
+				this.win.hide();
+	       	},
+	      	destroy: function(){
+	       		delete this.win;
+	      	}
+    	}
+	});
+	this.win.show();
+};
+
+GenericPlugin.prototype.addHtmlElement = function (html) {
+	$("#"+this.container_div).html(html);
+};
+
+GenericPlugin.prototype.addSenchaElement = function (component) {
+	this.getWindow().add(component);
+};
+
+GenericPlugin.prototype.getWindow = function () {
+	return Ext.getCmp(this.id+'pluginWindow');
+};
+
+GenericPlugin.prototype.closeWindow = function () {
+	Ext.getCmp(this.id+'pluginWindow').close();
+};
 function GenomeMaps(targetId,args){
 	var _this=this;
 	this.id = "GenomeMaps"+ Math.round(Math.random()*10000);
@@ -171,7 +447,7 @@ GenomeMaps.prototype.getMenuBar = function() {
 				menu : [{
 					text : 'GFF',
 					handler : function() {
-						var gffFileWidget = new GFFFileWidget({viewer:_this.genomeViewer});
+						var gffFileWidget = new GFFFileWidget();
 						gffFileWidget.draw();
 						gffFileWidget.onOk.addEventListener(function(sender, args) {
 							_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
@@ -187,7 +463,7 @@ GenomeMaps.prototype.getMenuBar = function() {
 				},{
 					text : 'VCF',
 					handler : function() {
-						var vcfFileWidget = new VCFFileWidget({viewer:_this.genomeViewer});
+						var vcfFileWidget = new VCFFileWidget();
 						vcfFileWidget.draw();
 						vcfFileWidget.onOk.addEventListener(function(sender, args) {
 							_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
@@ -669,7 +945,7 @@ GenomeMaps.prototype.getTracksMenu = function() {
 							handler : function() {
 //							_this.getGFFUploadMenu();
 //							_this.openGFFDialog.show();
-							var gffFileWidget = new GFFFileWidget({viewer:_this.genomeViewer});
+							var gffFileWidget = new GFFFileWidget();
 							gffFileWidget.draw();
 							if (_this.wum){
 								_this.headerWidget.onLogin.addEventListener(function (sender){
@@ -687,7 +963,7 @@ GenomeMaps.prototype.getTracksMenu = function() {
 						}, {
 							text : 'BED',
 							handler : function() {
-								var bedFileWidget = new BEDFileWidget({viewer:_this.genomeViewer});
+								var bedFileWidget = new BEDFileWidget();
 								bedFileWidget.draw();
 								bedFileWidget.onOk.addEventListener(function(sender, args) {
 									_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
@@ -698,7 +974,7 @@ GenomeMaps.prototype.getTracksMenu = function() {
 						{
 							text : 'VCF',
 							handler : function() {
-							var vcfFileWidget = new VCFFileWidget({viewer:_this.genomeViewer});
+							var vcfFileWidget = new VCFFileWidget();
 							vcfFileWidget.draw();
 							vcfFileWidget.onOk.addEventListener(function(sender, args) {
 								_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
