@@ -14,21 +14,21 @@ var AVAILABLE_TRACKS = [
 			                  {"id":"Sequence", "checked":false},
 			                  {"id":"CpG islands", "checked":false},
 			                  {"id":"SNP", "checked":true},
-			                  {"id":"Mutation", "checked":false},
-			                  {"id":"Structural variation", "checked":false},
-			                  {"id":"miRNA targets", "checked":false},
-			                  {"id":"TFBS", "checked":false},
-			                  {"id":"Histone", "checked":false},
-			                  {"id":"Polymerase", "checked":false},
-			                  {"id":"Open Chromatin", "checked":false},
-			                  {"id":"Conserved regions", "checked":false}
+			                  {"id":"Mutation", "checked":true},
+			                  {"id":"Structural variation", "checked":true},
+			                  {"id":"miRNA targets", "checked":true},
+			                  {"id":"TFBS", "checked":true},
+			                  {"id":"Histone", "checked":true},
+			                  {"id":"Polymerase", "checked":true},
+			                  {"id":"Open Chromatin", "checked":true},
+			                  {"id":"Conserved regions", "checked":true}
 			]},
 			{"species":"mmu",
-			"enabled_tracks":[{"id":"Gene/Transcript", "checked":false},
-			                  {"id":"Cytoband", "checked":false},
-			                  {"id":"Sequence", "checked":false},
+			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
+			                  {"id":"Cytoband", "checked":true},
+			                  {"id":"Sequence", "checked":true},
 			                  {"id":"CpG islands", "checked":false},
-			                  {"id":"SNP", "checked":false},
+			                  {"id":"SNP", "checked":true},
 			                  {"id":"Mutation", "checked":false},
 			                  {"id":"Structural variation", "checked":false},
 			                  {"id":"miRNA targets", "checked":false},
@@ -39,11 +39,11 @@ var AVAILABLE_TRACKS = [
 			                  {"id":"Conserved regions", "checked":false}
 			]},
 			{"species":"dre",
-			"enabled_tracks":[{"id":"Gene/Transcript", "checked":false},
-			                  {"id":"Cytoband", "checked":false},
-			                  {"id":"Sequence", "checked":false},
+			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
+			                  {"id":"Cytoband", "checked":true},
+			                  {"id":"Sequence", "checked":true},
 			                  {"id":"CpG islands", "checked":false},
-			                  {"id":"SNP", "checked":false},
+			                  {"id":"SNP", "checked":true},
 			                  {"id":"Mutation", "checked":false},
 			                  {"id":"Structural variation", "checked":false},
 			                  {"id":"miRNA targets", "checked":false},
@@ -54,11 +54,11 @@ var AVAILABLE_TRACKS = [
 			                  {"id":"Conserved regions", "checked":false}
 			]},
 			{"species":"rno",
-			"enabled_tracks":[{"id":"Gene/Transcript", "checked":false},
-			                  {"id":"Cytoband", "checked":false},
-			                  {"id":"Sequence", "checked":false},
+			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
+			                  {"id":"Cytoband", "checked":true},
+			                  {"id":"Sequence", "checked":true},
 			                  {"id":"CpG islands", "checked":false},
-			                  {"id":"SNP", "checked":false},
+			                  {"id":"SNP", "checked":true},
 			                  {"id":"Mutation", "checked":false},
 			                  {"id":"Structural variation", "checked":false},
 			                  {"id":"miRNA targets", "checked":false},
@@ -69,11 +69,11 @@ var AVAILABLE_TRACKS = [
 			                  {"id":"Conserved regions", "checked":false}
 			]},
 			{"species":"dme",
-			"enabled_tracks":[{"id":"Gene/Transcript", "checked":false},
-			                  {"id":"Cytoband", "checked":false},
-			                  {"id":"Sequence", "checked":false},
+			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
+			                  {"id":"Cytoband", "checked":true},
+			                  {"id":"Sequence", "checked":true},
 			                  {"id":"CpG islands", "checked":false},
-			                  {"id":"SNP", "checked":false},
+			                  {"id":"SNP", "checked":true},
 			                  {"id":"Mutation", "checked":false},
 			                  {"id":"Structural variation", "checked":false},
 			                  {"id":"miRNA targets", "checked":false},
@@ -84,11 +84,11 @@ var AVAILABLE_TRACKS = [
 			                  {"id":"Conserved regions", "checked":false}
 			]},
 			{"species":"sce",
-			"enabled_tracks":[{"id":"Gene/Transcript", "checked":false},
-			                  {"id":"Cytoband", "checked":false},
-			                  {"id":"Sequence", "checked":false},
+			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
+			                  {"id":"Cytoband", "checked":true},
+			                  {"id":"Sequence", "checked":true},
 			                  {"id":"CpG islands", "checked":false},
-			                  {"id":"SNP", "checked":false},
+			                  {"id":"SNP", "checked":true},
 			                  {"id":"Mutation", "checked":false},
 			                  {"id":"Structural variation", "checked":false},
 			                  {"id":"miRNA targets", "checked":false},
@@ -99,11 +99,11 @@ var AVAILABLE_TRACKS = [
 			                  {"id":"Conserved regions", "checked":false}
 			]},
 			{"species":"cel",
-			"enabled_tracks":[{"id":"Gene/Transcript", "checked":false},
-			                  {"id":"Cytoband", "checked":false},
-			                  {"id":"Sequence", "checked":false},
+			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
+			                  {"id":"Cytoband", "checked":true},
+			                  {"id":"Sequence", "checked":true},
 			                  {"id":"CpG islands", "checked":false},
-			                  {"id":"SNP", "checked":false},
+			                  {"id":"SNP", "checked":true},
 			                  {"id":"Mutation", "checked":false},
 			                  {"id":"Structural variation", "checked":false},
 			                  {"id":"miRNA targets", "checked":false},
@@ -137,33 +137,25 @@ var DAS_TRACKS = [
 				{"species":"mmu",
 				   "categories":[
 				      {"name":"Core",
-					   "sources":[
-                	        {"name":"GRC Region NCBI_37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":false},
-                	        {"name":"Vega genes","url":"http://das.sanger.ac.uk/das/vega_ens_zv8_genes/features","checked":true}
-                	        ]
+					   "sources":[]
 				      },
 				      {"name":"Variation",
-					   "sources":[
-                	        {"name":"Cosmic Mutations NCBI 36","url":"http://das.sanger.ac.uk/das/cosmic_mutations_GRCh37/features","checked":false}
-                	        ]
+					   "sources":[]
 				      },
 				      {"name":"Regulatory",
-					   "sources":[]
+					   "sources":[
+					   		{"name":"miRNAs", "url":"http://www.ebi.ac.uk/das-srv/genomicdas/das/mmuprimiRNA/", "checked":false}
+					   		]
 				      }
 				   ]
 				},
 				{"species":"dre",
 				   "categories":[
 				      {"name":"Core",
-					   "sources":[
-                	        {"name":"GRC Region NCBI_37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":false},
-                	        {"name":"Vega genes","url":"http://das.sanger.ac.uk/das/vega_ens_zv8_genes/features","checked":false}
-                	        ]
+					   "sources":[]
 				      },
 				      {"name":"Variation",
-					   "sources":[
-                	        {"name":"Cosmic Mutations NCBI 36","url":"http://das.sanger.ac.uk/das/cosmic_mutations_GRCh37/features","checked":true}
-                	        ]
+					   "sources":[]
 				      },
 				      {"name":"Regulatory",
 					   "sources":[]
@@ -173,33 +165,25 @@ var DAS_TRACKS = [
 				{"species":"rno",
 				   "categories":[
 				      {"name":"Core",
-					   "sources":[
-                	        {"name":"GRC Region NCBI_37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":false},
-                	        {"name":"Vega genes","url":"http://das.sanger.ac.uk/das/vega_ens_zv8_genes/features","checked":false}
-                	        ]
+					   "sources":[]
 				      },
 				      {"name":"Variation",
-					   "sources":[
-                	        {"name":"Cosmic Mutations NCBI 36","url":"http://das.sanger.ac.uk/das/cosmic_mutations_GRCh37/features","checked":true}
-                	        ]
+					   "sources":[]
 				      },
 				      {"name":"Regulatory",
-					   "sources":[]
+					   "sources":[
+					   		{"name":"miRNAs", "url":"http://www.ebi.ac.uk/das-srv/genomicdas/das/rnoprimiRNA/", "checked":false}
+					   		]
 				      }
 				   ]
 				},
 				{"species":"dme",
 				   "categories":[
 				      {"name":"Core",
-					   "sources":[
-                	        {"name":"GRC Region NCBI_37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":false},
-                	        {"name":"Vega genes","url":"http://das.sanger.ac.uk/das/vega_ens_zv8_genes/features","checked":false}
-                	        ]
+					   "sources":[]
 				      },
 				      {"name":"Variation",
-					   "sources":[
-                	        {"name":"Cosmic Mutations NCBI 36","url":"http://das.sanger.ac.uk/das/cosmic_mutations_GRCh37/features","checked":true}
-                	        ]
+					   "sources":[]
 				      },
 				      {"name":"Regulatory",
 					   "sources":[]
@@ -209,15 +193,10 @@ var DAS_TRACKS = [
 				{"species":"sce",
 				   "categories":[
 				      {"name":"Core",
-					   "sources":[
-                	        {"name":"GRC Region NCBI_37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":false},
-                	        {"name":"Vega genes","url":"http://das.sanger.ac.uk/das/vega_ens_zv8_genes/features","checked":false}
-                	        ]
+					   "sources":[]
 				      },
 				      {"name":"Variation",
-					   "sources":[
-                	        {"name":"Cosmic Mutations NCBI 36","url":"http://das.sanger.ac.uk/das/cosmic_mutations_GRCh37/features","checked":true}
-                	        ]
+					   "sources":[]
 				      },
 				      {"name":"Regulatory",
 					   "sources":[]
@@ -227,15 +206,10 @@ var DAS_TRACKS = [
 				{"species":"cel",
 				   "categories":[
 				      {"name":"Core",
-					   "sources":[
-                	        {"name":"GRC Region NCBI_37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":false},
-                	        {"name":"Vega genes","url":"http://das.sanger.ac.uk/das/vega_ens_zv8_genes/features","checked":false}
-                	        ]
+					   "sources":[]
 				      },
 				      {"name":"Variation",
-					   "sources":[
-                	        {"name":"Cosmic Mutations NCBI 36","url":"http://das.sanger.ac.uk/das/cosmic_mutations_GRCh37/features","checked":true}
-                	        ]
+					   "sources":[]
 				      },
 				      {"name":"Regulatory",
 					   "sources":[]
