@@ -310,8 +310,9 @@ GenomeMaps.prototype.getMenuBar = function() {
 				text : 'Search',
 				menu : searchMenu
 			},{
-				text : 'Tracks',
-				menu : this.getTracksMenu()
+				id : this.id+"tracksMenu",
+				text : 'Tracks'
+//				menu : this.getTracksMenu()
 			},{
 				text : 'Plugins',
 				menu : this.getPluginsMenu()
@@ -717,6 +718,7 @@ GenomeMaps.prototype.getTracksMenu = function() {
 
 //Enables or no the checkBoxes
 GenomeMaps.prototype.setTracksMenu = function() {
+	Ext.getCmp(this.id+"tracksMenu").menu=this.getTracksMenu();
 	var _this = this;
 	var tracks = AVAILABLE_TRACKS;
 	var species = this.genomeViewer.species;
@@ -731,6 +733,7 @@ GenomeMaps.prototype.setTracksMenu = function() {
 			break;
 		}
 	};
+	
 };
 
 GenomeMaps.prototype.getDASMenu = function() {

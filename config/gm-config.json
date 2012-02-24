@@ -27,37 +27,37 @@ var AVAILABLE_TRACKS = [
 			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
 			                  {"id":"Cytoband", "checked":true},
 			                  {"id":"Sequence", "checked":true},
-			                  {"id":"SNP", "checked":true},
+			                  {"id":"SNP", "checked":true}
 			]},
 			{"species":"dre",
 			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
 			                  {"id":"Cytoband", "checked":true},
 			                  {"id":"Sequence", "checked":true},
-			                  {"id":"SNP", "checked":true},
+			                  {"id":"SNP", "checked":true}
 			]},
 			{"species":"rno",
 			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
 			                  {"id":"Cytoband", "checked":true},
 			                  {"id":"Sequence", "checked":true},
-			                  {"id":"SNP", "checked":true},
+			                  {"id":"SNP", "checked":true}
 			]},
 			{"species":"dme",
 			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
 			                  {"id":"Cytoband", "checked":true},
 			                  {"id":"Sequence", "checked":true},
-			                  {"id":"SNP", "checked":true},
+			                  {"id":"SNP", "checked":true}
 			]},
 			{"species":"sce",
 			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
 			                  {"id":"Cytoband", "checked":true},
 			                  {"id":"Sequence", "checked":true},
-			                  {"id":"SNP", "checked":true},
+			                  {"id":"SNP", "checked":true}
 			]},
 			{"species":"cel",
 			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
 			                  {"id":"Cytoband", "checked":true},
 			                  {"id":"Sequence", "checked":true},
-			                  {"id":"SNP", "checked":true},
+			                  {"id":"SNP", "checked":true}
 			]}
 			];
 

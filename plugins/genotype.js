@@ -6,11 +6,11 @@ var genotypePlugin = new GenericPlugin('Genotype', {title: 'Genotype',
 
 function auxGenotype(sender){
 	genotypePlugin.closeWindow();
-	var species = sender.genomeViewer.species;
+	var species = genomeMaps.genomeViewer.species;
 	
-	var genotypeGenomicAttributesWidget =  new GenotypeGenomicAttributesWidget(sender.genomeViewer.species);
+	var genotypeGenomicAttributesWidget =  new GenotypeGenomicAttributesWidget(species);
 	
-	if (sender.wum){
+	if (genomeMaps.wum){
 		genomeMaps.headerWidget.onLogin.addEventListener(function (sender){
 			genotypeGenomicAttributesWidget.attributesPanel.sessionInitiated();
 		});
