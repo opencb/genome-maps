@@ -6,7 +6,7 @@ var expressionPlugin = new GenericPlugin('Expression', {title: 'Expression',
 
 
 function auxExpression(){
-//	expressionPlugin.closeWindow();
+	expressionPlugin.closeWindow();
 	var species = genomeMaps.genomeViewer.species;
 	
 	var expressionGenomicAttributesWidget = new ExpressionGenomicAttributesWidget(species);
