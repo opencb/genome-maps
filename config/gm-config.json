@@ -17,7 +17,7 @@ var AVAILABLE_TRACKS = [
 			                  {"id":"Mutation", "checked":false},
 			                  {"id":"Structural variation", "checked":false},
 			                  {"id":"miRNA targets", "checked":false},
-			                  {"id":"TFBS", "checked":true},
+			                  {"id":"TFBS", "checked":false},
 			                  {"id":"Histone", "checked":false},
 			                  {"id":"Polymerase", "checked":false},
 			                  {"id":"Open Chromatin", "checked":false},
