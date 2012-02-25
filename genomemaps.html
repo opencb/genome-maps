@@ -226,6 +226,9 @@
 	Ext.onReady(run);
 	var genomeMaps;
 	function run(){
+		
+		var pathname = window.location.href;
+		console.log(pathname);
 	// 	console.log(Ext.ComponentManager.getCount());
 		genomeMaps = new GenomeMaps("mydiv"); //the div must exist
 	// 	console.log(Ext.ComponentManager.getCount());
