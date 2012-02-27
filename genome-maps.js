@@ -33,8 +33,17 @@ function GenomeMaps(targetId,args){
 		}
 	}
 	
-//	this.genomeViewer = new GenomeViewer(null, {description:"Homo Sapiens", menuBar:this.getMenuBar()});
+	//Parse query params to get location.... Also in AVAILABLE_SPECIES, an example location is set.
+	var url = $.url();
+	var location = url.param('location');
+	if(location != null) {
+		var position = location.split(":")[1];
+		var chromosome = location.split(":")[0];
+	}
+	   
 	this.genomeViewer =new GenomeViewer(null, AVAILABLE_SPECIES[0],{
+		position:position,
+		chromosome:chromosome,
 		menuBar:this.getMenuBar()
 	});
 	
@@ -64,7 +73,6 @@ function GenomeMaps(targetId,args){
 	$(window).smartresize(function(a){
 		_this.setSize($(window).width(),$(window).height());
 	});
-	
 };
 
 
