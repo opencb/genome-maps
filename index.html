@@ -71,9 +71,9 @@
 		
 		var counter = 1000000;
 		function test(ms,positions){
-			if (ms==null){ms = 500}
-			if (positions==null){positions = 250000}
-			genomeMaps.genomeViewer.setLocation("1", counter)
+			if (ms==null){ms = 500;}
+			if (positions==null){positions = 250000;}
+			genomeMaps.genomeViewer.setLocation("1", counter);
 			setTimeout("test()", ms);
 			counter = counter + positions;
 		}
