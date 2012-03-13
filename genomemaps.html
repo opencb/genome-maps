@@ -32,8 +32,9 @@
 
 	<!-- jQuery -->
 	<!-- 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery/1.6.4/jquery-1.6.4.min.js"></script>  -->
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery/1.7.1/jquery-1.7.1.min.js"></script>
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.sha1.js"></script>
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.url.js"></script>
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.cookie.js"></script>  
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jqXMLUtils.js"></script>
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.smartresize.js"></script>
@@ -226,6 +227,9 @@
 	Ext.onReady(run);
 	var genomeMaps;
 	function run(){
+		
+// 		var pathname = window.location.href;
+// 		console.log(pathname);
 	// 	console.log(Ext.ComponentManager.getCount());
 		genomeMaps = new GenomeMaps("mydiv"); //the div must exist
 	// 	console.log(Ext.ComponentManager.getCount());
