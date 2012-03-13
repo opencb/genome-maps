@@ -41,7 +41,7 @@ function GenomeMaps(targetId,args){
 		var chromosome = location.split(":")[0];
 	}
 	   
-	this.genomeViewer =new GenomeViewer(null, AVAILABLE_SPECIES[0],{
+	this.genomeViewer = new GenomeViewer(null, AVAILABLE_SPECIES[0],{
 		position:position,
 		chromosome:chromosome,
 		menuBar:this.getMenuBar()
@@ -319,8 +319,8 @@ GenomeMaps.prototype.getMenuBar = function() {
 				menu : searchMenu
 			},{
 				id : this.id+"tracksMenu",
-				text : 'Tracks'
-//				menu : this.getTracksMenu()
+				text : 'Tracks',
+				menu : []
 			},{
 				text : 'Plugins',
 				menu : this.getPluginsMenu()
