@@ -612,8 +612,8 @@ GenomeMaps.prototype.getTracksMenu = function() {
 							checked : false,
 							disabled : true,
 							handler : function() {
-//								_this.genomeViewer.genomeWidgetProperties.tracks[this.text] = this.checked;
-//								_this.genomeViewer.refreshMasterGenomeViewer();
+								_this.genomeViewer.genomeWidgetProperties.tracks[this.text] = this.checked;
+								_this.genomeViewer.refreshMasterGenomeViewer();
 							}
 						}, {
 							text : 'Histone',
