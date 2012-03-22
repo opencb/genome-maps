@@ -40,7 +40,7 @@ function GenomeMaps(targetId,args){
 		var position = location.split(":")[1];
 		var chromosome = location.split(":")[0];
 	}
-	   
+	
 	this.genomeViewer = new GenomeViewer(null, AVAILABLE_SPECIES[0],{
 		position:position,
 		chromosome:chromosome,

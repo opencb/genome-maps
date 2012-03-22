@@ -16,8 +16,8 @@ var AVAILABLE_TRACKS = [
 			                  {"id":"Sequence", "checked":true},
 			                  {"id":"CpG islands", "checked":false},
 			                  {"id":"SNP", "checked":true},
-			                  {"id":"Mutation", "checked":true},
-			                  {"id":"Structural variation", "checked":true},
+			                  {"id":"Mutation", "checked":false},
+			                  {"id":"Structural variation", "checked":false},
 			                  {"id":"miRNA targets", "checked":false},
 			                  {"id":"TFBS", "checked":false},
 			                  {"id":"Histone", "checked":false},
@@ -165,5 +165,3 @@ var DAS_TRACKS = [
 				   ]
 				}
 				];
-
-
