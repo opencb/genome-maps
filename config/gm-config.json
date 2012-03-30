@@ -70,13 +70,13 @@ var DAS_TRACKS = [
 				   "categories":[
 				      {"name":"Core",
 					   "sources":[
-                	        {"name":"GRC Region NCBI_37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":false},
+                	        {"name":"GRC Region GRCh37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":false},
                 	        {"name":"Vega genes","url":"http://das.sanger.ac.uk/das/vega_ens_zv8_genes/features","checked":false}
                 	        ]
 				      },
 				      {"name":"Variation",
 					   "sources":[
-                	        {"name":"Cosmic Mutations NCBI 36","url":"http://das.sanger.ac.uk/das/cosmic_mutations_GRCh37/features","checked":false}
+                	        {"name":"Cosmic Mutations GRCh37","url":"http://das.sanger.ac.uk/das/cosmic_mutations_GRCh37/features","checked":false}
                 	        ]
 				      },
 				      {"name":"Regulatory",

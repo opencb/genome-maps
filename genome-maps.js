@@ -5,6 +5,7 @@ function GenomeMaps(targetId,args){
 	this.title="Genome Maps";
 	this.description="RC";
 	this.wum=true;
+	this.version="Genome Maps 1.0.1";
 
 	this.args = args;
 	
@@ -44,7 +45,8 @@ function GenomeMaps(targetId,args){
 	this.genomeViewer = new GenomeViewer(null, AVAILABLE_SPECIES[0],{
 		position:position,
 		chromosome:chromosome,
-		menuBar:this.getMenuBar()
+		menuBar:this.getMenuBar(),
+		version:this.version
 	});
 	
 //	if (this.wum==true){
