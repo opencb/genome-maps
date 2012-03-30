@@ -10,7 +10,7 @@ function GenomeMaps(targetId,args){
 	
 	this.width =  $(window).width();
 	this.height = $(window).height();
-	this.targetId=document.body;
+	this.targetId = document.body;
 	
 	if (targetId != null){
 		this.targetId=targetId;
