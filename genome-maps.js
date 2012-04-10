@@ -5,7 +5,7 @@ function GenomeMaps(targetId,args){
 	this.title="Genome Maps";
 	this.description="RC";
 	this.wum=true;
-	this.version="Genome Maps 1.0.1";
+	this.version="Genome Maps 1.0.2";
 
 	this.args = args;
 	
@@ -48,6 +48,8 @@ function GenomeMaps(targetId,args){
 		menuBar:this.getMenuBar(),
 		version:this.version
 	});
+//	console.log(Ext.ComponentManager.each(function(a){console.log(a);}));
+//	console.log(Ext.ComponentManager.getCount());
 	
 //	if (this.wum==true){
 	this.headerWidget = new HeaderWidget({
@@ -82,8 +84,8 @@ function GenomeMaps(targetId,args){
 GenomeMaps.prototype.draw = function(){
 	if(this._panel==null){
 		
-		
 		this._panel = Ext.create('Ext.panel.Panel', {
+			id:this.id+"_panel",
 			renderTo:this.targetId,
 //			renderTo:Ext.getBody(),
 //		layout: { type: 'vbox',align: 'stretch'},
@@ -99,10 +101,9 @@ GenomeMaps.prototype.draw = function(){
 	this.genomeViewer.setSpeciesMenu(AVAILABLE_SPECIES);
 	this._setTracks();
 	this.setTracksMenu();
-	this.setDASMenu();
+//	this.setDASMenu();
 	this.setPluginsMenu();
 	this.genomeViewer.draw();
-
 };
 
 
@@ -171,6 +172,7 @@ GenomeMaps.prototype._setTracks= function(){
 GenomeMaps.prototype.getMenuBar = function() {
 	var _this = this;
 	var fileMenu = Ext.create('Ext.menu.Menu', {
+		
 		items : [{
 				text : 'New',
 				handler : function() {
@@ -523,14 +525,19 @@ GenomeMaps.prototype.getRegulatorySearchMenu = function() {
 
 GenomeMaps.prototype.getTracksMenu = function() {
 	var _this = this;
+	if(this.tracksMenu!=null){
+		this.tracksMenu.destroy();
+	}
 	this.tracksMenu = Ext.create('Ext.menu.Menu', {
+				id:this.id+"tracksMenuInit",
 				margin : '0 0 10 0',
 				floating : true,
 				items : [{
+						id:this.id+"tracksMenuCore",
 						text : 'Core',
 						menu : [{
-							text : 'Gene/Transcript',
 							id : 'Gene/Transcript',
+							text : 'Gene/Transcript',
 							checked : false,
 							disabled : true,
 							handler : function() {
@@ -538,8 +545,8 @@ GenomeMaps.prototype.getTracksMenu = function() {
 								_this.genomeViewer.refreshMasterGenomeViewer();
 							}
 						}, {
-							text : 'Cytoband',
 							id : 'Cytoband',
+							text : 'Cytoband',
 							checked : false,
 							disabled : true,
 							handler : function() {
@@ -547,8 +554,8 @@ GenomeMaps.prototype.getTracksMenu = function() {
 								_this.genomeViewer.refreshMasterGenomeViewer();
 							}
 						}, {
-							text : 'Sequence',
 							id : 'Sequence',
+							text : 'Sequence',
 							checked : false,
 							disabled : true,
 							handler : function() {
@@ -556,8 +563,8 @@ GenomeMaps.prototype.getTracksMenu = function() {
 								_this.genomeViewer.refreshMasterGenomeViewer();
 							}
 						}, {
-							text : 'CpG islands',
 							id : 'CpG islands',
+							text : 'CpG islands',
 							checked : false,
 							disabled : true,
 							handler : function() {
@@ -566,10 +573,11 @@ GenomeMaps.prototype.getTracksMenu = function() {
 							}
 						}]
 					}, {
+						id:this.id+"tracksMenuVariation",
 						text : 'Variation',
 						menu : [{
-							text : 'SNP',
 							id : 'SNP',
+							text : 'SNP',
 							checked : false,
 							disabled : true,
 							handler : function() {
@@ -577,8 +585,8 @@ GenomeMaps.prototype.getTracksMenu = function() {
 								_this.genomeViewer.refreshMasterGenomeViewer();
 							}
 						}, {
-							text : 'Mutation',
 							id : 'Mutation',
+							text : 'Mutation',
 							checked : false,
 							disabled : true,
 							handler : function() {
@@ -586,8 +594,8 @@ GenomeMaps.prototype.getTracksMenu = function() {
 								_this.genomeViewer.refreshMasterGenomeViewer();
 							}
 						}, {
-							text : 'Structural variation',
 							id : 'Structural variation',
+							text : 'Structural variation',
 							checked : false,
 							disabled : true,
 							handler : function() {
@@ -598,10 +606,11 @@ GenomeMaps.prototype.getTracksMenu = function() {
 		
 						]
 					}, {
+						id:this.id+"tracksMenuRegulatory",
 						text : 'Regulatory',
 						menu : [{
-							text : 'miRNA targets',
 							id : 'miRNA targets',
+							text : 'miRNA targets',
 							checked : false,
 							disabled : true,
 							handler : function() {
@@ -609,8 +618,8 @@ GenomeMaps.prototype.getTracksMenu = function() {
 								_this.genomeViewer.refreshMasterGenomeViewer();
 							}
 						}, {
-							text : 'TFBS',
 							id : 'TFBS',
+							text : 'TFBS',
 							checked : false,
 							disabled : true,
 							handler : function() {
@@ -618,8 +627,8 @@ GenomeMaps.prototype.getTracksMenu = function() {
 								_this.genomeViewer.refreshMasterGenomeViewer();
 							}
 						}, {
-							text : 'Histone',
 							id : 'Histone',
+							text : 'Histone',
 							checked : false,
 							disabled : true,
 							handler : function() {
@@ -628,8 +637,8 @@ GenomeMaps.prototype.getTracksMenu = function() {
 							}
 						},
 						{
-							text : 'Polymerase',
 							id : 'Polymerase',
+							text : 'Polymerase',
 							checked : false,
 							disabled : true,
 							handler : function() {
@@ -639,8 +648,8 @@ GenomeMaps.prototype.getTracksMenu = function() {
 						}
 						,
 						{
-							text : 'Open Chromatin',
 							id : 'Open Chromatin',
+							text : 'Open Chromatin',
 							checked : false,
 							disabled : true,
 							handler : function() {
@@ -658,8 +667,8 @@ GenomeMaps.prototype.getTracksMenu = function() {
 //							}
 //						}, 
 						{
-							text : 'Conserved regions',
 							id : 'Conserved regions',
+							text : 'Conserved regions',
 							checked : false,
 							disabled : true,
 							handler : function() {
@@ -670,12 +679,15 @@ GenomeMaps.prototype.getTracksMenu = function() {
 						
 					}, "-", 
 					{
+						id : this.id+"tracksMenuDAS",
 						text : 'DAS',
 						menu : this.getDASMenu()
 					
 					},"-",{
+						id : this.id+"tracksMenuCustomDAS",
 						text : 'Add custom data',
 						menu : [{
+							id : this.id+"tracksMenuGFF",
 							text : 'GFF',
 							handler : function() {
 //							_this.getGFFUploadMenu();
@@ -696,6 +708,7 @@ GenomeMaps.prototype.getTracksMenu = function() {
 
 						}
 						}, {
+							id : this.id+"tracksMenuBED",
 							text : 'BED',
 							handler : function() {
 								var bedFileWidget = new BEDFileWidget({viewer:_this.genomeViewer});
@@ -705,8 +718,8 @@ GenomeMaps.prototype.getTracksMenu = function() {
 								});
 							}
 						},
-
 						{
+							id : this.id+"tracksMenuVCF",
 							text : 'VCF',
 							handler : function() {
 							var vcfFileWidget = new VCFFileWidget({viewer:_this.genomeViewer});
@@ -722,7 +735,6 @@ GenomeMaps.prototype.getTracksMenu = function() {
 					}]
 		
 				});
-
 	return this.tracksMenu;
 };
 
@@ -743,27 +755,19 @@ GenomeMaps.prototype.setTracksMenu = function() {
 			break;
 		}
 	};
-	
 };
 
 GenomeMaps.prototype.getDASMenu = function() {
-	if(this._DASMenu == null){
-		this._DASMenu = Ext.create('Ext.menu.Menu', {
-			margin : '0 0 10 0',
-			floating : true,
-			items : []
-		});
-	}
-	return this._DASMenu;
-};
-
-GenomeMaps.prototype.setDASMenu = function() {
 	var _this = this;
+	
 	var tracks = DAS_TRACKS;
 	var species = this.genomeViewer.species;
 	//Auto generate menu items depending of DAS_TRACKS config
-	var menu = this.getDASMenu();
-	menu.removeAll(); // Remove the old DAS
+//	var menu = this.getDASMenu();
+//	menu.removeAll(); // Remove the old DAS
+	
+	var items = new Array();
+	
 	for (var i = 0; i < tracks.length; i++) {
 		if(tracks[i].species == species){
 			for ( var j = 0; j < tracks[i].categories.length; j++){
@@ -780,7 +784,7 @@ GenomeMaps.prototype.setDASMenu = function() {
 								  }
 					});
 				}
-				menu.add({
+				items.push({
 					text : tracks[i].categories[j].name,
 					menu : sources
 				});
@@ -790,7 +794,7 @@ GenomeMaps.prototype.setDASMenu = function() {
 	}
 	
 	//Add custom source
-	menu.add("-",{
+	items.push("-",{
 		text : 'Add custom...',
 		handler : function() {
 			var urlWidget = new UrlWidget({title:'Add a DAS track'});
@@ -801,25 +805,27 @@ GenomeMaps.prototype.setDASMenu = function() {
 			});
 			urlWidget.draw();
 		},
-		menu : this.getCustomDASMenu()
-	});
-};
-
-GenomeMaps.prototype.getCustomDASMenu = function() {
-	if(this._customDASMenu == null){
-		this._customDASMenu = Ext.create('Ext.menu.Menu', {
+		menu :{
+			id:this.id+"_customDASMenu",
 			margin : '0 0 10 0',
 			floating : true,
 			items : []
-		});
-	}
-	return this._customDASMenu;
+		}
+	});
+	
+	this._DASMenu = Ext.create('Ext.menu.Menu', {
+		id:this.id_panel+"_DASMenu",
+		margin : '0 0 10 0',
+		floating : true,
+		items : items
+	});
+	return this._DASMenu;
 };
+
 
 GenomeMaps.prototype.setCustomDASMenu = function(name) {
 	var _this = this;
-	
-	_this.getCustomDASMenu().add({
+	Ext.getCmp(this.id+"_customDASMenu").add({
 		text : name,
 		checked : true,
 		handler : function() {
@@ -840,6 +846,7 @@ GenomeMaps.prototype.setCustomDASMenu = function(name) {
 GenomeMaps.prototype.getPluginsMenu = function() {
 	if(this._pluginsMenu == null){
 		this._pluginsMenu = Ext.create('Ext.menu.Menu', {
+			id:this.id+"_pluginsMenu",
 			margin : '0 0 10 0',
 			floating : true,
 			items : []
@@ -903,73 +910,73 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 
 
 
-GenomeMaps.prototype.getPluginsMenuOLD = function(chromosome, position) {
-	var _this = this;
-	if(this.pluginsMenu==null){
-		return Ext.create('Ext.menu.Menu', {
-			margin : '0 0 10 0',
-			floating : true,
-			items : [{
-						text : 'Expression',
-						handler : function() {
-							var expressionGenomicAttributesWidget = new ExpressionGenomicAttributesWidget(_this.genomeViewer.species);
-							
-							if (_this.wum){
-								_this.headerWidget.onLogin.addEventListener(function (sender){
-									expressionGenomicAttributesWidget.attributesPanel.sessionInitiated();
-								});
-								_this.headerWidget.onLogout.addEventListener(function (sender){
-									expressionGenomicAttributesWidget.attributesPanel.sessionFinished();
-								});
-							}
-							expressionGenomicAttributesWidget.draw();
-							expressionGenomicAttributesWidget.onMarkerClicked.addEventListener(function(sender, feature){
-								_this.goTo(feature.chromosome, feature.start);
-								
-							});
-							
-							expressionGenomicAttributesWidget.onTrackAddAction.addEventListener(function(sender, feature){
-								console.log(feature);
-								_this.addTrackFromFeaturesList(feature);
-								
-							});
-
-						}
-					},
-					{
-						text : 'Genotype',
-						handler : function() {
-							var genotypeGenomicAttributesWidget =  new GenotypeGenomicAttributesWidget(_this.genomeViewer.species);
-							
-							if (_this.wum){
-								_this.headerWidget.onLogin.addEventListener(function (sender){
-									genotypeGenomicAttributesWidget.attributesPanel.sessionInitiated();
-								});
-								_this.headerWidget.onLogout.addEventListener(function (sender){
-									genotypeGenomicAttributesWidget.attributesPanel.sessionFinished();
-								});
-							}
-							
-							genotypeGenomicAttributesWidget.draw();
-							
-							genotypeGenomicAttributesWidget.onMarkerClicked.addEventListener(function(sender, feature){
-								_this.goTo(feature.chromosome, feature.start);
-							});
-							
-							genotypeGenomicAttributesWidget.onTrackAddAction.addEventListener(function(sender, feature){
-								_this.addTrackFromFeaturesList(feature);
-								
-							});
-						}
-					}]
-		});
-	}
-	
-	return Ext.create('Ext.menu.Menu', {
-		margin : '0 0 10 0',
-		floating : true,
-		items : this.pluginsMenu
-	});
-	
-	
-};
+//GenomeMaps.prototype.getPluginsMenuOLD = function(chromosome, position) {
+//	var _this = this;
+//	if(this.pluginsMenu==null){
+//		return Ext.create('Ext.menu.Menu', {
+//			margin : '0 0 10 0',
+//			floating : true,
+//			items : [{
+//						text : 'Expression',
+//						handler : function() {
+//							var expressionGenomicAttributesWidget = new ExpressionGenomicAttributesWidget(_this.genomeViewer.species);
+//							
+//							if (_this.wum){
+//								_this.headerWidget.onLogin.addEventListener(function (sender){
+//									expressionGenomicAttributesWidget.attributesPanel.sessionInitiated();
+//								});
+//								_this.headerWidget.onLogout.addEventListener(function (sender){
+//									expressionGenomicAttributesWidget.attributesPanel.sessionFinished();
+//								});
+//							}
+//							expressionGenomicAttributesWidget.draw();
+//							expressionGenomicAttributesWidget.onMarkerClicked.addEventListener(function(sender, feature){
+//								_this.goTo(feature.chromosome, feature.start);
+//								
+//							});
+//							
+//							expressionGenomicAttributesWidget.onTrackAddAction.addEventListener(function(sender, feature){
+//								console.log(feature);
+//								_this.addTrackFromFeaturesList(feature);
+//								
+//							});
+//
+//						}
+//					},
+//					{
+//						text : 'Genotype',
+//						handler : function() {
+//							var genotypeGenomicAttributesWidget =  new GenotypeGenomicAttributesWidget(_this.genomeViewer.species);
+//							
+//							if (_this.wum){
+//								_this.headerWidget.onLogin.addEventListener(function (sender){
+//									genotypeGenomicAttributesWidget.attributesPanel.sessionInitiated();
+//								});
+//								_this.headerWidget.onLogout.addEventListener(function (sender){
+//									genotypeGenomicAttributesWidget.attributesPanel.sessionFinished();
+//								});
+//							}
+//							
+//							genotypeGenomicAttributesWidget.draw();
+//							
+//							genotypeGenomicAttributesWidget.onMarkerClicked.addEventListener(function(sender, feature){
+//								_this.goTo(feature.chromosome, feature.start);
+//							});
+//							
+//							genotypeGenomicAttributesWidget.onTrackAddAction.addEventListener(function(sender, feature){
+//								_this.addTrackFromFeaturesList(feature);
+//								
+//							});
+//						}
+//					}]
+//		});
+//	}
+//	
+//	return Ext.create('Ext.menu.Menu', {
+//		margin : '0 0 10 0',
+//		floating : true,
+//		items : this.pluginsMenu
+//	});
+//	
+//	
+//};
