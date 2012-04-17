@@ -831,7 +831,7 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 					pluginName : plugins_cat[i].plugins[j].name,
 					handler : function() {
 						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].draw();
-						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].launch();
+//						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].launch();
 					}
 				});
 			}
@@ -843,8 +843,6 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 				sources.push({text : plugins_cat[i].plugins[j].name,
 					pluginName : plugins_cat[i].plugins[j].name,
 					handler : function() {
-						
-						
 						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].draw();
 						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].launch();
 					}

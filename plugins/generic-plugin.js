@@ -6,6 +6,8 @@ function GenericPlugin(name, args){
 	this.title = null;
 	this.width = 640;
 	this.height = 480;
+	this.window = true;
+	
 	this.launch = null;
 	
 	this.container_div = this.name+'_plugin_container';
@@ -26,6 +28,9 @@ function GenericPlugin(name, args){
         if (args.launch!= null) {
         	this.launch = args.launch;       
         }
+        if (args.window!= null) {
+        	this.window = args.window;       
+        }
     }
 	
 	GENOME_MAPS_REGISTERED_PLUGINS[this.name] = this;
@@ -33,30 +38,37 @@ function GenericPlugin(name, args){
 
 GenericPlugin.prototype.draw = function (){
 	var _this=this;
-	this.win = Ext.create('Ext.window.Window',{
-		id:this.id+'pluginWindow',
-		title: this.title,
-		resizable: false,
-		minimizable: true,
-		constrain: true,
-		closable: true,
-		width: this.width,
-		height: this.height,
-		html: '<div id='+this.container_div+'></div>',
-		buttonAlign:'left',
-		buttons:['->',
-		         {text:'Close', handler: function(){_this.closeWindow();}}],
- 		listeners: {
-	    	scope: this,
-	    	minimize:function(){
-				this.win.hide();
-	       	},
-	      	destroy: function(){
-	       		delete this.win;
-	      	}
-    	}
-	});
-	this.win.show();
+	if(this.window){
+		this.win = Ext.create('Ext.window.Window',{
+			id:this.id+'pluginWindow',
+			title: this.title,
+			resizable: false,
+			minimizable: true,
+			constrain: true,
+			closable: true,
+			width: this.width,
+			height: this.height,
+			html: '<div id='+this.container_div+'></div>',
+			buttonAlign:'left',
+			buttons:['->',
+			         {text:'Close', handler: function(){_this.closeWindow();}}],
+	 		listeners: {
+		    	scope: this,
+		    	minimize:function(){
+					this.win.hide();
+		       	},
+		      	destroy: function(){
+		       		delete this.win;
+		      	}
+	    	}
+		});
+		this.win.show();
+	}
+	if(this.launch!=null){
+		this.launch();
+	}else{
+		cpnsole.log("No launch method defined.");
+	}
 };
 
 GenericPlugin.prototype.addHtmlElement = function (html) {

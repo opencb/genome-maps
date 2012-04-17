@@ -1,11 +1,12 @@
 var genotypePlugin = new GenericPlugin('Genotype', {title: 'Genotype',
 											  	width: 900,
+											  	window: false,
 											  	launch: function(sender) { auxGenotype(sender); }
 });
 
 
 function auxGenotype(sender){
-	genotypePlugin.closeWindow();
+//	genotypePlugin.closeWindow();
 	var species = genomeMaps.genomeViewer.species;
 	
 	var genotypeGenomicAttributesWidget =  new GenotypeGenomicAttributesWidget(species);

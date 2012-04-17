@@ -1,12 +1,13 @@
 var expressionPlugin = new GenericPlugin('Expression', {title: 'Expression',
 											  	width: 1035,
 											  	height: 653,
+											  	window: false,
 											  	launch: function() { auxExpression(); }
 });
 
 
 function auxExpression(){
-	expressionPlugin.closeWindow();
+//	expressionPlugin.closeWindow();
 	var species = genomeMaps.genomeViewer.species;
 	
 	var expressionGenomicAttributesWidget = new ExpressionGenomicAttributesWidget(species);
