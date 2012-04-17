@@ -218,14 +218,13 @@
 	
 	var counter = 1000000;
 	function test(ms,positions){
-		if (ms==null){ms = 500;}
+		if (ms==null){ms = 50;}
 		if (positions==null){positions = 250000;}
-		genomeMaps.genomeViewer.setLocation("1", counter);
+// 		genomeMaps.genomeViewer.setLocation("1", counter);
+		genomeMaps.genomeViewer.genomeWidget.trackCanvas.moveX(1)
 		setTimeout("test()", ms);
 		counter = counter + positions;
 	}
-	
-	
 	
 	Ext.onReady(run);
 	var genomeMaps;
@@ -248,6 +247,12 @@
 	// // vamos par alla!!!
 	// gv1.draw();
 	// gv2.draw();
+	
+		//RUN TEST
+		if($.url().param('test') == "true") {
+			setTimeout("test()", 2000);
+		}
+	
 	}
 	
 	
