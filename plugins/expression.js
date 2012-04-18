@@ -8,9 +8,9 @@ var expressionPlugin = new GenericPlugin('Expression', {title: 'Expression',
 
 function auxExpression(){
 //	expressionPlugin.closeWindow();
-	var species = genomeMaps.genomeViewer.species;
+	var species = expressionPlugin.getSpecies();
 	
-	var expressionGenomicAttributesWidget = new ExpressionGenomicAttributesWidget(species);
+	var expressionGenomicAttributesWidget = new ExpressionGenomicAttributesWidget(species,{viewer:expressionPlugin.viewer});
 	
 	if (genomeMaps.wum){
 		genomeMaps.headerWidget.onLogin.addEventListener(function (sender){

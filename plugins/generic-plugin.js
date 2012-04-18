@@ -9,6 +9,7 @@ function GenericPlugin(name, args){
 	this.window = true;
 	
 	this.launch = null;
+	this.viewer = null;
 	
 	this.container_div = this.name+'_plugin_container';
 	
@@ -36,6 +37,13 @@ function GenericPlugin(name, args){
 	GENOME_MAPS_REGISTERED_PLUGINS[this.name] = this;
 };
 
+GenericPlugin.prototype.setViewer = function (viewer){
+	this.viewer = viewer;
+};
+GenericPlugin.prototype.getSpecies = function (){
+	return this.viewer.species;
+};
+
 GenericPlugin.prototype.draw = function (){
 	var _this=this;
 	if(this.window){
@@ -44,6 +52,7 @@ GenericPlugin.prototype.draw = function (){
 			title: this.title,
 			resizable: false,
 			minimizable: true,
+			taskbar:Ext.getCmp(this.viewer.id+'uxTaskbar'),
 			constrain: true,
 			closable: true,
 			width: this.width,

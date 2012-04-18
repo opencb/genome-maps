@@ -7,9 +7,9 @@ var genotypePlugin = new GenericPlugin('Genotype', {title: 'Genotype',
 
 function auxGenotype(sender){
 //	genotypePlugin.closeWindow();
-	var species = genomeMaps.genomeViewer.species;
+	var species = genotypePlugin.getSpecies();
 	
-	var genotypeGenomicAttributesWidget =  new GenotypeGenomicAttributesWidget(species);
+	var genotypeGenomicAttributesWidget =  new GenotypeGenomicAttributesWidget(species,{viewer:genotypePlugin.viewer});
 	
 	if (genomeMaps.wum){
 		genomeMaps.headerWidget.onLogin.addEventListener(function (sender){
