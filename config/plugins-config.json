@@ -11,7 +11,7 @@ var GENOME_MAPS_AVAILABLE_PLUGINS = [
 //				                	   		   	  "available_species" : [{"name:":"hsa", "assembly":"hg19"}]
 //									 		 	  }]
 //				                     },
-				                     {"category" : "",
+				                     {"category" : "Analysis",
 				                      "plugins" : [{"name" : "Expression",
 				               	   		   	  	  	"email" : "imedina@cipf.es",
 				               	   		   	  	  	"version" : "1.0",
