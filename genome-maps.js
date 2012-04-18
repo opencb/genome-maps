@@ -77,6 +77,7 @@ function GenomeMaps(targetId,args){
 	$(window).smartresize(function(a){
 		_this.setSize($(window).width(),$(window).height());
 	});
+	
 };
 
 
@@ -830,6 +831,7 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 					text : plugins_cat[i].plugins[j].name,
 					pluginName : plugins_cat[i].plugins[j].name,
 					handler : function() {
+						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].setViewer(_this.genomeViewer);
 						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].draw();
 //						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].launch();
 					}
