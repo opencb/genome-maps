@@ -845,6 +845,7 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 				sources.push({text : plugins_cat[i].plugins[j].name,
 					pluginName : plugins_cat[i].plugins[j].name,
 					handler : function() {
+						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].setViewer(_this.genomeViewer);
 						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].draw();
 //						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].launch();
 					}

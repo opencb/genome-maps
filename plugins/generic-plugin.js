@@ -76,7 +76,7 @@ GenericPlugin.prototype.draw = function (){
 	if(this.launch!=null){
 		this.launch();
 	}else{
-		cpnsole.log("No launch method defined.");
+		console.log("No launch method defined.");
 	}
 };
 
