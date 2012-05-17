@@ -5,7 +5,7 @@
     <title>Genome Maps</title>
 
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/ext-libs/sencha/extjs-4.1.0-rc3/resources/css/ext-all.css">
+	<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/ext-libs/sencha/extjs-4.1.0/resources/css/ext-all.css">
  	<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/libs/resources/css/style.css">  
 	<!--	<link rel="stylesheet" type="text/css" href="../../wum/resources/css/style.css"> -->
 	<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/ext-libs/ChemDoodleWeb/install/ChemDoodleWeb.css">
@@ -26,8 +26,8 @@
 	<!-- EXT-LIBS -->
 
 	<!-- Ext-js -->
-	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/sencha/extjs-4.1.0-rc3/ext-all.js"></script>
-	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/sencha/extjs-4.1.0-rc3/examples/shared/examples.js"></script>
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/sencha/extjs-4.1.0/ext-all.js"></script>
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/sencha/extjs-4.1.0/examples/shared/examples.js"></script>
 	
 
 	<!-- jQuery -->
@@ -188,6 +188,10 @@
 	<script type="text/javascript" src="../js-commons-lib/utils/string-buffer.js"  ></script> 
 	<script type="text/javascript" src="../js-commons-lib/utils/graphics/svg.js"  ></script> 
 	
+		<!-- js-commons-lib dqs -->
+<!-- 	<script type="text/javascript" src="../js-commons-lib/dqs/dqs-rest-manager.js"  ></script> -->
+<!-- 	<script type="text/javascript" src="../js-commons-lib/dqs/dqs-manager.js"  ></script> -->
+<!-- 	<script type="text/javascript" src="../js-commons-lib/dqs/dqs-data-adapter.js"  ></script> -->
 	
 	<!-- genome-maps -->
 	<script type="text/javascript" src="./config/gm-config.json"  ></script>
@@ -210,22 +214,22 @@
 
 	
 	Ext.Loader.setConfig({enabled: true});
-	Ext.Loader.setPath('Ext.ux', 'http://jsapi.bioinfo.cipf.es/ext-libs/sencha/extjs-4.1.0-rc3/examples/ux');
+	Ext.Loader.setPath('Ext.ux', 'http://jsapi.bioinfo.cipf.es/ext-libs/sencha/extjs-4.1.0/examples/ux');
 	Ext.QuickTips.init();
 	Ext.require([
 	    'Ext.ux.grid.FiltersFeature',
+	    'Ext.grid.PagingScroller'
 	]);
 	
 	var counter = 1000000;
 	function test(ms,positions){
-		if (ms==null){ms = 500;}
+		if (ms==null){ms = 50;}
 		if (positions==null){positions = 250000;}
-		genomeMaps.genomeViewer.setLocation("1", counter);
+// 		genomeMaps.genomeViewer.setLocation("1", counter);
+		genomeMaps.genomeViewer.genomeWidget.trackCanvas.moveX(1)
 		setTimeout("test()", ms);
 		counter = counter + positions;
 	}
-	
-	
 	
 	Ext.onReady(run);
 	var genomeMaps;
@@ -233,25 +237,40 @@
 		
 // 		var pathname = window.location.href;
 // 		console.log(pathname);
-	// 	console.log(Ext.ComponentManager.getCount());
-		genomeMaps = new GenomeMaps("mydiv"); //the div must exist
-	// 	console.log(Ext.ComponentManager.getCount());
-		genomeMaps.draw();
+// 		genomeMaps = new GenomeMaps("mydiv"); //the div must exist
+		
+// 		genomeMaps.addPlugin();
+// 		console.log(Ext.ComponentManager.getCount());
+// 		genomeMaps.draw();
 	// 	console.log(Ext.ComponentManager.getCount());
 		
-	// 	gv = new GenomeViewer("mydiv");
-	// 	gv.draw();
+// 		gv = new GenomeViewer("mydiv");
+// 		gv.draw();
 	
 	
-	// var gv1 = new GenomeViewer("gv_div2");
 	// gv1.setSpecies("Mus musculus");
 	// var gv2 = new GenomeViewer("gv_div1");
 	// // vamos par alla!!!
-	// gv1.draw();
-	// gv2.draw();
+// 	gv2.draw();
 	
+	//GenomeViewer v2
+	gv1 = new GenomeViewer("gv_div2",AVAILABLE_SPECIES[0],{
+		toolbar: Ext.create('Ext.toolbar.Toolbar', {height:27}),
+		availableSpecies: AVAILABLE_SPECIES
+	});
+	gv1.draw();
+	
+	
+	
+		//RUN TEST
+		if($.url().param('test') == "true") {
+			setTimeout("test()", 2000);
+		}
 	
 	}
+	
+	
+	
 	</script>
 	
 <!-- 	<STYLE type="text/css"> -->

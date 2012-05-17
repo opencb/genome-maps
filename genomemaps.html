@@ -57,6 +57,8 @@
 	
 	<!-- LIBS -->
 	
+	<script type="text/javascript" src="../apps/wum/ui-widgets/check-browser.js"></script>
+	
 	<!-- wum ui-widgets -->
 	<script type="text/javascript" src="../apps/wum/ui-widgets/header-widget.js"></script>
 	<!-- 	<script type="text/javascript" src="../apps/wum/ui-widgets/app-viewer.js"></script> -->
@@ -188,6 +190,10 @@
 	<script type="text/javascript" src="../js-commons-lib/utils/string-buffer.js"  ></script> 
 	<script type="text/javascript" src="../js-commons-lib/utils/graphics/svg.js"  ></script> 
 	
+		<!-- js-commons-lib dqs -->
+<!-- 	<script type="text/javascript" src="../js-commons-lib/dqs/dqs-rest-manager.js"  ></script> -->
+<!-- 	<script type="text/javascript" src="../js-commons-lib/dqs/dqs-manager.js"  ></script> -->
+<!-- 	<script type="text/javascript" src="../js-commons-lib/dqs/dqs-data-adapter.js"  ></script> -->
 	
 	<!-- genome-maps -->
 	<script type="text/javascript" src="./config/gm-config.json"  ></script>
@@ -229,7 +235,7 @@
 	Ext.onReady(run);
 	var genomeMaps;
 	function run(){
-		
+		CheckBrowser();
 // 		var pathname = window.location.href;
 // 		console.log(pathname);
 		genomeMaps = new GenomeMaps("mydiv"); //the div must exist
@@ -268,6 +274,7 @@
 <!--  	</STYLE> -->
 </head>
 <body style="overflow: hidden">
+	<div id="checkBrowser"></div>
 	<div id="mydiv"></div>
 	<div id="gv_div1"></div>
 	<div id="gv_div2"></div>
