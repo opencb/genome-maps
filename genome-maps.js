@@ -5,7 +5,7 @@ function GenomeMaps(targetId,args){
 	this.title="Genome Maps";
 	this.description="RC";
 	this.wum=true;
-	this.version="1.1.0";
+	this.version="1.1.2";
 
 	this.args = args;
 	
@@ -135,7 +135,7 @@ GenomeMaps.prototype._setTracks= function(){
 					checked = tracks[i].enabled_tracks[j].checked;
 					
 					if(checked){
-						_this.genomeViewer.genomeWidgetProperties.tracks[id] = checked;
+//						_this.genomeViewer.genomeWidgetProperties.tracks[id] = checked;
 					}
 			}
 			break;
@@ -265,9 +265,10 @@ GenomeMaps.prototype.getMenuBar = function() {
 							scope : this,
 							'click' : function() {
 								var svg = new XMLSerializer().serializeToString(this.genomeViewer.genomeWidget.trackCanvas._svg);
-								var canvas = DOM.createNewElement("canvas", document.body, [["id", "ext-gen1097"]]);
+								var canvas = DOM.createNewElement("canvas", document.body, [["id", this.id+"png"],["visibility", this.id+"hidden"]]);
 								canvg(canvas, svg);
-								Canvas2Image.saveAsPNG(canvas); 
+								Canvas2Image.saveAsPNG(canvas);
+								$("#"+this.id+"png").remove();
 //								DOM.select("canvas").parent.removeChild(canvas);
 							}
 						}
@@ -279,9 +280,10 @@ GenomeMaps.prototype.getMenuBar = function() {
 								try{
 									_this.genomeViewer._getPanel().setLoading("Saving image");
 									var svg = new XMLSerializer().serializeToString(this.genomeViewer.genomeWidget.trackCanvas._svg);
-									var canvas = DOM.createNewElement("canvas", document.body, [["id", "ext-gen1097"]]);
+									var canvas = DOM.createNewElement("canvas", document.body, [["id", this.id+"jpg"],["visibility", this.id+"hidden"]]);
 									canvg(canvas, svg);
 									Canvas2Image.saveAsJPEG(canvas); 
+									$("#"+this.id+"jpg").remove();
 //									DOM.select("canvas").parent.removeChild(canvas);
 								}
 								catch(e){
