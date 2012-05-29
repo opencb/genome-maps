@@ -135,7 +135,7 @@ GenomeMaps.prototype._setTracks= function(){
 					checked = tracks[i].enabled_tracks[j].checked;
 					
 					if(checked){
-//						_this.genomeViewer.genomeWidgetProperties.tracks[id] = checked;
+						_this.genomeViewer.genomeWidgetProperties.tracks[id] = checked;
 					}
 			}
 			break;
