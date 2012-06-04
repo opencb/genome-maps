@@ -14,7 +14,7 @@ var AVAILABLE_SPECIES = [
                          {"name":"Plasmodium falciparum", "species":"pfa", "icon":"","chromosome":"01","position":"238905"},
                          {"name":"Saccharomyces cerevisiae", "species":"sce", "icon":"","chromosome":"I","position":"111532"}
                          ];
-
+//43788521   32889611
 var AVAILABLE_TRACKS = [
 			{"species":"hsa",
 			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
