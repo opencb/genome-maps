@@ -1,6 +1,7 @@
 var AVAILABLE_SPECIES = [
 //                         {"name":"Homo sapiens", "species":"hsa", "icon":"","chromosome":"1","position":"500"},
-                         {"name":"Homo sapiens", "species":"hsa", "icon":"","chromosome":"13","position":"32889611"},
+//                         {"name":"Homo sapiens", "species":"hsa", "icon":"","chromosome":"13","position":"32889611"},
+                         {"name":"Homo sapiens", "species":"hsa", "icon":"","chromosome":"20","position":"1234567"},
 //                         {"name":"Homo sapiens", "species":"hsa", "icon":"","chromosome":"5","position":"143353"},
 //						 {"name":"Homo sapiens", "species":"hsa", "icon":"","chromosome":"1","position":"127471214"},
                          {"name":"Mus musculus", "species":"mmu", "icon":"","chromosome":"1","position":"18422009"},
