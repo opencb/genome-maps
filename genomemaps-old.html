@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Genome Maps</title>
+
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/ext-libs/sencha/ext-4.0.7/resources/css/ext-all.css">
+ 	<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/libs/resources/css/style.css">  
+	<!--	<link rel="stylesheet" type="text/css" href="../../wum/resources/css/style.css"> -->
+	<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/ext-libs/ChemDoodleWeb/install/ChemDoodleWeb.css">
+  
+	<!-- Google Analytics -->
+	<script type="text/javascript">
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-16414504-2']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	</script>
+  
+	<!-- EXT-LIBS -->
+
+	<!-- Ext-js -->
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/sencha/ext-4.0.7/ext-all.js"></script>
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/sencha/ext-4.0.7/examples/shared/examples.js"></script>
+	
+
+	<!-- jQuery -->
+	<!-- 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery/1.6.4/jquery-1.6.4.min.js"></script>  -->
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery/1.7.1/jquery-1.7.1.min.js"></script>
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.sha1.js"></script>
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.url.js"></script>
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.cookie.js"></script>  
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jqXMLUtils.js"></script>
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.smartresize.js"></script>
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-mousewheel-3.0.6/jquery.mousewheel.min.js"></script>
+	
+	
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/xml2json.js"  ></script>
+	
+	<!-- Canvas to SVG converters -->
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/svg/base64.js"  ></script>
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/svg/canvas2image.js"  ></script>
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/svg/canvg.js"></script> 
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/svg/rgbcolor.js"></script> 
+	
+	
+	<!-- CHEMDOODLE -->
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/ChemDoodleWeb/install/ChemDoodleWeb-libs.js"></script> 
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/ChemDoodleWeb/install/ChemDoodleWeb.js"></script> 
+	
+	
+	<!-- LIBS -->
+	
+	<script type="text/javascript" src="../apps/wum/ui-widgets/check-browser.js"></script>
+	
+	<!-- wum ui-widgets -->
+	<script type="text/javascript" src="../apps/wum/ui-widgets/header-widget.js"></script>
+	<!-- 	<script type="text/javascript" src="../apps/wum/ui-widgets/app-viewer.js"></script> -->
+	<script type="text/javascript" src="../apps/wum/ui-widgets/user-list-widget.js"></script>
+	<script type="text/javascript" src="../apps/wum/ui-widgets/job-list-widget.js"></script>
+	<script type="text/javascript" src="../apps/wum/ui-widgets/data-list-widget.js"></script>
+	<script type="text/javascript" src="../apps/wum/ui-widgets/paged-view-list-widget.js"></script>
+	<script type="text/javascript" src="../apps/wum/ui-widgets/user-bar-widget.js"></script>
+	<script type="text/javascript" src="../apps/wum/ui-widgets/upload-widget.js"></script>
+	<script type="text/javascript" src="../apps/wum/ui-widgets/login-widget.js"></script>
+	<script type="text/javascript" src="../apps/wum/ui-widgets/edit-user-widget.js"></script>
+	<script type="text/javascript" src="../apps/wum/ui-widgets/result-widget.js"></script>
+	<script type="text/javascript" src="../apps/wum/ui-widgets/result-table.js"></script>
+	<script type="text/javascript" src="../apps/wum/ui-widgets/browser-data-widget.js"></script>
+	<script type="text/javascript" src="../apps/wum/ui-widgets/manage-projects-widget.js"></script>
+	
+	
+	<!-- wum ws-manager -->
+	<script type="text/javascript" src="../apps/wum/ws-manager/wum-adapter.js"></script>
+	<script type="text/javascript" src="../apps/wum/ws-manager/wum-rest-adapter.js"></script>
+	
+
+	<!-- js-commons-lib dataadapter -->
+	<script type="text/javascript" src="../js-commons-lib/data-adapter/data-adapter.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/data-adapter/das-region-data-adapter.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/data-adapter/rule-region-data-adapter.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/data-adapter/local-region-data-adapter.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/data-adapter/bed-local-region-data-adapter.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/data-adapter/gff-local-region-data-adapter.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/data-adapter/vcf-local-region-data-adapter.js"  ></script>
+	
+    <script type="text/javascript" src="../js-commons-lib/data-adapter/file/file-data-adapter.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/data-adapter/file/tabular-file-data-adapter.js"  ></script>
+    <script type="text/javascript" src="../js-commons-lib/data-adapter/file/bed-file-data-adapter.js"  ></script>
+ 	<script type="text/javascript" src="../js-commons-lib/data-adapter/file/gff-file-data-adapter.js"  ></script>
+    <script type="text/javascript" src="../js-commons-lib/data-adapter/file/vcf-file-data-adapter.js"  ></script>
+
+
+	<!-- js-commons-lib dataset -->
+	<script type="text/javascript" src="../js-commons-lib/dataset/dataset.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/dataset/feature-dataset.js"  ></script>
+
+	
+	<!-- js-commons-lib genome-viewer tracks -->
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/tracks/track.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/tracks/feature-track.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/tracks/snp-feature-track.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/tracks/vcf-feature-track.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/tracks/gene-feature-track.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/tracks/track-canvas.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/tracks/sequence-feature-track.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/tracks/rule-feature-track.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/tracks/multi-feature-track.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/tracks/cytoband-feature-track.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/tracks/region-feature-track.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/tracks/histogram-feature-track.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/tracks/vcf-feature-track.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/tracks/chromosome-feature-track.js"  ></script>
+	
+	<!-- js-commons-lib genome-viewer formatters -->
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/formatters/feature-formatter.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/formatters/genome-map-feature-formatter.js"  ></script>
+	
+	<!-- js-commons-lib genome-viewer manager -->
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/manager/gene-block-manager.js"  ></script>
+
+	<!-- js-commons-lib genome-viewer ui-widgets -->
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/ui-widgets/genome-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/ui-widgets/genome-widget-properties.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/ui-widgets/master-slave-genome-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/ui-widgets/tooltip-panel.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/ui-widgets/legend-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/ui-widgets/legend-panel.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/ui-widgets/karyotype-panel.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/ui-widgets/karyotype-panel-window.js"  ></script>
+
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/ui-widgets/file/file-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/ui-widgets/file/vcf-file-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/ui-widgets/file/gff-file-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/ui-widgets/file/bed-file-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/ui-widgets/url/url-widget.js"  ></script>
+	
+	<!-- js-commons-lib genome-viewer -->
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/genome-viewer.js"  ></script>
+	
+	
+	<!-- js-commons-lib cellbase dataadapter -->
+	<script type="text/javascript" src="../js-commons-lib/cellbase/data-adapter/cellbase-data-adapter.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/cellbase/data-adapter/region-cellbase-data-adapter.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/cellbase/data-adapter/gene-region-cellbase-data-adapter.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/cellbase/data-adapter/karyotype-cellbase-data-adapter.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/cellbase/data-adapter/xref-feature-list-cellbase-data-adapter.js"  ></script>
+	
+	<!-- js-commons-lib cellbase ui-widgets -->
+	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/info-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/gene-info-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/protein-info-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/snp-info-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/transcript-info-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/vcf-variant-info-widget.js"  ></script>
+	
+	<!-- js-commons-lib cellbase ws-manager -->
+	<script type="text/javascript" src="../js-commons-lib/cellbase/cellbase-manager.js"  ></script>
+	
+
+	<!-- js-commons-lib ui-widgets -->
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/ux-window.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/attributes/genomic-attributes-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/attributes/expression-genomic-attributes-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/attributes/genotype-genomic-attributes-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/attributes/attributes-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/attributes/attributes-panel.js"></script>
+	
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/list/list-panel.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/list/list-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/list/genomic-list-panel.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/list/genomic-list-widget.js"  ></script>
+
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/input-list-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/chart-widget.js"  ></script>
+	
+	<!-- 	<script type="text/javascript" src="../js-commons-lib/ui-widgets/text-window-widget.js"  ></script> -->
+
+	<!-- js-commons-lib utils -->
+	<script type="text/javascript" src="../js-commons-lib/utils/event.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/utils/dom.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/utils/colors.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/utils/normalization.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/utils/string-buffer.js"  ></script> 
+	<script type="text/javascript" src="../js-commons-lib/utils/graphics/svg.js"  ></script> 
+	
+		<!-- js-commons-lib dqs -->
+<!-- 	<script type="text/javascript" src="../js-commons-lib/dqs/dqs-rest-manager.js"  ></script> -->
+<!-- 	<script type="text/javascript" src="../js-commons-lib/dqs/dqs-manager.js"  ></script> -->
+<!-- 	<script type="text/javascript" src="../js-commons-lib/dqs/dqs-data-adapter.js"  ></script> -->
+	
+	<!-- genome-maps -->
+	<script type="text/javascript" src="./config/gm-config.json"  ></script>
+	<script type="text/javascript" src="./config/plugins-config.json"  ></script>
+	<script type="text/javascript" src="./genome-maps.js"  ></script>
+	
+	<!-- genome-maps plugins -->	
+	<script type="text/javascript" src="./plugins/generic-plugin.js"  ></script>
+	<script type="text/javascript" src="./plugins/my-plugin.js"  ></script>
+	<script type="text/javascript" src="./plugins/expression.js"  ></script>
+	<script type="text/javascript" src="./plugins/genotype.js"  ></script>
+	
+
+	<script>
+	// 	Ext.application({
+	// 	    launch: run
+	// 	});
+	
+	
+
+	
+	Ext.Loader.setConfig({enabled: true});
+	Ext.Loader.setPath('Ext.ux', 'http://jsapi.bioinfo.cipf.es/ext-libs/sencha/ext-4.0.7/examples/ux');
+	Ext.QuickTips.init();
+	Ext.require([
+	    'Ext.ux.grid.FiltersFeature',
+	]);
+	
+	var counter = 1000000;
+	function test(ms,positions){
+		if (ms==null){ms = 50;}
+		if (positions==null){positions = 250000;}
+// 		genomeMaps.genomeViewer.setLocation("1", counter);
+		genomeMaps.genomeViewer.genomeWidget.trackCanvas.moveX(1)
+		setTimeout("test()", ms);
+		counter = counter + positions;
+	}
+	
+	Ext.onReady(run);
+	var genomeMaps;
+	function run(){
+		CheckBrowser();
+// 		var pathname = window.location.href;
+// 		console.log(pathname);
+		genomeMaps = new GenomeMaps("mydiv"); //the div must exist
+		
+// 		genomeMaps.addPlugin();
+// 		console.log(Ext.ComponentManager.getCount());
+		genomeMaps.draw();
+	// 	console.log(Ext.ComponentManager.getCount());
+		
+	// 	gv = new GenomeViewer("mydiv");
+	// 	gv.draw();
+	
+	
+	// var gv1 = new GenomeViewer("gv_div2");
+	// gv1.setSpecies("Mus musculus");
+	// var gv2 = new GenomeViewer("gv_div1");
+	// // vamos par alla!!!
+	// gv1.draw();
+	// gv2.draw();
+	
+		//RUN TEST
+		if($.url().param('test') == "true") {
+			setTimeout("test()", 2000);
+		}
+	
+	}
+	
+	
+	
+	</script>
+	
+<!-- 	<STYLE type="text/css"> -->
+<!-- 		body{background:gray} -->
+<!-- 		.wrap{padding:100px} -->
+<!--  		.container {border: 1px solid #bbb; width:802px;}  -->
+<!--  	</STYLE> -->
+</head>
+<body style="overflow: hidden">
+	<div id="checkBrowser"></div>
+	<div id="mydiv"></div>
+	<div id="gv_div1"></div>
+	<div id="gv_div2"></div>
+</body>
+</html>
