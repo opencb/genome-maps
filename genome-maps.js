@@ -53,7 +53,14 @@ function GenomeMaps(targetId,args){
 		suiteId : this.suiteId
 	});
 	
-	this.genomeViewer = new GenomeViewer(this.id+"gvDiv", AVAILABLE_SPECIES[0],{
+
+	if($.cookie("gm_settings")){
+		var species = JSON.parse($.cookie("gm_settings")).species;
+	}else{
+		var species = AVAILABLE_SPECIES[0];
+	}
+	
+	this.genomeViewer = new GenomeViewer(this.id+"gvDiv", species,{
 		position:position,
 		chromosome:chromosome,
 		toolbar:this.getMenuBar(),
@@ -87,6 +94,19 @@ function GenomeMaps(targetId,args){
 		_this.setSize($(window).width(),$(window).height());
 	});
 	
+	//SAVE CONFIG IN COOKIE
+	$(window).unload(function(){
+		var value = {
+				species:{
+					name:_this.genomeViewer.speciesName,
+					species:_this.genomeViewer.species,
+					chromosome:_this.genomeViewer.chromosome,
+					position:_this.genomeViewer.position}
+		};
+		
+		$.cookie("gm_settings", JSON.stringify(value), {expires: 365});
+//		console.log(_this.genomeViewer.trackSvgLayout.trackSvgList);
+	});
 };
 
 
@@ -987,9 +1007,9 @@ GenomeMaps.prototype.getDASMenu = function() {
 		handler : function() {
 			var urlWidget = new UrlWidget({title:'Add a DAS track'});
 			urlWidget.onAdd.addEventListener(function(event, data) {
-				_this.genomeViewer.loadDASTrack(data.name, data.url);
+//				_this.genomeViewer.loadDASTrack(data.name, data.url);
 				_this.setCustomDASMenu(data.name);
-				_this.genomeViewer.refreshMasterGenomeViewer();
+//				_this.genomeViewer.refreshMasterGenomeViewer();
 			});
 			urlWidget.draw();
 		},
