@@ -77,6 +77,10 @@ function GenomeMaps(targetId,args){
 //	this.genomeViewer.onSpeciesChange.addEventListener(function(sender,data){
 //		_this.draw();
 //	});
+	//Events i listen
+	this.genomeViewer.onLocationChange.addEventListener(function(sender,data){
+		_this.headerWidget.setDescription(_this.genomeViewer.speciesName);
+	});
 	
 	//RESIZE EVENT
 	$(window).smartresize(function(a){
@@ -159,6 +163,7 @@ GenomeMaps.prototype._setTracks= function(){
 		histogramRender:null,
 		featuresRender:"MultiFeatureRender",
 		histogramZoom:20,
+		transcriptZoom:80,
 		height:150,
 		visibleRange:{start:0,end:100},
 		titleVisibility:'hidden',
@@ -219,6 +224,7 @@ GenomeMaps.prototype._setTracks= function(){
 		histogramRender:null,
 		featuresRender:"MultiFeatureRender",
 		histogramZoom:20,
+		transcriptZoom:80,
 		height:24,
 		visibleRange:{start:0,end:100},
 		settings:{
