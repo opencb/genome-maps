@@ -5,7 +5,7 @@ function GenomeMaps(targetId,args){
 	this.title="Genome Maps";
 	this.description="RC";
 	this.wum=true;
-	this.version="1.1.2";
+	this.version="2.0.0";
 
 	this.args = args;
 	
@@ -42,20 +42,25 @@ function GenomeMaps(targetId,args){
 		var chromosome = location.split(":")[0];
 	}
 	
-	this.genomeViewer = new GenomeViewer(null, AVAILABLE_SPECIES[0],{
-		position:position,
-		chromosome:chromosome,
-		menuBar:this.getMenuBar(),
-		version:this.version
-	});
 //	console.log(Ext.ComponentManager.each(function(a){console.log(a);}));
 //	console.log(Ext.ComponentManager.getCount());
 	
 //	if (this.wum==true){
 	this.headerWidget = new HeaderWidget({
-		appname: this.title/*+" "+this.version*/,
+		appname: this.title,
 		description: this.description,
+		version:this.version,
 		suiteId : this.suiteId
+	});
+	
+	this.genomeViewer = new GenomeViewer(this.id+"gvDiv", AVAILABLE_SPECIES[0],{
+		position:position,
+		chromosome:chromosome,
+		toolbar:this.getMenuBar(),
+		version:this.version,
+		availableSpecies: AVAILABLE_SPECIES,
+		height:this.height-this.headerWidget.height,
+		width:this.width
 	});
 	
 	/**Atach events i listen**/
@@ -69,9 +74,9 @@ function GenomeMaps(targetId,args){
 //	}
 	
 	//SPECIE EVENT
-	this.genomeViewer.onSpeciesChange.addEventListener(function(sender,data){
-		_this.draw();
-	});
+//	this.genomeViewer.onSpeciesChange.addEventListener(function(sender,data){
+//		_this.draw();
+//	});
 	
 	//RESIZE EVENT
 	$(window).smartresize(function(a){
@@ -83,7 +88,13 @@ function GenomeMaps(targetId,args){
 
 
 GenomeMaps.prototype.draw = function(){
+	var _this = this;
 	if(this._panel==null){
+		
+		var gvContainer = Ext.create('Ext.container.Container', {
+			id:this.id+"gvContainer",
+			html : '<div id="'+this.id+'gvDiv"></div>'
+		});
 		
 		this._panel = Ext.create('Ext.panel.Panel', {
 			id:this.id+"_panel",
@@ -93,14 +104,21 @@ GenomeMaps.prototype.draw = function(){
 			border:false,
 			width:this.width,
 			height:this.height,
-			items:[this.headerWidget.getPanel(),this.genomeViewer._getPanel(this.width, this.height-this.headerWidget.height)]
+			items:[this.headerWidget.getPanel(),gvContainer]
 		});
 	}
 	
 	this.headerWidget.setDescription(this.genomeViewer.speciesName);
+	$("#"+this.headerWidget.id+"appTextItem").qtip({
+		content: '<span class="info">'+this.version+'</span>',
+		position: {adjust: { y: -23, x:10 }}
+		
+	});
 	
-	this.genomeViewer.setSpeciesMenu(AVAILABLE_SPECIES);
-	this._setTracks();
+	
+	this.genomeViewer.afterRender.addEventListener(function(sender,event){
+		_this._setTracks();
+	});
 	this.setTracksMenu();
 //	this.setDASMenu();
 	this.setPluginsMenu();
@@ -121,47 +139,249 @@ GenomeMaps.prototype.setSize = function(width,height){
 };
 
 
-GenomeMaps.prototype._setTracks= function(){	
-	var _this = this;
-	var species = this.genomeViewer.species;
-	var tracks = AVAILABLE_TRACKS;
+GenomeMaps.prototype._setTracks= function(){
 	
-	//Load initial AVAILABLE_TRACKS config
-	for (var i = 0; i < tracks.length; i++) {
-		if(tracks[i].species == species){
-			var id, checked;
-			for ( var j = 0; j < tracks[i].enabled_tracks.length; j++){
-					id = tracks[i].enabled_tracks[j].id;
-					checked = tracks[i].enabled_tracks[j].checked;
-					
-					if(checked){
-						_this.genomeViewer.genomeWidgetProperties.tracks[id] = checked;
-					}
+	var geneTrack = new TrackData("gene",{
+		adapter: new CellBaseAdapter({
+			category: "genomic",
+			subCategory: "region",
+			resource: "gene",
+			species: this.genomeViewer.species,
+			featureCache:{
+				gzip: true,
+				chunkSize:50000
 			}
-			break;
+		})
+	});
+	this.genomeViewer.trackSvgLayout2.addTrack(geneTrack,{
+		id:"gene",
+		type:"gene",
+		histogramRender:null,
+		featuresRender:"MultiFeatureRender",
+		histogramZoom:20,
+		height:150,
+		visibleRange:{start:0,end:100},
+		titleVisibility:'hidden',
+		settings:{
+			label: "externalName",
+			infoWidgetId: "externalName",
+			height:4,
+			histogramColor:"lightblue",
+			colorField: "biotype",
+			color: this.genomeViewer.geneBioTypeColors
 		}
-	}
+	});
+	//FIN REGION TRACKS
 	
-	//Load initial DAS_TRACKS config
-	var das_tracks = DAS_TRACKS;
-	for (var i = 0; i < das_tracks.length; i++) {
-		if(das_tracks[i].species == species){
-			for ( var j = 0; j < das_tracks[i].categories.length; j++){
-				var sourceName, sourceUrl, checked;
-				for ( var k = 0; k < das_tracks[i].categories[j].sources.length; k++){
-					sourceName = das_tracks[i].categories[j].sources[k].name;
-					sourceUrl = das_tracks[i].categories[j].sources[k].url;
-					checked = das_tracks[i].categories[j].sources[k].checked;
-					
-					if(checked){
-						_this.genomeViewer.loadDASTrack(sourceName, sourceUrl);
-						_this.genomeViewer.genomeWidgetProperties.tracks[sourceName] = checked;
-					}
-				}
+	
+	
+	var seqtrack = new TrackData("sequence",{
+		adapter: new CellBaseAdapter({
+			category: "genomic",
+			subCategory: "region",
+			resource: "sequence",
+			species: this.genomeViewer.species,
+			featureCache:{
+				gzip: true,
+				chunkSize:1000
 			}
-			break;
+		})
+	});
+	this.genomeViewer.trackSvgLayout.addTrack(seqtrack,{
+		id:"sequence",
+		type:"sequence",
+		featuresRender:"SequenceRender",
+//		histogramZoom:"",
+		height:50,
+		visibleRange:{start:100,end:100},
+		settings:{
+			color: {A:"#009900", C:"#0000FF", G:"#857A00", T:"#aa0000", N:"#555555"},
+			closable: false
 		}
-	}
+	});
+	
+	
+	var geneTrack = new TrackData("gene",{
+		adapter: new CellBaseAdapter({
+			category: "genomic",
+			subCategory: "region",
+			resource: "gene",
+			species: this.genomeViewer.species,
+			featureCache:{
+				gzip: true,
+				chunkSize:50000
+			}
+		})
+	});
+	this.genomeViewer.trackSvgLayout.addTrack(geneTrack,{
+		id:"gene",
+		type:"gene",
+		histogramRender:null,
+		featuresRender:"MultiFeatureRender",
+		histogramZoom:20,
+		height:24,
+		visibleRange:{start:0,end:100},
+		settings:{
+			label: "externalName",
+			infoWidgetId: "externalName",
+			colorField: "biotype",
+			height:4,
+			histogramColor:"lightblue",
+			color: this.genomeViewer.geneBioTypeColors
+		}
+	});
+	
+	
+	var snpTrack = new TrackData("snp",{
+		adapter: new CellBaseAdapter({
+			category: "genomic",
+			subCategory: "region",
+			resource: "snp",
+			species: this.genomeViewer.species,
+			featureCache:{
+				gzip: true,
+				chunkSize:10000
+			}
+		})
+	});
+	this.genomeViewer.trackSvgLayout.addTrack(snpTrack,{
+		id:"snp",
+		type:"snp",
+		histogramRender:null,
+		featuresRender:"MultiFeatureRender",
+		histogramZoom:80,
+		height:150,
+		visibleRange:{start:0,end:100},
+		settings:{
+			label: "name",
+			infoWidgetId: "name",
+			colorField: "displaySoConsequence",
+			height:10,
+			histogramColor:"orange",
+			color: this.genomeViewer.snpBioTypeColors
+		}
+	});
+	
+	
+//	var vcfTrack = new TrackData("vcf",{
+//		adapter: new VCFDataAdapter(new UrlDataSource("http://rsanchez/example.vcf"),{
+//			async: false,
+//			gzip: false
+//		})
+//	});
+//	_this.trackSvgLayout.addTrack(vcfTrack,{
+//		id:"vcf",
+//		type:"vcf",
+//		histogramRender:null,
+//		featuresRender:"MultiFeatureRender",
+//		histogramZoom:"",
+//		height:50,
+//		visibleRange:{start:0,end:100}
+//	});
+	
+	
+//	var vcfTrack = new TrackData("vcf",{
+//		adapter: new VCFDataAdapter(new UrlDataSource("http://rsanchez/example.vcf"),{
+//			async: false,
+//			gzip: true
+//		})
+//	});
+//	_this.trackSvgLayout.addTrack(vcfTrack,{
+//		id:"vcf",
+//		type:"vcf",
+//		histogramRender:null,
+//		featuresRender:"MultiFeatureRender",
+//		histogramZoom:"",
+//		height:50,
+//		visibleRange:{start:0,end:100}
+//	});
+	
+//	var track3 = new TrackData("gff",{
+//		adapter: new GFFDataAdapter(new UrlDataSource("http://rsanchez/example.gff"),{
+//			async: false,
+//			gzip: true
+//		})
+//	});
+//	_this.trackSvgLayout.addTrack(track3,{id:"gff",type:"gff"});
+
+//		var track4 = new TrackData("bed",{
+//			adapter: new BEDDataAdapter(new UrlDataSource("http://bioinfo.cipf.es/apps-beta/examples/example.bed"),{
+//				async: false,
+//				gzip: false
+//			})
+//		});
+//		_this.trackSvgLayout.addTrack(track4,{id:"bed",type:"bed"});
+	
+//		// load vcf file from file widget
+//		var vcf = new TestVCFFileWidget({viewer:this});
+//		vcf.onComplete.addEventListener(function(sender, data){
+//			vcf.onOk.addEventListener(function(sender){
+//				_this.trackSvgLayout.addTrack(data,{id:"vcf",type:"vcf",render:""/*GeneRender*/});
+//			});
+//		});
+//		vcf.draw();
+	
+//		this.trackSvgLayout.addTrack(track3,{id:"vcf",type:"snp",render:""/*GeneRender*/});
+	
+	
+	//track3.adapter.onLoad.addEventListener(function(sender){
+		//_this.trackSvgLayout.addTrack(track3,{id:"vcf",type:"snp",render:""/*GeneRender*/});
+	//});
+	
+	
+	// _this.trackSvgLayout.addTrack({id:"gene",resource:"gene"});
+	//_this.trackSvgLayout.addTrack({id:"snp",resource:"snp"});
+	
+	//setTimeout(function() {
+		//_this.trackSvgLayout.addTrack({id:"track4"});
+	//},5000);
+	
+	
+	
+	
+	
+	//CODIGO ANTIGUO...
+	
+//	var _this = this;
+//	var species = this.genomeViewer.species;
+//	var tracks = AVAILABLE_TRACKS;
+//	
+//	//Load initial AVAILABLE_TRACKS config
+//	for (var i = 0; i < tracks.length; i++) {
+//		if(tracks[i].species == species){
+//			var id, checked;
+//			for ( var j = 0; j < tracks[i].enabled_tracks.length; j++){
+//					id = tracks[i].enabled_tracks[j].id;
+//					checked = tracks[i].enabled_tracks[j].checked;
+//					
+//					if(checked){
+//						_this.genomeViewer.genomeWidgetProperties.tracks[id] = checked;
+//					}
+//			}
+//			break;
+//		}
+//	}
+//	
+//	//Load initial DAS_TRACKS config
+//	var das_tracks = DAS_TRACKS;
+//	for (var i = 0; i < das_tracks.length; i++) {
+//		if(das_tracks[i].species == species){
+//			for ( var j = 0; j < das_tracks[i].categories.length; j++){
+//				var sourceName, sourceUrl, checked;
+//				for ( var k = 0; k < das_tracks[i].categories[j].sources.length; k++){
+//					sourceName = das_tracks[i].categories[j].sources[k].name;
+//					sourceUrl = das_tracks[i].categories[j].sources[k].url;
+//					checked = das_tracks[i].categories[j].sources[k].checked;
+//					
+//					if(checked){
+//						_this.genomeViewer.loadDASTrack(sourceName, sourceUrl);
+//						_this.genomeViewer.genomeWidgetProperties.tracks[sourceName] = checked;
+//					}
+//				}
+//			}
+//			break;
+//		}
+//	}
 
 };
 
