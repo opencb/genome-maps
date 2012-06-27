@@ -287,6 +287,29 @@ GenomeMaps.prototype._setTracks= function(){
 		}
 	});
 	
+	var dasTrack = new TrackData("das",{
+		adapter: new DasAdapter({
+			url: "http://www.ensembl.org/das/Homo_sapiens.GRCh37.gene/features",
+			species: this.genomeViewer.species,
+			featureCache:{
+				gzip: false,
+				chunkSize:10000
+			}
+		})
+	});
+	this.genomeViewer.trackSvgLayout.addTrack(dasTrack,{
+		id:"das",
+		type:"das",
+		histogramRender:null,
+		featuresRender:"MultiFeatureRender",
+		histogramZoom:80,
+		height:150,
+		visibleRange:{start:0,end:100},
+		settings:{
+			height:10
+		}
+	});
+	
 	
 //	var vcfTrack = new TrackData("vcf",{
 //		adapter: new VCFDataAdapter(new UrlDataSource("http://rsanchez/example.vcf"),{
