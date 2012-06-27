@@ -54,13 +54,13 @@ function GenomeMaps(targetId,args){
 	});
 	
 
-	if($.cookie("gm_settings")){
-		var species = JSON.parse($.cookie("gm_settings")).species;
-	}else{
-		var species = AVAILABLE_SPECIES[0];
-	}
+//	if($.cookie("gm_settings")){
+//		var species = JSON.parse($.cookie("gm_settings")).species;
+//	}else{
+//		var species = AVAILABLE_SPECIES[0];
+//	}
 	
-	this.genomeViewer = new GenomeViewer(this.id+"gvDiv", species,{
+	this.genomeViewer = new GenomeViewer(this.id+"gvDiv", AVAILABLE_SPECIES[0],{
 		position:position,
 		chromosome:chromosome,
 		toolbar:this.getMenuBar(),
@@ -183,7 +183,6 @@ GenomeMaps.prototype._setTracks= function(){
 		histogramRender:null,
 		featuresRender:"MultiFeatureRender",
 		histogramZoom:20,
-		transcriptZoom:80,
 		height:150,
 		visibleRange:{start:0,end:100},
 		titleVisibility:'hidden',
@@ -193,7 +192,7 @@ GenomeMaps.prototype._setTracks= function(){
 			height:4,
 			histogramColor:"lightblue",
 			colorField: "biotype",
-			color: this.genomeViewer.geneBioTypeColors
+			color: GENE_BIOTYPE_COLORS
 		}
 	});
 	//FIN REGION TRACKS
@@ -249,11 +248,11 @@ GenomeMaps.prototype._setTracks= function(){
 		visibleRange:{start:0,end:100},
 		settings:{
 			label: "externalName",
-			infoWidgetId: "externalName",
+			infoWidgetId: "stableId",
 			colorField: "biotype",
 			height:4,
 			histogramColor:"lightblue",
-			color: this.genomeViewer.geneBioTypeColors
+			color: GENE_BIOTYPE_COLORS
 		}
 	});
 	
@@ -284,7 +283,7 @@ GenomeMaps.prototype._setTracks= function(){
 			colorField: "displaySoConsequence",
 			height:10,
 			histogramColor:"orange",
-			color: this.genomeViewer.snpBioTypeColors
+			color: SNP_BIOTYPE_COLORS
 		}
 	});
 	
