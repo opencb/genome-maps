@@ -165,36 +165,29 @@ GenomeMaps.prototype.setSize = function(width,height){
 
 GenomeMaps.prototype._setTracks= function(){
 	
-	var geneTrack = new TrackData("gene",{
-		adapter: new CellBaseAdapter({
-			category: "genomic",
-			subCategory: "region",
-			resource: "gene",
-			species: this.genomeViewer.species,
-			featureCache:{
-				gzip: true,
-				chunkSize:50000
-			}
-		})
-	});
-	this.genomeViewer.trackSvgLayout2.addTrack(geneTrack,{
-		id:"gene",
-		type:"gene",
-		histogramRender:null,
-		featuresRender:"MultiFeatureRender",
-		histogramZoom:20,
-		height:150,
-		visibleRange:{start:0,end:100},
-		titleVisibility:'hidden',
-		settings:{
-			label: "externalName",
-			infoWidgetId: "externalName",
-			height:4,
-			histogramColor:"lightblue",
-			colorField: "biotype",
-			color: GENE_BIOTYPE_COLORS
-		}
-	});
+//	var geneTrack = new TrackData("gene",{
+//		adapter: new CellBaseAdapter({
+//			category: "genomic",
+//			subCategory: "region",
+//			resource: "gene",
+//			species: this.genomeViewer.species,
+//			featureCache:{
+//				gzip: true,
+//				chunkSize:50000
+//			}
+//		})
+//	});
+//	this.genomeViewer.trackSvgLayout2.addTrack(geneTrack,{
+//		id:"gene",
+//		type:"gene",
+//		histogramRender:null,
+//		featuresRender:"MultiFeatureRender",
+//		histogramZoom:20,
+//		height:150,
+//		visibleRange:{start:0,end:100},
+//		titleVisibility:'hidden',
+//		types:FEATURE_TYPES
+//	});
 	//FIN REGION TRACKS
 	
 	
@@ -223,8 +216,8 @@ GenomeMaps.prototype._setTracks= function(){
 //			closable: false
 //		}
 //	});
-//	
-//	
+
+	
 	var geneTrack = new TrackData("gene",{
 		adapter: new CellBaseAdapter({
 			category: "genomic",
@@ -243,20 +236,13 @@ GenomeMaps.prototype._setTracks= function(){
 		histogramRender:null,
 		featuresRender:"MultiFeatureRender",
 		histogramZoom:20,
-		transcriptZoom:80,
+		transcriptZoom:50,
 		height:24,
 		visibleRange:{start:0,end:100},
-		settings:{
-			label: "externalName",
-			infoWidgetId: "stableId",
-			colorField: "biotype",
-			height:4,
-			histogramColor:"lightblue",
-			color: GENE_BIOTYPE_COLORS
-		}
+		types:FEATURE_TYPES
 	});
-//	
-//	
+
+	
 //	var snpTrack = new TrackData("snp",{
 //		adapter: new CellBaseAdapter({
 //			category: "genomic",
@@ -286,8 +272,7 @@ GenomeMaps.prototype._setTracks= function(){
 //			color: SNP_BIOTYPE_COLORS
 //		}
 //	});
-//	
-//	
+
 //	var vcfTrack = new TrackData("vcf",{
 //		adapter: new VCFDataAdapter(new UrlDataSource("http://rsanchez/example.vcf"),{
 //			async: false,
