@@ -396,7 +396,7 @@ GenomeMaps.prototype._setTracks= function(){
 
 
 GenomeMaps.prototype.addTrack = function(trackId) {
-	console.log(trackId)
+	console.log(trackId);
 	switch (trackId) {
 	case "Gene/Transcript":
 		var geneTrack = new TrackData("gene",{
