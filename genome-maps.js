@@ -165,64 +165,57 @@ GenomeMaps.prototype.setSize = function(width,height){
 
 GenomeMaps.prototype._setTracks= function(){
 	
-	var geneTrack = new TrackData("gene",{
-		adapter: new CellBaseAdapter({
-			category: "genomic",
-			subCategory: "region",
-			resource: "gene",
-			species: this.genomeViewer.species,
-			featureCache:{
-				gzip: true,
-				chunkSize:50000
-			}
-		})
-	});
-	this.genomeViewer.trackSvgLayout2.addTrack(geneTrack,{
-		id:"gene",
-		type:"gene",
-		histogramRender:null,
-		featuresRender:"MultiFeatureRender",
-		histogramZoom:20,
-		height:150,
-		visibleRange:{start:0,end:100},
-		titleVisibility:'hidden',
-		settings:{
-			label: "externalName",
-			infoWidgetId: "externalName",
-			height:4,
-			histogramColor:"lightblue",
-			colorField: "biotype",
-			color: GENE_BIOTYPE_COLORS
-		}
-	});
+//	var geneTrack = new TrackData("gene",{
+//		adapter: new CellBaseAdapter({
+//			category: "genomic",
+//			subCategory: "region",
+//			resource: "gene",
+//			species: this.genomeViewer.species,
+//			featureCache:{
+//				gzip: true,
+//				chunkSize:50000
+//			}
+//		})
+//	});
+//	this.genomeViewer.trackSvgLayout2.addTrack(geneTrack,{
+//		id:"gene",
+//		type:"gene",
+//		histogramRender:null,
+//		featuresRender:"MultiFeatureRender",
+//		histogramZoom:20,
+//		height:150,
+//		visibleRange:{start:0,end:100},
+//		titleVisibility:'hidden',
+//		types:FEATURE_TYPES
+//	});
 	//FIN REGION TRACKS
 	
 	
 	
-	var seqtrack = new TrackData("sequence",{
-		adapter: new CellBaseAdapter({
-			category: "genomic",
-			subCategory: "region",
-			resource: "sequence",
-			species: this.genomeViewer.species,
-			featureCache:{
-				gzip: true,
-				chunkSize:1000
-			}
-		})
-	});
-	this.genomeViewer.trackSvgLayout.addTrack(seqtrack,{
-		id:"sequence",
-		type:"sequence",
-		featuresRender:"SequenceRender",
-//		histogramZoom:"",
-		height:50,
-		visibleRange:{start:100,end:100},
-		settings:{
-			color: {A:"#009900", C:"#0000FF", G:"#857A00", T:"#aa0000", N:"#555555"},
-			closable: false
-		}
-	});
+//	var seqtrack = new TrackData("sequence",{
+//		adapter: new CellBaseAdapter({
+//			category: "genomic",
+//			subCategory: "region",
+//			resource: "sequence",
+//			species: this.genomeViewer.species,
+//			featureCache:{
+//				gzip: true,
+//				chunkSize:1000
+//			}
+//		})
+//	});
+//	this.genomeViewer.trackSvgLayout.addTrack(seqtrack,{
+//		id:"sequence",
+//		type:"sequence",
+//		featuresRender:"SequenceRender",
+////		histogramZoom:"",
+//		height:50,
+//		visibleRange:{start:100,end:100},
+//		settings:{
+//			color: {A:"#009900", C:"#0000FF", G:"#857A00", T:"#aa0000", N:"#555555"},
+//			closable: false
+//		}
+//	});
 	
 	
 	var geneTrack = new TrackData("gene",{
@@ -243,72 +236,65 @@ GenomeMaps.prototype._setTracks= function(){
 		histogramRender:null,
 		featuresRender:"MultiFeatureRender",
 		histogramZoom:20,
-		transcriptZoom:80,
+		transcriptZoom:50,
 		height:24,
 		visibleRange:{start:0,end:100},
-		settings:{
-			label: "externalName",
-			infoWidgetId: "stableId",
-			colorField: "biotype",
-			height:4,
-			histogramColor:"lightblue",
-			color: GENE_BIOTYPE_COLORS
-		}
+		types:FEATURE_TYPES
 	});
 	
 	
-	var snpTrack = new TrackData("snp",{
-		adapter: new CellBaseAdapter({
-			category: "genomic",
-			subCategory: "region",
-			resource: "snp",
-			species: this.genomeViewer.species,
-			featureCache:{
-				gzip: true,
-				chunkSize:10000
-			}
-		})
-	});
-	this.genomeViewer.trackSvgLayout.addTrack(snpTrack,{
-		id:"snp",
-		type:"snp",
-		histogramRender:null,
-		featuresRender:"MultiFeatureRender",
-		histogramZoom:80,
-		height:150,
-		visibleRange:{start:0,end:100},
-		settings:{
-			label: "name",
-			infoWidgetId: "name",
-			colorField: "displaySoConsequence",
-			height:10,
-			histogramColor:"orange",
-			color: SNP_BIOTYPE_COLORS
-		}
-	});
+//	var snpTrack = new TrackData("snp",{
+//		adapter: new CellBaseAdapter({
+//			category: "genomic",
+//			subCategory: "region",
+//			resource: "snp",
+//			species: this.genomeViewer.species,
+//			featureCache:{
+//				gzip: true,
+//				chunkSize:10000
+//			}
+//		})
+//	});
+//	this.genomeViewer.trackSvgLayout.addTrack(snpTrack,{
+//		id:"snp",
+//		type:"snp",
+//		histogramRender:null,
+//		featuresRender:"MultiFeatureRender",
+//		histogramZoom:80,
+//		height:150,
+//		visibleRange:{start:0,end:100},
+//		settings:{
+//			label: "name",
+//			infoWidgetId: "name",
+//			colorField: "displaySoConsequence",
+//			height:10,
+//			histogramColor:"orange",
+//			color: SNP_BIOTYPE_COLORS
+//		}
+//	});
 	
-	var dasTrack = new TrackData("das",{
-		adapter: new DasAdapter({
-			url: "http://www.ensembl.org/das/Homo_sapiens.GRCh37.gene/features",
-			species: this.genomeViewer.species,
-			featureCache:{
-				gzip: false,
-				chunkSize:10000
-			}
-		})
-	});
-	this.genomeViewer.trackSvgLayout.addTrack(dasTrack,{
-		id:"das",
-		type:"das",
-		histogramRender:null,
-		featuresRender:"MultiFeatureRender",
-		histogramZoom:80,
-		height:150,
-		visibleRange:{start:0,end:100},
-		settings:{
-			height:10
-		}
-	});
+//	var dasTrack = new TrackData("das",{
+//		adapter: new DasAdapter({
+//			url: "http://www.ensembl.org/das/Homo_sapiens.GRCh37.gene/features",
+//			species: this.genomeViewer.species,
+//			featureCache:{
+//				gzip: false,
+//				chunkSize:10000
+//			}
+//		})
+//	});
+//	this.genomeViewer.trackSvgLayout.addTrack(dasTrack,{
+//		id:"das",
+//		type:"das",
+//		histogramRender:null,
+//		featuresRender:"MultiFeatureRender",
+//		histogramZoom:80,
+//		height:150,
+//		visibleRange:{start:0,end:100},
+//		settings:{
+//			height:10
+//		}
+//	});
 	
 	
 //	var vcfTrack = new TrackData("vcf",{
