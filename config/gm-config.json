@@ -92,12 +92,30 @@ var AVAILABLE_TRACKS = [
 			]}
 			];
 
+var TRACKS = [
+			{"species":"hsa",
+			"tracks":[{"id":"Gene/Transcript", "disabled":false, "checked":true},
+	                  {"id":"Cytoband", "disabled":false, "checked":true},
+	                  {"id":"Sequence", "disabled":false, "checked":true},
+	                  {"id":"CpG islands", "disabled":false, "checked":false},
+	                  {"id":"SNP", "disabled":false, "checked":true},
+	                  {"id":"Mutation", "disabled":false, "checked":false},
+	                  {"id":"Structural variation", "disabled":false, "checked":false},
+	                  {"id":"miRNA targets", "disabled":false, "checked":false},
+	                  {"id":"TFBS", "disabled":false, "checked":false},
+	                  {"id":"Histone", "disabled":false, "checked":false},
+	                  {"id":"Polymerase", "disabled":false, "checked":false},
+//	                  {"id":"Open Chromatin", "disabled":false, "checked":false},
+	                  {"id":"Conserved regions", "disabled":false, "checked":false}
+			]}
+			];
+
 var DAS_TRACKS = [
 				{"species":"hsa",
 				   "categories":[
 				      {"name":"Core",
 					   "sources":[
-                	        {"name":"GRC Region GRCh37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":false},
+                	        {"name":"GRC Region GRCh37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":true},
                 	        {"name":"Vega genes","url":"http://das.sanger.ac.uk/das/vega_ens_zv8_genes/features","checked":false}
                 	        ]
 				      },
