@@ -236,7 +236,7 @@ GenomeMaps.prototype._setTracks= function(){
 		histogramRender:null,
 		featuresRender:"MultiFeatureRender",
 		histogramZoom:20,
-		transcriptZoom:50,
+		transcriptZoom:55,
 		height:24,
 		visibleRange:{start:0,end:100},
 		types:FEATURE_TYPES
