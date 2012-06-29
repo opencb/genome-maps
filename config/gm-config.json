@@ -17,105 +17,109 @@ var AVAILABLE_SPECIES = [
                          {"name":"Saccharomyces cerevisiae", "species":"sce", "icon":"","chromosome":"I","position":111532}
                          ];
 //43788521   32889611
-var AVAILABLE_TRACKS = [
-			{"species":"hsa",
-			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
-			                  {"id":"Cytoband", "checked":true},
-			                  {"id":"Sequence", "checked":true},
-			                  {"id":"CpG islands", "checked":false},
-			                  {"id":"SNP", "checked":true},
-			                  {"id":"Mutation", "checked":false},
-			                  {"id":"Structural variation", "checked":false},
-			                  {"id":"miRNA targets", "checked":false},
-			                  {"id":"TFBS", "checked":false},
-			                  {"id":"Histone", "checked":false},
-			                  {"id":"Polymerase", "checked":false},
-//			                  {"id":"Open Chromatin", "checked":false},
-			                  {"id":"Conserved regions", "checked":false}
-			]},
-			{"species":"mmu",
-			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
-			                  {"id":"Cytoband", "checked":true},
-			                  {"id":"Sequence", "checked":true},
-			                  {"id":"SNP", "checked":true}
-			]},
-			{"species":"dre",
-			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
-			                  {"id":"Cytoband", "checked":true},
-			                  {"id":"Sequence", "checked":true},
-			                  {"id":"SNP", "checked":true}
-			]},
-			{"species":"rno",
-			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
-			                  {"id":"Cytoband", "checked":true},
-			                  {"id":"Sequence", "checked":true},
-			                  {"id":"SNP", "checked":true}
-			]},
-			{"species":"dme",
-			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
-			                  {"id":"Cytoband", "checked":true},
-			                  {"id":"Sequence", "checked":true},
-			                  {"id":"SNP", "checked":true}
-			]},
-			{"species":"sce",
-			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
-			                  {"id":"Cytoband", "checked":true},
-			                  {"id":"Sequence", "checked":true},
-			                  {"id":"SNP", "checked":true}
-			]},
-			{"species":"cel",
-			"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
-			                  {"id":"Cytoband", "checked":true},
-			                  {"id":"Sequence", "checked":true},
-			                  {"id":"SNP", "checked":true}
-			]},
-			{"species":"cfa",
-				"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
-				                  {"id":"Cytoband", "checked":true},
-				                  {"id":"Sequence", "checked":true}
-			]},
-			{"species":"ssc",
-				"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
-				                  {"id":"Cytoband", "checked":true},
-				                  {"id":"Sequence", "checked":true},
-				                  {"id":"SNP", "checked":true}
-			]},
-			{"species":"aga",
-				"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
-				                  {"id":"Cytoband", "checked":true},
-				                  {"id":"Sequence", "checked":true}
-			]},
-			{"species":"pfa",
-				"enabled_tracks":[{"id":"Gene/Transcript", "checked":true},
-				                  {"id":"Cytoband", "checked":true},
-				                  {"id":"Sequence", "checked":true}
-			]}
-			];
 
-var TRACKS = [
-			{"species":"hsa",
-			"tracks":[{"id":"Gene/Transcript", "disabled":false, "checked":true},
-	                  {"id":"Cytoband", "disabled":false, "checked":true},
-	                  {"id":"Sequence", "disabled":false, "checked":true},
-	                  {"id":"CpG islands", "disabled":false, "checked":false},
-	                  {"id":"SNP", "disabled":false, "checked":true},
-	                  {"id":"Mutation", "disabled":false, "checked":false},
-	                  {"id":"Structural variation", "disabled":false, "checked":false},
-	                  {"id":"miRNA targets", "disabled":false, "checked":false},
-	                  {"id":"TFBS", "disabled":false, "checked":false},
-	                  {"id":"Histone", "disabled":false, "checked":false},
-	                  {"id":"Polymerase", "disabled":false, "checked":false},
-//	                  {"id":"Open Chromatin", "disabled":false, "checked":false},
-	                  {"id":"Conserved regions", "disabled":false, "checked":false}
-			]}
-			];
+var SPECIES_TRACKS_GROUP = {"hsa":"group1",
+							"mmu":"group2",
+							"dre":"group2",
+							"rno":"group2",
+							"dme":"group2",
+							"sce":"group2",
+							"cel":"group2",
+							"ssc":"group2",
+							"cfa":"group3",
+							"aga":"group3",
+							"pfa":"group3"
+							};
+
+var TRACKS ={"group1":[
+			          {"category":"Core",
+					   "tracks":[
+					          {"id":"Cytoband", "disabled":false, "checked":true},
+					          {"id":"Sequence", "disabled":false, "checked":true},
+					          {"id":"Gene/Transcript", "disabled":false, "checked":true},
+			                  {"id":"CpG islands", "disabled":false, "checked":false}
+			                  ]
+					  },
+					  {"category":"Variation",
+					   "tracks":[
+			                  {"id":"SNP", "disabled":false, "checked":true},
+			                  {"id":"Mutation", "disabled":false, "checked":false},
+			                  {"id":"Structural variation", "disabled":false, "checked":false}
+			                  ]
+					  },
+					  {"category":"Regulatory",
+					   "tracks":[
+			                  {"id":"miRNA targets", "disabled":false, "checked":false},
+			                  {"id":"TFBS", "disabled":false, "checked":false},
+			                  {"id":"Histone", "disabled":false, "checked":false},
+			                  {"id":"Polymerase", "disabled":false, "checked":false},
+			                  {"id":"Open Chromatin", "disabled":true, "checked":false},
+			                  {"id":"Conserved regions", "disabled":false, "checked":false}
+			                  ]
+					  }
+			],
+			"group2":[
+			          {"category":"Core",
+					   "tracks":[
+					          {"id":"Cytoband", "disabled":false, "checked":true},
+					          {"id":"Sequence", "disabled":false, "checked":true},
+					          {"id":"Gene/Transcript", "disabled":false, "checked":true},
+			                  {"id":"CpG islands", "disabled":true, "checked":false}
+			                  ]
+					  },
+					  {"category":"Variation",
+					   "tracks":[
+			                  {"id":"SNP", "disabled":false, "checked":true},
+			                  {"id":"Mutation", "disabled":true, "checked":false},
+			                  {"id":"Structural variation", "disabled":true, "checked":false}
+			                  ]
+					  },
+					  {"category":"Regulatory",
+					   "tracks":[
+			                  {"id":"miRNA targets", "disabled":true, "checked":false},
+			                  {"id":"TFBS", "disabled":true, "checked":false},
+			                  {"id":"Histone", "disabled":true, "checked":false},
+			                  {"id":"Polymerase", "disabled":true, "checked":false},
+			                  {"id":"Open Chromatin", "disabled":true, "checked":false},
+			                  {"id":"Conserved regions", "disabled":true, "checked":false}
+			                  ]
+					  }
+			],
+			"group3":[
+			          {"category":"Core",
+					   "tracks":[
+					          {"id":"Cytoband", "disabled":false, "checked":true},
+					          {"id":"Sequence", "disabled":false, "checked":true},
+					          {"id":"Gene/Transcript", "disabled":false, "checked":true},
+			                  {"id":"CpG islands", "disabled":true, "checked":false}
+			                  ]
+					  },
+					  {"category":"Variation",
+					   "tracks":[
+			                  {"id":"SNP", "disabled":true, "checked":false},
+			                  {"id":"Mutation", "disabled":true, "checked":false},
+			                  {"id":"Structural variation", "disabled":true, "checked":false}
+			                  ]
+					  },
+					  {"category":"Regulatory",
+					   "tracks":[
+			                  {"id":"miRNA targets", "disabled":true, "checked":false},
+			                  {"id":"TFBS", "disabled":true, "checked":false},
+			                  {"id":"Histone", "disabled":true, "checked":false},
+			                  {"id":"Polymerase", "disabled":true, "checked":false},
+			                  {"id":"Open Chromatin", "disabled":true, "checked":false},
+			                  {"id":"Conserved regions", "disabled":true, "checked":false}
+			                  ]
+					  }
+			]
+};
 
 var DAS_TRACKS = [
 				{"species":"hsa",
 				   "categories":[
 				      {"name":"Core",
 					   "sources":[
-                	        {"name":"GRC Region GRCh37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":true},
+                	        {"name":"GRC Region GRCh37","url":"http://das.sanger.ac.uk/das/grc_region_GRCh37/features","checked":false},
                 	        {"name":"Vega genes","url":"http://das.sanger.ac.uk/das/vega_ens_zv8_genes/features","checked":false}
                 	        ]
 				      },
