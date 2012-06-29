@@ -1244,10 +1244,8 @@ GenomeMaps.prototype.getDASMenu = function() {
 		text : 'Add custom...',
 		handler : function() {
 			var urlWidget = new UrlWidget({title:'Add a DAS track'});
-			urlWidget.onAdd.addEventListener(function(event, data) {
-//				_this.genomeViewer.loadDASTrack(data.name, data.url);
-				_this.setCustomDASMenu(data.name);
-//				_this.genomeViewer.refreshMasterGenomeViewer();
+			urlWidget.onAdd.addEventListener(function(sender, event) {
+				_this.addDASTrack(event.name, event.url);
 			});
 			urlWidget.draw();
 		},
