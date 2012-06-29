@@ -282,15 +282,17 @@ GenomeMaps.prototype._setTracks= function(){
 //			gzip: false
 //		})
 //	});
-//	_this.trackSvgLayout.addTrack(vcfTrack,{
+//	this.genomeViewer.trackSvgLayout.addTrack(vcfTrack,{
 //		id:"vcf",
 //		type:"vcf",
-//		histogramRender:null,
 //		featuresRender:"MultiFeatureRender",
-//		histogramZoom:"",
+////		histogramZoom:"",
 //		height:50,
-//		visibleRange:{start:0,end:100}
+//		visibleRange:{start:0,end:100},
+//		types:FEATURE_TYPES
 //	});
+	
+	
 //	
 //	
 //	var vcfTrack = new TrackData("vcf",{
@@ -1308,7 +1310,7 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 	var menu = this.getPluginsMenu();
 	menu.removeAll(); // Remove the old entries
 	menu.add([{
-		id : this.id+"tracksMenuCustomDAS",
+		id : this.id+"tracksMenuPlugins",
 		text : 'Load',
 		menu : [{
 			id : this.id+"tracksMenuGFF",
@@ -1316,7 +1318,7 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 			handler : function() {
 //			_this.getGFFUploadMenu();
 //			_this.openGFFDialog.show();
-			var gffFileWidget = new GFFFileWidget({viewer:_this.genomeViewer});
+			var gffFileWidget = new TestGFFFileWidget({viewer:_this.genomeViewer});
 			gffFileWidget.draw();
 			if (_this.wum){
 				_this.headerWidget.onLogin.addEventListener(function (sender){
@@ -1327,7 +1329,8 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 				});
 			}
 			gffFileWidget.onOk.addEventListener(function(sender, args) {
-				_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
+//				_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
+				console.log(args)
 			});
 
 		}
@@ -1375,42 +1378,44 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 	}]);
 	
 
-	for (var i = 0; i < plugins_cat.length; i++) {
-		// If category is blank, adds directly a button in the root menu
-		if(plugins_cat[i].category == ""){
-			for (var j = 0; j < plugins_cat[i].plugins.length; j++){
-				menu.add({
-					text : plugins_cat[i].plugins[j].name,
-					pluginName : plugins_cat[i].plugins[j].name,
-					handler : function() {
-						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].setViewer(_this.genomeViewer);
-						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].draw();
-//						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].launch();
-					}
-				});
-			}
-		}
-		else{
-			var sources = [];
-			for (var j = 0; j < plugins_cat[i].plugins.length; j++){
-//			if(plugins[i].species == species){
-				sources.push({text : plugins_cat[i].plugins[j].name,
-					pluginName : plugins_cat[i].plugins[j].name,
-					handler : function() {
-						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].setViewer(_this.genomeViewer);
-						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].draw();
-//						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].launch();
-					}
-				});
-//				break;
+	//XXX ANALYSIS PLUGINS
+//	for (var i = 0; i < plugins_cat.length; i++) {
+//		// If category is blank, adds directly a button in the root menu
+//		if(plugins_cat[i].category == ""){
+//			for (var j = 0; j < plugins_cat[i].plugins.length; j++){
+//				menu.add({
+//					text : plugins_cat[i].plugins[j].name,
+//					pluginName : plugins_cat[i].plugins[j].name,
+//					handler : function() {
+//						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].setViewer(_this.genomeViewer);
+//						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].draw();
+////						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].launch();
+//					}
+//				});
 //			}
-			}
-			menu.add({
-				text : plugins_cat[i].category,
-				menu : sources
-			});
-		}
-	}
+//		}
+//		else{
+//			var sources = [];
+//			for (var j = 0; j < plugins_cat[i].plugins.length; j++){
+////			if(plugins[i].species == species){
+//				sources.push({text : plugins_cat[i].plugins[j].name,
+//					pluginName : plugins_cat[i].plugins[j].name,
+//					handler : function() {
+//						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].setViewer(_this.genomeViewer);
+//						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].draw();
+////						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].launch();
+//					}
+//				});
+////				break;
+////			}
+//			}
+//			menu.add({
+//				text : plugins_cat[i].category,
+//				menu : sources
+//			});
+//		}
+//	}
+	//XXX ANALYSIS PLUGINS
 	
 	
 };
