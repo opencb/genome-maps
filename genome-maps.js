@@ -1328,9 +1328,18 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 					gffFileWidget.sessionFinished();
 				});
 			}
-			gffFileWidget.onOk.addEventListener(function(sender, args) {
-//				_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
-				console.log(args)
+			gffFileWidget.onOk.addEventListener(function(sender, event) {
+				var gffTrack = new TrackData(event.fileName,{
+					adapter: event.adapter
+				});
+				_this.genomeViewer.trackSvgLayout.addTrack(gffTrack,{
+					id:event.fileName,
+					featuresRender:"MultiFeatureRender",
+//					histogramZoom:80,
+					height:150,
+					visibleRange:{start:0,end:100},
+					types:FEATURE_TYPES
+				});
 			});
 
 		}
@@ -1338,7 +1347,7 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 			id : this.id+"tracksMenuBED",
 			text : 'BED',
 			handler : function() {
-				var bedFileWidget = new BEDFileWidget({viewer:_this.genomeViewer});
+				var bedFileWidget = new TestBEDFileWidget({viewer:_this.genomeViewer});
 				bedFileWidget.draw();
 				if (_this.wum){
 					_this.headerWidget.onLogin.addEventListener(function (sender){
@@ -1348,8 +1357,18 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 						bedFileWidget.sessionFinished();
 					});
 				}
-				bedFileWidget.onOk.addEventListener(function(sender, args) {
-					_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
+				bedFileWidget.onOk.addEventListener(function(sender, event) {
+					var bedTrack = new TrackData(event.fileName,{
+						adapter: event.adapter
+					});
+					_this.genomeViewer.trackSvgLayout.addTrack(bedTrack,{
+						id:event.fileName,
+						featuresRender:"MultiFeatureRender",
+//						histogramZoom:80,
+						height:150,
+						visibleRange:{start:0,end:100},
+						types:FEATURE_TYPES
+					});
 				});
 			}
 		},
