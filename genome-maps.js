@@ -1357,7 +1357,7 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 			id : this.id+"tracksMenuVCF",
 			text : 'VCF',
 			handler : function() {
-			var vcfFileWidget = new VCFFileWidget({viewer:_this.genomeViewer});
+			var vcfFileWidget = new TestVCFFileWidget({viewer:_this.genomeViewer});
 			vcfFileWidget.draw();
 			if (_this.wum){
 				_this.headerWidget.onLogin.addEventListener(function (sender){
@@ -1367,9 +1367,18 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 					vcfFileWidget.sessionFinished();
 				});
 			}
-			vcfFileWidget.onOk.addEventListener(function(sender, args) {
-				_this.genomeViewer.addFeatureTrack(args.title, args.dataAdapter);
-
+			vcfFileWidget.onOk.addEventListener(function(sender, event) {
+				var vcfTrack = new TrackData(event.fileName,{
+					adapter: event.adapter
+				});
+				_this.genomeViewer.trackSvgLayout.addTrack(vcfTrack,{
+					id:event.fileName,
+					featuresRender:"MultiFeatureRender",
+//					histogramZoom:80,
+					height:150,
+					visibleRange:{start:0,end:100},
+					types:FEATURE_TYPES
+				});
 			});
 		}
 		}
