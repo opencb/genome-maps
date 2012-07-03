@@ -190,10 +190,6 @@ GenomeMaps.prototype.setSize = function(width,height){
 
 
 GenomeMaps.prototype._setTracks= function(){
-	//FIN REGION TRACKS
-	
-	
-	
 //	var seqtrack = new TrackData("sequence",{
 //		adapter: new CellBaseAdapter({
 //			category: "genomic",
@@ -354,7 +350,7 @@ GenomeMaps.prototype._setTracks= function(){
 	
 	
 	
-	//XXX
+	//Load initial TRACKS config
 	var _this = this;
 	var species = this.genomeViewer.species;
 	var categories = TRACKS[SPECIES_TRACKS_GROUP[species]];
@@ -373,38 +369,14 @@ GenomeMaps.prototype._setTracks= function(){
 			}
 		}
 	}
-	//XXX
-	
-	
-	
-//	var _this = this;
-//	var species = this.genomeViewer.species;
-//	var tracks = AVAILABLE_TRACKS;
-//	
-//	//Load initial AVAILABLE_TRACKS config
-//	for (var i = 0; i < tracks.length; i++) {
-//		if(tracks[i].species == species){
-//			var id, checked;
-//			for ( var j = 0; j < tracks[i].enabled_tracks.length; j++){
-//					id = tracks[i].enabled_tracks[j].id;
-//					checked = tracks[i].enabled_tracks[j].checked;
-//					
-//					if(checked){
-////						_this.genomeViewer.genomeWidgetProperties.tracks[id] = checked;
-//						this.addTrack(id);
-//					}
-//			}
-//			break;
-//		}
-//	}
 	
 	//Load initial DAS_TRACKS config
 	var das_tracks = DAS_TRACKS;
-	for (var i = 0; i < das_tracks.length; i++) {
+	for (var i = 0, leni = das_tracks.length; i < leni; i++) {
 		if(das_tracks[i].species == species){
-			for ( var j = 0; j < das_tracks[i].categories.length; j++){
+			for ( var j = 0, lenj = das_tracks[i].categories.length; j < lenj; j++){
 				var sourceName, sourceUrl, checked;
-				for ( var k = 0; k < das_tracks[i].categories[j].sources.length; k++){
+				for ( var k = 0, lenk = das_tracks[i].categories[j].sources.length; k < lenk; k++){
 					sourceName = das_tracks[i].categories[j].sources[k].name;
 					sourceUrl = das_tracks[i].categories[j].sources[k].url;
 					checked = das_tracks[i].categories[j].sources[k].checked;
@@ -919,6 +891,7 @@ GenomeMaps.prototype.getRegulatorySearchMenu = function() {
 	return menu;
 };
 
+//XXX DEPRECATED
 GenomeMaps.prototype.getTracksMenuOLD = function() {
 	var _this = this;
 	if(this.tracksMenu!=null){
@@ -1108,29 +1081,10 @@ GenomeMaps.prototype.getTracksMenuOLD = function() {
 	return this.tracksMenu;
 };
 
-//Enables or no the checkBoxes
 GenomeMaps.prototype.setTracksMenu = function() {
 	Ext.getCmp(this.id+"tracksMenu").menu=this.getTracksMenu();
-//	var _this = this;
-//	var tracks = AVAILABLE_TRACKS;
-//	var species = this.genomeViewer.species;
-//	//Auto generate menu items depending of AVAILABLE_TRACKS config
-//	for (var i = 0; i < tracks.length; i++) {
-//		if(tracks[i].species == species){
-//			var item = null;
-//			for (var j = 0; j < tracks[i].enabled_tracks.length; j++){
-//				enabled = tracks[i].enabled_tracks[j];
-//				Ext.getCmp(enabled.id).enable().setChecked(enabled.checked);
-//				console.log("checked: "+enabled.id);
-//			}
-//			break;
-//		}
-//	};
 };
 
-
-
-//XXX
 GenomeMaps.prototype.getTracksMenu = function() {
 	var _this = this;
 	if(this._TracksMenu!=null){
@@ -1140,15 +1094,11 @@ GenomeMaps.prototype.getTracksMenu = function() {
 	var species = this.genomeViewer.species;
 	var categories = TRACKS[SPECIES_TRACKS_GROUP[species]];
 	
-	//Auto generate menu items depending of TRACKS config
-//	var menu = this.getDASMenu();
-//	menu.removeAll(); // Remove the old DAS
-	
 	var items = new Array();
 	
-	for (var i = 0; i < categories.length; i++) {
+	for (var i = 0, leni = categories.length; i < leni; i++) {
 		var sources = [];
-		for ( var j = 0; j < categories[i].tracks.length; j++){
+		for ( var j = 0, lenj = categories[i].tracks.length; j < lenj; j++){
 			sources.push({
 				text : categories[i].tracks[j].id,
 				disabled : categories[i].tracks[j].disabled,
@@ -1189,8 +1139,6 @@ GenomeMaps.prototype.getTracksMenu = function() {
 	});
 	return this._TracksMenu;
 };
-//XXX
-
 
 GenomeMaps.prototype.getDASMenu = function() {
 	var _this = this;
@@ -1203,11 +1151,11 @@ GenomeMaps.prototype.getDASMenu = function() {
 	
 	var items = new Array();
 	
-	for (var i = 0; i < tracks.length; i++) {
+	for (var i = 0, leni = tracks.length; i < leni; i++) {
 		if(tracks[i].species == species){
-			for ( var j = 0; j < tracks[i].categories.length; j++){
+			for ( var j = 0, lenj = tracks[i].categories.length; j < lenj; j++){
 				var sources = [];
-				for ( var k = 0; k < tracks[i].categories[j].sources.length; k++){
+				for ( var k = 0, lenk = tracks[i].categories[j].sources.length; k < lenk; k++){
 					sources.push({text : tracks[i].categories[j].sources[k].name,
 								  sourceName : tracks[i].categories[j].sources[k].name,
 								  sourceUrl : tracks[i].categories[j].sources[k].url,
@@ -1223,9 +1171,6 @@ GenomeMaps.prototype.getDASMenu = function() {
 									  else{
 										  _this.genomeViewer.trackSvgLayout._hideTrack(this.sourceName);
 									  }
-//									  _this.genomeViewer.loadDASTrack(this.sourceName, this.sourceUrl);
-//									  _this.genomeViewer.genomeWidgetProperties.tracks[this.text] = this.checked;
-//									  _this.genomeViewer.refreshMasterGenomeViewer();
 								  }
 					});
 				}
@@ -1265,7 +1210,6 @@ GenomeMaps.prototype.getDASMenu = function() {
 	return this._DASMenu;
 };
 
-
 GenomeMaps.prototype.setCustomDASMenu = function(name) {
 	var _this = this;
 	Ext.getCmp(this.id+"_customDASMenu").add({
@@ -1277,14 +1221,6 @@ GenomeMaps.prototype.setCustomDASMenu = function(name) {
 		}
 	});
 };
-
-
-
-
-
-
-
-
 
 GenomeMaps.prototype.getPluginsMenu = function() {
 	if(this._pluginsMenu == null){
@@ -1404,10 +1340,10 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 	
 
 	//XXX ANALYSIS PLUGINS
-	for (var i = 0; i < plugins_cat.length; i++) {
+	for (var i = 0, leni = plugins_cat.length; i < leni; i++) {
 		// If category is blank, adds directly a button in the root menu
 		if(plugins_cat[i].category == ""){
-			for (var j = 0; j < plugins_cat[i].plugins.length; j++){
+			for (var j = 0, lenj = plugins_cat[i].plugins.length; j < lenj; j++){
 				menu.add({
 					text : plugins_cat[i].plugins[j].name,
 					pluginName : plugins_cat[i].plugins[j].name,
@@ -1421,7 +1357,7 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 		}
 		else{
 			var sources = [];
-			for (var j = 0; j < plugins_cat[i].plugins.length; j++){
+			for (var j = 0, lenj = plugins_cat[i].plugins.length; j < lenj; j++){
 //			if(plugins[i].species == species){
 				sources.push({text : plugins_cat[i].plugins[j].name,
 					pluginName : plugins_cat[i].plugins[j].name,
