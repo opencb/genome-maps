@@ -138,13 +138,35 @@ GenomeMaps.prototype.draw = function(){
 	this.headerWidget.setDescription(this.genomeViewer.speciesName);
 	$("#"+this.headerWidget.id+"appTextItem").qtip({
 		content: '<span class="info">'+this.version+'</span>',
-		position: {adjust: { y: -23, x:10 }}
+		position: {my:"bottom center",at:"top center",adjust: { y: 0, x:-25 }}
 		
 	});
 	
 	
 	this.genomeViewer.afterRender.addEventListener(function(sender,event){
 		Ext.getCmp(_this.genomeViewer.id+"versionLabel").setText('<span class="info">'+_this.version+'</span>');
+		var geneTrack = new TrackData("gene",{
+			adapter: new CellBaseAdapter({
+				category: "genomic",
+				subCategory: "region",
+				resource: "gene",
+				species: _this.genomeViewer.species,
+				featureCache:{
+					gzip: true,
+					chunkSize:50000
+				}
+			})
+		});
+		_this.genomeViewer.trackSvgLayout2.addTrack(geneTrack,{
+			id:"gene",
+			type:"gene",
+			featuresRender:"MultiFeatureRender",
+			histogramZoom:20,
+			height:150,
+			visibleRange:{start:0,end:100},
+			titleVisibility:'hidden',
+			types:FEATURE_TYPES
+		});
 		_this._setTracks();
 	});
 	this.setTracksMenu();
@@ -168,29 +190,6 @@ GenomeMaps.prototype.setSize = function(width,height){
 
 
 GenomeMaps.prototype._setTracks= function(){
-	
-	var geneTrack = new TrackData("gene",{
-		adapter: new CellBaseAdapter({
-			category: "genomic",
-			subCategory: "region",
-			resource: "gene",
-			species: this.genomeViewer.species,
-			featureCache:{
-				gzip: true,
-				chunkSize:50000
-			}
-		})
-	});
-	this.genomeViewer.trackSvgLayout2.addTrack(geneTrack,{
-		id:"gene",
-		type:"gene",
-		featuresRender:"MultiFeatureRender",
-		histogramZoom:20,
-		height:150,
-		visibleRange:{start:0,end:100},
-		titleVisibility:'hidden',
-		types:FEATURE_TYPES
-	});
 	//FIN REGION TRACKS
 	
 	
@@ -1405,42 +1404,42 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 	
 
 	//XXX ANALYSIS PLUGINS
-//	for (var i = 0; i < plugins_cat.length; i++) {
-//		// If category is blank, adds directly a button in the root menu
-//		if(plugins_cat[i].category == ""){
-//			for (var j = 0; j < plugins_cat[i].plugins.length; j++){
-//				menu.add({
-//					text : plugins_cat[i].plugins[j].name,
-//					pluginName : plugins_cat[i].plugins[j].name,
-//					handler : function() {
-//						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].setViewer(_this.genomeViewer);
-//						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].draw();
-////						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].launch();
-//					}
-//				});
+	for (var i = 0; i < plugins_cat.length; i++) {
+		// If category is blank, adds directly a button in the root menu
+		if(plugins_cat[i].category == ""){
+			for (var j = 0; j < plugins_cat[i].plugins.length; j++){
+				menu.add({
+					text : plugins_cat[i].plugins[j].name,
+					pluginName : plugins_cat[i].plugins[j].name,
+					handler : function() {
+						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].setViewer(_this.genomeViewer);
+						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].draw();
+//						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].launch();
+					}
+				});
+			}
+		}
+		else{
+			var sources = [];
+			for (var j = 0; j < plugins_cat[i].plugins.length; j++){
+//			if(plugins[i].species == species){
+				sources.push({text : plugins_cat[i].plugins[j].name,
+					pluginName : plugins_cat[i].plugins[j].name,
+					handler : function() {
+						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].setViewer(_this.genomeViewer);
+						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].draw();
+//						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].launch();
+					}
+				});
+//				break;
 //			}
-//		}
-//		else{
-//			var sources = [];
-//			for (var j = 0; j < plugins_cat[i].plugins.length; j++){
-////			if(plugins[i].species == species){
-//				sources.push({text : plugins_cat[i].plugins[j].name,
-//					pluginName : plugins_cat[i].plugins[j].name,
-//					handler : function() {
-//						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].setViewer(_this.genomeViewer);
-//						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].draw();
-////						GENOME_MAPS_REGISTERED_PLUGINS[this.pluginName].launch();
-//					}
-//				});
-////				break;
-////			}
-//			}
-//			menu.add({
-//				text : plugins_cat[i].category,
-//				menu : sources
-//			});
-//		}
-//	}
+			}
+			menu.add({
+				text : plugins_cat[i].category,
+				menu : sources
+			});
+		}
+	}
 	//XXX ANALYSIS PLUGINS
 	
 	
