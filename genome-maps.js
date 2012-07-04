@@ -165,7 +165,7 @@ GenomeMaps.prototype.draw = function(){
 			height:150,
 			visibleRange:{start:0,end:100},
 			titleVisibility:'hidden',
-			types:FEATURE_TYPES
+			featureTypes:FEATURE_TYPES
 		});
 		_this._setTracks();
 	});
@@ -237,7 +237,7 @@ GenomeMaps.prototype._setTracks= function(){
 //		transcriptZoom:50,
 //		height:24,
 //		visibleRange:{start:0,end:100},
-//		types:FEATURE_TYPES
+//		featureTypes:FEATURE_TYPES
 //	});
 
 	
@@ -284,7 +284,7 @@ GenomeMaps.prototype._setTracks= function(){
 ////		histogramZoom:"",
 //		height:50,
 //		visibleRange:{start:0,end:100},
-//		types:FEATURE_TYPES
+//		featureTypes:FEATURE_TYPES
 //	});
 	
 	
@@ -416,7 +416,7 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 			transcriptZoom:50,
 			height:24,
 			visibleRange:{start:0,end:100},
-			types:FEATURE_TYPES
+			featureTypes:FEATURE_TYPES
 		});
 		break;
 	case "Cytoband":
@@ -465,7 +465,7 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 			histogramZoom:80,
 			height:150,
 			visibleRange:{start:0,end:100},
-			types:FEATURE_TYPES
+			featureTypes:FEATURE_TYPES
 		});
 		break;
 	case "Mutation":
@@ -778,28 +778,31 @@ GenomeMaps.prototype.getFeatureSearchMenu = function() {
 							});
 							inputListWidget.draw();
 						}
-					},
-					{
-						text : 'Transcript',
-						handler : function() {
-							var inputListWidget = new InputListWidget({title:'Ensembl Transcript',viewer:_this.genomeViewer});
-							inputListWidget.onOk.addEventListener(function(evt, names) {
-								_this.genomeViewer.openTranscriptListWidget(names);
-							});
-							inputListWidget.draw();
-						}
-					},
-					{
-						text : 'Exon',
-						handler : function() {
-							//ENSE00001663727
-							var inputListWidget = new InputListWidget({title:'Ensembl Exon List',viewer:_this.genomeViewer});
-							inputListWidget.onOk.addEventListener(function(evt, geneNames) {
-								_this.genomeViewer.openExonListWidget(geneNames);
-							});
-							inputListWidget.draw();
-						}
-					},
+					}
+//					,
+//					{
+//						text : 'Transcript',
+//						handler : function() {
+//							var inputListWidget = new InputListWidget({title:'Ensembl Transcript',viewer:_this.genomeViewer});
+//							inputListWidget.onOk.addEventListener(function(evt, names) {
+//								_this.genomeViewer.openTranscriptListWidget(names);
+//							});
+//							inputListWidget.draw();
+//						}
+//					}
+//					,
+//					{
+//						text : 'Exon',
+//						handler : function() {
+//							//ENSE00001663727
+//							var inputListWidget = new InputListWidget({title:'Ensembl Exon List',viewer:_this.genomeViewer});
+//							inputListWidget.onOk.addEventListener(function(evt, geneNames) {
+//								_this.genomeViewer.openExonListWidget(geneNames);
+//							});
+//							inputListWidget.draw();
+//						}
+//					}
+					,
 					{
 						text : 'SNP',
 						handler : function() {
@@ -809,18 +812,18 @@ GenomeMaps.prototype.getFeatureSearchMenu = function() {
 							});
 							inputListWidget.draw();
 						}
-					},
-					
-					{
-						text : 'Protein',
-						handler : function() {
-							var inputListWidget = new InputListWidget({title:'Ensembl Protein',viewer:_this.genomeViewer});
-							inputListWidget.onOk.addEventListener(function(evt, snpNames) {
-								_this.genomeViewer.openGOListWidget(snpNames);
-							});
-							inputListWidget.draw();
-						}
 					}
+//					,
+//					{
+//						text : 'Protein',
+//						handler : function() {
+//							var inputListWidget = new InputListWidget({title:'Ensembl Protein',viewer:_this.genomeViewer});
+//							inputListWidget.onOk.addEventListener(function(evt, snpNames) {
+//								_this.genomeViewer.openGOListWidget(snpNames);
+//							});
+//							inputListWidget.draw();
+//						}
+//					}
 					
 					
 					]
@@ -850,17 +853,18 @@ GenomeMaps.prototype.getFunctionalSearchMenu = function() {
 						handler : function() {
 							alert("Not yet implemented");
 						}
-					},
-					{
-						text : 'Interpro',
-						handler : function() {
-							var inputListWidget = new InputListWidget({title:'Protein',viewer:_this.genomeViewer});
-							inputListWidget.onOk.addEventListener(function(evt, snpNames) {
-								_this.genomeViewer.openGOListWidget(snpNames);
-							});
-							inputListWidget.draw();
-						}
 					}
+//					,
+//					{
+//						text : 'Interpro',
+//						handler : function() {
+//							var inputListWidget = new InputListWidget({title:'Protein',viewer:_this.genomeViewer});
+//							inputListWidget.onOk.addEventListener(function(evt, snpNames) {
+//								_this.genomeViewer.openGOListWidget(snpNames);
+//							});
+//							inputListWidget.draw();
+//						}
+//					}
 					]
 			});
 	return menu;
@@ -1271,7 +1275,7 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 //					histogramZoom:80,
 					height:150,
 					visibleRange:{start:0,end:100},
-					types:FEATURE_TYPES
+					featureTypes:FEATURE_TYPES
 				});
 			});
 
@@ -1300,7 +1304,7 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 //						histogramZoom:80,
 						height:150,
 						visibleRange:{start:0,end:100},
-						types:FEATURE_TYPES
+						featureTypes:FEATURE_TYPES
 					});
 				});
 			}
@@ -1329,7 +1333,7 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 //					histogramZoom:80,
 					height:150,
 					visibleRange:{start:0,end:100},
-					types:FEATURE_TYPES
+					featureTypes:FEATURE_TYPES
 				});
 			});
 		}

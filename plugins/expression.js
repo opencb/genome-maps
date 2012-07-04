@@ -10,7 +10,9 @@ function auxExpression(){
 //	expressionPlugin.closeWindow();
 	var species = expressionPlugin.getSpecies();
 	
-	var expressionGenomicAttributesWidget = new ExpressionGenomicAttributesWidget(species,{viewer:expressionPlugin.viewer});
+	var viewer = expressionPlugin.viewer;
+	
+	var expressionGenomicAttributesWidget = new ExpressionGenomicAttributesWidget(species,{viewer:viewer});
 	
 	if (genomeMaps.wum){
 		genomeMaps.headerWidget.onLogin.addEventListener(function (sender){
@@ -27,9 +29,20 @@ function auxExpression(){
 		
 	});
 	
-	expressionGenomicAttributesWidget.onTrackAddAction.addEventListener(function(sender, feature){
-		console.log(feature);
-		genomeMaps.addTrackFromFeaturesList(feature);
+	expressionGenomicAttributesWidget.onTrackAddAction.addEventListener(function(sender, event){
+		
+		var track = new TrackData(event.fileName,{
+			adapter: event.adapter
+		});
+		viewer.trackSvgLayout.addTrack(track,{
+			id:event.fileName,
+			featuresRender:"MultiFeatureRender",
+//			histogramZoom:80,
+			height:150,
+			visibleRange:{start:0,end:100},
+			types:FEATURE_TYPES
+		});
+		
 	});
 	
 };
