@@ -189,166 +189,6 @@ GenomeMaps.prototype.setSize = function(width,height){
 
 
 GenomeMaps.prototype._setTracks= function(){
-//	var seqtrack = new TrackData("sequence",{
-//		adapter: new CellBaseAdapter({
-//			category: "genomic",
-//			subCategory: "region",
-//			resource: "sequence",
-//			species: this.genomeViewer.species,
-//			featureCache:{
-//				gzip: true,
-//				chunkSize:1000
-//			}
-//		})
-//	});
-//	this.genomeViewer.trackSvgLayout.addTrack(seqtrack,{
-//		id:"sequence",
-//		type:"sequence",
-//		featuresRender:"SequenceRender",
-////		histogramZoom:"",
-//		height:50,
-//		visibleRange:{start:100,end:100},
-//		settings:{
-//			color: {A:"#009900", C:"#0000FF", G:"#857A00", T:"#aa0000", N:"#555555"},
-//			closable: false
-//		}
-//	});
-
-	
-//	var geneTrack = new TrackData("gene",{
-//		adapter: new CellBaseAdapter({
-//			category: "genomic",
-//			subCategory: "region",
-//			resource: "gene",
-//			species: this.genomeViewer.species,
-//			featureCache:{
-//				gzip: true,
-//				chunkSize:50000
-//			}
-//		})
-//	});
-//	this.genomeViewer.trackSvgLayout.addTrack(geneTrack,{
-//		id:"gene",
-//		type:"gene",
-//		histogramRender:null,
-//		featuresRender:"MultiFeatureRender",
-//		histogramZoom:20,
-//		transcriptZoom:50,
-//		height:24,
-//		visibleRange:{start:0,end:100},
-//		featureTypes:FEATURE_TYPES
-//	});
-
-	
-//	var snpTrack = new TrackData("snp",{
-//		adapter: new CellBaseAdapter({
-//			category: "genomic",
-//			subCategory: "region",
-//			resource: "snp",
-//			species: this.genomeViewer.species,
-//			featureCache:{
-//				gzip: true,
-//				chunkSize:10000
-//			}
-//		})
-//	});
-//	this.genomeViewer.trackSvgLayout.addTrack(snpTrack,{
-//		id:"snp",
-//		type:"snp",
-//		histogramRender:null,
-//		featuresRender:"MultiFeatureRender",
-//		histogramZoom:80,
-//		height:150,
-//		visibleRange:{start:0,end:100},
-//		settings:{
-//			label: "name",
-//			infoWidgetId: "name",
-//			colorField: "displaySoConsequence",
-//			height:10,
-//			histogramColor:"orange",
-//			color: SNP_BIOTYPE_COLORS
-//		}
-//	});
-
-//	var vcfTrack = new TrackData("vcf",{
-//		adapter: new VCFDataAdapter(new UrlDataSource("http://rsanchez/example.vcf"),{
-//			async: false,
-//			gzip: false
-//		})
-//	});
-//	this.genomeViewer.trackSvgLayout.addTrack(vcfTrack,{
-//		id:"vcf",
-//		type:"vcf",
-//		featuresRender:"MultiFeatureRender",
-////		histogramZoom:"",
-//		height:50,
-//		visibleRange:{start:0,end:100},
-//		featureTypes:FEATURE_TYPES
-//	});
-	
-	
-//	
-//	
-//	var vcfTrack = new TrackData("vcf",{
-//		adapter: new VCFDataAdapter(new UrlDataSource("http://rsanchez/example.vcf"),{
-//			async: false,
-//			gzip: true
-//		})
-//	});
-//	_this.trackSvgLayout.addTrack(vcfTrack,{
-//		id:"vcf",
-//		type:"vcf",
-//		histogramRender:null,
-//		featuresRender:"MultiFeatureRender",
-//		histogramZoom:"",
-//		height:50,
-//		visibleRange:{start:0,end:100}
-//	});
-	
-//	var track3 = new TrackData("gff",{
-//		adapter: new GFFDataAdapter(new UrlDataSource("http://rsanchez/example.gff"),{
-//			async: false,
-//			gzip: true
-//		})
-//	});
-//	_this.trackSvgLayout.addTrack(track3,{id:"gff",type:"gff"});
-
-//		var track4 = new TrackData("bed",{
-//			adapter: new BEDDataAdapter(new UrlDataSource("http://bioinfo.cipf.es/apps-beta/examples/example.bed"),{
-//				async: false,
-//				gzip: false
-//			})
-//		});
-//		_this.trackSvgLayout.addTrack(track4,{id:"bed",type:"bed"});
-	
-//		// load vcf file from file widget
-//		var vcf = new VCFFileWidget({viewer:this});
-//		vcf.onComplete.addEventListener(function(sender, data){
-//			vcf.onOk.addEventListener(function(sender){
-//				_this.trackSvgLayout.addTrack(data,{id:"vcf",type:"vcf",render:""/*GeneRender*/});
-//			});
-//		});
-//		vcf.draw();
-	
-//		this.trackSvgLayout.addTrack(track3,{id:"vcf",type:"snp",render:""/*GeneRender*/});
-	
-	
-	//track3.adapter.onLoad.addEventListener(function(sender){
-		//_this.trackSvgLayout.addTrack(track3,{id:"vcf",type:"snp",render:""/*GeneRender*/});
-	//});
-	
-	
-	// _this.trackSvgLayout.addTrack({id:"gene",resource:"gene"});
-	//_this.trackSvgLayout.addTrack({id:"snp",resource:"snp"});
-	
-	//setTimeout(function() {
-		//_this.trackSvgLayout.addTrack({id:"track4"});
-	//},5000);
-	
-	
-	
-	
-	
 	//Load initial TRACKS config
 	var _this = this;
 	var species = this.genomeViewer.species;
@@ -508,13 +348,37 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 			featureTypes:FEATURE_TYPES
 		});
 		break;
-	case "Structural variation":
+	case "Structural variation (<20Kb)":
 		var structuralTrack = new TrackData(trackId,{
 			adapter: new CellBaseAdapter({
 				category: "genomic",
 				subCategory: "region",
 				resource: "structural_variation",
 				species: this.genomeViewer.species,
+				params : {min_length:1,max_length:20000},
+				featureCache:{
+					gzip: true,
+					chunkSize:50000
+				}
+			})
+		});
+		this.genomeViewer.addTrack(structuralTrack,{
+			id:trackId,
+			featuresRender:"MultiFeatureRender",
+			histogramZoom:40,
+			height:150,
+			visibleRange:{start:0,end:100},
+			featureTypes:FEATURE_TYPES
+		});
+		break;
+	case "Structural variation (>20Kb)":
+		var structuralTrack = new TrackData(track>Id,{
+			adapter: new CellBaseAdapter({
+				category: "genomic",
+				subCategory: "region",
+				resource: "structural_variation",
+				species: this.genomeViewer.species,
+				params : {min_length:20000,max_length:300000000},
 				featureCache:{
 					gzip: true,
 					chunkSize:5000000

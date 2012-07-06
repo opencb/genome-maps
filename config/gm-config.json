@@ -44,7 +44,8 @@ var TRACKS ={"group1":[
 					   "tracks":[
 			                  {"id":"SNP", "disabled":false, "checked":true},
 			                  {"id":"Mutation", "disabled":false, "checked":false},
-			                  {"id":"Structural variation", "disabled":false, "checked":false}
+			                  {"id":"Structural variation (<20Kb)", "disabled":false, "checked":false},
+			                  {"id":"Structural variation (>20Kb)", "disabled":false, "checked":false}
 			                  ]
 					  },
 					  {"category":"Regulatory",
@@ -71,7 +72,8 @@ var TRACKS ={"group1":[
 					   "tracks":[
 			                  {"id":"SNP", "disabled":false, "checked":true},
 			                  {"id":"Mutation", "disabled":true, "checked":false},
-			                  {"id":"Structural variation", "disabled":true, "checked":false}
+			                  {"id":"Structural variation (<20Kb)", "disabled":true, "checked":false},
+			                  {"id":"Structural variation (>20Kb)", "disabled":true, "checked":false}
 			                  ]
 					  },
 					  {"category":"Regulatory",
@@ -98,7 +100,8 @@ var TRACKS ={"group1":[
 					   "tracks":[
 			                  {"id":"SNP", "disabled":true, "checked":false},
 			                  {"id":"Mutation", "disabled":true, "checked":false},
-			                  {"id":"Structural variation", "disabled":true, "checked":false}
+			                  {"id":"Structural variation (<20Kb)", "disabled":true, "checked":false},
+			                  {"id":"Structural variation (>20Kb)", "disabled":true, "checked":false}
 			                  ]
 					  },
 					  {"category":"Regulatory",
