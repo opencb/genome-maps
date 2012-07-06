@@ -443,7 +443,26 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 		});
 		break;
 	case "CpG islands":
-		
+		var cpgTrack = new TrackData(trackId,{
+			adapter: new CellBaseAdapter({
+				category: "genomic",
+				subCategory: "region",
+				resource: "cpg_island",
+				species: this.genomeViewer.species,
+				featureCache:{
+					gzip: true,
+					chunkSize:50000
+				}
+			})
+		});
+		this.genomeViewer.addTrack(cpgTrack,{
+			id:trackId,
+			featuresRender:"MultiFeatureRender",
+			histogramZoom:10,
+			height:150,
+			visibleRange:{start:0,end:100},
+			featureTypes:FEATURE_TYPES
+		});
 		break;
 	case "SNP":
 		var snpTrack = new TrackData(trackId,{
@@ -468,28 +487,123 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 		});
 		break;
 	case "Mutation":
-		
+		var mutationTrack = new TrackData(trackId,{
+			adapter: new CellBaseAdapter({
+				category: "genomic",
+				subCategory: "region",
+				resource: "mutation",
+				species: this.genomeViewer.species,
+				featureCache:{
+					gzip: true,
+					chunkSize:10000
+				}
+			})
+		});
+		this.genomeViewer.addTrack(mutationTrack,{
+			id:trackId,
+			featuresRender:"MultiFeatureRender",
+			histogramZoom:50,
+			height:150,
+			visibleRange:{start:0,end:100},
+			featureTypes:FEATURE_TYPES
+		});
 		break;
 	case "Structural variation":
-		
+		var structuralTrack = new TrackData(trackId,{
+			adapter: new CellBaseAdapter({
+				category: "genomic",
+				subCategory: "region",
+				resource: "structural_variation",
+				species: this.genomeViewer.species,
+				featureCache:{
+					gzip: true,
+					chunkSize:5000000
+				}
+			})
+		});
+		this.genomeViewer.addTrack(structuralTrack,{
+			id:trackId,
+			featuresRender:"MultiFeatureRender",
+			histogramZoom:40,
+			height:150,
+			visibleRange:{start:0,end:100},
+			featureTypes:FEATURE_TYPES
+		});
 		break;
 	case "miRNA targets":
-		
+		var miRNATrack = new TrackData(trackId,{
+			adapter: new CellBaseAdapter({
+				category: "genomic",
+				subCategory: "region",
+				resource: "mirna_targets",
+				species: this.genomeViewer.species,
+				featureCache:{
+					gzip: true,
+					chunkSize:10000
+				}
+			})
+		});
+		this.genomeViewer.addTrack(miRNATrack,{
+			id:trackId,
+			featuresRender:"MultiFeatureRender",
+			histogramZoom:50,
+			height:150,
+			visibleRange:{start:0,end:100},
+			featureTypes:FEATURE_TYPES
+		});
 		break;
 	case "TFBS":
-		
+		var tfbsTrack = new TrackData(trackId,{
+			adapter: new CellBaseAdapter({
+				category: "genomic",
+				subCategory: "region",
+				resource: "tfbs",
+				species: this.genomeViewer.species,
+				featureCache:{
+					gzip: true,
+					chunkSize:10000
+				}
+			})
+		});
+		this.genomeViewer.addTrack(tfbsTrack,{
+			id:trackId,
+			featuresRender:"MultiFeatureRender",
+			histogramZoom:50,
+			height:150,
+			visibleRange:{start:0,end:100},
+			featureTypes:FEATURE_TYPES
+		});
 		break;
-	case "Histone":
-		
-		break;
-	case "Polymerase":
-		
-		break;
-	case "Open Chromatin":
-		
-		break;
+//	case "Histone":
+//		
+//		break;
+//	case "Polymerase":
+//		
+//		break;
+//	case "Open Chromatin":
+//		
+//		break;
 	case "Conserved regions":
-		
+		var conservedTrack = new TrackData(trackId,{
+			adapter: new CellBaseAdapter({
+				category: "genomic",
+				subCategory: "region",
+				resource: "conserved_region",
+				species: this.genomeViewer.species,
+				featureCache:{
+					gzip: true,
+					chunkSize:10000
+				}
+			})
+		});
+		this.genomeViewer.addTrack(conservedTrack,{
+			id:trackId,
+			featuresRender:"MultiFeatureRender",
+			histogramZoom:50,
+			height:150,
+			visibleRange:{start:0,end:100},
+			featureTypes:FEATURE_TYPES
+		});
 		break;
 
 	default:
@@ -1328,6 +1442,7 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 				});
 			}
 			vcfFileWidget.onOk.addEventListener(function(sender, event) {
+				console.log(event.fileName);
 				var vcfTrack = new TrackData(event.fileName,{
 					adapter: event.adapter
 				});

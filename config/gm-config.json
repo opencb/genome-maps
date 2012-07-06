@@ -51,9 +51,9 @@ var TRACKS ={"group1":[
 					   "tracks":[
 			                  {"id":"miRNA targets", "disabled":false, "checked":false},
 			                  {"id":"TFBS", "disabled":false, "checked":false},
-			                  {"id":"Histone", "disabled":false, "checked":false},
-			                  {"id":"Polymerase", "disabled":false, "checked":false},
-			                  {"id":"Open Chromatin", "disabled":true, "checked":false},
+//			                  {"id":"Histone", "disabled":false, "checked":false},
+//			                  {"id":"Polymerase", "disabled":false, "checked":false},
+//			                  {"id":"Open Chromatin", "disabled":true, "checked":false},
 			                  {"id":"Conserved regions", "disabled":false, "checked":false}
 			                  ]
 					  }
