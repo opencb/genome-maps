@@ -42,7 +42,7 @@ var TRACKS ={"group1":[
 					  },
 					  {"category":"Variation",
 					   "tracks":[
-			                  {"id":"SNP", "disabled":false, "checked":true},
+//			                  {"id":"SNP", "disabled":false, "checked":true},
 			                  {"id":"Mutation", "disabled":false, "checked":false},
 			                  {"id":"Structural variation (<20Kb)", "disabled":false, "checked":false},
 			                  {"id":"Structural variation (>20Kb)", "disabled":false, "checked":false}
