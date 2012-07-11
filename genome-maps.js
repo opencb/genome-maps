@@ -568,7 +568,7 @@ GenomeMaps.prototype.getMenuBar = function() {
 					legendWidget.draw(GENE_BIOTYPE_COLORS);
 				}
 			}
-			,'-',
+//			,'-',
 //			{
 //	        	 text:'Ensembl Id',
 //	        	 checked:false,
@@ -586,46 +586,54 @@ GenomeMaps.prototype.getMenuBar = function() {
 //					}
 //	         	}
 //	         },
-	         {
-					text : 'Download as',
-					iconCls:'icon-box',
-					menu : [{
-						text:'PNG',iconCls:'icon-blue-box',disabled:false,
-						listeners : {
-							scope : this,
-							'click' : function() {
-								var svg = new XMLSerializer().serializeToString(this.genomeViewer.genomeWidget.trackCanvas._svg);
-								var canvas = DOM.createNewElement("canvas", document.body, [["id", this.id+"png"],["visibility", this.id+"hidden"]]);
-								canvg(canvas, svg);
-								Canvas2Image.saveAsPNG(canvas);
-								$("#"+this.id+"png").remove();
-//								DOM.select("canvas").parent.removeChild(canvas);
-							}
-						}
-					},{
-						text:'JPEG',iconCls:'icon-blue-box',disabled:false,
-						listeners : {
-						scope : this,
-							'click' : function() {
-								try{
-									_this.genomeViewer._getPanel().setLoading("Saving image");
-									var svg = new XMLSerializer().serializeToString(this.genomeViewer.genomeWidget.trackCanvas._svg);
-									var canvas = DOM.createNewElement("canvas", document.body, [["id", this.id+"jpg"],["visibility", this.id+"hidden"]]);
-									canvg(canvas, svg);
-									Canvas2Image.saveAsJPEG(canvas); 
-									$("#"+this.id+"jpg").remove();
-//									DOM.select("canvas").parent.removeChild(canvas);
-								}
-								catch(e){
-									alert(e);
-								}
-								finally{
-									_this.genomeViewer._getPanel().setLoading(false);
-								}
-							}
-						}
-					}]
-				}
+
+//	         {
+//					text : 'Download as',
+//					iconCls:'icon-box',
+//					menu : [{
+//						text:'PNG',iconCls:'icon-blue-box',disabled:false,
+//						listeners : {
+//							scope : this,
+//							'click' : function() {
+//								var svg = new XMLSerializer().serializeToString(_this.genomeViewer.trackSvgLayout.svg);
+//								var canvas = DOM.createNewElement("canvas", document.body, [["id", _this.id+"png"],["visibility", _this.id+"hidden"]]);
+//								
+////								console.log(svg);
+////								svg = '<svg width="1582" height="407"><svg width="7000000" height="407" x="-35000"><rect width="1000" height="200" x="1000" y="50" fill="red"></rect></svg></svg>';
+//								canvg(canvas, svg);
+////								console.log(canvas);
+//								canvas.toBlob(function(blob) {
+//						            saveAs(blob, "exported_image.png");
+//						        }, "image/png");
+////								Canvas2Image.saveAsPNG(canvas);
+//								$("#"+_this.id+"png").remove();
+////								DOM.select("canvas").parent.removeChild(canvas);
+//							}
+//						}
+//					},{
+//						text:'JPEG',iconCls:'icon-blue-box',disabled:false,
+//						listeners : {
+//						scope : this,
+//							'click' : function() {
+//								try{
+////									_this.genomeViewer._getPanel().setLoading("Saving image");
+//									var svg = new XMLSerializer().serializeToString(_this.genomeViewer.trackSvgLayout.svg);
+//									var canvas = DOM.createNewElement("canvas", document.body, [["id", this.id+"jpg"],["visibility", this.id+"hidden"]]);
+//									canvg(canvas, svg);
+//									Canvas2Image.saveAsJPEG(canvas); 
+//									$("#"+this.id+"jpg").remove();
+////									DOM.select("canvas").parent.removeChild(canvas);
+//								}
+//								catch(e){
+//									alert(e);
+//								}
+//								finally{
+////									_this.genomeViewer._getPanel().setLoading(false);
+//								}
+//							}
+//						}
+//					}]
+//				}
 			]
 	});
 	
