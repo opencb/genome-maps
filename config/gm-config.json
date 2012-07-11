@@ -42,7 +42,7 @@ var TRACKS ={"group1":[
 					  },
 					  {"category":"Variation",
 					   "tracks":[
-//			                  {"id":"SNP", "disabled":false, "checked":true},
+			                  {"id":"SNP", "disabled":false, "checked":true},
 			                  {"id":"Mutation", "disabled":false, "checked":false},
 			                  {"id":"Structural variation (<20Kb)", "disabled":false, "checked":false},
 			                  {"id":"Structural variation (>20Kb)", "disabled":false, "checked":false}
@@ -50,8 +50,8 @@ var TRACKS ={"group1":[
 					  },
 					  {"category":"Regulatory",
 					   "tracks":[
+					          {"id":"TFBS", "disabled":false, "checked":false},
 			                  {"id":"miRNA targets", "disabled":false, "checked":false},
-			                  {"id":"TFBS", "disabled":false, "checked":false},
 //			                  {"id":"Histone", "disabled":false, "checked":false},
 //			                  {"id":"Polymerase", "disabled":false, "checked":false},
 //			                  {"id":"Open Chromatin", "disabled":true, "checked":false},
@@ -78,8 +78,8 @@ var TRACKS ={"group1":[
 					  },
 					  {"category":"Regulatory",
 					   "tracks":[
+					          {"id":"TFBS", "disabled":true, "checked":false},
 			                  {"id":"miRNA targets", "disabled":true, "checked":false},
-			                  {"id":"TFBS", "disabled":true, "checked":false},
 			                  {"id":"Histone", "disabled":true, "checked":false},
 			                  {"id":"Polymerase", "disabled":true, "checked":false},
 			                  {"id":"Open Chromatin", "disabled":true, "checked":false},
@@ -106,8 +106,8 @@ var TRACKS ={"group1":[
 					  },
 					  {"category":"Regulatory",
 					   "tracks":[
+					          {"id":"TFBS", "disabled":true, "checked":false},
 			                  {"id":"miRNA targets", "disabled":true, "checked":false},
-			                  {"id":"TFBS", "disabled":true, "checked":false},
 			                  {"id":"Histone", "disabled":true, "checked":false},
 			                  {"id":"Polymerase", "disabled":true, "checked":false},
 			                  {"id":"Open Chromatin", "disabled":true, "checked":false},

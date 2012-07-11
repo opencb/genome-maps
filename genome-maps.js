@@ -82,15 +82,14 @@ function GenomeMaps(targetId,args){
 	
 	//SPECIE EVENT
 	this.genomeViewer.onSpeciesChange.addEventListener(function(sender,data){
-//		_this.draw();
-//		console.log("*CAMBIAMOS LA ESPECIE")
 		_this._setTracks();
 		_this.setTracksMenu();
-	});
-	//Events i listen
-	this.genomeViewer.onLocationChange.addEventListener(function(sender,data){
 		_this.headerWidget.setDescription(_this.genomeViewer.speciesName);
 	});
+	
+	//Events i listen
+//	this.genomeViewer.onLocationChange.addEventListener(function(sender,data){
+//	});
 	
 	//RESIZE EVENT
 	$(window).smartresize(function(a){
@@ -250,7 +249,7 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 		});
 		this.genomeViewer.addTrack(geneTrack,{
 			id:trackId,
-			featuresRender:"MultiFeatureRender",
+			featuresRender:"GeneTranscriptRender",
 			histogramZoom:20,
 			transcriptZoom:50,
 			height:24,
@@ -399,7 +398,7 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 			adapter: new CellBaseAdapter({
 				category: "genomic",
 				subCategory: "region",
-				resource: "mirna_targets",
+				resource: "mirna_target",
 				species: this.genomeViewer.species,
 				featureCache:{
 					gzip: true,
@@ -569,7 +568,7 @@ GenomeMaps.prototype.getMenuBar = function() {
 					legendWidget.draw(GENE_BIOTYPE_COLORS);
 				}
 			}
-//			,'-',
+			,'-',
 //			{
 //	        	 text:'Ensembl Id',
 //	        	 checked:false,
@@ -587,46 +586,46 @@ GenomeMaps.prototype.getMenuBar = function() {
 //					}
 //	         	}
 //	         },
-//	         {
-//					text : 'Download as',
-//					iconCls:'icon-box',
-//					menu : [{
-//						text:'PNG',iconCls:'icon-blue-box',disabled:false,
-//						listeners : {
-//							scope : this,
-//							'click' : function() {
-//								var svg = new XMLSerializer().serializeToString(this.genomeViewer.genomeWidget.trackCanvas._svg);
-//								var canvas = DOM.createNewElement("canvas", document.body, [["id", this.id+"png"],["visibility", this.id+"hidden"]]);
-//								canvg(canvas, svg);
-//								Canvas2Image.saveAsPNG(canvas);
-//								$("#"+this.id+"png").remove();
-////								DOM.select("canvas").parent.removeChild(canvas);
-//							}
-//						}
-//					},{
-//						text:'JPEG',iconCls:'icon-blue-box',disabled:false,
-//						listeners : {
-//						scope : this,
-//							'click' : function() {
-//								try{
-//									_this.genomeViewer._getPanel().setLoading("Saving image");
-//									var svg = new XMLSerializer().serializeToString(this.genomeViewer.genomeWidget.trackCanvas._svg);
-//									var canvas = DOM.createNewElement("canvas", document.body, [["id", this.id+"jpg"],["visibility", this.id+"hidden"]]);
-//									canvg(canvas, svg);
-//									Canvas2Image.saveAsJPEG(canvas); 
-//									$("#"+this.id+"jpg").remove();
-////									DOM.select("canvas").parent.removeChild(canvas);
-//								}
-//								catch(e){
-//									alert(e);
-//								}
-//								finally{
-//									_this.genomeViewer._getPanel().setLoading(false);
-//								}
-//							}
-//						}
-//					}]
-//				}
+	         {
+					text : 'Download as',
+					iconCls:'icon-box',
+					menu : [{
+						text:'PNG',iconCls:'icon-blue-box',disabled:false,
+						listeners : {
+							scope : this,
+							'click' : function() {
+								var svg = new XMLSerializer().serializeToString(this.genomeViewer.genomeWidget.trackCanvas._svg);
+								var canvas = DOM.createNewElement("canvas", document.body, [["id", this.id+"png"],["visibility", this.id+"hidden"]]);
+								canvg(canvas, svg);
+								Canvas2Image.saveAsPNG(canvas);
+								$("#"+this.id+"png").remove();
+//								DOM.select("canvas").parent.removeChild(canvas);
+							}
+						}
+					},{
+						text:'JPEG',iconCls:'icon-blue-box',disabled:false,
+						listeners : {
+						scope : this,
+							'click' : function() {
+								try{
+									_this.genomeViewer._getPanel().setLoading("Saving image");
+									var svg = new XMLSerializer().serializeToString(this.genomeViewer.genomeWidget.trackCanvas._svg);
+									var canvas = DOM.createNewElement("canvas", document.body, [["id", this.id+"jpg"],["visibility", this.id+"hidden"]]);
+									canvg(canvas, svg);
+									Canvas2Image.saveAsJPEG(canvas); 
+									$("#"+this.id+"jpg").remove();
+//									DOM.select("canvas").parent.removeChild(canvas);
+								}
+								catch(e){
+									alert(e);
+								}
+								finally{
+									_this.genomeViewer._getPanel().setLoading(false);
+								}
+							}
+						}
+					}]
+				}
 			]
 	});
 	
@@ -1231,13 +1230,14 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 	menu.add([{
 		id : this.id+"tracksMenuPlugins",
 		text : 'Load',
-		menu : [{
-			id : this.id+"tracksMenuGFF",
-			text : 'GFF',
+		menu : [
+		  {
+			id : this.id+"tracksMenuGFF2",
+			text : 'GFF2',
 			handler : function() {
 //			_this.getGFFUploadMenu();
 //			_this.openGFFDialog.show();
-			var gffFileWidget = new GFFFileWidget({viewer:_this.genomeViewer});
+			var gffFileWidget = new GFFFileWidget({version:2,viewer:_this.genomeViewer});
 			gffFileWidget.draw();
 			if (_this.wum){
 				_this.headerWidget.onLogin.addEventListener(function (sender){
@@ -1248,10 +1248,10 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 				});
 			}
 			gffFileWidget.onOk.addEventListener(function(sender, event) {
-				var gffTrack = new TrackData(event.fileName,{
+				var gff2Track = new TrackData(event.fileName,{
 					adapter: event.adapter
 				});
-				_this.genomeViewer.addTrack(gffTrack,{
+				_this.genomeViewer.addTrack(gff2Track,{
 					id:event.fileName,
 					featuresRender:"MultiFeatureRender",
 //					histogramZoom:80,
@@ -1262,7 +1262,73 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 			});
 
 		}
-		}, {
+		},
+		  {
+			id : this.id+"tracksMenuGFF3",
+			text : 'GFF3',
+			handler : function() {
+//			_this.getGFFUploadMenu();
+//			_this.openGFFDialog.show();
+			var gffFileWidget = new GFFFileWidget({version:3,viewer:_this.genomeViewer});
+			gffFileWidget.draw();
+			if (_this.wum){
+				_this.headerWidget.onLogin.addEventListener(function (sender){
+					gffFileWidget.sessionInitiated();
+				});
+				_this.headerWidget.onLogout.addEventListener(function (sender){
+					gffFileWidget.sessionFinished();
+				});
+			}
+			gffFileWidget.onOk.addEventListener(function(sender, event) {
+				var gff3Track = new TrackData(event.fileName,{
+					adapter: event.adapter
+				});
+				_this.genomeViewer.addTrack(gff3Track,{
+					id:event.fileName,
+					featuresRender:"MultiFeatureRender",
+//					histogramZoom:80,
+					height:150,
+					visibleRange:{start:0,end:100},
+					featureTypes:FEATURE_TYPES
+				});
+			});
+
+		}
+		},
+		  {
+			id : this.id+"tracksMenuGTF",
+			text : 'GTF',
+			handler : function() {
+//			_this.getGFFUploadMenu();
+//			_this.openGFFDialog.show();
+			var gtfFileWidget = new GTFFileWidget({viewer:_this.genomeViewer});
+			gtfFileWidget.draw();
+			if (_this.wum){
+				_this.headerWidget.onLogin.addEventListener(function (sender){
+					gtfFileWidget.sessionInitiated();
+				});
+				_this.headerWidget.onLogout.addEventListener(function (sender){
+					gtfFileWidget.sessionFinished();
+				});
+			}
+			gtfFileWidget.onOk.addEventListener(function(sender, event) {
+				var gtfTrack = new TrackData(event.fileName,{
+					adapter: event.adapter
+				});
+				_this.genomeViewer.addTrack(gtfTrack,{
+					id:event.fileName,
+					featuresRender:"MultiFeatureRender",
+//					histogramZoom:80,
+					height:150,
+					visibleRange:{start:0,end:100},
+					featureTypes:FEATURE_TYPES
+				});
+			});
+
+		}
+		},
+		
+		{
 			id : this.id+"tracksMenuBED",
 			text : 'BED',
 			handler : function() {
@@ -1293,7 +1359,7 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 		},
 		{
 			id : this.id+"tracksMenuVCF",
-			text : 'VCF',
+			text : 'VCF4',
 			handler : function() {
 			var vcfFileWidget = new VCFFileWidget({viewer:_this.genomeViewer});
 			vcfFileWidget.draw();
@@ -1367,83 +1433,3 @@ GenomeMaps.prototype.setPluginsMenu = function() {
 	
 	
 };
-
-
-
-
-
-
-
-
-
-
-//GenomeMaps.prototype.getPluginsMenuOLD = function(chromosome, position) {
-//	var _this = this;
-//	if(this.pluginsMenu==null){
-//		return Ext.create('Ext.menu.Menu', {
-//			margin : '0 0 10 0',
-//			floating : true,
-//			items : [{
-//						text : 'Expression',
-//						handler : function() {
-//							var expressionGenomicAttributesWidget = new ExpressionGenomicAttributesWidget(_this.genomeViewer.species);
-//							
-//							if (_this.wum){
-//								_this.headerWidget.onLogin.addEventListener(function (sender){
-//									expressionGenomicAttributesWidget.attributesPanel.sessionInitiated();
-//								});
-//								_this.headerWidget.onLogout.addEventListener(function (sender){
-//									expressionGenomicAttributesWidget.attributesPanel.sessionFinished();
-//								});
-//							}
-//							expressionGenomicAttributesWidget.draw();
-//							expressionGenomicAttributesWidget.onMarkerClicked.addEventListener(function(sender, feature){
-//								_this.goTo(feature.chromosome, feature.start);
-//								
-//							});
-//							
-//							expressionGenomicAttributesWidget.onTrackAddAction.addEventListener(function(sender, feature){
-//								console.log(feature);
-//								_this.addTrackFromFeaturesList(feature);
-//								
-//							});
-//
-//						}
-//					},
-//					{
-//						text : 'Genotype',
-//						handler : function() {
-//							var genotypeGenomicAttributesWidget =  new GenotypeGenomicAttributesWidget(_this.genomeViewer.species);
-//							
-//							if (_this.wum){
-//								_this.headerWidget.onLogin.addEventListener(function (sender){
-//									genotypeGenomicAttributesWidget.attributesPanel.sessionInitiated();
-//								});
-//								_this.headerWidget.onLogout.addEventListener(function (sender){
-//									genotypeGenomicAttributesWidget.attributesPanel.sessionFinished();
-//								});
-//							}
-//							
-//							genotypeGenomicAttributesWidget.draw();
-//							
-//							genotypeGenomicAttributesWidget.onMarkerClicked.addEventListener(function(sender, feature){
-//								_this.goTo(feature.chromosome, feature.start);
-//							});
-//							
-//							genotypeGenomicAttributesWidget.onTrackAddAction.addEventListener(function(sender, feature){
-//								_this.addTrackFromFeaturesList(feature);
-//								
-//							});
-//						}
-//					}]
-//		});
-//	}
-//	
-//	return Ext.create('Ext.menu.Menu', {
-//		margin : '0 0 10 0',
-//		floating : true,
-//		items : this.pluginsMenu
-//	});
-//	
-//	
-//};
