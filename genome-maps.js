@@ -5,7 +5,7 @@ function GenomeMaps(targetId,args){
 	this.title="Genome Maps";
 	this.description="RC";
 	this.wum=true;
-	this.version="2.0.0";
+	this.version="2.0.1";
 
 	this.args = args;
 	
@@ -142,30 +142,12 @@ GenomeMaps.prototype.draw = function(){
 	
 	
 	this.genomeViewer.afterRender.addEventListener(function(sender,event){
-		Ext.getCmp(_this.genomeViewer.id+"versionLabel").setText('<span class="info">'+_this.version+'</span>');
-		var geneTrack = new TrackData("gene",{
-			adapter: new CellBaseAdapter({
-				category: "genomic",
-				subCategory: "region",
-				resource: "gene",
-				species: _this.genomeViewer.species,
-				featureCache:{
-					gzip: true,
-					chunkSize:50000
-				}
-			})
-		});
-		_this.genomeViewer.trackSvgLayout2.addTrack(geneTrack,{
-			id:"gene",
-			type:"gene",
-			featuresRender:"MultiFeatureRender",
-			histogramZoom:20,
-			height:150,
-			visibleRange:{start:0,end:100},
-			titleVisibility:'hidden',
-			featureTypes:FEATURE_TYPES
-		});
+		Ext.getCmp(_this.genomeViewer.id+"versionLabel").setText('<span class="info">Genome Maps v'+_this.version+'</span>');
 		_this._setTracks();
+		_this._setRegionTracks();
+		_this.genomeViewer.onSvgRemoveTrack.addEventListener(function(sender,trackId){
+			Ext.getCmp(_this.id+trackId+"menu").setChecked(false);
+		});
 	});
 	this.setTracksMenu();
 //	this.setDASMenu();
@@ -186,6 +168,31 @@ GenomeMaps.prototype.setSize = function(width,height){
 	this.headerWidget.setWidth(width);
 };
 
+GenomeMaps.prototype._setRegionTracks= function(){
+	var geneTrack = new TrackData("gene",{
+		adapter: new CellBaseAdapter({
+			category: "genomic",
+			subCategory: "region",
+			resource: "gene",
+			species: this.genomeViewer.species,
+			featureCache:{
+				gzip: true,
+				chunkSize:50000
+			}
+		})
+	});
+	this.genomeViewer.trackSvgLayout2.addTrack(geneTrack,{
+		id:"gene",
+		type:"gene",
+		featuresRender:"MultiFeatureRender",
+		histogramZoom:10,
+		labelZoom:20,
+		height:150,
+		visibleRange:{start:0,end:100},
+		titleVisibility:'hidden',
+		featureTypes:FEATURE_TYPES
+	});
+};
 
 GenomeMaps.prototype._setTracks= function(){
 	//Load initial TRACKS config
@@ -203,7 +210,7 @@ GenomeMaps.prototype._setTracks= function(){
 			if(checked && !disabled && !this.genomeViewer.checkRenderedTrack(id)){
 				this.addTrack(id);
 			}else if((!checked || disabled) && this.genomeViewer.checkRenderedTrack(id)){
-				this.genomeViewer.removeTrack(id);
+				this.removeTrack(id);
 			}
 		}
 	}
@@ -230,6 +237,9 @@ GenomeMaps.prototype._setTracks= function(){
 
 };
 
+GenomeMaps.prototype.removeTrack = function(trackId) {
+	this.genomeViewer.removeTrack(trackId);
+};
 
 GenomeMaps.prototype.addTrack = function(trackId) {
 	console.log(trackId);
@@ -277,8 +287,7 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 			id:trackId,
 			featuresRender:"SequenceRender",
 			height:50,
-			visibleRange:{start:100,end:100},
-			closable: false
+			visibleRange:{start:100,end:100}
 		});
 		break;
 	case "CpG islands":
@@ -319,7 +328,8 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 		this.genomeViewer.addTrack(snpTrack,{
 			id:trackId,
 			featuresRender:"MultiFeatureRender",
-			histogramZoom:80,
+			histogramZoom:70,
+			labelZoom:80,
 			height:150,
 			visibleRange:{start:0,end:100},
 			featureTypes:FEATURE_TYPES
@@ -1088,6 +1098,7 @@ GenomeMaps.prototype.getTracksMenu = function() {
 		var sources = [];
 		for ( var j = 0, lenj = categories[i].tracks.length; j < lenj; j++){
 			sources.push({
+				id : this.id+categories[i].tracks[j].id+"menu",
 				text : categories[i].tracks[j].id,
 				disabled : categories[i].tracks[j].disabled,
 				checked : categories[i].tracks[j].checked,
@@ -1100,7 +1111,7 @@ GenomeMaps.prototype.getTracksMenu = function() {
 //						}
 					}
 					else{
-						_this.genomeViewer.removeTrack(this.text);
+						_this.removeTrack(this.text);
 					}
 				}
 			});
@@ -1125,6 +1136,7 @@ GenomeMaps.prototype.getTracksMenu = function() {
 		floating : true,
 		items : items
 	});
+	console.log(this._TracksMenu);
 	return this._TracksMenu;
 };
 
@@ -1144,22 +1156,24 @@ GenomeMaps.prototype.getDASMenu = function() {
 			for ( var j = 0, lenj = tracks[i].categories.length; j < lenj; j++){
 				var sources = [];
 				for ( var k = 0, lenk = tracks[i].categories[j].sources.length; k < lenk; k++){
-					sources.push({text : tracks[i].categories[j].sources[k].name,
-								  sourceName : tracks[i].categories[j].sources[k].name,
-								  sourceUrl : tracks[i].categories[j].sources[k].url,
-								  checked : tracks[i].categories[j].sources[k].checked,
-								  handler : function() {
-									  if(this.checked){
-//										  if(_this.genomeViewer.trackSvgLayout.swapHash[this.sourceName]){
-//											  _this.genomeViewer.trackSvgLayout._showTrack(this.sourceName);
-//										  }else{
-											  _this.addDASTrack(this.sourceName, this.sourceUrl);
-//										  }
-									  }
-									  else{
-										  _this.genomeViewer.removeTrack(this.sourceName);
-									  }
-								  }
+					sources.push({
+						id : this.id+tracks[i].categories[j].sources[k].name+"menu",
+						text : tracks[i].categories[j].sources[k].name,
+						sourceName : tracks[i].categories[j].sources[k].name,
+						sourceUrl : tracks[i].categories[j].sources[k].url,
+						checked : tracks[i].categories[j].sources[k].checked,
+						handler : function() {
+							if(this.checked){
+//								if(_this.genomeViewer.trackSvgLayout.swapHash[this.sourceName]){
+//								_this.genomeViewer.trackSvgLayout._showTrack(this.sourceName);
+//								}else{
+								_this.addDASTrack(this.sourceName, this.sourceUrl);
+//								}
+							}
+							else{
+								_this.removeTrack(this.sourceName);
+							}
+						}
 					});
 				}
 				items.push({
