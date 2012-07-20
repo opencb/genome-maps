@@ -34,7 +34,7 @@ var SPECIES_TRACKS_GROUP = {"hsa":"group1",
 var TRACKS ={"group1":[
 			          {"category":"Core",
 					   "tracks":[
-					          {"id":"Cytoband", "disabled":false, "checked":true},
+//					          {"id":"Cytoband", "disabled":false, "checked":true},
 					          {"id":"Sequence", "disabled":false, "checked":true},
 					          {"id":"Gene/Transcript", "disabled":false, "checked":true},
 			                  {"id":"CpG islands", "disabled":false, "checked":false}
@@ -62,7 +62,7 @@ var TRACKS ={"group1":[
 			"group2":[
 			          {"category":"Core",
 					   "tracks":[
-					          {"id":"Cytoband", "disabled":false, "checked":true},
+//					          {"id":"Cytoband", "disabled":false, "checked":true},
 					          {"id":"Sequence", "disabled":false, "checked":true},
 					          {"id":"Gene/Transcript", "disabled":false, "checked":true},
 			                  {"id":"CpG islands", "disabled":true, "checked":false}
@@ -90,7 +90,7 @@ var TRACKS ={"group1":[
 			"group3":[
 			          {"category":"Core",
 					   "tracks":[
-					          {"id":"Cytoband", "disabled":false, "checked":true},
+//					          {"id":"Cytoband", "disabled":false, "checked":true},
 					          {"id":"Sequence", "disabled":false, "checked":true},
 					          {"id":"Gene/Transcript", "disabled":false, "checked":true},
 			                  {"id":"CpG islands", "disabled":true, "checked":false}

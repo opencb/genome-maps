@@ -5,7 +5,7 @@ function GenomeMaps(targetId,args){
 	this.title="Genome Maps";
 	this.description="RC";
 	this.wum=true;
-	this.version="2.0.1";
+	this.version="2.0.2";
 
 	this.args = args;
 	
@@ -139,7 +139,6 @@ GenomeMaps.prototype.draw = function(){
 		position: {my:"bottom center",at:"top center",adjust: { y: 0, x:-25 }}
 		
 	});
-	
 	
 	this.genomeViewer.afterRender.addEventListener(function(sender,event){
 		Ext.getCmp(_this.genomeViewer.id+"versionLabel").setText('<span class="info">Genome Maps v'+_this.version+'</span>');
@@ -554,6 +553,7 @@ GenomeMaps.prototype.getMenuBar = function() {
 		]
 	});
 	
+	
 	var viewMenu = Ext.create('Ext.menu.Menu', {
 		margin : '0 0 10 0',
 		floating : true,
@@ -561,6 +561,25 @@ GenomeMaps.prototype.getMenuBar = function() {
 				text : 'Zoom',
 				menu : this.getZoomMenu()
 			}, '-',
+//			{
+//				text : 'Karyotype',
+//				handler : function() {
+//					Ext.getCmp(_this.genomeViewer.id+"karyotypeButton").toggle();
+//				}
+//			},
+//			{
+//				text : 'Chromosome',
+//				handler : function() {
+//					Ext.getCmp(_this.genomeViewer.id+"ChromosomeToggleButton").toggle();
+//				}
+//			},
+//			{
+//				text : 'Region',
+//				handler : function() {
+//					Ext.getCmp(_this.genomeViewer.id+"RegionToggleButton").toggle();
+//				}
+//			},
+//			'-',
 //			{
 //				text : 'Label',
 //				menu : this.getLabelMenu()
