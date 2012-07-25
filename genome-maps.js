@@ -5,7 +5,7 @@ function GenomeMaps(targetId,args){
 	this.title="Genome Maps";
 	this.description="RC";
 	this.wum=true;
-	this.version="2.1.1";
+	this.version="2.1.2";
 
 	this.args = args;
 	
