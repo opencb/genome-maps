@@ -53,6 +53,8 @@
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/svg/canvg.js"></script> 
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/svg/rgbcolor.js"></script> 
 	
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/rawdeflate.js"></script> 
+	
 <!-- 	<script type="text/javascript" src="https://raw.github.com/eligrey/BlobBuilder.js/master/BlobBuilder.min.js"/></script> -->
 <!-- 	<script type="text/javascript" src="https://raw.github.com/eligrey/canvas-toBlob.js/master/canvas-toBlob.min.js"/></script> -->
 <!-- 	<script type="text/javascript" src="https://raw.github.com/eligrey/FileSaver.js/master/FileSaver.min.js"/></script> -->
@@ -67,49 +69,45 @@
 	
 	
 	<!-- LIBS -->
-		<!-- js-commons-lib utils -->
-		
+	<!-- js-commons-lib utils -->
 	<script type="text/javascript" src="../js-commons-lib/utils/event.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/utils/graphics/svg.js"  ></script> 
+	<script type="text/javascript" src="../js-commons-lib/utils/svg.js"  ></script> 
 	<script type="text/javascript" src="../js-commons-lib/utils/normalization.js"  ></script>
 	<script type="text/javascript" src="../js-commons-lib/utils/colors.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/utils/dom.js"  ></script>
 	
 
 
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/ui-widgets/file/file-widget.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/ui-widgets/legend-widget.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/ui-widgets/legend-panel.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/ui-widgets/url/url-widget.js"  ></script>
-
-	
 
 	<!-- wum ui-widgets -->
-	<script type="text/javascript" src="../apps/wum/ui-widgets/header-widget.js"></script>
-	<script type="text/javascript" src="../apps/wum/ui-widgets/user-list-widget.js"></script>
-	<script type="text/javascript" src="../apps/wum/ui-widgets/job-list-widget.js"></script>
-	<script type="text/javascript" src="../apps/wum/ui-widgets/data-list-widget.js"></script>
-	<script type="text/javascript" src="../apps/wum/ui-widgets/paged-view-list-widget.js"></script>
-	<script type="text/javascript" src="../apps/wum/ui-widgets/user-bar-widget.js"></script>
-	<script type="text/javascript" src="../apps/wum/ui-widgets/upload-widget.js"></script>
-	<script type="text/javascript" src="../apps/wum/ui-widgets/login-widget.js"></script>
-	<script type="text/javascript" src="../apps/wum/ui-widgets/edit-user-widget.js"></script>
-	<script type="text/javascript" src="../apps/wum/ui-widgets/result-widget.js"></script>
-	<script type="text/javascript" src="../apps/wum/ui-widgets/result-table.js"></script>
-	<script type="text/javascript" src="../apps/wum/ui-widgets/browser-data-widget.js"></script>
-	<script type="text/javascript" src="../apps/wum/ui-widgets/manage-projects-widget.js"></script>
-	
+	<script type="text/javascript" src="../js-commons-lib/wum/ui-widgets/header-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/wum/ui-widgets/user-list-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/wum/ui-widgets/job-list-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/wum/ui-widgets/data-list-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/wum/ui-widgets/paged-view-list-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/wum/ui-widgets/user-bar-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/wum/ui-widgets/upload-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/wum/ui-widgets/login-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/wum/ui-widgets/edit-user-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/wum/ui-widgets/result-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/wum/ui-widgets/result-table.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/wum/ui-widgets/browser-data-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/wum/ui-widgets/manage-projects-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/wum/ui-widgets/check-browser.js"></script>
 	
 	<!-- wum ws-manager -->
-	<script type="text/javascript" src="../apps/wum/ws-manager/wum-adapter.js"></script>
-	<script type="text/javascript" src="../apps/wum/ws-manager/wum-rest-adapter.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/wum/ws-manager/wum-adapter.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/wum/ws-manager/wum-rest-adapter.js"></script>
 	
 
 
 	<!-- js-commons-lib genome-viewer -->
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/file-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/legend-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/legend-panel.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/url-widget.js"  ></script>
+	
 	<script type="text/javascript" src="../js-commons-lib/genome-viewer/gv-config.json"  ></script>
 	<script type="text/javascript" src="../js-commons-lib/genome-viewer/feature-binary-search-tree.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/rawdeflate.js"  ></script>
 	<script type="text/javascript" src="../js-commons-lib/genome-viewer/genome-viewer.js"  ></script>
 	<script type="text/javascript" src="../js-commons-lib/genome-viewer/track-svg.js"  ></script>
 	<script type="text/javascript" src="../js-commons-lib/genome-viewer/track-svg-layout.js"  ></script>
@@ -172,7 +170,7 @@
 
 		<!-- genome-maps -->
 	<script type="text/javascript" src="./config/gm-config.json"  ></script>
-	<script type="text/javascript" src="./config/plugins-config.json"  ></script>
+	<script type="text/javascript" src="./config/gm-plugins-config.json"  ></script>
 	<script type="text/javascript" src="./genome-maps.js"  ></script>
 	
 	<!-- genome-maps plugins -->	
@@ -184,7 +182,6 @@
 
 
 
-	<script type="text/javascript" src="../apps/wum/ui-widgets/check-browser.js"></script>
 
 	<script>
 	// 	Ext.application({
