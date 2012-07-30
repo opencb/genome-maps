@@ -173,6 +173,7 @@ GenomeMaps.prototype._setRegionTracks= function(){
 			category: "genomic",
 			subCategory: "region",
 			resource: "gene",
+			host: GV_CELLBASE_HOST,
 			species: this.genomeViewer.species,
 			featureCache:{
 				gzip: true,
@@ -1155,7 +1156,6 @@ GenomeMaps.prototype.getTracksMenu = function() {
 		floating : true,
 		items : items
 	});
-	console.log(this._TracksMenu);
 	return this._TracksMenu;
 };
 

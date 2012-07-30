@@ -69,8 +69,6 @@
 	<!-- LIBS -->
 		<!-- js-commons-lib utils -->
 		
-
-		
 	<script type="text/javascript" src="../js-commons-lib/utils/event.js"  ></script>
 	<script type="text/javascript" src="../js-commons-lib/utils/graphics/svg.js"  ></script> 
 	<script type="text/javascript" src="../js-commons-lib/utils/normalization.js"  ></script>
@@ -183,6 +181,11 @@
 	<script type="text/javascript" src="./plugins/expression.js"  ></script>
 	<script type="text/javascript" src="./plugins/genotype.js"  ></script>
 
+
+
+
+	<script type="text/javascript" src="../apps/wum/ui-widgets/check-browser.js"></script>
+
 	<script>
 	// 	Ext.application({
 	// 	    launch: run
@@ -212,7 +215,7 @@
 	Ext.onReady(run);
 	var genomeMaps;
 	function run(){
-		
+		CheckBrowser();
 // 		var pathname = window.location.href;
 // 		console.log(pathname);
 		genomeMaps = new GenomeMaps("mydiv"); //the div must exist
@@ -262,6 +265,7 @@
 <!--  	</STYLE> -->
 </head>
 <body style="overflow: hidden">
+	<div id="checkBrowser"></div>
 	<div id="mydiv"></div>
 	<div id="gv_div1"></div>
 	<div id="gv_div2"></div>

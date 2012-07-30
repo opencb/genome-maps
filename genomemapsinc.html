@@ -26,6 +26,7 @@
 	</script>
 
   
+  
 	<!-- EXT-LIBS -->
 
 	<!-- Ext-js -->
@@ -53,36 +54,21 @@
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/svg/canvg.js"></script> 
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/svg/rgbcolor.js"></script> 
 	
-<!-- 	<script type="text/javascript" src="https://raw.github.com/eligrey/BlobBuilder.js/master/BlobBuilder.min.js"/></script> -->
-<!-- 	<script type="text/javascript" src="https://raw.github.com/eligrey/canvas-toBlob.js/master/canvas-toBlob.min.js"/></script> -->
-<!-- 	<script type="text/javascript" src="https://raw.github.com/eligrey/FileSaver.js/master/FileSaver.min.js"/></script> -->
-	
-	
 	
 	<!-- CHEMDOODLE -->
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/ChemDoodleWeb/install/ChemDoodleWeb-libs.js"></script> 
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/ChemDoodleWeb/install/ChemDoodleWeb.js"></script> 
 	
 	
-	
-	<script type="text/javascript" src="https://raw.github.com/CapMousse/include.js/master/include-min.js"></script> 
-	
 	<!-- LIBS -->
-		<!-- js-commons-lib utils -->
-		
+	<script type="text/javascript" src="/bioinfo-js/js-commons-lib/utils/libutils.inc.js"></script>
+	<script type="text/javascript" src="/bioinfo-js/js-commons-lib/ui-widgets/libui.inc.js"></script>
+  	<script type="text/javascript" src="/bioinfo-js/js-commons-lib/genome-viewer/libgv.inc.js"></script>
+	<script type="text/javascript" src="/bioinfo-js/js-commons-lib/cellbase/libcb.inc.js"></script>
+	<script type="text/javascript" src="/bioinfo-js/apps/wum/wum.inc.js"></script>
+	<script type="text/javascript" src="/bioinfo-js/genome-maps/gm.inc.js"></script>	
 
 	<script>
-	include([
-	         "/bioinfo-js/js-commons-lib/js-commons-lib.inc.js",
-	         "/bioinfo-js/apps/apps.inc.js",
-	         "/bioinfo-js/genome-maps/genome-maps.inc.js"
-	         ],function(fn){
-		console.log(fn);
-	});
-	// 	Ext.application({
-	// 	    launch: run
-	// 	});
-	
 	
 	Ext.Loader.setConfig({enabled: true});
 	Ext.Loader.setPath('Ext.ux', 'http://jsapi.bioinfo.cipf.es/ext-libs/sencha/extjs-4.1.1/examples/ux');
