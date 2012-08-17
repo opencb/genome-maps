@@ -43,22 +43,17 @@ function GenomeMaps(targetId,args){
 	}
 	
 	var urlSpecies = url.param('species');
+	var speciesObj = AVAILABLE_SPECIES[0];
 	if(urlSpecies != null){
 		//TODO change to object AVAILABLE SPECIES
-		var found = false;
 		for(var i = 0; i < AVAILABLE_SPECIES.length; i++){
 			if(AVAILABLE_SPECIES[i].species==urlSpecies){
-				found = true;
+				speciesObj=AVAILABLE_SPECIES[i];
 				break;
 			}
 		}
-		if(!found){
-			urlSpecies = AVAILABLE_SPECIES[0];
-		}
-	}else{
-		urlSpecies = AVAILABLE_SPECIES[0];
-	}	
-	
+	}
+	console.log(speciesObj)	
 //	console.log(Ext.ComponentManager.each(function(a){console.log(a);}));
 //	console.log(Ext.ComponentManager.getCount());
 	
@@ -77,7 +72,7 @@ function GenomeMaps(targetId,args){
 //		var species = AVAILABLE_SPECIES[0];
 //	}
 	
-	this.genomeViewer = new GenomeViewer(this.id+"gvDiv", urlSpecies,{
+	this.genomeViewer = new GenomeViewer(this.id+"gvDiv", speciesObj,{
 		position:position,
 		chromosome:chromosome,
 		toolbar:this.getMenuBar(),
