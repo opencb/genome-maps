@@ -42,6 +42,23 @@ function GenomeMaps(targetId,args){
 		var chromosome = location.split(":")[0];
 	}
 	
+	var urlSpecies = url.param('species');
+	if(urlSpecies != null){
+		//TODO change to object AVAILABLE SPECIES
+		var found = false;
+		for(var i = 0; i < AVAILABLE_SPECIES.length; i++){
+			if(AVAILABLE_SPECIES[i].species==urlSpecies){
+				found = true;
+				break;
+			}
+		}
+		if(!found){
+			urlSpecies = AVAILABLE_SPECIES[0];
+		}
+	}else{
+		urlSpecies = AVAILABLE_SPECIES[0];
+	}	
+	
 //	console.log(Ext.ComponentManager.each(function(a){console.log(a);}));
 //	console.log(Ext.ComponentManager.getCount());
 	
@@ -60,7 +77,7 @@ function GenomeMaps(targetId,args){
 //		var species = AVAILABLE_SPECIES[0];
 //	}
 	
-	this.genomeViewer = new GenomeViewer(this.id+"gvDiv", AVAILABLE_SPECIES[0],{
+	this.genomeViewer = new GenomeViewer(this.id+"gvDiv", urlSpecies,{
 		position:position,
 		chromosome:chromosome,
 		toolbar:this.getMenuBar(),
