@@ -79,7 +79,7 @@ function GenomeMaps(targetId,args){
 		version:this.version,
 		availableSpecies: AVAILABLE_SPECIES,
 		height:this.height-this.headerWidget.height,
-		width:this.width
+		width:this.width,
 	});
 	
 	/**Atach events i listen**/
