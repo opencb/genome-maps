@@ -2,12 +2,11 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Genome Maps</title>
+	<title>Genome Maps</title>
 
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/ext-libs/sencha/extjs-4.1.1/resources/css/ext-all.css">
+	<link rel="stylesheet" type="text/css" href="http://cdn.sencha.io/ext-4.1.1-gpl/resources/css/ext-all.css">
  	<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/libs/resources/css/style.css">  
-	<!--	<link rel="stylesheet" type="text/css" href="../../wum/resources/css/style.css"> -->
 	<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/ext-libs/ChemDoodleWeb/install/ChemDoodleWeb.css">
 	<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.qtip.min.css">
   
@@ -29,8 +28,8 @@
 	<!-- EXT-LIBS -->
 
 	<!-- Ext-js -->
-	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/sencha/extjs-4.1.1/ext-all.js"></script>
-	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/sencha/extjs-4.1.1/examples/shared/examples.js"></script>
+	<script type="text/javascript" src="http://cdn.sencha.io/ext-4.1.1-gpl/ext-all.js"></script>
+	<script type="text/javascript" src="http://cdn.sencha.io/ext-4.1.1-gpl/examples/shared/examples.js"></script>
 	
 
 	<!-- jQuery -->
@@ -45,11 +44,11 @@
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-mousewheel-3.0.6/jquery.mousewheel.min.js"></script>
 	
 	
-	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/xml2json.js"  ></script>
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/xml2json.js"></script>
 	
 	<!-- Canvas to SVG converters -->
-	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/svg/base64.js"  ></script>
-	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/svg/canvas2image.js"  ></script>
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/svg/base64.js"></script>
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/svg/canvas2image.js"></script>
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/svg/canvg.js"></script> 
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/svg/rgbcolor.js"></script> 
 	
@@ -70,10 +69,10 @@
 	
 	<!-- LIBS -->
 	<!-- js-commons-lib utils -->
-	<script type="text/javascript" src="../js-commons-lib/utils/event.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/utils/svg.js"  ></script> 
-	<script type="text/javascript" src="../js-commons-lib/utils/normalization.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/utils/colors.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/utils/event.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/utils/svg.js"></script> 
+	<script type="text/javascript" src="../js-commons-lib/utils/normalization.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/utils/colors.js"></script>
 	
 
 
@@ -101,51 +100,51 @@
 
 
 	<!-- js-commons-lib genome-viewer -->
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/file-widget.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/legend-widget.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/legend-panel.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/url-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/file-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/legend-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/legend-panel.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/url-widget.js"></script>
 	
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/gv-config.json"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/feature-binary-search-tree.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/genome-viewer.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/track-svg.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/track-svg-layout.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/track-data.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/feature-cache.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/feature-data-adapter.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/chromosome-widget.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/circular-chromosome-widget.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/karyotype-widget.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/data-source.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/cellbase-adapter.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/file-data-source.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/string-data-source.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/url-data-source.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/vcf-data-adapter.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/gff2-data-adapter.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/gff3-data-adapter.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/gtf-data-adapter.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/bed-data-adapter.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/tabular-data-adapter.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/das-adapter.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/cellbase-adapter.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/vcf-file-widget.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/gff-file-widget.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/gtf-file-widget.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/genome-viewer/bed-file-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/gv-config.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/feature-binary-search-tree.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/genome-viewer.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/track-svg.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/track-svg-layout.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/track-data.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/feature-cache.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/feature-data-adapter.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/chromosome-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/circular-chromosome-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/karyotype-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/data-source.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/cellbase-adapter.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/file-data-source.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/string-data-source.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/url-data-source.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/vcf-data-adapter.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/gff2-data-adapter.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/gff3-data-adapter.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/gtf-data-adapter.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/bed-data-adapter.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/tabular-data-adapter.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/das-adapter.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/cellbase-adapter.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/vcf-file-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/gff-file-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/gtf-file-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/genome-viewer/bed-file-widget.js"></script>
 
 	
 	<!-- js-commons-lib cellbase ui-widgets -->
-	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/info-widget.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/gene-info-widget.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/protein-info-widget.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/snp-info-widget.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/transcript-info-widget.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/vcf-variant-info-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/info-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/gene-info-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/protein-info-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/snp-info-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/transcript-info-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/cellbase/ui-widgets/vcf-variant-info-widget.js"></script>
 	
 	<!-- js-commons-lib cellbase ws-manager -->
-	<script type="text/javascript" src="../js-commons-lib/cellbase/cellbase-manager.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/cellbase/cellbase-manager.js"></script>
 	
 	
 	
@@ -158,26 +157,26 @@
 	<script type="text/javascript" src="../js-commons-lib/ui-widgets/attributes/attributes-widget.js"></script>
 	<script type="text/javascript" src="../js-commons-lib/ui-widgets/attributes/attributes-panel.js"></script>
 	
-	<script type="text/javascript" src="../js-commons-lib/ui-widgets/list/list-panel.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/ui-widgets/list/list-widget.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/ui-widgets/list/genomic-list-panel.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/ui-widgets/list/genomic-list-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/list/list-panel.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/list/list-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/list/genomic-list-panel.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/list/genomic-list-widget.js"></script>
 
-	<script type="text/javascript" src="../js-commons-lib/ui-widgets/input-list-widget.js"  ></script>
-	<script type="text/javascript" src="../js-commons-lib/ui-widgets/chart-widget.js"  ></script>
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/input-list-widget.js"></script>
+	<script type="text/javascript" src="../js-commons-lib/ui-widgets/chart-widget.js"></script>
 
 
 
 		<!-- genome-maps -->
-	<script type="text/javascript" src="./config/gm-config.json"  ></script>
-	<script type="text/javascript" src="./config/gm-plugins-config.json"  ></script>
-	<script type="text/javascript" src="./genome-maps.js"  ></script>
+	<script type="text/javascript" src="./config/gm-config.json"></script>
+	<script type="text/javascript" src="./config/gm-plugins-config.json"></script>
+	<script type="text/javascript" src="./genome-maps.js"></script>
 	
 	<!-- genome-maps plugins -->	
-	<script type="text/javascript" src="./plugins/generic-plugin.js"  ></script>
-	<script type="text/javascript" src="./plugins/my-plugin.js"  ></script>
-	<script type="text/javascript" src="./plugins/expression.js"  ></script>
-	<script type="text/javascript" src="./plugins/genotype.js"  ></script>
+	<script type="text/javascript" src="./plugins/generic-plugin.js"></script>
+	<script type="text/javascript" src="./plugins/my-plugin.js"></script>
+	<script type="text/javascript" src="./plugins/expression.js"></script>
+	<script type="text/javascript" src="./plugins/genotype.js"></script>
 
 
 
@@ -192,7 +191,7 @@
 
 	
 	Ext.Loader.setConfig({enabled: true});
-	Ext.Loader.setPath('Ext.ux', 'http://jsapi.bioinfo.cipf.es/ext-libs/sencha/extjs-4.1.1/examples/ux');
+	Ext.Loader.setPath('Ext.ux', 'http://cdn.sencha.io/ext-4.1.1-gpl/examples/ux');
 	Ext.QuickTips.init();
 	Ext.require([
 	    'Ext.ux.grid.FiltersFeature',
@@ -201,10 +200,9 @@
 	
 	var counter = 1000000;
 	function test(ms,positions){
-		if (ms==null){ms = 50;}
+		if (ms==null){ms = 200;}
 		if (positions==null){positions = 250000;}
-// 		genomeMaps.genomeViewer.setLocation("1", counter);
-		genomeMaps.genomeViewer.genomeWidget.trackCanvas.moveX(1)
+		genomeMaps.genomeViewer.trackSvgLayout.onMove.notify(-1)
 		setTimeout("test()", ms);
 		counter = counter + positions;
 	}

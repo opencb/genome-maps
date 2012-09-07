@@ -36,14 +36,20 @@ function GenomeMaps(targetId,args){
 	
 	//Parse query params to get location.... Also in AVAILABLE_SPECIES, an example location is set.
 	var url = $.url();
+	
+	var url_cbhost = url.param('CELLBASE_HOST');
+	if(url_cbhost != null) {
+		CELLBASE_HOST = url_cbhost;
+	}
+	
 	var location = url.param('location');
 	if(location != null) {
 		var position = location.split(":")[1];
 		var chromosome = location.split(":")[0];
 	}
 	
+	var speciesObj = DEFAULT_SPECIES;
 	var urlSpecies = url.param('species');
-	var speciesObj = AVAILABLE_SPECIES[0];
 	if(urlSpecies != null){
 		//TODO change to object AVAILABLE SPECIES
 		for(var i = 0; i < AVAILABLE_SPECIES.length; i++){
@@ -53,7 +59,7 @@ function GenomeMaps(targetId,args){
 			}
 		}
 	}
-	console.log(speciesObj)	
+	console.log(speciesObj);
 //	console.log(Ext.ComponentManager.each(function(a){console.log(a);}));
 //	console.log(Ext.ComponentManager.getCount());
 	
@@ -79,7 +85,7 @@ function GenomeMaps(targetId,args){
 		version:this.version,
 		availableSpecies: AVAILABLE_SPECIES,
 		height:this.height-this.headerWidget.height,
-		width:this.width,
+		width:this.width
 	});
 	
 	/**Atach events i listen**/
@@ -185,7 +191,6 @@ GenomeMaps.prototype._setRegionTracks= function(){
 			category: "genomic",
 			subCategory: "region",
 			resource: "gene",
-			host: GV_CELLBASE_HOST,
 			species: this.genomeViewer.species,
 			featureCache:{
 				gzip: true,
