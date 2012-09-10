@@ -35,7 +35,7 @@ var AVAILABLE_SPECIES = [
                          {"name":"Plasmodium falciparum 3D7", "species":"pfa", "icon":"","chromosome":"01","position":238905}
                          ];
 
-var DEFAULT_SPECIES = AVAILABLE_SPECIES[2];
+var DEFAULT_SPECIES = AVAILABLE_SPECIES[0];
 
 
 var SPECIES_TRACKS_GROUP = {"hsa":"group1",
