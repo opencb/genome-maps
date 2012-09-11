@@ -1,19 +1,18 @@
-//This line never changes
 //CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
+//CELLBASE_HOST = "http://usa.cellbase.org:8080/cellbase/rest";
 CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
-//CELLBASE_HOST = "http://cloud.cellbase.org:8080/cellbase/rest";
 
-//if(window.location.host.indexOf("fsalavert")!=-1 ||
-//   window.location.host.indexOf("rsanchez")!=-1 ||
-//   window.location.host.indexOf("imedina")!=-1 ||
-//   window.location.href.indexOf("http://bioinfo.cipf.es/apps-beta")!=-1
-//){
-////		this.host = "http://ralonso:8080/naranjoma-ws/rest";
-//	this.host = "http://ws-beta.bioinfo.cipf.es/cellbase/rest";
-////		this.host = "http://fsalavert:8080/cellbase/rest";
-////		this.host = "http://rsanchez:8080/cellbase/rest";
-////		this.host = "http://imedina:8080/cellbase/rest";
-//}
+if(window.location.host.indexOf("fsalavert")!=-1 ||
+   window.location.host.indexOf("rsanchez")!=-1 ||
+   window.location.host.indexOf("imedina")!=-1 ||
+   window.location.href.indexOf("http://bioinfo.cipf.es/apps-beta")!=-1
+){
+//		this.host = "http://ralonso:8080/naranjoma-ws/rest";
+	CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbase/rest";
+//		this.host = "http://fsalavert:8080/cellbase/rest";
+//		this.host = "http://rsanchez:8080/cellbase/rest";
+//		this.host = "http://imedina:8080/cellbase/rest";
+}
 
 
 var AVAILABLE_SPECIES = [
