@@ -2,6 +2,7 @@
 //CELLBASE_HOST = "http://usa.cellbase.org:8080/cellbase/rest";
 CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
 
+//devel only
 if(window.location.host.indexOf("fsalavert")!=-1 ||
    window.location.host.indexOf("rsanchez")!=-1 ||
    window.location.host.indexOf("imedina")!=-1 ||
