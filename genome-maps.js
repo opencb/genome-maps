@@ -32,7 +32,7 @@ function GenomeMaps(targetId, args) {
     this.width = $(window).width();
     this.height = $(window).height();
     this.targetId = document.body;
-	
+
     if (targetId != null) {
         this.targetId = targetId;
     }
@@ -53,21 +53,19 @@ function GenomeMaps(targetId, args) {
     
     var url_cbhost = url.param('CELLBASE_HOST');
     if(url_cbhost != null) {
-            CELLBASE_HOST = url_cbhost;
+		CELLBASE_HOST = url_cbhost;
     }
     
     var location = url.param('location');
-    
-    var position;
-    var chromosome;
+    var position, chromosome;
     if(location != null) {
-            position = location.split(":")[1];
-            chromosome = location.split(":")[0];
+		position = location.split(":")[1];
+		chromosome = location.split(":")[0];
     }
     
-    var speciesObj = DEFAULT_SPECIES;
+    speciesObj = DEFAULT_SPECIES;
     var urlSpecies = url.param('species');
-    if(urlSpecies != null){
+    if(urlSpecies != null || urlSpecies != ""){
             //TODO change to object AVAILABLE SPECIES
             for(var i = 0; i < AVAILABLE_SPECIES.length; i++){
                     if(AVAILABLE_SPECIES[i].species==urlSpecies){
@@ -76,7 +74,28 @@ function GenomeMaps(targetId, args) {
                     }
             }
     }
+    this.species = speciesObj.species
     console.log(speciesObj);
+
+    var urlZoom = url.param('zoom');
+	urlZoom = parseInt(urlZoom);
+    if(urlZoom==NaN || urlZoom > 100 || urlZoom < 0 || urlZoom%5 != 0){
+		urlZoom = null;
+	}
+
+    var urlGene = url.param('gene');
+    if(urlGene != null && urlGene != ""){
+		var loc = this.getPostionByFeature(urlGene,"gene");
+		position = loc.position;
+		chromosome = loc.chromosome;
+	}
+    var urlSnp = url.param('snp');
+    if(urlSnp != null && urlSnp != ""){
+		var loc = this.getPostionByFeature(urlSnp,"snp");
+		position = loc.position;
+		chromosome = loc.chromosome;
+	}
+	
 //	console.log(Ext.ComponentManager.each(function(a){console.log(a);}));
 //	console.log(Ext.ComponentManager.getCount());
     
@@ -99,6 +118,7 @@ function GenomeMaps(targetId, args) {
             chromosome:chromosome,
             toolbar:this.getMenuBar(),
             version:this.version,
+            zoom:urlZoom,
             availableSpecies: AVAILABLE_SPECIES,
             height:this.height-this.headerWidget.height,
             width:this.width
@@ -119,6 +139,7 @@ function GenomeMaps(targetId, args) {
             _this._setTracks();
             _this.setTracksMenu();
             _this.headerWidget.setDescription(_this.genomeViewer.speciesName);
+            _this.species=_this.genomeViewer.species;
     });
 
     //Events i listen
@@ -196,6 +217,30 @@ GenomeMaps.prototype.setSize = function(width,height){
 	this._panel.setSize(width,height);
 	this.genomeViewer.setSize(width,height-this.headerWidget.height);
 	this.headerWidget.setWidth(width);
+};
+
+
+GenomeMaps.prototype.getPostionByFeature = function(name, feature){
+	var url = CELLBASE_HOST+"/latest/"+this.species+"/feature/"+feature+"/"+name+"/info?of=json";
+	var f;
+	$.ajax({
+		url:url,
+		async:false,
+		success:function(data){
+			f = JSON.parse(data)[0][0];
+		}
+	});
+	if(f != null){
+		return {chromosome:f.chromosome, position:f.start}
+	}
+	return {};
+};
+
+GenomeMaps.prototype.setLocationByFeature = function(name, feature){
+	var loc = this.getPostionByFeature(name, feature);
+	if (loc.chromosome != null &&  loc.position != null){
+		this.genomeViewer.setLoc(loc);
+	}
 };
 
 GenomeMaps.prototype._setRegionTracks= function(){
@@ -317,7 +362,7 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 			id:trackId,
 			featuresRender:"SequenceRender",
 			height:50,
-			visibleRange:{start:100,end:100}
+			visibleRange:{start:95,end:100}
 		});
 		break;
 	case "CpG islands":
