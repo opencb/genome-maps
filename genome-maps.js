@@ -26,7 +26,7 @@ function GenomeMaps(targetId, args) {
     this.title = "Genome Maps";
     this.description = "RC";
     this.wum = true;
-    this.version = "2.1.4";
+    this.version = "2.1.5";
 
     this.args = args;
     this.width = $(window).width();
@@ -75,7 +75,7 @@ function GenomeMaps(targetId, args) {
             }
     }
     this.species = speciesObj.species
-    console.log(speciesObj);
+    //console.log(speciesObj);
 
     var urlZoom = url.param('zoom');
 	urlZoom = parseInt(urlZoom);
@@ -317,7 +317,7 @@ GenomeMaps.prototype.removeTrack = function(trackId) {
 };
 
 GenomeMaps.prototype.addTrack = function(trackId) {
-	console.log(trackId);
+	//console.log(trackId);
 	switch (trackId) {
 	case "Gene/Transcript":
 		var geneTrack = new TrackData(trackId,{
@@ -347,7 +347,7 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 		break;
 	case "Sequence":
 		var seqtrack = new TrackData(trackId,{
-			adapter: new CellBaseAdapter({
+			adapter: new SequenceAdapter({
 				category: "genomic",
 				subCategory: "region",
 				resource: "sequence",
@@ -574,9 +574,8 @@ GenomeMaps.prototype.addDASTrack = function(sourceName, sourceUrl) {
 		id:sourceName,
 		type:"das",
 		featuresRender:"MultiFeatureRender",
-//		histogramZoom:80,
 		height:150,
-		visibleRange:{start:0,end:100},
+		visibleRange:{start:50,end:100},
 		settings:{
 			height:10
 		}
