@@ -1,27 +1,30 @@
-//CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
+/**
+ * This is a configuration file.
+ * Changes to this file may cause the application does not work as it should
+ *
+ **/
+
+/** URL for the cellbase service **/
 //CELLBASE_HOST = "http://usa.cellbase.org:8080/cellbase/rest";
 CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
 
-//devel only
+
+/** Devel only: custom URL check **/
 if(window.location.host.indexOf("fsalavert")!=-1 ||
    window.location.host.indexOf("rsanchez")!=-1 ||
    window.location.host.indexOf("imedina")!=-1 ||
    window.location.href.indexOf("http://bioinfo.cipf.es/apps-beta")!=-1
 ){
-//		CELLBASE_HOST = "http://ralonso:8080/naranjoma-ws/rest";
-	//CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbase/rest";
-//		CELLBASE_HOST = "http://fsalavert:8080/cellbase/rest";
-//		CELLBASE_HOST = "http://rsanchez:8080/cellbase/rest";
-//		CELLBASE_HOST = "http://imedina:8080/cellbase/rest";
+	CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbase/rest";
+	//CELLBASE_HOST = "http://fsalavert:8080/cellbase/rest";
+	//CELLBASE_HOST = "http://rsanchez:8080/cellbase/rest";
+	//CELLBASE_HOST = "http://imedina:8080/cellbase/rest";
+	//CELLBASE_HOST = "http://ralonso:8080/naranjoma-ws/rest";
 }
 
-
+/** List of available species in the cellbase service **/
 var AVAILABLE_SPECIES = [
-//                         {"name":"Homo sapiens", "species":"hsa", "icon":"","chromosome":"1","position":500},
                          {"name":"Homo sapiens 37.p7", "species":"hsa", "icon":"","chromosome":"13","position":32889611},
-//                         {"name":"Homo sapiens", "species":"hsa", "icon":"","chromosome":"20","position":1234567},
-//                         {"name":"Homo sapiens", "species":"hsa", "icon":"","chromosome":"5","position":143353},
-//						 {"name":"Homo sapiens", "species":"hsa", "icon":"","chromosome":"1","position":127471214},
                          {"name":"Mus musculus m37", "species":"mmu", "icon":"","chromosome":"1","position":18422009},
                          {"name":"Rattus norvegicus 3.4", "species":"rno", "icon":"","chromosome":"1","position":1570040},
                          {"name":"Danio rerio v9", "species":"dre", "icon":"","chromosome":"1","position":1570040},
@@ -33,9 +36,15 @@ var AVAILABLE_SPECIES = [
                          {"name":"Sus scrofa 10.2", "species":"ssc", "icon":"","chromosome":"1","position":135353160},
                          {"name":"Anopheles gambiae 3", "species":"aga", "icon":"","chromosome":"2L","position":12123831},
                          {"name":"Plasmodium falciparum 3D7", "species":"pfa", "icon":"","chromosome":"01","position":238905}
+                         //{"name":"Aspergillus fumigatus 68.2", "species":"afu", "icon":"","chromosome":"I","position":2905},
+                         //{"name":"Fusarium oxysporum 68.2", "species":"fox", "icon":"","chromosome":"1","position":2905}
                          ];
 
+/** Reference to a species from the list to be shown at start **/
 var DEFAULT_SPECIES = AVAILABLE_SPECIES[0];
+
+
+
 
 
 var SPECIES_TRACKS_GROUP = {"hsa":"group1",
