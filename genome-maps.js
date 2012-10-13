@@ -50,17 +50,15 @@ function GenomeMaps(targetId, args) {
 	// Parse query params to get location.... Also in AVAILABLE_SPECIES, an
 	// example location is set.
     var url = $.url();
-    
     var url_cbhost = url.param('CELLBASE_HOST');
     if(url_cbhost != null) {
 		CELLBASE_HOST = url_cbhost;
     }
     
     var location = url.param('location');
-    var position, chromosome;
+    var regionObj;
     if(location != null) {
-		position = location.split(":")[1];
-		chromosome = location.split(":")[0];
+		var regionObj = Compbio.parseRegion(location);
     }
     
     speciesObj = DEFAULT_SPECIES;
@@ -74,7 +72,7 @@ function GenomeMaps(targetId, args) {
                     }
             }
     }
-    this.species = speciesObj.species
+    this.species = speciesObj.species;
     //console.log(speciesObj);
 
     var urlZoom = url.param('zoom');
@@ -85,15 +83,11 @@ function GenomeMaps(targetId, args) {
 
     var urlGene = url.param('gene');
     if(urlGene != null && urlGene != ""){
-		var loc = this.getPostionByFeature(urlGene,"gene");
-		position = loc.position;
-		chromosome = loc.chromosome;
+		regionObj = this.getPostionByFeature(urlGene,"gene");
 	}
     var urlSnp = url.param('snp');
     if(urlSnp != null && urlSnp != ""){
-		var loc = this.getPostionByFeature(urlSnp,"snp");
-		position = loc.position;
-		chromosome = loc.chromosome;
+		regionObj = this.getPostionByFeature(urlSnp,"snp");
 	}
 	
 //	console.log(Ext.ComponentManager.each(function(a){console.log(a);}));
@@ -114,8 +108,7 @@ function GenomeMaps(targetId, args) {
     
     
     this.genomeViewer = new GenomeViewer(this.id+"gvDiv", speciesObj,{
-            position:position,
-            chromosome:chromosome,
+			region:regionObj,
             toolbar:this.getMenuBar(),
             version:this.version,
             zoom:urlZoom,
@@ -198,7 +191,7 @@ GenomeMaps.prototype.draw = function(){
 	this.genomeViewer.afterRender.addEventListener(function(sender,event){
 		Ext.getCmp(_this.genomeViewer.id+"versionLabel").setText('<span class="info">Genome Maps v'+_this.version+'</span>');
 		_this._setTracks();
-		_this._setRegionTracks();
+		_this._setOverviewTracks();
 		_this.genomeViewer.onSvgRemoveTrack.addEventListener(function(sender,trackId){
 			Ext.getCmp(_this.id+trackId+"menu").setChecked(false);
 		});
@@ -231,7 +224,7 @@ GenomeMaps.prototype.getPostionByFeature = function(name, feature){
 		}
 	});
 	if(f != null){
-		return {chromosome:f.chromosome, position:f.start}
+		return {chromosome:f.chromosome, start:f.start, end:f.start}
 	}
 	return {};
 };
@@ -243,7 +236,7 @@ GenomeMaps.prototype.setLocationByFeature = function(name, feature){
 	}
 };
 
-GenomeMaps.prototype._setRegionTracks= function(){
+GenomeMaps.prototype._setOverviewTracks= function(){
 	var geneTrack = new TrackData("gene",{
 		adapter: new CellBaseAdapter({
 			category: "genomic",
@@ -256,7 +249,7 @@ GenomeMaps.prototype._setRegionTracks= function(){
 			}
 		})
 	});
-	this.genomeViewer.trackSvgLayout2.addTrack(geneTrack,{
+	this.genomeViewer.trackSvgLayoutOverview.addTrack(geneTrack,{
 		id:"gene",
 		type:"gene",
 		featuresRender:"MultiFeatureRender",
