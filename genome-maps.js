@@ -49,18 +49,15 @@ function GenomeMaps(targetId, args) {
     }
 	// Parse query params to get location.... Also in AVAILABLE_SPECIES, an
 	// example location is set.
+
+    var region = new Region();
+	
     var url = $.url();
     var url_cbhost = url.param('CELLBASE_HOST');
     if(url_cbhost != null) {
 		CELLBASE_HOST = url_cbhost;
     }
-    
-    var location = url.param('location');
-    var regionObj;
-    if(location != null) {
-		var regionObj = Compbio.parseRegion(location);
-    }
-    
+
     speciesObj = DEFAULT_SPECIES;
     var urlSpecies = url.param('species');
     if(urlSpecies != null || urlSpecies != ""){
@@ -73,21 +70,26 @@ function GenomeMaps(targetId, args) {
             }
     }
     this.species = speciesObj.species;
+    region.load(speciesObj.region);
     //console.log(speciesObj);
 
-    var urlZoom = url.param('zoom');
-	urlZoom = parseInt(urlZoom);
-    if(urlZoom==NaN || urlZoom > 100 || urlZoom < 0 || urlZoom%5 != 0){
+    var regionStr = url.param('region');
+    if(regionStr != null) {
+		region.parse(regionStr);
+    }
+    
+    var urlZoom = parseInt(url.param('zoom'));
+    if(isNaN(urlZoom) || urlZoom > 100 || urlZoom < 0 ){
 		urlZoom = null;
 	}
 
     var urlGene = url.param('gene');
     if(urlGene != null && urlGene != ""){
-		regionObj = this.getPostionByFeature(urlGene,"gene");
+		region.load(this.getRegionByFeature(urlGene,"gene"));
 	}
     var urlSnp = url.param('snp');
     if(urlSnp != null && urlSnp != ""){
-		regionObj = this.getPostionByFeature(urlSnp,"snp");
+		region.load(this.getRegionByFeature(urlSnp,"snp"));
 	}
 	
 //	console.log(Ext.ComponentManager.each(function(a){console.log(a);}));
@@ -105,10 +107,9 @@ function GenomeMaps(targetId, args) {
 //	}else{
 //		var species = AVAILABLE_SPECIES[0];
 //	}
-    
-    
+
     this.genomeViewer = new GenomeViewer(this.id+"gvDiv", speciesObj,{
-			region:regionObj,
+			region:region,
             toolbar:this.getMenuBar(),
             version:this.version,
             zoom:urlZoom,
@@ -213,7 +214,7 @@ GenomeMaps.prototype.setSize = function(width,height){
 };
 
 
-GenomeMaps.prototype.getPostionByFeature = function(name, feature){
+GenomeMaps.prototype.getRegionByFeature = function(name, feature){
 	var url = CELLBASE_HOST+"/latest/"+this.species+"/feature/"+feature+"/"+name+"/info?of=json";
 	var f;
 	$.ajax({
@@ -224,13 +225,13 @@ GenomeMaps.prototype.getPostionByFeature = function(name, feature){
 		}
 	});
 	if(f != null){
-		return {chromosome:f.chromosome, start:f.start, end:f.start}
+		return {chromosome:f.chromosome, start:f.start, end:f.end}
 	}
 	return {};
 };
 
 GenomeMaps.prototype.setLocationByFeature = function(name, feature){
-	var loc = this.getPostionByFeature(name, feature);
+	var loc = this.getRegionByFeature(name, feature);
 	if (loc.chromosome != null &&  loc.position != null){
 		this.genomeViewer.setLoc(loc);
 	}
@@ -355,7 +356,7 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 			id:trackId,
 			featuresRender:"SequenceRender",
 			height:50,
-			visibleRange:{start:95,end:100}
+			visibleRange:{start:100,end:100}
 		});
 		break;
 	case "CpG islands":
