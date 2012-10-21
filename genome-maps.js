@@ -47,8 +47,8 @@ function GenomeMaps(targetId, args) {
             this.wum = args.wum;
         }
     }
-	// Parse query params to get location.... Also in AVAILABLE_SPECIES, an
-	// example location is set.
+	// Parse query params to get region.... Also in AVAILABLE_SPECIES, an
+	// example region is set.
 
     var region = new Region();
 	
@@ -115,7 +115,7 @@ function GenomeMaps(targetId, args) {
             zoom:urlZoom,
             availableSpecies: AVAILABLE_SPECIES,
             height:this.height-this.headerWidget.height,
-            width:this.width
+            width:this.width-150
     });
     
     /**Atach events i listen**/
@@ -127,6 +127,25 @@ function GenomeMaps(targetId, args) {
             Ext.example.msg('Good bye', 'You logged out');
     });
 //	}
+	this.genomeViewer.onRegionChange.addEventListener(function(sender,data){
+		Ext.getCmp(_this.id+"regionHistory").add({
+			xtype:'container',
+			padding:"2 5 2 0",
+			html:_this.genomeViewer.region.toString(),
+			s:_this.genomeViewer.region.toString(),
+			listeners:{
+			afterrender:function(){
+					var s = this.s;
+					this.getEl().addClsOnOver("encima");
+					this.getEl().addCls("whiteborder");
+	    			this.getEl().on("click",function(){
+		    			_this.genomeViewer.region.parse(s);
+		    			_this.genomeViewer.setRegion({sender:"regionHistory"});
+	    			});
+	    		}
+			}
+		});
+	});
     
     //SPECIE EVENT
     this.genomeViewer.onSpeciesChange.addEventListener(function(sender,data){
@@ -167,7 +186,27 @@ GenomeMaps.prototype.draw = function(){
 		
 		var gvContainer = Ext.create('Ext.container.Container', {
 			id:this.id+"gvContainer",
+			region:"center",
 			html : '<div id="'+this.id+'gvDiv"></div>'
+		});
+		var sideContainer = Ext.create('Ext.container.Container', {
+			id:this.id+"sideContainer",
+			region:"east",
+			title:"sidePanel",
+			width:150,
+			border: 1,
+			style: {borderColor:'lightblue', borderStyle:'solid', borderWidth:'1px'},
+			layout: 'accordion',
+			items: [{
+				title: 'Panel 1',
+				html: 'Panel content!'
+			},{
+				title: 'Panel 2',
+				html: 'Panel content!'
+			},{
+				title: 'Region history',
+				id:this.id+"regionHistory"
+			}]
 		});
 		
 		this._panel = Ext.create('Ext.panel.Panel', {
@@ -175,32 +214,34 @@ GenomeMaps.prototype.draw = function(){
 			renderTo:this.targetId,
 //			renderTo:Ext.getBody(),
 //		layout: { type: 'vbox',align: 'stretch'},
+			layout:'border',
 			border:false,
 			width:this.width,
 			height:this.height,
-			items:[this.headerWidget.getPanel(),gvContainer]
+			items:[this.headerWidget.getPanel(),gvContainer,sideContainer]
 		});
+		
+		this.headerWidget.setDescription(this.genomeViewer.speciesName);
+		$("#"+this.headerWidget.id+"appTextItem").qtip({
+			content: '<span class="info">'+this.version+'</span>',
+			position: {my:"bottom center",at:"top center",adjust: { y: 0, x:-25 }}
+			
+		});
+		
+		this.genomeViewer.afterRender.addEventListener(function(sender,event){
+			Ext.getCmp(_this.genomeViewer.id+"versionLabel").setText('<span class="info">Genome Maps v'+_this.version+'</span>');
+			_this._setTracks();
+			_this._setOverviewTracks();
+			_this.genomeViewer.onSvgRemoveTrack.addEventListener(function(sender,trackId){
+				Ext.getCmp(_this.id+trackId+"menu").setChecked(false);
+			});
+		});
+		this.setTracksMenu();
+	//	this.setDASMenu();
+		this.setPluginsMenu();
+		this.genomeViewer.draw();
 	}
 	
-	this.headerWidget.setDescription(this.genomeViewer.speciesName);
-	$("#"+this.headerWidget.id+"appTextItem").qtip({
-		content: '<span class="info">'+this.version+'</span>',
-		position: {my:"bottom center",at:"top center",adjust: { y: 0, x:-25 }}
-		
-	});
-	
-	this.genomeViewer.afterRender.addEventListener(function(sender,event){
-		Ext.getCmp(_this.genomeViewer.id+"versionLabel").setText('<span class="info">Genome Maps v'+_this.version+'</span>');
-		_this._setTracks();
-		_this._setOverviewTracks();
-		_this.genomeViewer.onSvgRemoveTrack.addEventListener(function(sender,trackId){
-			Ext.getCmp(_this.id+trackId+"menu").setChecked(false);
-		});
-	});
-	this.setTracksMenu();
-//	this.setDASMenu();
-	this.setPluginsMenu();
-	this.genomeViewer.draw();
 };
 
 
@@ -209,7 +250,7 @@ GenomeMaps.prototype.setSize = function(width,height){
 	this.height=height;
 	
 	this._panel.setSize(width,height);
-	this.genomeViewer.setSize(width,height-this.headerWidget.height);
+	this.genomeViewer.setSize(width-150,height-this.headerWidget.height);
 	this.headerWidget.setWidth(width);
 };
 
