@@ -51,7 +51,6 @@ function auxExpression(){
 	});
 	
 	expressionGenomicAttributesWidget.onTrackAddAction.addEventListener(function(sender, event){
-		
 		var track = new TrackData(event.fileName,{
 			adapter: event.adapter
 		});
