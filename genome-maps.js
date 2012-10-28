@@ -28,6 +28,8 @@ function GenomeMaps(targetId, args) {
     this.wum = true;
     this.version = "2.2.0";
 
+	this.trackIdCounter = 1;
+	
     this.args = args;
     this.width = $(window).width();
     this.height = $(window).height();
@@ -324,10 +326,16 @@ GenomeMaps.prototype.getTrackSvgById = function(trackId) {
 	return this.genomeViewer.getTrackSvgById(trackId);
 };
 
-GenomeMaps.prototype.addTrack = function(trackId) {
-	var id = trackId+Math.round(Math.random() * 10000);
+GenomeMaps.prototype.addTrack = function(trackType, trackTitle, trackId) {
+	var id;
+	if(trackId != null){
+		id = trackId;
+	}else{
+		id = this.trackIdCounter;
+		this.trackIdCounter++;
+	}
 	//console.log(trackId);
-	switch (trackId) {
+	switch (trackType) {
 	case "Gene/Transcript":
 		var geneTrack = new TrackData(id,{
 			adapter: new CellBaseAdapter({
@@ -345,6 +353,8 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 		});
 		this.genomeViewer.addTrack(geneTrack,{
 			id:id,
+			type:trackType,
+			title:trackTitle,
 			featuresRender:"GeneTranscriptRender",
 			histogramZoom:20,
 			transcriptZoom:50,
@@ -371,6 +381,8 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 		});
 		this.genomeViewer.addTrack(seqtrack,{
 			id:id,
+			type:trackType,
+			title:trackTitle,
 			featuresRender:"SequenceRender",
 			height:50,
 			visibleRange:{start:100,end:100}
@@ -391,6 +403,8 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 		});
 		this.genomeViewer.addTrack(cpgTrack,{
 			id:id,
+			type:trackType,
+			title:trackTitle,
 			featuresRender:"MultiFeatureRender",
 			histogramZoom:10,
 			height:150,
@@ -415,6 +429,8 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 		});
 		this.genomeViewer.addTrack(snpTrack,{
 			id:id,
+			type:trackType,
+			title:trackTitle,
 			featuresRender:"MultiFeatureRender",
 			histogramZoom:70,
 			labelZoom:80,
@@ -438,6 +454,8 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 		});
 		this.genomeViewer.addTrack(mutationTrack,{
 			id:id,
+			type:trackType,
+			title:trackTitle,
 			featuresRender:"MultiFeatureRender",
 			histogramZoom:50,
 			height:150,
@@ -461,6 +479,8 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 		});
 		this.genomeViewer.addTrack(structuralTrack,{
 			id:id,
+			type:trackType,
+			title:trackTitle,
 			featuresRender:"MultiFeatureRender",
 			histogramZoom:40,
 			height:150,
@@ -484,6 +504,8 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 		});
 		this.genomeViewer.addTrack(structuralTrack,{
 			id:id,
+			type:trackType,
+			title:trackTitle,
 			featuresRender:"MultiFeatureRender",
 			histogramZoom:40,
 			height:150,
@@ -506,6 +528,8 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 		});
 		this.genomeViewer.addTrack(miRNATrack,{
 			id:id,
+			type:trackType,
+			title:trackTitle,
 			featuresRender:"MultiFeatureRender",
 			histogramZoom:50,
 			height:150,
@@ -528,6 +552,8 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 		});
 		this.genomeViewer.addTrack(tfbsTrack,{
 			id:id,
+			type:trackType,
+			title:trackTitle,
 			featuresRender:"MultiFeatureRender",
 			histogramZoom:50,
 			height:150,
@@ -559,6 +585,8 @@ GenomeMaps.prototype.addTrack = function(trackId) {
 		});
 		this.genomeViewer.addTrack(conservedTrack,{
 			id:id,
+			type:trackType,
+			title:trackTitle,
 			featuresRender:"MultiFeatureRender",
 			histogramZoom:50,
 			height:150,
@@ -610,7 +638,15 @@ GenomeMaps.prototype.addFileTrack = function(text, record, updateActiveTracksPan
 	}
 };
 
-GenomeMaps.prototype.addDASTrack = function(sourceName, sourceUrl) {
+GenomeMaps.prototype.addDASTrack = function(sourceName, sourceUrl, trackId) {
+	var id;
+	if(trackId != null){
+		id = trackId;
+	}else{
+		id = this.trackIdCounter;
+		this.trackIdCounter++;
+	}
+	
 	var dasTrack = new TrackData("das",{
 		adapter: new DasAdapter({
 			url: sourceUrl,
@@ -622,7 +658,8 @@ GenomeMaps.prototype.addDASTrack = function(sourceName, sourceUrl) {
 		})
 	});
 	this.genomeViewer.addTrack(dasTrack,{
-		id:sourceName,
+		id:id,
+		title:sourceName,
 		type:"das",
 		featuresRender:"MultiFeatureRender",
 		height:150,
@@ -631,6 +668,7 @@ GenomeMaps.prototype.addDASTrack = function(sourceName, sourceUrl) {
 			height:10
 		}
 	});
+	return id;
 };
 
 GenomeMaps.prototype.getSidePanelItems = function() {
@@ -647,13 +685,14 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 		var subChilds = [];
 		cellbaseChilds.push({text: categories[i].category, iconCls:"icon-box", expanded:true, children:subChilds});
 		for ( var j = 0, lenj=categories[i].tracks.length; j<lenj; j++){
-			var text = categories[i].tracks[j].id;
+			var trackType = categories[i].tracks[j].id;
 			var checked = categories[i].tracks[j].checked;
 			var disabled = categories[i].tracks[j].disabled;
-			subChilds.push({text: text, iconCls:"icon-blue-box", leaf:true});
+			subChilds.push({text: trackType, iconCls:"icon-blue-box", leaf:true});
 			if(checked){
-				var uniqueId = this.addTrack(text);
-				activeTracks.push({text: text, id:uniqueId, checked:true, iconCls:"icon-blue-box", leaf:true});
+				var trackId = this.addTrack(trackType, trackType);
+				var trackTitle = trackType+'-'+trackId;
+				activeTracks.push({text: trackTitle, trackId:trackId, trackType:trackType ,checked:true, iconCls:"icon-blue-box", leaf:true});
 			}
 		}
 	}
@@ -672,7 +711,7 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 					checked = das_tracks[i].categories[j].sources[k].checked;
 					subChilds.push({text:sourceName, url:sourceUrl, iconCls:"icon-blue-box", leaf:true});
 					if(checked){
-						this.addDASTrack(sourceName, sourceUrl);
+						//this.addDASTrack(sourceName, sourceUrl);
 					}
 				}
 			}
@@ -689,6 +728,7 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 	]
 	
 	var activeSt = Ext.create('Ext.data.TreeStore',{
+		fields:['text', 'trackId', 'trackType'],
 		root:{
 			expanded: true,
 			children: activeTracks
@@ -710,15 +750,6 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 	//example to add a children
 	//availableSt.getRootNode().findChild("text","Cellbase").appendChild({text: "prueba", expanded: true, iconCls:"icon-blue-box"});
 
-	var updateActiveTracksPanel = function(text, showActive) {
-		activeSt.getRootNode().appendChild({text: text, leaf: true, checked:true, iconCls:"icon-blue-box"});
-		Ext.example.msg("Track "+text,"actived");
-		Ext.getCmp(_this.id+"activeTracksTree").getSelectionModel().select(activeSt.getRootNode().findChild("text",text))
-		if(showActive == true){
-			Ext.getCmp(_this.id+"activeTracksTree").expand();
-		}
-	};
-	
 	var items = [];
 	items.push({
 			xtype:"treepanel",
@@ -742,12 +773,14 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 				handler: function(grid, rowIndex, colIndex, actionItem, event, record, row) {
 					event.stopEvent();
 					if(record.isLeaf()){
-						var id = record.data.id;
-						debugger
-						var trackFilterWidget = new TrackFilterWidget({
-							trackSvg:_this.getTrackSvgById(id)
-						});
-						//TODO remove -> edit and -> add
+						var id = record.data.trackId;
+						var track = _this.getTrackSvgById(id);
+						if(track != null){
+							var trackFilterWidget = new TrackFilterWidget({
+								trackSvg:track,
+								treeRecord:record
+							});
+						}
 					}
 				}
 			},{
@@ -759,11 +792,11 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 				icon: Compbio.images.del,
 				handler: function(grid, rowIndex, colIndex, actionItem, event, record, row) {
 					//this also fires itemclick event from tree panel
-					debugger
-					record.destroy();
 					if(record.isLeaf()){
-						if(record.data.checked){
-							var id = record.data.id;
+						var id = record.data.trackId;
+						var checked = record.data.checked;
+						record.destroy();
+						if(checked){
 							_this.removeTrack(id);
 						}
 					}
@@ -775,11 +808,10 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 				},
 				listeners : {
 					drop : function (node, data, overModel, dropPosition, eOpts){
-						debugger
 						var record = data.records[0];
 						//check if is leaf and if the record has a new index
 						if(record.isLeaf() && record.data.index != record.removedFrom && record.data.checked){
-							var id = record.data.id;
+							var id = record.data.trackId;
 							_this.setTrackIndex(id, record.data.index);
 						}
 					}
@@ -787,34 +819,38 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 			},
 			listeners : {
 				itemclick : function (este, record, item, index, e, eOpts){
-					debugger
 					if(record.isLeaf()){
-						var id = record.data.id;
 						if(record.data.checked){//if is checked because if not checked does not exist
 							//this also fires remove button click event from tree panel action column	
 							//Could be that track no exists because of that
+							var id = record.data.trackId;
 							_this.scrollToTrack(id);
 						}
 					}
 				},
 				checkchange : function (node, checked){
+					//TODO: add remove das and file tracks, also gcs tracks
+					//TODO check type
 					debugger
-					var id = node.data.id;
-					if(checked){
-						_this.addTrack(id);
-						_this.setTrackIndex(id, node.data.index);
-					}else{
-						_this.removeTrack(id);
-					}
+					var type = node.data.trackType;
+					var title = node.data.text;
+					var id = node.data.trackId;
+						if(checked){
+							_this.addTrack(type, title, id);
+							_this.setTrackIndex(id, node.data.index);
+						}else{
+							_this.removeTrack(id);
+						}
+						
 				},
 				itemmouseenter : function (este,record){
-					var track = _this.getTrackSvgById(record.data.id);
+					var track = _this.getTrackSvgById(record.data.trackId);
 					if(track != null){
 						track.fnTitleMouseEnter();
 					}
 				},
 				itemmouseleave : function (este,record){
-					var track = _this.getTrackSvgById(record.data.id);
+					var track = _this.getTrackSvgById(record.data.trackId);
 					if(track != null){
 						track.fnTitleMouseLeave();
 					}
@@ -840,10 +876,10 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 				align: 'center',
 				width:20,
 				renderer: function(value, metaData, record){
-					if(record.data.id == "Cellbase"){
+					if(record.data.text == "Cellbase"){
 						this.icon = Compbio.images.info;
 						this.tooltip = CELLBASE_HOST;
-					}else if(record.data.id == "DAS"){
+					}else if(record.data.text == "DAS"){
 						this.icon = Compbio.images.info;
 						this.tooltip = "Add custom DAS track";
 					}else{
@@ -862,9 +898,9 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 						this.icon = Compbio.images.add;
 						this.tooltip = "Add";
 					}else{
-						if(record.data.id == "Cellbase"){
+						if(record.data.text == "Cellbase"){
 							this.icon = Compbio.images.edit;
-						}else if(record.data.id == "DAS"){
+						}else if(record.data.text == "DAS"){
 							this.icon = Compbio.images.add;
 						}else{
 							this.icon = null;
@@ -872,26 +908,39 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 					}
 				},
 				handler: function(grid, rowIndex, colIndex, actionItem, event, record, row) {
+					var updateActiveTracksPanel = function(trackType, trackTitle, trackId, showActive) {
+						activeSt.getRootNode().appendChild({text: trackTitle, trackId:trackId, trackType:trackType, leaf: true, checked:true, iconCls:"icon-blue-box"});
+						Ext.example.msg("Track "+trackType,"actived");
+						Ext.getCmp(_this.id+"activeTracksTree").getSelectionModel().select(activeSt.getRootNode().findChild("trackId",trackId))
+						if(showActive == true){
+							Ext.getCmp(_this.id+"activeTracksTree").expand();
+						}
+					};
 					if(record.isLeaf()){
-						var text = record.data.id;
-						if( activeSt.getRootNode().findChild("text",text) == null){
+						var text = record.data.text;
+						//if( activeSt.getRootNode().findChild("text",text) == null){
 							if(record.isAncestor(availableSt.getRootNode().findChild("text","Cellbase"))){
-								var uniqueId = _this.addTrack(text);
-								updateActiveTracksPanel(uniqueId, true);
+								var type = text;
+								var id = _this.addTrack(type, text);
+								var title = type+'-'+id;
+								updateActiveTracksPanel(type, title, id, true);
 							}
 							if(record.isAncestor(availableSt.getRootNode().findChild("text","DAS"))){
-								_this.addDASTrack(text, record.raw.url);
-								updateActiveTracksPanel(text, true);
+								var type = 'das';
+								var id = _this.addDASTrack(text, record.raw.url);
+								var title = text+'-'+id;
+								updateActiveTracksPanel(type, title, id, true);
 							}
 							if(record.isAncestor(availableSt.getRootNode().findChild("text","Local"))){
-								var update = function(fileText){
-									updateActiveTracksPanel(fileText, true);
+								var type = text;
+								var update = function(fileText, id){
+									updateActiveTracksPanel(fileText, id, true);
 								}
 								_this.addFileTrack(text, record, update);
 							}
-						}else{
-							Ext.example.msg("Track "+text,"is already active");
-						}
+						//}else{
+							//Ext.example.msg("Track "+text,"is already active");
+						//}
 					}else{
 						if(record.data.text == "Cellbase"){
 							Ext.Msg.prompt('Cellbase', 'Please enter a new Cellbase URL:', function(btn, text){
@@ -916,24 +965,14 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 						if(record.data.text == "DAS"){
 							var urlWidget = new UrlWidget({title:'Add a DAS track'});
 							urlWidget.onAdd.addEventListener(function(sender, event) {
-								_this.addDASTrack(event.name, event.url);
-								updateActiveTracksPanel(event.name, true);
+								var id = _this.addDASTrack(event.name, event.url);
+								updateActiveTracksPanel(event.name, id, true);
 							});
 							urlWidget.draw();
 						}
 					}
 				}
-			}],
-			listeners : {
-				
-				itemclick : function (este,record){
-				},
-				itemdblclick : function (este,record){
-				},
-				itemcontextmenu : function (este, record, item, index, e, eOpts){
-					e.stopEvent();
-				}
-			}
+			}]
 		},{
 			title:"Plugins"
 		},{
