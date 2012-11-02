@@ -805,7 +805,7 @@ GenomeMaps.prototype.getSidePanelItems = function() {
                     //availableSt.getRootNode().findChild("text","Genomic Cloud Storage").appendChild({text:data[i], iconCls:"icon-blue-box", leaf:true});
             //}
     //});
-    this.dqsManager.bamList();
+    //this.dqsManager.bamList();
 
     
 	/**example to add a children**/
