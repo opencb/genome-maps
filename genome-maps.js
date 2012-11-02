@@ -389,7 +389,7 @@ GenomeMaps.prototype.addTrack = function(trackType, trackTitle) {
 			type:trackType,
 			title:trackTitle,
 			featuresRender:"SequenceRender",
-			height:50,
+			height:30,
 			visibleRange:{start:100,end:100}
 		});
 		break;
@@ -797,7 +797,7 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 		}
 	});
 
-	//LOAD GCS
+	/**LOAD GCS**/
 	//this.dqsManager = new DqsManager();
     //this.dqsManager.onBamList.addEventListener(function (evt, data){
             //console.log(data);
@@ -808,7 +808,7 @@ GenomeMaps.prototype.getSidePanelItems = function() {
     //this.dqsManager.bamList();
 
     
-	//example to add a children
+	/**example to add a children**/
 	//availableSt.getRootNode().findChild("text","Cellbase").appendChild({text: "prueba", expanded: true, iconCls:"icon-blue-box"});
 
 	var items = [];
@@ -1072,6 +1072,7 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 			},{
 				id:this.id+"searchPanelCombo",
 				fieldLabel:'Result type',
+				labelWidth:'75',
 				xtype:'combobox',
 				store:{fields:['value', 'name'],data : [
 					{"value":"info", "name":"Genes"},
@@ -1086,6 +1087,7 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 				listeners:{afterrender:function(este){este.select(este.getStore().data.items[0]);}}
 			},{
 				id:this.id+'searchPanelButton',
+				margin:"0 0 0 0",
 				xtype: 'button',
 				text:'Search',
 				disabled:true,
@@ -1097,29 +1099,49 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 					var boxValue = Ext.getCmp(_this.id+"searchPanelCombo").getValue().toLowerCase();
 					var cellBaseManager = new CellBaseManager(_this.species);
 					cellBaseManager.success.addEventListener(function(evt, data) {
-						var notFound = "";
-						var boxes = [];
-						var grids = [];
+						var notFound = "", boxes = [];
+						var featureType = boxValue.replace("info","gene");
+						var id = FEATURE_TYPES[featureType].infoWidgetId;
 						for (var i=0, leni=data.result.length; i<leni; i++) {
 							if(data.result[i].length > 0){
-								var featureType = boxValue.replace("info","gene");
-								var id = FEATURE_TYPES[featureType].infoWidgetId;
-								var st = Ext.create('Ext.data.Store', {
-									fields: [id,'chromosome','start','end'], data: data.result[i],
-									proxy: {type: 'pagingmemory'},pageSize: 5
-								});
-								grids.push({xtype:'grid', store: st, hideHeaders:true, width:245, height:170, loadMask: true, margin:'2 0 0 0',
-									title:'<p class="info">'+data.query[i]+'</p>',
-									columns: [{text: 'id',dataIndex: id, width:243}],
-									dockedItems: [{xtype: 'pagingtoolbar',store: st, dock: 'top',beforePageText:''/*displayInfo: true*/
-									}],
-									listeners:{
-										itemclick:function(este, record, item, index, e, eOpts){
-											_this.genomeViewer.region.load(record.data);
-											_this.genomeViewer.onRegionChange.notify({sender:"searchSidePanel"});
+								var collapsed = data.query.length > 3;
+								if(featureType=='snp' || featureType=='mutation' || featureType=='exon'){
+									var st = Ext.create('Ext.data.Store', {
+										fields: [id,'chromosome','start','end'], data: data.result[i],
+										proxy: {type: 'pagingmemory'},pageSize: 5
+									});
+									boxes.push({xtype:'grid', store: st, hideHeaders:true, width:245, height:160, loadMask: true, margin:'2 0 0 0',
+										title:'<p class="info">'+data.query[i]+'</p>',collapsible:true,collapsed:collapsed,titleCollapse:true,
+										columns: [{text: 'id',dataIndex: id, width:243}],
+										dockedItems: [{xtype: 'pagingtoolbar',store: st, dock: 'top',beforePageText:''/*displayInfo: true*/
+										}],
+										listeners:{
+											itemclick:function(este, record, item, index, e, eOpts){
+												_this.genomeViewer.region.load(record.data);
+												_this.genomeViewer.onRegionChange.notify({sender:"searchSidePanel"});
+											}
 										}
+									});
+								}else{
+									var collapsed = false;
+									var items = [];
+									var tpl = new Ext.XTemplate('<p>{'+id+'}</p>');
+									for (var j=0, lenj=data.result[i].length; j<lenj; j++) {
+										items.push({xtype:'box',padding:"1 5 1 10",border:1,tpl:tpl,
+											data:data.result[i][j],datos:data.result[i][j],
+											listeners:{afterrender:function(este){
+													this.getEl().addClsOnOver("encima2");
+													this.getEl().addCls("whiteborder");
+													this.getEl().on("click",function(){
+														_this.genomeViewer.region.load(este.datos);
+														_this.genomeViewer.onRegionChange.notify({sender:"searchSidePanel"});
+													});
+											}}
+										});
 									}
-								});
+									boxes.push({xtype:'panel',title:'<p class="info">'+data.query[i]+'</p>',margin:"2 0 0 0",
+												collapsible:true,collapsed:false,titleCollapse:true, width:245, items:items});
+								}
 							}else{
 								notFound+='&nbsp; &nbsp;'+data.query[i]+'<br>';
 							}
@@ -1127,8 +1149,8 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 						if(notFound!=""){
 							notFound='<p class="err">Features not found:</p>'+notFound;
 						}
-						grids.push({xtype:'box',padding:"15 5 2 3",border:1,html:notFound});
-						resultPan.add(grids);
+						boxes.push({xtype:'box',padding:"15 5 2 3",border:1,html:notFound});
+						resultPan.add(boxes);
 						resultPan.setLoading(false);
 					});
 					cellBaseManager.get("feature", "gene", features, boxValue, null/*params*/);//gene must search in later versions
@@ -1150,22 +1172,6 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 		//}
 	);
 	return items;
-					//Ext.getCmp(_this.id+"regionHistory").add({
-					//xtype:'container',padding:"2 5 2 3",border:1,
-					//html:_this.region.toString(),
-					//s:_this.region.toString(),
-					//listeners:{
-					//afterrender:function(){
-							//var s = this.s;
-							//this.getEl().addClsOnOver("encima");
-							//this.getEl().addCls("whiteborder");
-							//this.getEl().on("click",function(){
-								//_this.region.parse(s);
-								//_this.setRegion({sender:"regionHistory"});
-							//});
-						//}
-					//}
-				//});
 };
 
 
