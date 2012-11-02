@@ -1049,9 +1049,10 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 			}
 		},{
 			title:"Search",
+			id:this.id+"searchSidePanel",
 			layout:{type:'vbox', align:'stretch'},
-			bodyPadding:"10",
-			items:[{
+			bodyPadding:"5",
+			items:[{xtype:'tbtext',text:'<p class="">Search by any external reference:</p>'},{
 				id:this.id+ "searchTextArea",
 	       	 	xtype: 'textarea',
 	        	flex:1,
@@ -1070,53 +1071,83 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 				}
 			},{
 				id:this.id+"searchPanelCombo",
+				fieldLabel:'Result type',
 				xtype:'combobox',
 				store:{fields:['value', 'name'],data : [
-					{"value":"all", "name":"All"},
-					{"value":"ensembl_gene", "name":"Genes"},
+					{"value":"info", "name":"Genes"},
 					{"value":"snp", "name":"SNPs"},
-					{"value":"go", "name":"GOs"},
-					{"value":"ensembl_transcript", "name":"Transcripts"},
-					{"value":"ensembl_exon", "name":"Exons"},
+					//{"value":"go", "name":"GOs"},
+					{"value":"mutation", "name":"Mutations"},
+					{"value":"transcript", "name":"Transcripts"},
+					{"value":"exon", "name":"Exons"}
 				]},
-				value:'',
 				displayField: 'name',
-				valueField: 'value'
+				valueField: 'value',
+				listeners:{afterrender:function(este){este.select(este.getStore().data.items[0]);}}
 			},{
 				id:this.id+'searchPanelButton',
 				xtype: 'button',
 				text:'Search',
 				disabled:true,
 				handler:function(){
-					var features = Ext.getCmp(_this.id+"searchTextArea").getValue().split("\n");
+					var resultPan = Ext.getCmp(_this.id+"searchResults");
+					resultPan.setLoading(true);
+					resultPan.removeAll();
+					var features = Ext.getCmp(_this.id+"searchTextArea").getValue().trim().split("\n");
 					var boxValue = Ext.getCmp(_this.id+"searchPanelCombo").getValue().toLowerCase();
-					var params = null;
-					if(boxValue != "all"){
-						params = {dbname:boxValue}
-					}
-					if(boxValue == ""){
-						params = {dbname:'ensembl_gene'};
-					}
-					
 					var cellBaseManager = new CellBaseManager(_this.species);
 					cellBaseManager.success.addEventListener(function(evt, data) {
-						//TODO
+						var notFound = "";
+						var boxes = [];
+						var grids = [];
+						for (var i=0, leni=data.result.length; i<leni; i++) {
+							if(data.result[i].length > 0){
+								var featureType = boxValue.replace("info","gene");
+								var id = FEATURE_TYPES[featureType].infoWidgetId;
+								var st = Ext.create('Ext.data.Store', {
+									fields: [id,'chromosome','start','end'], data: data.result[i],
+									proxy: {type: 'pagingmemory'},pageSize: 5
+								});
+								grids.push({xtype:'grid', store: st, hideHeaders:true, width:245, height:170, loadMask: true, margin:'2 0 0 0',
+									title:'<p class="info">'+data.query[i]+'</p>',
+									columns: [{text: 'id',dataIndex: id, width:243}],
+									dockedItems: [{xtype: 'pagingtoolbar',store: st, dock: 'top',beforePageText:''/*displayInfo: true*/
+									}],
+									listeners:{
+										itemclick:function(este, record, item, index, e, eOpts){
+											_this.genomeViewer.region.load(record.data);
+											_this.genomeViewer.onRegionChange.notify({sender:"searchSidePanel"});
+										}
+									}
+								});
+							}else{
+								notFound+='&nbsp; &nbsp;'+data.query[i]+'<br>';
+							}
+						}
+						if(notFound!=""){
+							notFound='<p class="err">Features not found:</p>'+notFound;
+						}
+						grids.push({xtype:'box',padding:"15 5 2 3",border:1,html:notFound});
+						resultPan.add(grids);
+						resultPan.setLoading(false);
 					});
-					cellBaseManager.get("feature", "id", features, "xref", params);
-					console.log(features);
+					cellBaseManager.get("feature", "gene", features, boxValue, null/*params*/);//gene must search in later versions
 				}
-			},{
+			},
+				{xtype:'tbtext',margin:'10 0 0 0',text:'<p class="">Results:</p>'},
+			{
 				id:this.id+"searchResults",
-				title:'Results',
-				flex:1,
-				margin:'10 0 0 0'
+				border:false,
+				autoScroll:true,
+				flex:3
 			}
 			]
-		},{
-			title:"Settings",
-			bodyPadding:'10 0 0 10',
-			html:"not yet"
 		}
+		//,{
+			//title:"Settings",
+			//bodyPadding:'10 0 0 10',
+			//html:"not yet"
+		//}
 	);
 	return items;
 					//Ext.getCmp(_this.id+"regionHistory").add({
