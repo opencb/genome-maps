@@ -782,7 +782,7 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 			expanded: true,
 			children: [
 				{ text: "Cellbase", iconCls:"icon-box", expanded:true, children: cellbaseChilds },
-				//{ text: "Genomic Cloud Storage", iconCls:"icon-box", expanded:true, children: [] },
+				{ text: "Genomic Cloud Storage", iconCls:"icon-box", expanded:true, children: [] },
 				{ text: "DAS", iconCls:"icon-box", expanded:true, children: dasChilds},
 				{ text: "Local", iconCls:"icon-box", expanded:true, children:localChilds}
 			]
@@ -798,14 +798,14 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 	});
 
 	/**LOAD GCS**/
-	//this.dqsManager = new DqsManager();
-    //this.dqsManager.onBamList.addEventListener(function (evt, data){
-            //console.log(data);
-            //for ( var i = 0; i < data.length; i++) {
-                    //availableSt.getRootNode().findChild("text","Genomic Cloud Storage").appendChild({text:data[i], iconCls:"icon-blue-box", leaf:true});
-            //}
-    //});
-    //this.dqsManager.bamList();
+	this.dqsManager = new DqsManager();
+    this.dqsManager.onBamList.addEventListener(function (evt, data){
+            console.log(data);
+            for ( var i = 0; i < data.length; i++) {
+                    availableSt.getRootNode().findChild("text","Genomic Cloud Storage").appendChild({text:data[i], iconCls:"icon-blue-box", leaf:true});
+            }
+    });
+    this.dqsManager.bamList();
 
     
 	/**example to add a children**/
