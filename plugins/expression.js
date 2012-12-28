@@ -46,12 +46,11 @@ function auxExpression(){
 	expressionGenomicAttributesWidget.draw();
 //	expressionPlugin.addSenchaElement(expressionGenomicAttributesWidget.getMainPanel());
 	expressionGenomicAttributesWidget.onMarkerClicked.addEventListener(function(sender, feature){
-	genomeMaps.goTo(feature.chromosome, feature.start);
+		genomeMaps.goTo(feature.chromosome, feature.start);
 		
 	});
 	
 	expressionGenomicAttributesWidget.onTrackAddAction.addEventListener(function(sender, event){
-		
 		var track = new TrackData(event.fileName,{
 			adapter: event.adapter
 		});
