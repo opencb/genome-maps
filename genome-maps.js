@@ -1278,7 +1278,7 @@ GenomeMaps.prototype._loadGcsaTracks = function(response) {
 			var gcsaObj = response.buckets[i].objects[j];
 			if(gcsaObj.fileType!='dir' && gcsaObj.fileFormat!='bai'){
 				gcsaObj["text"] = gcsaObj.fileName;
-				gcsaObj["iconCls"] = "icon-blue-box";
+				gcsaObj["icon"] = Compbio.images.r;
 				gcsaObj["leaf"] = true;
 				files.push(gcsaObj);
 			}
