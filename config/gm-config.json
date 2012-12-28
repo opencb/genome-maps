@@ -30,6 +30,10 @@ if(window.location.host.indexOf("fsalavert")!=-1 ||
 	WUM_HOST = "http://ws-beta.bioinfo.cipf.es/wum/rest";
 }
 
+//DELETE after GCSA BETA
+GCSA_HOST = "http://ws-beta.bioinfo.cipf.es/gcsa/rest";
+
+
 /** List of available species in the cellbase service **/
 var AVAILABLE_SPECIES = [
                         {	"name":"Homo sapiens 37.p7", "species":"hsa", "icon":"",
