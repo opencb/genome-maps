@@ -2,17 +2,18 @@
  * This is a configuration file.
  * Changes to this file may cause the application does not work as it should
  *
+ * Default hosts
+ * CELLBASE_HOST = "http://usa.cellbase.org:8080/cellbase/rest";
+ * CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
+ * GCSA_HOST = "http://ws.bioinfo.cipf.es/gcsa/rest";
+ *
+ * Deprecated hosts
+ * WUM_HOST = "http://ws.bioinfo.cipf.es/wum/rest";
+ *
  **/
 
-/** URL for the cellbase service
- *
- *
- * **/
-
-//CELLBASE_HOST = "http://usa.cellbase.org:8080/cellbase/rest";
 CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
 GCSA_HOST = "http://ws.bioinfo.cipf.es/gcsa/rest";
-WUM_HOST = "http://ws.bioinfo.cipf.es/wum/rest";
 
 /** Devel only: custom URL check **/
 if(window.location.host.indexOf("fsalavert")!=-1 ||
@@ -20,23 +21,19 @@ if(window.location.host.indexOf("fsalavert")!=-1 ||
    window.location.host.indexOf("imedina")!=-1 ||
    window.location.href.indexOf("http://bioinfo.cipf.es/apps-beta")!=-1
 ){
-	//CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbase/rest";
-	CELLBASE_HOST = "http://fsalavert:8080/cellbase/rest";
+	CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbase/rest";
+    //CELLBASE_HOST = "http://fsalavert:8080/cellbase/rest";
 	//CELLBASE_HOST = "http://rsanchez:8080/cellbase/rest";
 	//CELLBASE_HOST = "http://imedina:8080/cellbase/rest";
 	//CELLBASE_HOST = "http://ralonso:8080/naranjoma-ws/rest";
 
 	GCSA_HOST = "http://ws-beta.bioinfo.cipf.es/gcsa/rest";
-
-//	GCSA_HOST = "http://fsalavert:8080/gcsa/rest";
-		//GCSA_HOST T= "http://rsanchez:8080/dqs/rest";
-		//GCSA_HOST = "http://imedina:8080/dqs/rest";
-
-	WUM_HOST = "http://ws-beta.bioinfo.cipf.es/wum/rest";
+    //DELETE after GCSA BETA
+    GCSA_HOST = "http://ws-beta.bioinfo.cipf.es/gcsabeta/rest";
+    //GCSA_HOST = "http://fsalavert:8080/gcsa/rest";
+    //GCSA_HOST T= "http://rsanchez:8080/dqs/rest";
+    //GCSA_HOST = "http://imedina:8080/dqs/rest";
 }
-
-//DELETE after GCSA BETA
-GCSA_HOST = "http://ws-beta.bioinfo.cipf.es/gcsabeta/rest";
 
 
 /** List of available species in the cellbase service **/
