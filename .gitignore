@@ -1,2 +1,2 @@
-genome-maps.html
-deploy
+build/
+add_gpl_license.sh

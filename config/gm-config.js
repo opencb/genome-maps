@@ -1,22 +1,89 @@
+/**
+ * This is a configuration file.
+ * Changes to this file may cause the application does not work as it should
+ *
+ * Default hosts
+ * CELLBASE_HOST = "http://usa.cellbase.org:8080/cellbase/rest";
+ * CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
+ * GCSA_HOST = "http://ws.bioinfo.cipf.es/gcsa/rest";
+ *
+ * Deprecated hosts
+ * WUM_HOST = "http://ws.bioinfo.cipf.es/wum/rest";
+ *
+ **/
+
+CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
+GCSA_HOST = "http://ws.bioinfo.cipf.es/gcsa/rest";
+
+/** Devel only: custom URL check **/
+if(window.location.host.indexOf("fsalavert")!=-1 ||
+   window.location.host.indexOf("rsanchez")!=-1 ||
+   window.location.host.indexOf("imedina")!=-1 ||
+   window.location.href.indexOf("http://bioinfo.cipf.es/apps-beta")!=-1
+){
+	CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbase/rest";
+    //CELLBASE_HOST = "http://fsalavert:8080/cellbase/rest";
+	//CELLBASE_HOST = "http://rsanchez:8080/cellbase/rest";
+	//CELLBASE_HOST = "http://imedina:8080/cellbase/rest";
+	//CELLBASE_HOST = "http://ralonso:8080/naranjoma-ws/rest";
+
+	GCSA_HOST = "http://ws-beta.bioinfo.cipf.es/gcsa/rest";
+    //DELETE after GCSA BETA
+    GCSA_HOST = "http://ws-beta.bioinfo.cipf.es/gcsabeta/rest";
+    //GCSA_HOST = "http://fsalavert:8080/gcsa/rest";
+    //GCSA_HOST T= "http://rsanchez:8080/dqs/rest";
+    //GCSA_HOST = "http://imedina:8080/dqs/rest";
+}
+
+
+/** List of available species in the cellbase service **/
 var AVAILABLE_SPECIES = [
-//                         {"name":"Homo sapiens", "species":"hsa", "icon":"","chromosome":"1","position":500},
-                         {"name":"Homo sapiens 37.p7", "species":"hsa", "icon":"","chromosome":"13","position":32889611},
-//                         {"name":"Homo sapiens", "species":"hsa", "icon":"","chromosome":"20","position":1234567},
-//                         {"name":"Homo sapiens", "species":"hsa", "icon":"","chromosome":"5","position":143353},
-//						 {"name":"Homo sapiens", "species":"hsa", "icon":"","chromosome":"1","position":127471214},
-                         {"name":"Mus musculus m37", "species":"mmu", "icon":"","chromosome":"1","position":18422009},
-                         {"name":"Rattus norvegicus 3.4", "species":"rno", "icon":"","chromosome":"1","position":1570040},
-                         {"name":"Danio rerio v9", "species":"dre", "icon":"","chromosome":"1","position":1570040},
-                         {"name":"Caenorhabditis elegans WS230", "species":"cel", "icon":"","chromosome":"X","position":817895},
-                         {"name":"Drosophila melanogaster 5.39", "species":"dme", "icon":"","chromosome":"2L","position":158597},
-                         {"name":"Saccharomyces cerevisiae 4", "species":"sce", "icon":"","chromosome":"I","position":111532},
-                         {"name":"Canis familiaris 2.0", "species":"cfa", "icon":"","chromosome":"1","position":109898268},
-                         //{"name":"Sus scrofa 9", "species":"ssc", "icon":"","chromosome":"1","position":135353160},
-                         {"name":"Sus scrofa 10.2", "species":"ssc", "icon":"","chromosome":"1","position":135353160},
-                         {"name":"Anopheles gambiae 3", "species":"aga", "icon":"","chromosome":"2L","position":12123831},
-                         {"name":"Plasmodium falciparum 3D7", "species":"pfa", "icon":"","chromosome":"01","position":238905}
-                         ];
-//43788521   32889611
+                        {	"name":"Homo sapiens 37.p7", "species":"hsa", "icon":"",
+							"region":{"chromosome":"13","start":32889599,"end":32889739}
+						},
+                        {	"name":"Mus musculus m37", "species":"mmu", "icon":"",
+							"region":{"chromosome":"1","start":18422009,"end":18422009}
+						},
+                        {	"name":"Rattus norvegicus 3.4", "species":"rno", "icon":"",
+							"region":{"chromosome":"1","start":1570040,"end":1570040}
+						},
+                        {	"name":"Danio rerio v9", "species":"dre", "icon":"",
+							"region":{"chromosome":"1","start":1570040,"end":1570040}
+						},
+                        {	"name":"Caenorhabditis elegans WS230", "species":"cel", "icon":"",
+							"region":{"chromosome":"X","start":817895,"end":817895}
+						},
+                        {	"name":"Drosophila melanogaster 5.39", "species":"dme", "icon":"",
+							"region":{"chromosome":"2L","start":158597,"end":158597}
+						},
+                        {	"name":"Saccharomyces cerevisiae 4", "species":"sce", "icon":"",
+							"region":{"chromosome":"I","start":111532,"end":111532}
+						},
+                        {	"name":"Canis familiaris 2.0", "species":"cfa", "icon":"",
+							"region":{"chromosome":"1","start":109898268,"end":109898268}
+						},
+                        //{	"name":"Sus scrofa 9", "species":"ssc", "icon":"",
+							//"region":{"chromosome":"1","start":135353160,"end":135353160}
+						//},
+                        {	"name":"Sus scrofa 10.2", "species":"ssc", "icon":"",
+							"region":{"chromosome":"1","start":135353160,"end":135353160}
+						},
+                        {	"name":"Anopheles gambiae 3", "species":"aga", "icon":"",
+							"region":{"chromosome":"2L","start":12123831,"end":12123831}
+                        },
+                        {	"name":"Plasmodium falciparum 3D7", "species":"pfa", "icon":"",
+							"region":{"chromosome":"01","start":238905,"end":238905}
+						}
+                        //{	"name":"Aspergillus fumigatus 68.2", "species":"afu", "icon":"",
+							//"region":{"chromosome":"I","start":2905,"end":2905}
+                        //},
+                        //{	"name":"Fusarium oxysporum 68.2", "species":"fox", "icon":"",
+                            //"region":{"chromosome":"1","start":2905,"end":2905}
+						//}
+                        ];
+
+/** Reference to a species from the list to be shown at start **/
+var DEFAULT_SPECIES = AVAILABLE_SPECIES[0];
 
 var SPECIES_TRACKS_GROUP = {"hsa":"group1",
 							"mmu":"group2",
