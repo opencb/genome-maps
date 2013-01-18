@@ -11,7 +11,6 @@
  * WUM_HOST = "http://ws.bioinfo.cipf.es/wum/rest";
  *
  **/
-
 CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
 GCSA_HOST = "http://ws.bioinfo.cipf.es/gcsa/rest";
 
@@ -21,8 +20,9 @@ if(window.location.host.indexOf("fsalavert")!=-1 ||
    window.location.host.indexOf("imedina")!=-1 ||
    window.location.href.indexOf("http://bioinfo.cipf.es/apps-beta")!=-1
 ){
-	CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbase/rest";
-    //CELLBASE_HOST = "http://fsalavert:8080/cellbase/rest";
+
+//    CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbase/rest";
+//	CELLBASE_HOST = "http://fsalavert:8080/cellbase/rest";
 	//CELLBASE_HOST = "http://rsanchez:8080/cellbase/rest";
 	//CELLBASE_HOST = "http://imedina:8080/cellbase/rest";
 	//CELLBASE_HOST = "http://ralonso:8080/naranjoma-ws/rest";
@@ -30,9 +30,9 @@ if(window.location.host.indexOf("fsalavert")!=-1 ||
 	GCSA_HOST = "http://ws-beta.bioinfo.cipf.es/gcsa/rest";
     //DELETE after GCSA BETA
     GCSA_HOST = "http://ws-beta.bioinfo.cipf.es/gcsabeta/rest";
-    //GCSA_HOST = "http://fsalavert:8080/gcsa/rest";
-    //GCSA_HOST T= "http://rsanchez:8080/dqs/rest";
-    //GCSA_HOST = "http://imedina:8080/dqs/rest";
+//  GCSA_HOST = "http://fsalavert:8080/gcsa/rest";
+//	GCSA_HOST = "http://rsanchez:8080/dqs/rest";
+//	GCSA_HOST = "http://imedina:8080/dqs/rest";
 }
 
 
