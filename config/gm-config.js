@@ -28,8 +28,6 @@ if(window.location.host.indexOf("fsalavert")!=-1 ||
 	//CELLBASE_HOST = "http://ralonso:8080/naranjoma-ws/rest";
 
 	GCSA_HOST = "http://ws-beta.bioinfo.cipf.es/gcsa/rest";
-    //DELETE after GCSA BETA
-//    GCSA_HOST = "http://mem15:8080/gcsa/rest";
 //  GCSA_HOST = "http://fsalavert:8080/gcsa/rest";
 //	GCSA_HOST = "http://rsanchez:8080/dqs/rest";
 //	GCSA_HOST = "http://imedina:8080/dqs/rest";
