@@ -24,9 +24,9 @@ function GenomeMaps(targetId, args) {
     this.id = "GenomeMaps" + Math.round(Math.random() * 10000);
     this.suiteId = 9;
     this.title = "Genome Maps";
-    this.description = "RC";
+    this.description = "Genomic data visualization";
     this.wum = true;
-    this.version = "3.0.0";
+    this.version = "3.0.2";
 
 	this.trackIdCounter = 1;
 	
@@ -94,7 +94,7 @@ function GenomeMaps(targetId, args) {
 		region.load(this.getRegionByFeature(urlSnp,"snp"));
 	}
 
-//	if (this.wum==true){
+//	if (this.gcsa==true){
     this.headerWidget = new HeaderWidget({
             appname: this.title,
             description: this.description,
@@ -136,8 +136,8 @@ function GenomeMaps(targetId, args) {
 
     //SPECIE EVENT
     this.genomeViewer.onSpeciesChange.addEventListener(function(sender,data){
-            _this._setTracks();
-            _this.setTracksMenu();
+//            _this._setTracks();
+//            _this.setTracksMenu();
             _this.headerWidget.setDescription(_this.genomeViewer.speciesName);
             _this.species=_this.genomeViewer.species;
     });
@@ -161,10 +161,11 @@ function GenomeMaps(targetId, args) {
 }
 
 GenomeMaps.prototype.sessionInitiated = function(){
-
+    this.availableSt.getRootNode().findChild('id','gcsa').set('text','Browse remote data');
 };
 
 GenomeMaps.prototype.sessionFinished = function(){
+    this.availableSt.getRootNode().findChild('id','gcsa').set('text','Browse remote data <span class="tip">(login required)</span>');
 	this._unloadGcsaTracks();
 	this.accountData = null;
 };
@@ -195,12 +196,7 @@ GenomeMaps.prototype.draw = function(){
 		});
 		
 		this.headerWidget.setDescription(this.genomeViewer.speciesName);
-		$("#"+this.headerWidget.id+"appTextItem").qtip({
-			content: '<span class="info">'+this.version+'</span>',
-			position: {my:"bottom center",at:"top center",adjust: { y: 0, x:-25 }}
-			
-		});
-		
+
 		this.genomeViewer.afterRender.addEventListener(function(sender,event){
 			Ext.getCmp(_this.genomeViewer.id+"versionLabel").setText('<span class="info">Genome Maps v'+_this.version+'</span>');
 			_this._setOverviewTracks();
@@ -602,6 +598,33 @@ GenomeMaps.prototype.addTrack = function(trackType, trackTitle, objectid) {
 		});
 		break;
 
+    case "vcf":
+        var vcfTrack = new TrackData(id,{
+            adapter: new GcsaAdapter({
+                category: "vcf",
+                //resource: trackTitle.substr(0,trackTitle.length-4),
+                resource: objectid,
+                species: this.genomeViewer.species,
+                featureCache:{
+                    gzip: false,
+                    chunkSize:5000
+                },
+                filters:{},
+                options:{},
+                featureConfig:FEATURE_CONFIG.vcf
+            })
+        });
+        this.genomeViewer.addTrack(vcfTrack,{
+            id:id,
+            type:trackType,
+            title:trackTitle,
+            featuresRender:"MultiFeatureRender",
+            histogramZoom:50,
+            height:150,
+            visibleRange:{start:0,end:100},
+            featureTypes:FEATURE_TYPES
+        });
+        break;
 	default:
 		return null;
 	}
@@ -746,17 +769,8 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 
 
     var tracks = this._loadInitialTracksConfig();
-    var dasTracks = this._loadInitialDasTrackConfig();
     var pluginTracks = this._loadInitialPluginTrackConfig();
 
-	var localChilds = [
-		{text:"GFF2", iconCls:"icon-blue-box", leaf:true},
-		{text:"GFF3", iconCls:"icon-blue-box", leaf:true},
-		{text:"GTF", iconCls:"icon-blue-box", leaf:true},
-		{text:"BED", iconCls:"icon-blue-box", leaf:true},
-		{text:"VCF", iconCls:"icon-blue-box", leaf:true}
-	];
-	
 	var activeSt = Ext.create('Ext.data.TreeStore',{
 		fields:['text', 'trackId', 'trackType'],
 		root:{
@@ -764,20 +778,8 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 			children: tracks.activeTracks
 		}
 	});
-	
-	var availableSt = Ext.create('Ext.data.TreeStore',{
-		root:{
-			expanded: true,
-			children: [
-				{ text: "Cellbase", iconCls:"icon-box", expanded:true, children: tracks.cellbaseTracks },
-				{ text: "Genomic Cloud Storage", iconCls:"icon-box", expanded:true, children: [] },
-				{ text: "DAS", iconCls:"icon-box", expanded:true, children: dasTracks},
-				{ text: "Local", iconCls:"icon-box", expanded:true, children:localChilds}
-			]
-		}
-	});
-	this.availableSt=availableSt;
-	
+	this.activeSt = activeSt;
+
 	var pluginSt = Ext.create('Ext.data.TreeStore',{
 		fields:['text', 'plugin'],
 		root:{
@@ -789,7 +791,7 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 	//availableSt.getRootNode().findChild("text","Cellbase").appendChild({text: "prueba", expanded: true, iconCls:"icon-blue-box"});
 
     var activeTracksPanel = {
-        title:"Active tracks",
+        title:'<span class="">Active tracks</span>',
         id:this.id+"activeTracksPanel",
         border:0,
         layout:{type:'vbox', align:'stretch'},
@@ -917,7 +919,8 @@ GenomeMaps.prototype.getSidePanelItems = function() {
         },{
             xtype:"tabpanel",
             id:this.id+"activeTracksSettings",
-            border:0,
+            plain: true,
+            border:false,
             margin :"5 0 0 0",
             autoScroll:true,
             flex:2,
@@ -927,142 +930,23 @@ GenomeMaps.prototype.getSidePanelItems = function() {
                     itemId:this.id+"trackOptions",
                     title:"Options",
                     bodyPadding:10,
-                    border:0
+                    border:false
                 },{
                     id:this.id+"trackFiltering",
                     itemId:this.id+"trackFiltering",
                     title:"Filtering",
                     layout:{type:'vbox', align:'stretch'},
-                    border:0
+                    border:false
                 }
             ]
         }]
     };
 
 
-    var availableTracksTree = {
-        xtype:"treepanel", //*********************************************AVAILABLE
-        id:this.id+"availableTracksTree",
-        title:"Add new track",
-        bodyPadding:"10 0 0 0",
-        useArrows:true,
-        rootVisible: false,
-        hideHeaders:true,
-        store: availableSt,
-        columns: [{
-            xtype: 'treecolumn',
-            dataIndex: 'text',
-            flex:1
-        },{
-            xtype: 'actioncolumn',
-            menuDisabled: true,
-            align: 'center',
-            width:20,
-            renderer: function(value, metaData, record){
-                if(record.data.text == "Cellbase"){
-                    this.icon = Compbio.images.info;
-                    this.tooltip = CELLBASE_HOST;
-                }else if(record.data.text == "DAS"){
-                    this.icon = Compbio.images.info;
-                    this.tooltip = "Add custom DAS track";
-                }else{
-                    this.tooltip = null;
-                    this.icon = null;
-                }
-            }
-        },{
-            xtype: 'actioncolumn',
-            menuDisabled: true,
-            align: 'center',
-            width:30,
-            icon: Compbio.images.add,
-            renderer: function(value, metaData, record){
-                if (record.isLeaf()) {
-                    this.icon = Compbio.images.add;
-                    this.tooltip = "Add";
-                }else{
-                    if(record.data.text == "Cellbase"){
-                        this.icon = Compbio.images.edit;
-                    }else if(record.data.text == "DAS"){
-                        this.icon = Compbio.images.add;
-                    }else{
-                        this.icon = null;
-                    }
-                }
-            },
-            handler: function(grid, rowIndex, colIndex, actionItem, event, record, row) {
-                var updateActiveTracksPanel = function(trackType, trackTitle, trackId, showActive) {
-                    var newNode = activeSt.getRootNode().appendChild({text: trackTitle, trackId:trackId, trackType:trackType, leaf: true, checked:true, iconCls:"icon-blue-box"});
-                    Ext.example.msg("Track "+trackType,"actived");
-                    //var node = activeSt.getRootNode().findChild("trackId",trackId);
-                    //Ext.getCmp(_this.id+"activeTracksTree").getSelectionModel().select(newNode);
-                    if(showActive == true){
-                        Ext.getCmp(_this.id+"activeTracksTree").expand();
-                    }
-                };
-                var text = record.data.text;
-                if(record.isLeaf()){
-                    if(record.isAncestor(availableSt.getRootNode().findChild("text","Cellbase"))){
-                        var type = text;
-                        var id = _this.addTrack(type, text);
-                        var title = type;
-                        updateActiveTracksPanel(type, title, id, true);
-                    }
-                    if(record.isAncestor(availableSt.getRootNode().findChild("text","DAS"))){
-                        var type = 'das';
-                        var id = _this.addDASTrack(text, record.raw.url);
-                        var title = text;
-                        updateActiveTracksPanel(type, title, id, true);
-                    }
-                    if(record.isAncestor(availableSt.getRootNode().findChild("text","Local"))){
-                        _this.addFileTrack(text, updateActiveTracksPanel);
-                    }
-                    if(record.isAncestor(availableSt.getRootNode().findChild("text","Genomic Cloud Storage"))){
-                        var type = record.raw.fileFormat;
-                        var id = _this.addTrack(type, text, record.raw.id);
-                        if(id != null){
-                            var title = text;
-                            updateActiveTracksPanel(type, title, id, true);
-                        }
-                    }
-                }else{
-                    if(text == "Cellbase"){
-                        Ext.Msg.prompt('Cellbase', 'Please enter a new Cellbase URL:', function(btn, text){
-                            if (btn == 'ok'){
-                                var checkHost = null;
-                                var testHost = "http://"+text+"/cellbase/rest";
-                                $.ajax({url:testHost+"/rest/latest",async:false,success:function(data){
-                                    if(data.indexOf("hsa") != -1 )
-                                        checkHost=true;
-                                }});
-                                if(checkHost){
-                                    CELLBASE_HOST = testHost;
-                                    record.set('tooltip', CELLBASE_HOST);
-                                    Ext.example.msg("Cellbase Host","Host changed<br>"+CELLBASE_HOST);
-                                }else{
-                                    Ext.example.msg("Cellbase Host","Not found");
-                                }
-                                //record.save();
-                            }
-                        });
-                    }
-                    if(record.data.text == "DAS"){
-                        var urlWidget = new UrlWidget({title:'Add a DAS track'});
-                        urlWidget.onAdd.addEventListener(function(sender, event) {
-                            var id = _this.addDASTrack(event.name, event.url);
-                            updateActiveTracksPanel('das', event.name+"-"+id, id, true);
-                        });
-                        urlWidget.draw();
-                    }
-                }
-            }
-        }]
-    };
-
     var pluginsTree =  {
         xtype:"treepanel",
         id:this.id+"pluginsTree",
-        title:"Plugins",
+        title:'<span class="">Analysis</span>',
         bodyPadding:"10 0 0 0",
         useArrows:true,
         rootVisible: false,
@@ -1080,7 +964,7 @@ GenomeMaps.prototype.getSidePanelItems = function() {
     };
 
     var searchSidePanel = {
-        title:"Search",
+        title:'<span class="">Search</span>',
         id:this.id+"searchSidePanel",
         layout:{type:'vbox', align:'stretch'},
         bodyPadding:"5",
@@ -1198,7 +1082,26 @@ GenomeMaps.prototype.getSidePanelItems = function() {
         }]
     };
 
-    return [activeTracksPanel,availableTracksTree,pluginsTree,searchSidePanel];
+
+    var curatedTree = this._createTracksTreePanel('CellBase and DAS',[
+        { text: "CellBase", iconCls:"icon-box", id:'cellbase', expanded:true, children: tracks.cellbaseTracks },
+        { text: "DAS", iconCls:"icon-box", id:'das', expanded:true, children: this._loadInitialDasTrackConfig()}
+    ]);
+
+    var localChilds = [
+        {text:"GFF2", iconCls:"icon-blue-box", leaf:true},
+        {text:"GFF3", iconCls:"icon-blue-box", leaf:true},
+//        {text:"GTF", iconCls:"icon-blue-box", leaf:true},
+        {text:"BED", iconCls:"icon-blue-box", leaf:true},
+        {text:"VCF", iconCls:"icon-blue-box", leaf:true}
+    ];
+    var importTree = this._createTracksTreePanel('Import data',[
+        { text: 'Browse remote data', id:'gcsa', iconCls:'icon-box', expanded:true, children: [] },
+        { text: 'Browse local data <span class="tip">(local server required)</span>', id:'localgcsa', iconCls:"icon-box", expanded:true, children: [] },
+        { text: 'Load local data (<500MB)', id:'load', iconCls:'icon-box', expanded:true, children:localChilds}
+    ]);
+
+    return [activeTracksPanel,curatedTree,importTree,/*pluginsTree,*/searchSidePanel];
 
 		//,{
 			//title:"Settings",
@@ -1206,23 +1109,159 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 			//html:"not yet"
 		//}
 };
+
+
+GenomeMaps.prototype._createTracksTreePanel = function(title, children) {
+    var _this = this;
+    var availableSt = Ext.create('Ext.data.TreeStore',{
+        fields:['text','id'],
+        root:{
+            expanded: true,
+            children: children
+        }
+    });
+    this.availableSt=availableSt;
+    return {
+        xtype:"treepanel", //*********************************************AVAILABLE
+        id:this.id+title,
+        title:'<span class="">'+title+'</span>',
+        bodyPadding:"10 0 0 0",
+        useArrows:true,
+        rootVisible: false,
+        hideHeaders:true,
+        store: availableSt,
+        viewConfig: {markDirty:false},
+        columns: [{
+            xtype: 'treecolumn',
+            dataIndex: 'text',
+            flex:1
+        },{
+            xtype: 'actioncolumn',
+            menuDisabled: true,
+            align: 'center',
+            width:20,
+            renderer: function(value, metaData, record){
+                if(record.data.id == "cellbase"){
+                    this.icon = Compbio.images.info;
+                    this.tooltip = CELLBASE_HOST;
+                }else if(record.data.id == "das"){
+                    this.icon = Compbio.images.info;
+                    this.tooltip = "Add custom DAS track";
+                }else{
+                    this.tooltip = null;
+                    this.icon = null;
+                }
+            }
+        },{
+            xtype: 'actioncolumn',
+            menuDisabled: true,
+            align: 'center',
+            width:30,
+            icon: Compbio.images.add,
+            renderer: function(value, metaData, record){
+                if (record.isLeaf()) {
+                    this.icon = Compbio.images.add;
+                    this.tooltip = "Add";
+                }else{
+                    if(record.data.id == "cellbase"){
+                        this.icon = Compbio.images.edit;
+                    }else if(record.data.id == "das"){
+                        this.icon = Compbio.images.add;
+                    }else{
+                        this.icon = null;
+                    }
+                }
+            },
+            handler: function(grid, rowIndex, colIndex, actionItem, event, record, row) {
+                var updateActiveTracksPanel = function(trackType, trackTitle, trackId, showActive) {
+                    var newNode = _this.activeSt.getRootNode().appendChild({text: trackTitle, trackId:trackId, trackType:trackType, leaf: true, checked:true, iconCls:"icon-blue-box"});
+                    Ext.example.msg("Track "+trackType,"actived");
+                    //var node = activeSt.getRootNode().findChild("trackId",trackId);
+                    //Ext.getCmp(_this.id+"activeTracksTree").getSelectionModel().select(newNode);
+                    if(showActive == true){
+                        Ext.getCmp(_this.id+"activeTracksTree").expand();
+                    }
+                };
+                var text = record.data.text;
+                var idText = record.data.id;
+                if(record.isLeaf()){
+                    if(record.isAncestor(availableSt.getRootNode().findChild("id","cellbase"))){
+                        var type = text;
+                        var id = _this.addTrack(type, text);
+                        var title = type;
+                        updateActiveTracksPanel(type, title, id, true);
+                    }
+                    if(record.isAncestor(availableSt.getRootNode().findChild("id","das"))){
+                        var type = 'das';
+                        var id = _this.addDASTrack(text, record.raw.url);
+                        var title = text;
+                        updateActiveTracksPanel(type, title, id, true);
+                    }
+                    if(record.isAncestor(availableSt.getRootNode().findChild("id","load"))){
+                        _this.addFileTrack(text, updateActiveTracksPanel);
+                    }
+                    if(record.isAncestor(availableSt.getRootNode().findChild("id","gcsa"))){
+                        var type = record.raw.fileFormat;
+                        var id = _this.addTrack(type, text, record.raw.oid);
+                        if(id != null){
+                            var title = text;
+                            updateActiveTracksPanel(type, title, id, true);
+                        }
+                    }
+                }else{
+                    if(idText == "cellbase"){
+                        Ext.Msg.prompt('Cellbase', 'Please enter a new Cellbase URL:', function(btn, text){
+                            if (btn == 'ok'){
+                                var checkHost = null;
+                                var testHost = "http://"+text+"/cellbase/rest";
+                                $.ajax({url:testHost+"/rest/latest",async:false,success:function(data){
+                                    if(data.indexOf("hsa") != -1 )
+                                        checkHost=true;
+                                }});
+                                if(checkHost){
+                                    CELLBASE_HOST = testHost;
+                                    record.set('tooltip', CELLBASE_HOST);
+                                    Ext.example.msg("Cellbase Host","Host changed<br>"+CELLBASE_HOST);
+                                }else{
+                                    Ext.example.msg("Cellbase Host","Not found");
+                                }
+                                //record.save();
+                            }
+                        });
+                    }
+                    if(idText == "das"){
+                        var urlWidget = new UrlWidget({title:'Add a DAS track'});
+                        urlWidget.onAdd.addEventListener(function(sender, event) {
+                            var id = _this.addDASTrack(event.name, event.url);
+                            updateActiveTracksPanel('das', event.name+"-"+id, id, true);
+                        });
+                        urlWidget.draw();
+                    }
+                }
+            }
+        }]
+    };
+};
+
+
 GenomeMaps.prototype._loadGcsaTracks = function(response) {
 	for ( var i = 0; i < response.buckets.length; i++) {
 		var files = [];
 		for ( var j = 0; j < response.buckets[i].objects.length; j++) {
 			var gcsaObj = response.buckets[i].objects[j];
-			if(gcsaObj.fileType!='dir' && gcsaObj.fileFormat!='bai'){
+			if(gcsaObj.fileType!='dir' && gcsaObj.fileFormat!='bai' && gcsaObj.fileFormat!='tbi'){
 				gcsaObj["text"] = gcsaObj.fileName;
 				gcsaObj["icon"] = Compbio.images.r;
 				gcsaObj["leaf"] = true;
+				gcsaObj["oid"] = gcsaObj.id;
 				files.push(gcsaObj);
 			}
 		}
-		this.availableSt.getRootNode().findChild("text","Genomic Cloud Storage").appendChild({text:response.buckets[i].name, iconCls:"icon-blue-box", expanded:true, children:files});
+		this.availableSt.getRootNode().findChild("text","Browse remote data").appendChild({text:response.buckets[i].name, iconCls:"icon-blue-box", expanded:true, children:files});
 	}
 };
 GenomeMaps.prototype._unloadGcsaTracks = function() {
-	this.availableSt.getRootNode().findChild("text","Genomic Cloud Storage").removeAll();
+	this.availableSt.getRootNode().findChild('id','gcsa').removeAll();
 };
 GenomeMaps.prototype._updateGcsaTracks = function(response) {
 	this._unloadGcsaTracks();
@@ -1318,20 +1357,21 @@ GenomeMaps.prototype._loadTrackConfig = function(trackSvg, treeRecord) {
 		}]};
 		var tabFilter = Ext.create('Ext.tab.Panel', {
 			flex:1,
+            plain:true,
 			border:0,
 			bbar:bar,
 			items: items
 		});
-		Ext.getCmp(this.id+"activeTracksSettings").child('#'+this.id+"trackFiltering").tab.show();
 		Ext.getCmp(this.id+"trackFiltering").removeAll();
 		Ext.getCmp(this.id+"trackFiltering").add([tabFilter]);
-		Ext.getCmp(this.id+"activeTracksSettings").setActiveTab(Ext.getCmp(this.id+"trackFiltering"));
+
 	}else{
 		Ext.getCmp(this.id+"activeTracksSettings").child('#'+this.id+"trackFiltering").tab.hide();
 		Ext.getCmp(this.id+"trackFiltering").removeAll();
 	}
+    Ext.getCmp(this.id+"activeTracksSettings").child('#'+this.id+"trackFiltering").tab.show();
+    Ext.getCmp(this.id+"activeTracksSettings").setActiveTab(Ext.getCmp(this.id+"trackFiltering"));
 
-	
 	var optionsConfig = trackSvg.getOptionsConfig();
 	var options = trackSvg.getOptions();
 	if(optionsConfig != null){
