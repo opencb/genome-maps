@@ -26,7 +26,7 @@ function GenomeMaps(targetId, args) {
     this.title = "Genome Maps";
     this.description = "Genomic data visualization";
     this.wum = true;
-    this.version = "3.0.2";
+    this.version = "3.0.3";
 
 	this.trackIdCounter = 1;
 	
@@ -94,7 +94,7 @@ function GenomeMaps(targetId, args) {
 		region.load(this.getRegionByFeature(urlSnp,"snp"));
 	}
 
-//	if (this.gcsa==true){
+//	if (this.opencga==true){
     this.headerWidget = new HeaderWidget({
             appname: this.title,
             description: this.description,
@@ -134,6 +134,8 @@ function GenomeMaps(targetId, args) {
 		_this.setAccountData(response);
 	});
 
+    this._updateLocalOpencgaTracks();
+
     //SPECIE EVENT
     this.genomeViewer.onSpeciesChange.addEventListener(function(sender,data){
 //            _this._setTracks();
@@ -161,18 +163,18 @@ function GenomeMaps(targetId, args) {
 }
 
 GenomeMaps.prototype.sessionInitiated = function(){
-    this.availableSt.getRootNode().findChild('id','gcsa').set('text','Browse remote data');
+    this.availableSt.getRootNode().findChild('id','opencga').set('text','Browse remote data');
 };
 
 GenomeMaps.prototype.sessionFinished = function(){
-    this.availableSt.getRootNode().findChild('id','gcsa').set('text','Browse remote data <span class="tip">(login required)</span>');
-	this._unloadGcsaTracks();
+    this.availableSt.getRootNode().findChild('id','opencga').set('text','Browse remote data <span class="tip">(login required)</span>');
+	this._unloadOpencgaTracks();
 	this.accountData = null;
 };
 
 GenomeMaps.prototype.setAccountData = function(response) {
     this.accountData = response;
-	this._updateGcsaTracks(JSON.parse(JSON.stringify(response)));
+	this._updateOpencgaTracks(JSON.parse(JSON.stringify(response)));
 };
 
 GenomeMaps.prototype.draw = function(){
@@ -305,7 +307,7 @@ GenomeMaps.prototype.getTrackSvgById = function(trackId) {
 	return this.genomeViewer.getTrackSvgById(trackId);
 };
 
-GenomeMaps.prototype.addTrack = function(trackType, trackTitle, objectid) {
+GenomeMaps.prototype.addTrack = function(trackType, trackTitle, objectid, host) {
 	var id = this.genTrackId();
 	//console.log(trackId);
 	switch (trackType) {
@@ -574,6 +576,7 @@ GenomeMaps.prototype.addTrack = function(trackType, trackTitle, objectid) {
 		var bamTrack = new TrackData(id,{
 			adapter: new BamAdapter({
 				category: "bam",
+                host:host,
 				//resource: trackTitle.substr(0,trackTitle.length-4),
 				resource: objectid,
 				species: this.genomeViewer.species,
@@ -600,7 +603,7 @@ GenomeMaps.prototype.addTrack = function(trackType, trackTitle, objectid) {
 
     case "vcf":
         var vcfTrack = new TrackData(id,{
-            adapter: new GcsaAdapter({
+            adapter: new OpencgaAdapter({
                 category: "vcf",
                 //resource: trackTitle.substr(0,trackTitle.length-4),
                 resource: objectid,
@@ -1096,8 +1099,8 @@ GenomeMaps.prototype.getSidePanelItems = function() {
         {text:"VCF", iconCls:"icon-blue-box", leaf:true}
     ];
     var importTree = this._createTracksTreePanel('Import data',[
-        { text: 'Browse remote data', id:'gcsa', iconCls:'icon-box', expanded:true, children: [] },
-        { text: 'Browse local data <span class="tip">(local server required)</span>', id:'localgcsa', iconCls:"icon-box", expanded:true, children: [] },
+        { text: 'Browse remote data', id:'opencga', iconCls:'icon-box', expanded:true, children: [] },
+        { text: 'Browse local data <span class="tip">(light server required)</span>', id:'localopencga', iconCls:"icon-box", expanded:true, children: [] },
         { text: 'Load local data (<500MB)', id:'load', iconCls:'icon-box', expanded:true, children:localChilds}
     ]);
 
@@ -1147,10 +1150,27 @@ GenomeMaps.prototype._createTracksTreePanel = function(title, children) {
                 }else if(record.data.id == "das"){
                     this.icon = Compbio.images.info;
                     this.tooltip = "Add custom DAS track";
+                }else if(record.data.id == "opencga"){
+                    this.icon = Compbio.images.info;
+                    this.tooltip = "OpenCGA server information link";
+                }else if(record.data.id == "localopencga"){
+                    this.icon = Compbio.images.info;
+                    this.tooltip = "OpenCGA light server information link";
                 }else{
                     this.tooltip = null;
                     this.icon = null;
                 }
+            },
+            handler:function(grid, rowIndex, colIndex, actionItem, event, record, row){
+                var text = record.data.text;
+                var idText = record.data.id;
+                if(idText == 'opencga'){
+                    open('http://bioinfo.cipf.es/docs/compbio/projects/visualization/doku.php?id=genome-maps:opencga_sever');
+                }
+                if(idText == 'localopencga'){
+                    open('http://bioinfo.cipf.es/docs/compbio/projects/visualization/doku.php?id=genome-maps:opencga_light_sever');
+                }
+
             }
         },{
             xtype: 'actioncolumn',
@@ -1167,6 +1187,9 @@ GenomeMaps.prototype._createTracksTreePanel = function(title, children) {
                         this.icon = Compbio.images.edit;
                     }else if(record.data.id == "das"){
                         this.icon = Compbio.images.add;
+                    }else if(record.data.id == "localopencga"){
+                        this.icon = Compbio.images.refresh;
+                        this.tooltip = "Refresh local files";
                     }else{
                         this.icon = null;
                     }
@@ -1200,9 +1223,17 @@ GenomeMaps.prototype._createTracksTreePanel = function(title, children) {
                     if(record.isAncestor(availableSt.getRootNode().findChild("id","load"))){
                         _this.addFileTrack(text, updateActiveTracksPanel);
                     }
-                    if(record.isAncestor(availableSt.getRootNode().findChild("id","gcsa"))){
+                    if(record.isAncestor(availableSt.getRootNode().findChild("id","opencga"))){
                         var type = record.raw.fileFormat;
                         var id = _this.addTrack(type, text, record.raw.oid);
+                        if(id != null){
+                            var title = text;
+                            updateActiveTracksPanel(type, title, id, true);
+                        }
+                    }
+                    if(record.isAncestor(availableSt.getRootNode().findChild("id","localopencga"))){
+                        var type = record.raw.oid.split('.').pop();
+                        var id = _this.addTrack(type, text, record.raw.oid, OPENCGA_LOCALHOST);
                         if(id != null){
                             var title = text;
                             updateActiveTracksPanel(type, title, id, true);
@@ -1237,6 +1268,9 @@ GenomeMaps.prototype._createTracksTreePanel = function(title, children) {
                         });
                         urlWidget.draw();
                     }
+                    if(idText == "localopencga"){
+                        _this._updateLocalOpencgaTracks();
+                    }
                 }
             }
         }]
@@ -1244,28 +1278,45 @@ GenomeMaps.prototype._createTracksTreePanel = function(title, children) {
 };
 
 
-GenomeMaps.prototype._loadGcsaTracks = function(response) {
+GenomeMaps.prototype._loadOpencgaTracks = function(response) {
 	for ( var i = 0; i < response.buckets.length; i++) {
 		var files = [];
 		for ( var j = 0; j < response.buckets[i].objects.length; j++) {
-			var gcsaObj = response.buckets[i].objects[j];
-			if(gcsaObj.fileType!='dir' && gcsaObj.fileFormat!='bai' && gcsaObj.fileFormat!='tbi'){
-				gcsaObj["text"] = gcsaObj.fileName;
-				gcsaObj["icon"] = Compbio.images.r;
-				gcsaObj["leaf"] = true;
-				gcsaObj["oid"] = gcsaObj.id;
-				files.push(gcsaObj);
+			var opencgaObj = response.buckets[i].objects[j];
+			if(opencgaObj.fileType!='dir' && opencgaObj.fileFormat!='bai' && opencgaObj.fileFormat!='tbi'){
+				opencgaObj["text"] = opencgaObj.fileName;
+				opencgaObj["icon"] = Compbio.images.r;
+				opencgaObj["leaf"] = true;
+				opencgaObj["oid"] = opencgaObj.id;
+				files.push(opencgaObj);
 			}
 		}
-		this.availableSt.getRootNode().findChild("text","Browse remote data").appendChild({text:response.buckets[i].name, iconCls:"icon-blue-box", expanded:true, children:files});
+		this.availableSt.getRootNode().findChild("id","opencga").appendChild({text:response.buckets[i].name, iconCls:"icon-blue-box", expanded:true, children:files});
 	}
 };
-GenomeMaps.prototype._unloadGcsaTracks = function() {
-	this.availableSt.getRootNode().findChild('id','gcsa').removeAll();
+
+GenomeMaps.prototype._unloadOpencgaTracks = function() {
+	this.availableSt.getRootNode().findChild('id','opencga').removeAll();
 };
-GenomeMaps.prototype._updateGcsaTracks = function(response) {
-	this._unloadGcsaTracks();
-	this._loadGcsaTracks(response);
+
+GenomeMaps.prototype._updateOpencgaTracks = function(response) {
+	this._unloadOpencgaTracks();
+	this._loadOpencgaTracks(response);
+};
+
+GenomeMaps.prototype._updateLocalOpencgaTracks = function() {
+    var _this = this;
+    var opencgaManager = new OpencgaManager(OPENCGA_LOCALHOST);
+    opencgaManager.onLocalFileList.addEventListener(function(sender, data){
+        _this.availableSt.getRootNode().findChild('id','localopencga').removeAll();
+        if(data.statusText != 'error'){
+            Ext.example.msg('Local Open CGA','loaded');
+            _this.availableSt.getRootNode().findChild('id','localopencga').set('text','Browse local data <span class="ok">(ready)</span>');
+            var localDirTree = JSON.parse(data);
+            _this.availableSt.getRootNode().findChild('id','localopencga').appendChild(localDirTree);
+        }
+    });
+    opencgaManager.localFileList();
 };
 
 
