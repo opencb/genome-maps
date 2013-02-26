@@ -1287,7 +1287,7 @@ GenomeMaps.prototype._loadOpencgaTracks = function(response) {
 				opencgaObj["text"] = opencgaObj.fileName;
 				opencgaObj["icon"] = Compbio.images.r;
 				opencgaObj["leaf"] = true;
-				opencgaObj["oid"] = opencgaObj.id;
+				opencgaObj["oid"] = opencgaObj.id || opencgaObj["oid"];
 				files.push(opencgaObj);
 			}
 		}
