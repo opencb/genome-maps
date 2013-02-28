@@ -110,10 +110,22 @@ function GenomeMaps(targetId, args) {
 
 	//CHECK genomeviewer check if the param is provided by url to apply zoom param or region param
 	region.url = url.param('region');
+
+    //visualiaztion URL paramaters
+    var confPanelCollapsed = false;
+    if( url.param('confpanel') === 'false'){
+        confPanelCollapsed = true;
+    }
+    var regionPanelHidden = true;
+    if( url.param('regionpanel') === 'false'){
+        regionPanelHidden = false;
+    }
     this.genomeViewer = new GenomeViewer(this.id+"gvDiv", speciesObj,{
 			region:region,
             version:this.version,
             zoom:urlZoom,
+            confPanelCollapsed:confPanelCollapsed,
+            regionPanelHidden:regionPanelHidden,
             availableSpecies: AVAILABLE_SPECIES,
             height:this.height-this.headerWidget.height,
             width:this.width
