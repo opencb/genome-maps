@@ -606,7 +606,7 @@ GenomeMaps.prototype.addTrack = function(trackType, trackTitle, objectid, host) 
 			type:trackType,
 			title:trackTitle,
 			featuresRender:"BamRender",
-			histogramZoom:20,
+			histogramZoom:95,
 			height:24,
 			visibleRange:{start:90,end:100},
 			featureTypes:FEATURE_TYPES
@@ -1177,10 +1177,10 @@ GenomeMaps.prototype._createTracksTreePanel = function(title, children) {
                 var text = record.data.text;
                 var idText = record.data.id;
                 if(idText == 'opencga'){
-                    open('http://bioinfo.cipf.es/docs/compbio/projects/visualization/doku.php?id=genome-maps:opencga_sever');
+                    open('http://opencb.org/projects/visualization/doku.php?id=genome-maps:opencga_sever');
                 }
                 if(idText == 'localopencga'){
-                    open('http://bioinfo.cipf.es/docs/compbio/projects/visualization/doku.php?id=genome-maps:opencga_light_sever');
+                    open('http://opencb.org/projects/visualization/doku.php?id=genome-maps:opencga_light_sever');
                 }
 
             }

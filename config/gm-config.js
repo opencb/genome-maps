@@ -24,13 +24,12 @@ if(window.location.host.indexOf("fsalavert")!=-1 ||
 ){
 
     CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbase/rest";
-//	CELLBASE_HOST = "http://fsalavert:8080/cellbase/rest";
+	CELLBASE_HOST = "http://fsalavert:8080/cellbase/rest";
 	//CELLBASE_HOST = "http://rsanchez:8080/cellbase/rest";
 	//CELLBASE_HOST = "http://imedina:8080/cellbase/rest";
 	//CELLBASE_HOST = "http://ralonso:8080/naranjoma-ws/rest";
 
-	OPENCGA_HOST = "http://ws-beta.bioinfo.cipf.es/opencga/rest";
-//  OPENCGA_HOST = "http://fsalavert:8080/opencga/rest";
+	OPENCGA_HOST = "http://ws-beta.bioinfo.cipf.es/opencgabeta/rest";
 //	OPENCGA_HOST = "http://rsanchez:8080/dqs/rest";
 //	OPENCGA_HOST = "http://imedina:8080/dqs/rest";
 }
@@ -80,6 +79,10 @@ var AVAILABLE_SPECIES = [
                         //{	"name":"Fusarium oxysporum 68.2", "species":"fox", "icon":"",
                             //"region":{"chromosome":"1","start":2905,"end":2905}
 						//}
+                        ,
+                        {	"name":"Citrus Clementina 1.0", "species":"ccl", "icon":"",
+                            "region":{"chromosome":"scaffold_1","start":233423,"end":236969}
+                        }
                         ];
 
 /** Reference to a species from the list to be shown at start **/
@@ -95,7 +98,8 @@ var SPECIES_TRACKS_GROUP = {"hsa":"group1",
 							"ssc":"group2",
 							"cfa":"group3",
 							"aga":"group3",
-							"pfa":"group3"
+							"pfa":"group3",
+                            "ccl":"group1"
 							};
 
 var TRACKS ={"group1":[
@@ -109,7 +113,7 @@ var TRACKS ={"group1":[
 					  },
 					  {"category":"Variation",
 					   "tracks":[
-			                  {"id":"SNP", "disabled":false, "checked":true},
+			                  {"id":"SNP", "disabled":false, "checked":false},
 			                  {"id":"Mutation", "disabled":false, "checked":false},
 			                  {"id":"Structural variation (<20Kb)", "disabled":false, "checked":false},
 			                  {"id":"Structural variation (>20Kb)", "disabled":false, "checked":false}
