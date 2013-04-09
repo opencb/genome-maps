@@ -25,28 +25,24 @@ function GenomeMaps(targetId, args) {
     this.suiteId = 9;
     this.title = "Genome Maps";
     this.description = "Genomic data visualization";
-    this.wum = true;
-    this.version = "3.0.3";
+    this.version = "3.1.0";
 
 	this.trackIdCounter = 1;
 	
     this.args = args;
     this.width = $(window).width();
     this.height = $(window).height();
-    this.targetId = document.body;
+    this.targetId = targetId || document.body;
 
-    if (targetId != null) {
-        this.targetId = targetId;
-    }
+//    if (targetId != null) {
+//        this.targetId = targetId;
+//    }
     if (args != null) {
         if (args.width != null) {
             this.width = args.width;
         }
         if (args.height != null) {
             this.height = args.height;
-        }
-        if (args.wum != null) {
-            this.wum = args.wum;
         }
     }
 
@@ -372,7 +368,7 @@ GenomeMaps.prototype.addTrack = function(trackType, trackTitle, objectid, host) 
 			type:trackType,
 			title:trackTitle,
 			featuresRender:"SequenceRender",
-			height:30,
+			height:100,
 			visibleRange:{start:100,end:100}
 		});
 		break;
@@ -658,14 +654,12 @@ GenomeMaps.prototype.addFileTrack = function(text, updateActiveTracksPanel) {
 	}
 	if(fileWidget != null){
 		fileWidget.draw();
-		if (_this.wum){
-			_this.headerWidget.onLogin.addEventListener(function (sender){
-				fileWidget.sessionInitiated();
-			});
-			_this.headerWidget.onLogout.addEventListener(function (sender){
-				fileWidget.sessionFinished();
-			});
-		}
+        _this.headerWidget.onLogin.addEventListener(function (sender){
+            fileWidget.sessionInitiated();
+        });
+        _this.headerWidget.onLogout.addEventListener(function (sender){
+            fileWidget.sessionFinished();
+        });
 		fileWidget.onOk.addEventListener(function(sender, event) {
 			var fileTrack = new TrackData(event.fileName,{
 				adapter: event.adapter
@@ -1031,6 +1025,7 @@ GenomeMaps.prototype.getSidePanelItems = function() {
                 var boxValue = Ext.getCmp(_this.id+"searchPanelCombo").getValue().toLowerCase();
                 var cellBaseManager = new CellBaseManager(_this.species);
                 cellBaseManager.success.addEventListener(function(evt, data) {
+                    debugger
                     var notFound = "", boxes = [];
                     var featureType = boxValue.replace("info","gene");
                     var id = FEATURE_TYPES[featureType].infoWidgetId;
@@ -1295,7 +1290,7 @@ GenomeMaps.prototype._loadOpencgaTracks = function(response) {
 		var files = [];
 		for ( var j = 0; j < response.buckets[i].objects.length; j++) {
 			var opencgaObj = response.buckets[i].objects[j];
-			if(opencgaObj.fileType!='dir' && opencgaObj.fileFormat!='bai' && opencgaObj.fileFormat!='tbi'){
+			if(opencgaObj.fileType!='dir' && (opencgaObj.fileFormat=='bam' || opencgaObj.fileFormat=='vcf')){
 				opencgaObj["text"] = opencgaObj.fileName;
 				opencgaObj["icon"] = Compbio.images.r;
 				opencgaObj["leaf"] = true;
@@ -1318,6 +1313,7 @@ GenomeMaps.prototype._updateOpencgaTracks = function(response) {
 
 GenomeMaps.prototype._updateLocalOpencgaTracks = function() {
     var _this = this;
+
     var opencgaManager = new OpencgaManager(OPENCGA_LOCALHOST);
     opencgaManager.onLocalFileList.addEventListener(function(sender, data){
         _this.availableSt.getRootNode().findChild('id','localopencga').removeAll();

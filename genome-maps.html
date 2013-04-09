@@ -5,10 +5,12 @@
 	<title>Genome Maps</title>
 
 	<!-- CSS -->
-	<link rel="stylesheet" type="text/css" href="http://cdn.sencha.io/ext-4.1.1a-gpl/resources/css/ext-all-gray.css">
-	<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/ext-libs/ChemDoodleWeb/install/ChemDoodleWeb.css">
-	<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.qtip.min.css">
- 	<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/libs/resources/css/style.css">  
+	<link rel="stylesheet" type="text/css" href="http://cdn.sencha.io/ext-4.2.0-gpl/resources/css/ext-all-gray.css">
+	<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/ext-libs/ChemDoodleWeb-5.1.0/install/ChemDoodleWeb.css">
+	<!--<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.qtip.min.css">-->
+	<!--<link rel="stylesheet" type="text/css" href="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.0.1/jquery.qtip.min.css">-->
+	<link rel="stylesheet" type="text/css" href="http://qtip2.com/v/nightly/jquery.qtip.min.css">
+ 	<link rel="stylesheet" type="text/css" href="http://jsapi.bioinfo.cipf.es/libs/resources/css/style.css">
   
 	<!-- Google Analytics -->
 
@@ -27,26 +29,24 @@
   
 	<!-- EXT-LIBS -->
 
-
 	<!-- Ext-js -->
-	<script type="text/javascript" src="http://cdn.sencha.io/ext-4.1.1a-gpl/ext-all.js"></script>
-	<script type="text/javascript" src="http://cdn.sencha.io/ext-4.1.1a-gpl/examples/shared/examples.js"></script>
+	<script type="text/javascript" src="http://cdn.sencha.io/ext-4.2.0-gpl/ext-all.js"></script>
+	<script type="text/javascript" src="http://cdn.sencha.io/ext-4.2.0-gpl/examples/shared/examples.js"></script>
 	
 
 	<!-- jQuery -->
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 	
-	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.qtip.min.js"></script>
+	<!--<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.qtip.min.js"></script>-->
+	<!--<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.0.1/jquery.qtip.min.js"></script>-->
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/hammer.js/1.0.3/hammer.min.js"></script>
+
+    <script type="text/javascript" src="http://qtip2.com/v/nightly/jquery.qtip.min.js"></script>
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.sha1.js"></script>
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.url.js"></script>
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.cookie.js"></script>  
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jqXMLUtils.js"></script>
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.smartresize.js"></script>
-	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/jquery-mousewheel-3.0.6/jquery.mousewheel.min.js"></script>
-	
-	
-
-
 
 	
 	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/xml2json.js"></script>
@@ -66,9 +66,9 @@
 	
 	
 	<!-- CHEMDOODLE -->
-	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/ChemDoodleWeb/install/ChemDoodleWeb-libs.js"></script> 
-	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/ChemDoodleWeb/install/ChemDoodleWeb.js"></script> 
-	
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/ChemDoodleWeb-5.1.0/install/ChemDoodleWeb-libs.js"></script>
+	<script type="text/javascript" src="http://jsapi.bioinfo.cipf.es/ext-libs/ChemDoodleWeb-5.1.0/install/ChemDoodleWeb.js"></script>
+
 	
 	<!-- genome-maps-config -->
 	<script type="text/javascript" src="./config/gm-config.js"></script>
@@ -204,11 +204,11 @@
     WORKERS_PATH = "../js-common-libs/opencga/ui-widgets/";
 	
 	Ext.Loader.setConfig({enabled: true});
-	Ext.Loader.setPath('Ext.ux', 'http://cdn.sencha.io/ext-4.1.1a-gpl/examples/ux');
+	Ext.Loader.setPath('Ext.ux', 'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux');
 	Ext.QuickTips.init();
 	Ext.require([
 	    'Ext.ux.grid.FiltersFeature',
-	    'Ext.grid.PagingScroller',
+//	    'Ext.grid.PagingScroller',
 	    'Ext.ux.data.PagingMemoryProxy'
 	]);
 	
