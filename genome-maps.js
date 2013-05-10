@@ -23,7 +23,7 @@ function GenomeMaps(targetId, args) {
     var _this = this;
     this.id = "GenomeMaps" + Math.round(Math.random() * 10000);
     this.suiteId = 9;
-    this.title = "Genome Maps";
+    this.title = 'Genome Maps';
     this.description = "Genomic data visualization";
     this.version = "3.1.0";
 
@@ -117,6 +117,7 @@ function GenomeMaps(targetId, args) {
             confPanelCollapsed:confPanelCollapsed,
             regionPanelHidden:regionPanelHidden,
             availableSpecies: AVAILABLE_SPECIES,
+            popularSpecies: POPULAR_SPECIES,
             height:this.height-this.headerWidget.height,
             width:this.width
     });
