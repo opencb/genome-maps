@@ -37,6 +37,12 @@ if(window.location.host.indexOf("fsalavert")!=-1 ||
 //CELLBASE_HOST = "http://citrusgenn.bioinfo.cipf.es/cellbasecitrus/rest";
 //OPENCGA_HOST = "http://citrusgenn.bioinfo.cipf.es/opencgacitrus/rest";
 
+/*Panel settings*/
+CONFPANELHIDDEN = false;
+REGIONPANELHIDDEN = true;
+/**/
+
+
 /** List of available species in the cellbase service **/
 
 var POPULAR_SPECIES = ["Homo sapiens", "Mus musculus", "Danio rerio", "Drosophila melanogaster", "Saccharomyces cerevisiae", "Plasmodium falciparum", "Arabidopsis thaliana"];
@@ -162,8 +168,48 @@ var AVAILABLE_SPECIESOLD = [
 /** Reference to a species from the list to be shown at start **/
 var DEFAULT_SPECIES = AVAILABLE_SPECIES.items[0].items[0];
 
-var SPECIES_TRACKS_GROUP = {"hsa":"group1",
+var SPECIES_TRACKS_GROUP = {
+							
+"hsapiens":"group1",
+"mmusculus":"group1",
+"rnorvegicus":"group1",
+"ptroglodytes":"group1",
+"ggorilla":"group1",
+"pabelii":"group1",
+"mmulatta":"group1",
+"sscrofa":"group1",
+"cfamiliaris":"group1",
+"ecaballus":"group1",
+"ocuniculus":"group1",
+"ggallus":"group1",
+"btaurus":"group1",
+"fcatus":"group1",
+"drerio":"group1",
+"cintestinalis":"group1",
+"dmelanogaster":"group1",
+"dsimulans":"group1",
+"dyakuba":"group1",
+"agambiae":"group1",
+"celegans":"group1",
+"scerevisiae":"group1",
+"spombe":"group1",
+"afumigatus":"group1",
+"aniger":"group1",
+"anidulans":"group1",
+"aoryzae":"group1",
+"pfalciparum":"group1",
+"lmajor":"group1",
+"athaliana":"group1",
+"alyrata":"group1",
+"bdistachyon":"group1",
+"osativa":"group1",
+"gmax":"group1",
+"vvinifera":"group1",
+"zmays":"group1",
+
+							"hsa":"group1",
 							"mmu":"group2",
+							"rno":"group2",
 							"dre":"group2",
 							"rno":"group2",
 							"dme":"group2",
@@ -173,7 +219,7 @@ var SPECIES_TRACKS_GROUP = {"hsa":"group1",
 							"cfa":"group3",
 							"aga":"group3",
 							"pfa":"group3",
-                            "ccl":"group1"
+				                        "ccl":"group1"
 							};
 
 var TRACKS ={"group1":[
@@ -182,25 +228,25 @@ var TRACKS ={"group1":[
 //					          {"id":"Cytoband", "disabled":false, "checked":true},
 					          {"id":"Sequence", "disabled":false, "checked":true},
 					          {"id":"Gene/Transcript", "disabled":false, "checked":true},
-			                  {"id":"CpG islands", "disabled":false, "checked":false}
+			                  {"id":"CpG islands", "disabled":true, "checked":false}
 			                  ]
 					  },
 					  {"category":"Variation",
 					   "tracks":[
-			                  {"id":"SNP", "disabled":false, "checked":false},
-			                  {"id":"Mutation", "disabled":false, "checked":false},
-			                  {"id":"Structural variation (<20Kb)", "disabled":false, "checked":false},
-			                  {"id":"Structural variation (>20Kb)", "disabled":false, "checked":false}
+			                  {"id":"SNP", "disabled":true, "checked":false},
+			                  {"id":"Mutation", "disabled":true, "checked":false},
+			                  {"id":"Structural variation (<20Kb)", "disabled":true, "checked":false},
+			                  {"id":"Structural variation (>20Kb)", "disabled":true, "checked":false}
 			                  ]
 					  },
 					  {"category":"Regulatory",
 					   "tracks":[
-					          {"id":"TFBS", "disabled":false, "checked":false},
-			                  {"id":"miRNA targets", "disabled":false, "checked":false},
+					          {"id":"TFBS", "disabled":true, "checked":false},
+			                  {"id":"miRNA targets", "disabled":true, "checked":false},
 //			                  {"id":"Histone", "disabled":false, "checked":false},
 //			                  {"id":"Polymerase", "disabled":false, "checked":false},
 //			                  {"id":"Open Chromatin", "disabled":true, "checked":false},
-			                  {"id":"Conserved regions", "disabled":false, "checked":false}
+			                  {"id":"Conserved regions", "disabled":true, "checked":false}
 			                  ]
 					  }
 			],
@@ -215,7 +261,7 @@ var TRACKS ={"group1":[
 					  },
 					  {"category":"Variation",
 					   "tracks":[
-			                  {"id":"SNP", "disabled":false, "checked":true},
+			                  {"id":"SNP", "disabled":true, "checked":true},
 			                  {"id":"Mutation", "disabled":true, "checked":false},
 			                  {"id":"Structural variation (<20Kb)", "disabled":true, "checked":false},
 			                  {"id":"Structural variation (>20Kb)", "disabled":true, "checked":false}

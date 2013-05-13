@@ -102,11 +102,11 @@ function GenomeMaps(targetId, args) {
 	region.url = url.param('region');
 
     //visualiaztion URL paramaters
-    var confPanelCollapsed = false;
+    var confPanelHidden = CONFPANELHIDDEN;
     if( url.param('confpanel') === 'false'){
-        confPanelCollapsed = true;
+        confPanelHidden = true;
     }
-    var regionPanelHidden = true;
+    var regionPanelHidden = REGIONPANELHIDDEN;
     if( url.param('regionpanel') === 'false'){
         regionPanelHidden = false;
     }
@@ -114,7 +114,7 @@ function GenomeMaps(targetId, args) {
 			region:region,
             version:this.version,
             zoom:urlZoom,
-            confPanelCollapsed:confPanelCollapsed,
+            confPanelHidden:confPanelHidden,
             regionPanelHidden:regionPanelHidden,
             availableSpecies: AVAILABLE_SPECIES,
             popularSpecies: POPULAR_SPECIES,
@@ -145,6 +145,7 @@ function GenomeMaps(targetId, args) {
 //            _this.setTracksMenu();
             _this.headerWidget.setDescription(_this.genomeViewer.speciesName);
             _this.species=_this.genomeViewer.species;
+            _this._refreshInitialTracksConfig();
     });
 
     //RESIZE EVENT
@@ -707,7 +708,7 @@ GenomeMaps.prototype.addDASTrack = function(sourceName, sourceUrl) {
 };
 
 
-GenomeMaps.prototype._loadInitialTracksConfig= function(){
+GenomeMaps.prototype._loadInitialTracksConfig= function(args){
     //Load initial TRACKS config
     var categories = TRACKS[SPECIES_TRACKS_GROUP[this.species]];
     var activeTracks = [];
@@ -719,14 +720,23 @@ GenomeMaps.prototype._loadInitialTracksConfig= function(){
             var trackType = categories[i].tracks[j].id;
             var checked = categories[i].tracks[j].checked;
             var disabled = categories[i].tracks[j].disabled;
-            subChilds.push({text: trackType, iconCls:"icon-blue-box", leaf:true});
+            subChilds.push({text: trackType, iconCls:"icon-blue-box", leaf:true, disabled:disabled});
             if(checked){
-                var trackId = this.addTrack(trackType, trackType);
+                if(args && args.addTrack){
+                    var trackId = this.addTrack(trackType, trackType);
+                }
                 activeTracks.push({text: trackType, trackId:trackId, trackType:trackType ,checked:true, iconCls:"icon-blue-box", leaf:true});
             }
         }
     }
     return {cellbaseTracks:cellbaseTracks,activeTracks:activeTracks};
+};
+
+GenomeMaps.prototype._refreshInitialTracksConfig = function(){//TODO finish
+    var availableStore = Ext.getStore(this.id+'Add new tracks from CellBase and DAS');
+    var cellbaseStore = availableStore.getRootNode().findChild('text','CellBase');
+    cellbaseStore.removeAll();
+    cellbaseStore.appendChild(this._loadInitialTracksConfig().cellbaseTracks);
 };
 
 GenomeMaps.prototype._loadInitialDasTrackConfig= function(){
@@ -772,7 +782,7 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 	var _this = this;
 
 
-    var tracks = this._loadInitialTracksConfig();
+    var tracks = this._loadInitialTracksConfig({addTrack:true});
     var pluginTracks = this._loadInitialPluginTrackConfig();
 
 	var activeSt = Ext.create('Ext.data.TreeStore',{
@@ -1119,6 +1129,7 @@ GenomeMaps.prototype.getSidePanelItems = function() {
 GenomeMaps.prototype._createTracksTreePanel = function(title, children) {
     var _this = this;
     var availableSt = Ext.create('Ext.data.TreeStore',{
+        id:this.id+title,
         fields:['text','id'],
         root:{
             expanded: true,
@@ -1184,6 +1195,10 @@ GenomeMaps.prototype._createTracksTreePanel = function(title, children) {
                 if (record.isLeaf()) {
                     this.icon = Utils.images.add;
                     this.tooltip = "Add";
+                    if(record.raw.disabled){
+                        this.icon = null;
+                        this.tooltip = null;
+                    }
                     if((record.raw.fileFormat === 'bam' || record.raw.fileFormat === 'vcf') && record.raw.status !== 'ready'){
                         this.icon = null;
                         this.tooltip = null;
@@ -1217,10 +1232,12 @@ GenomeMaps.prototype._createTracksTreePanel = function(title, children) {
                 var idText = record.data.id;
                 if(record.isLeaf()){
                     if(record.isAncestor(availableSt.getRootNode().findChild("id","cellbase"))){
-                        var type = text;
-                        var id = _this.addTrack(type, text);
-                        var title = type;
-                        updateActiveTracksPanel(type, title, id, true);
+                        if(!record.raw.disabled){
+                            var type = text;
+                            var id = _this.addTrack(type, text);
+                            var title = type;
+                            updateActiveTracksPanel(type, title, id, true);
+                        }
                     }
                     if(record.isAncestor(availableSt.getRootNode().findChild("id","das"))){
                         var type = 'das';
