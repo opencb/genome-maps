@@ -142,6 +142,7 @@ function GenomeMaps(targetId, args) {
     //SPECIE EVENT
     this.genomeViewer.onSpeciesChange.addEventListener(function(sender,data){
 //            _this._setTracks();
+        debugger
 //            _this.setTracksMenu();
             _this.headerWidget.setDescription(_this.genomeViewer.speciesName);
             _this.species=_this.genomeViewer.species;
@@ -1062,7 +1063,8 @@ GenomeMaps.prototype.getSidePanelItems = function() {
                                         });
                                         items.push({xtype:'grid', store: st, hideHeaders:true, width:width, height:180, loadMask: true, margin:'2 0 0 0',
                                             title:'<span class="info">'+queryStr+'</span> <span style="font-family: Oxygen;color:slategray">'+features.length+'</span>',collapsible:true,collapsed:collapsed,titleCollapse:true,
-                                            columns: [{text: 'id',dataIndex: id, width:230}],plugins: 'bufferedrenderer',loadMask: true,
+                                            columns: [{text: 'id',dataIndex: id, width:230}],
+                                            plugins: 'bufferedrenderer',loadMask: true,
         //                                    dockedItems: [{items:{xtype:'field'}}],
                                             listeners:{
                                                 itemclick:function(este, record, item, index, e, eOpts){
