@@ -312,7 +312,7 @@ GenomeMaps.prototype.getTrackSvgById = function(trackId) {
 	return this.genomeViewer.getTrackSvgById(trackId);
 };
 
-GenomeMaps.prototype.addTrack = function(trackType, trackTitle, objectid, host) {
+GenomeMaps.prototype.addTrack = function(trackType, trackTitle, object, host) {
 	var id = this.genTrackId();
 	//console.log(trackId);
 	switch (trackType) {
@@ -592,7 +592,7 @@ GenomeMaps.prototype.addTrack = function(trackType, trackTitle, objectid, host) 
 				category: "bam",
                 host:host,
 				//resource: trackTitle.substr(0,trackTitle.length-4),
-				resource: objectid,
+				resource: object,
 				species: this.genomeViewer.species,
 				featureCache:{
 					gzip: false,
@@ -620,7 +620,7 @@ GenomeMaps.prototype.addTrack = function(trackType, trackTitle, objectid, host) 
             adapter: new OpencgaAdapter({
                 category: "vcf",
                 //resource: trackTitle.substr(0,trackTitle.length-4),
-                resource: objectid,
+                resource: object,
                 species: this.genomeViewer.species,
                 featureCache:{
                     gzip: false,
@@ -1330,7 +1330,7 @@ GenomeMaps.prototype._createTracksTreePanel = function(args) {
                     if(record.isAncestor(store.getRootNode().findChild("id","opencga"))){
                         if(!record.raw.disabled){
                             var type = record.raw.fileFormat;
-                            var id = _this.addTrack(type, text, record.raw.oid);
+                            var id = _this.addTrack(type, text, record.raw);
                             if(id != null){
                                 var title = text;
                                 updateActiveTracksPanel(type, title, id, true);
@@ -1387,8 +1387,10 @@ GenomeMaps.prototype._createTracksTreePanel = function(args) {
 GenomeMaps.prototype._loadOpencgaTracks = function(response) {
 	for ( var i = 0; i < response.buckets.length; i++) {
 		var files = [];
+        var bucketId = response.buckets[i].id;
 		for ( var j = 0; j < response.buckets[i].objects.length; j++) {
 			var opencgaObj = response.buckets[i].objects[j];
+            opencgaObj['bucketId'] = bucketId;
 //            console.log(opencgaObj.status);
 			if(opencgaObj.fileType!=='dir' && (opencgaObj.fileFormat==='bam' || opencgaObj.fileFormat==='vcf')){
 				opencgaObj["text"] = opencgaObj.fileName;
