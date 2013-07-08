@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Genome Maps</title>
+
+    <link rel="stylesheet" type="text/css" href="http://cdn.sencha.io/ext-4.2.0-gpl/resources/css/ext-all-gray.css">
+
+    <!-- CSS from vendors -->
+    <!-- build:style vendor -->
+    <link type="text/css" rel="stylesheet" href="../vendor/ChemDoodleWeb.css"/>
+    <link type="text/css" rel="stylesheet" href="../vendor/jquery.qtip.min.css"/>
+    <link href="../vendor/jquery-ui-1.10.3.custom/css/smoothgray/jquery-ui-1.10.3.custom.min.css" rel="stylesheet">
+    <!-- /build -->
+
+    <!-- CSS from Styles -->
+    <!-- build:style css -->
+    <link type="text/css" rel="stylesheet" href="../styles/css/style.css"/>
+    <!-- /build -->
+
+    <!-- Sencha Ext -->
+    <script type="text/javascript" src="http://cdn.sencha.io/ext-4.2.0-gpl/ext-all.js"></script>
+    <script type="text/javascript" src="http://cdn.sencha.io/ext-4.2.0-gpl/examples/shared/examples.js"></script>
+
+
+    <!-- Workers directory -->
+    <script type="text/javascript">
+        WORKERS_PATH = "vendor/";
+    </script>
+
+    <!-- JS from vendors -->
+
+    <!-- build:script vendor -->
+    <script type="text/javascript" src="../vendor/underscore-min.js"></script>
+    <script type="text/javascript" src="../vendor/backbone-min.js"></script>
+    <script type="text/javascript" src="../vendor/rawdeflate.js"></script>
+    <script type="text/javascript" src="../vendor/jquery.min.js"></script>
+
+    <script type="text/javascript" src="../vendor/jquery.qtip.min.js"></script>
+    <script type="text/javascript" src="../vendor/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../vendor/jquery.sha1.js"></script>
+    <script type="text/javascript" src="../vendor/purl.min.js"></script>
+    <script type="text/javascript" src="../vendor/jquery.mousewheel.min.js"></script>
+    <script type="text/javascript" src="../vendor/gl-matrix-min.js"></script>
+    <script type="text/javascript" src="../vendor/ChemDoodleWeb.js"></script>
+    <script type="text/javascript" src="../vendor/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>
+
+
+    <script type="text/javascript" src="../vendor/genome-viewer-1.0.2.js"></script>
+    <script type="text/javascript" src="../vendor/opencga-1.0.0.js"></script>
+    <script type="text/javascript">
+        WORKERS_PATH = "../vendor/";
+    </script>
+    <!-- /build -->
+
+
+    <!-- JS from GenomeMaps -->
+    <!-- build:script js -->
+    <script type="text/javascript" src="./gm-config.js"></script>
+    <script type="text/javascript" src="./gm-plugins-config.js"></script>
+    <script type="text/javascript" src="./genome-maps.js"></script>
+    <!-- /build -->
+
+    <script>
+        Ext.Loader.setConfig({enabled: true});
+        Ext.Loader.setPath('Ext.ux', 'http://cdn.sencha.io/ext-4.2.0-gpl/examples/ux');
+        Ext.QuickTips.init();
+        Ext.require([
+            'Ext.ux.grid.FiltersFeature',
+            'Ext.grid.plugin.BufferedRenderer'
+//	    'Ext.grid.PagingScroller',
+//	    'Ext.ux.data.PagingMemoryProxy'
+        ]);
+
+        var genomeMaps;
+        Ext.onReady(function () {
+            CheckBrowser();
+            genomeMaps = new GenomeMaps({
+                targetId: 'application',
+                autoRender: true
+            }); //the div must exist
+            genomeMaps.draw();
+        });
+    </script>
+    <STYLE type="text/css">
+    </STYLE>
+</head>
+<body style="overflow: hidden">
+<div id="checkBrowser"></div>
+<div id="application"></div>
+</body>
+</html>
