@@ -1,7 +1,7 @@
-/*! Genome Viewer - v1.0.2 - 2013-07-08
+/*! Genome Viewer - v1.0.2 - 2013-07-12
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
-/*! Genome Viewer - v1.0.2 - 2013-07-08
+/*! Genome Viewer - v1.0.2 - 2013-07-12
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 var Utils = {
@@ -482,7 +482,7 @@ var SVG = {
 //	
 //};
 
-/*! Genome Viewer - v1.0.2 - 2013-07-08
+/*! Genome Viewer - v1.0.2 - 2013-07-12
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 function CellBaseManager(species, args) {
@@ -3474,234 +3474,254 @@ CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbasebeta/rest";
 CELLBASE_VERSION = "v3";
 
 FEATURE_CONFIG = {
-	gene:{
-		filters:[{
-			name:"biotype",
-			text:"Biotype",
-			values:["3prime_overlapping_ncrna", "ambiguous_orf", "antisense", "disrupted_domain", "IG_C_gene", "IG_D_gene", "IG_J_gene", "IG_V_gene", "lincRNA", "miRNA", "misc_RNA", "Mt_rRNA", "Mt_tRNA", "ncrna_host", "nonsense_mediated_decay", "non_coding", "non_stop_decay", "polymorphic_pseudogene", "processed_pseudogene", "processed_transcript", "protein_coding", "pseudogene", "retained_intron", "retrotransposed", "rRNA", "sense_intronic", "sense_overlapping", "snoRNA", "snRNA", "transcribed_processed_pseudogene", "transcribed_unprocessed_pseudogene", "unitary_pseudogene", "unprocessed_pseudogene"],
-			selection:"multi"
-		}]
-		//options:[
-		//]
-	},
-	snp:{
-		filters:[{
-			name:"consequence_type",
-			text:"Consequence Type",
-			values:["2KB_upstream_variant", "5KB_upstream_variant", "500B_downstream_variant", "5KB_downstream_variant", "3_prime_UTR_variant", "5_prime_UTR_variant", "coding_sequence_variant", "complex_change_in_transcript", "frameshift_variant", "incomplete_terminal_codon_variant", "inframe_codon_gain", "inframe_codon_loss", "initiator_codon_change", "non_synonymous_codon", "intergenic_variant", "intron_variant", "mature_miRNA_variant", "nc_transcript_variant", "splice_acceptor_variant", "splice_donor_variant", "splice_region_variant", "stop_gained", "stop_lost", "stop_retained_variant", "synonymous_codon"],
-			selection:"multi"
-		}]
-		//options:[
-		//]
-	},
-	bam:{
-		//filters:[{
-				//name:"view",
-				//text:"View",
-				//values:["view_as_pairs","show_soft-clipped_bases"],
-				//selection:"multi"
-			//}
-		//],
-		options:[{
-				text:"View as pairs",
-				name:"view_as_pairs",
-				type:"checkbox",
-				fetch:true,
-				checked : false
-			},{
-				text:"Show Soft-clipping",
-				name:"show_softclipping",
-				type:"checkbox",
-				fetch:true,
-				checked : false
-			},{
-				text:"Insert size interval",
-				name:"insert_size_interval",
-				type:"doublenumberfield",
-				fetch:false,
-				minValue : 0,
-				maxValue : 0
-			}
-		]
-	}
-	
+    gene: {
+        filters: [
+            {
+                name: "biotype",
+                text: "Biotype",
+                values: ["3prime_overlapping_ncrna", "ambiguous_orf", "antisense", "disrupted_domain", "IG_C_gene", "IG_D_gene", "IG_J_gene", "IG_V_gene", "lincRNA", "miRNA", "misc_RNA", "Mt_rRNA", "Mt_tRNA", "ncrna_host", "nonsense_mediated_decay", "non_coding", "non_stop_decay", "polymorphic_pseudogene", "processed_pseudogene", "processed_transcript", "protein_coding", "pseudogene", "retained_intron", "retrotransposed", "rRNA", "sense_intronic", "sense_overlapping", "snoRNA", "snRNA", "transcribed_processed_pseudogene", "transcribed_unprocessed_pseudogene", "unitary_pseudogene", "unprocessed_pseudogene"],
+                selection: "multi"
+            }
+        ]
+        //options:[
+        //]
+    },
+    snp: {
+        filters: [
+            {
+                name: "consequence_type",
+                text: "Consequence Type",
+                values: ["2KB_upstream_variant", "5KB_upstream_variant", "500B_downstream_variant", "5KB_downstream_variant", "3_prime_UTR_variant", "5_prime_UTR_variant", "coding_sequence_variant", "complex_change_in_transcript", "frameshift_variant", "incomplete_terminal_codon_variant", "inframe_codon_gain", "inframe_codon_loss", "initiator_codon_change", "non_synonymous_codon", "intergenic_variant", "intron_variant", "mature_miRNA_variant", "nc_transcript_variant", "splice_acceptor_variant", "splice_donor_variant", "splice_region_variant", "stop_gained", "stop_lost", "stop_retained_variant", "synonymous_codon"],
+                selection: "multi"
+            }
+        ]
+        //options:[
+        //]
+    },
+    bam: {
+        //filters:[{
+        //name:"view",
+        //text:"View",
+        //values:["view_as_pairs","show_soft-clipped_bases"],
+        //selection:"multi"
+        //}
+        //],
+        options: [
+            {
+                text: "View as pairs",
+                name: "view_as_pairs",
+                type: "checkbox",
+                fetch: true,
+                checked: false
+            },
+            {
+                text: "Show Soft-clipping",
+                name: "show_softclipping",
+                type: "checkbox",
+                fetch: true,
+                checked: false
+            },
+            {
+                text: "Insert size interval",
+                name: "insert_size_interval",
+                type: "doublenumberfield",
+                fetch: false,
+                minValue: 0,
+                maxValue: 0
+            }
+        ]
+    }
+
 };
 FEATURE_OPTIONS = {
-	gene:[{
-		name:"biotype",
-		text:"Biotype",
-		values:["3prime_overlapping_ncrna", "ambiguous_orf", "antisense", "disrupted_domain", "IG_C_gene", "IG_D_gene", "IG_J_gene", "IG_V_gene", "lincRNA", "miRNA", "misc_RNA", "Mt_rRNA", "Mt_tRNA", "ncrna_host", "nonsense_mediated_decay", "non_coding", "non_stop_decay", "polymorphic_pseudogene", "processed_pseudogene", "processed_transcript", "protein_coding", "pseudogene", "retained_intron", "retrotransposed", "rRNA", "sense_intronic", "sense_overlapping", "snoRNA", "snRNA", "transcribed_processed_pseudogene", "transcribed_unprocessed_pseudogene", "unitary_pseudogene", "unprocessed_pseudogene"],
-		selection:"multi"
-	}],
-	snp:[{
-		name:"consequence_type",
-		text:"Consequence Type",
-		values:["2KB_upstream_variant", "5KB_upstream_variant", "500B_downstream_variant", "5KB_downstream_variant", "3_prime_UTR_variant", "5_prime_UTR_variant", "coding_sequence_variant", "complex_change_in_transcript", "frameshift_variant", "incomplete_terminal_codon_variant", "inframe_codon_gain", "inframe_codon_loss", "initiator_codon_change", "non_synonymous_codon", "intergenic_variant", "intron_variant", "mature_miRNA_variant", "nc_transcript_variant", "splice_acceptor_variant", "splice_donor_variant", "splice_region_variant", "stop_gained", "stop_lost", "stop_retained_variant", "synonymous_codon"],
-		selection:"multi"
-	}],
-	bam:[{
-		name:"view",
-		text:"View",
-		values:["view_as_pairs","show_soft-clipped_bases"],
-		selection:"multi"
-	}]
+    gene: [
+        {
+            name: "biotype",
+            text: "Biotype",
+            values: ["3prime_overlapping_ncrna", "ambiguous_orf", "antisense", "disrupted_domain", "IG_C_gene", "IG_D_gene", "IG_J_gene", "IG_V_gene", "lincRNA", "miRNA", "misc_RNA", "Mt_rRNA", "Mt_tRNA", "ncrna_host", "nonsense_mediated_decay", "non_coding", "non_stop_decay", "polymorphic_pseudogene", "processed_pseudogene", "processed_transcript", "protein_coding", "pseudogene", "retained_intron", "retrotransposed", "rRNA", "sense_intronic", "sense_overlapping", "snoRNA", "snRNA", "transcribed_processed_pseudogene", "transcribed_unprocessed_pseudogene", "unitary_pseudogene", "unprocessed_pseudogene"],
+            selection: "multi"
+        }
+    ],
+    snp: [
+        {
+            name: "consequence_type",
+            text: "Consequence Type",
+            values: ["2KB_upstream_variant", "5KB_upstream_variant", "500B_downstream_variant", "5KB_downstream_variant", "3_prime_UTR_variant", "5_prime_UTR_variant", "coding_sequence_variant", "complex_change_in_transcript", "frameshift_variant", "incomplete_terminal_codon_variant", "inframe_codon_gain", "inframe_codon_loss", "initiator_codon_change", "non_synonymous_codon", "intergenic_variant", "intron_variant", "mature_miRNA_variant", "nc_transcript_variant", "splice_acceptor_variant", "splice_donor_variant", "splice_region_variant", "stop_gained", "stop_lost", "stop_retained_variant", "synonymous_codon"],
+            selection: "multi"
+        }
+    ],
+    bam: [
+        {
+            name: "view",
+            text: "View",
+            values: ["view_as_pairs", "show_soft-clipped_bases"],
+            selection: "multi"
+        }
+    ]
 };
 
 GENE_BIOTYPE_COLORS = {
-		"3prime_overlapping_ncrna":"Orange",
-		"ambiguous_orf":"SlateBlue",
-		"antisense":"SteelBlue",
-		"disrupted_domain":"YellowGreen",
-		"IG_C_gene":"#FF7F50",
-		"IG_D_gene":"#FF7F50",
-		"IG_J_gene":"#FF7F50",
-		"IG_V_gene":"#FF7F50",
-		"lincRNA":"#8b668b",
-		"miRNA":"#8b668b",
-		"misc_RNA":"#8b668b",
-		"Mt_rRNA":"#8b668b",
-		"Mt_tRNA":"#8b668b",
-		"ncrna_host":"Fuchsia",
-		"nonsense_mediated_decay":"seagreen",
-		"non_coding":"orangered",
-		"non_stop_decay":"aqua",
-		"polymorphic_pseudogene":"#666666",
-		"processed_pseudogene":"#666666",
-		"processed_transcript":"#0000ff",
-		"protein_coding":"#a00000",
-		"pseudogene":"#666666",
-		"retained_intron":"goldenrod",
-		"retrotransposed":"lightsalmon",
-		"rRNA":"indianred",
-		"sense_intronic":"#20B2AA",
-		"sense_overlapping":"#20B2AA",  
-		"snoRNA":"#8b668b",
-		"snRNA":"#8b668b",
-		"transcribed_processed_pseudogene":"#666666",
-		"transcribed_unprocessed_pseudogene":"#666666",
-		"unitary_pseudogene":"#666666",
-		"unprocessed_pseudogene":"#666666",
-		"":"orangered",
-		"other":"#000000"
+    "3prime_overlapping_ncrna": "Orange",
+    "ambiguous_orf": "SlateBlue",
+    "antisense": "SteelBlue",
+    "disrupted_domain": "YellowGreen",
+    "IG_C_gene": "#FF7F50",
+    "IG_D_gene": "#FF7F50",
+    "IG_J_gene": "#FF7F50",
+    "IG_V_gene": "#FF7F50",
+    "lincRNA": "#8b668b",
+    "miRNA": "#8b668b",
+    "misc_RNA": "#8b668b",
+    "Mt_rRNA": "#8b668b",
+    "Mt_tRNA": "#8b668b",
+    "ncrna_host": "Fuchsia",
+    "nonsense_mediated_decay": "seagreen",
+    "non_coding": "orangered",
+    "non_stop_decay": "aqua",
+    "polymorphic_pseudogene": "#666666",
+    "processed_pseudogene": "#666666",
+    "processed_transcript": "#0000ff",
+    "protein_coding": "#a00000",
+    "pseudogene": "#666666",
+    "retained_intron": "goldenrod",
+    "retrotransposed": "lightsalmon",
+    "rRNA": "indianred",
+    "sense_intronic": "#20B2AA",
+    "sense_overlapping": "#20B2AA",
+    "snoRNA": "#8b668b",
+    "snRNA": "#8b668b",
+    "transcribed_processed_pseudogene": "#666666",
+    "transcribed_unprocessed_pseudogene": "#666666",
+    "unitary_pseudogene": "#666666",
+    "unprocessed_pseudogene": "#666666",
+    "": "orangered",
+    "other": "#000000"
 };
-
 
 
 SNP_BIOTYPE_COLORS = {
-	"2KB_upstream_variant":"#a2b5cd",
-	"5KB_upstream_variant":"#a2b5cd",
-	"500B_downstream_variant":"#a2b5cd",
-	"5KB_downstream_variant":"#a2b5cd",
-	"3_prime_UTR_variant":"#7ac5cd",
-	"5_prime_UTR_variant":"#7ac5cd",
-	"coding_sequence_variant":"#458b00",
-	"complex_change_in_transcript":"#00fa9a",
-	"frameshift_variant":"#ff69b4",
-	"incomplete_terminal_codon_variant":"#ff00ff",
-	"inframe_codon_gain":"#ffd700",
-	"inframe_codon_loss":"#ffd700",
-	"initiator_codon_change":"#ffd700",
-	"non_synonymous_codon":"#ffd700",
-	"intergenic_variant":"#636363",
-	"intron_variant":"#02599c",
-	"mature_miRNA_variant":"#458b00",
-	"nc_transcript_variant":"#32cd32",
-	"splice_acceptor_variant":"#ff7f50",
-	"splice_donor_variant":"#ff7f50",
-	"splice_region_variant":"#ff7f50",
-	"stop_gained":"#ff0000",
-	"stop_lost":"#ff0000",
-	"stop_retained_variant":"#76ee00",
-	"synonymous_codon":"#76ee00",
-	"other":"#000000"
+    "2KB_upstream_variant": "#a2b5cd",
+    "5KB_upstream_variant": "#a2b5cd",
+    "500B_downstream_variant": "#a2b5cd",
+    "5KB_downstream_variant": "#a2b5cd",
+    "3_prime_UTR_variant": "#7ac5cd",
+    "5_prime_UTR_variant": "#7ac5cd",
+    "coding_sequence_variant": "#458b00",
+    "complex_change_in_transcript": "#00fa9a",
+    "frameshift_variant": "#ff69b4",
+    "incomplete_terminal_codon_variant": "#ff00ff",
+    "inframe_codon_gain": "#ffd700",
+    "inframe_codon_loss": "#ffd700",
+    "initiator_codon_change": "#ffd700",
+    "non_synonymous_codon": "#ffd700",
+    "intergenic_variant": "#636363",
+    "intron_variant": "#02599c",
+    "mature_miRNA_variant": "#458b00",
+    "nc_transcript_variant": "#32cd32",
+    "splice_acceptor_variant": "#ff7f50",
+    "splice_donor_variant": "#ff7f50",
+    "splice_region_variant": "#ff7f50",
+    "stop_gained": "#ff0000",
+    "stop_lost": "#ff0000",
+    "stop_retained_variant": "#76ee00",
+    "synonymous_codon": "#76ee00",
+    "other": "#000000"
 };
 
 
-SEQUENCE_COLORS = {A:"#009900", C:"#0000FF", G:"#857A00", T:"#aa0000", N:"#555555"};
+SEQUENCE_COLORS = {A: "#009900", C: "#0000FF", G: "#857A00", T: "#aa0000", N: "#555555"};
 
-SAM_FLAGS = [["read paired", 0x1],
-             ["read mapped in proper pair", 0x2],
-             ["read unmapped", 0x4],
-             ["mate unmapped", 0x8],
-             ["read reverse strand", 0x10],
-             ["mate reverse strand", 0x20],
-             ["first in pair", 0x40],
-             ["second in pair", 0x80],
-             ["not primary alignment", 0x100],
-             ["read fails platform/vendor quality checks", 0x200],
-             ["read is PCR or optical duplicate", 0x400]];
+SAM_FLAGS = [
+    ["read paired", 0x1],
+    ["read mapped in proper pair", 0x2],
+    ["read unmapped", 0x4],
+    ["mate unmapped", 0x8],
+    ["read reverse strand", 0x10],
+    ["mate reverse strand", 0x20],
+    ["first in pair", 0x40],
+    ["second in pair", 0x80],
+    ["not primary alignment", 0x100],
+    ["read fails platform/vendor quality checks", 0x200],
+    ["read is PCR or optical duplicate", 0x400]
+];
 
 
 FEATURE_TYPES = {
-	
-	//methods
-	formatTitle : function (str){
-		var s = str.replace(/_/gi, " ");
-		s = s.charAt(0).toUpperCase() + s.slice(1);
-		return s;
-	},
-	getTipCommons : function(f){
-		var strand = (f.strand != null) ? f.strand : "NA";
-		return 'start-end:&nbsp;<span class="emph">'+f.start+'-'+f.end+'</span><br>'+
-		'strand:&nbsp;<span class="emph">'+strand+'</span><br>'+
-		'length:&nbsp;<span class="info">'+(f.end-f.start+1).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+'</span><br>';
-	},
-		
-	//items
-	sequence:{
-		color: SEQUENCE_COLORS
-	},
-	undefined:{
-		getLabel: function(f){
-			var str = "";
-			str+= f.chromosome + ":" + f.start + "-" + f.end;
-			return str;
-		},
-		getTipTitle: function(f){
-			return " ";
-		},
-		getTipText: function(f){
-			return " ";
-		},
-		getColor: function(f){
-			return "grey";
-		},
+
+    //methods
+    formatTitle: function (str) {
+        var s = str.replace(/_/gi, " ");
+        s = s.charAt(0).toUpperCase() + s.slice(1);
+        return s;
+    },
+    getTipCommons: function (f) {
+        var strand = (f.strand != null) ? f.strand : "NA";
+        return 'start-end:&nbsp;<span class="emph">' + f.start + '-' + f.end + '</span><br>' +
+            'strand:&nbsp;<span class="emph">' + strand + '</span><br>' +
+            'length:&nbsp;<span class="info">' + (f.end - f.start + 1).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '</span><br>';
+    },
+
+    //items
+    sequence: {
+        color: SEQUENCE_COLORS
+    },
+    undefined: {
+        getLabel: function (f) {
+            var str = "";
+            str += f.chromosome + ":" + f.start + "-" + f.end;
+            return str;
+        },
+        getTipTitle: function (f) {
+            return " ";
+        },
+        getTipText: function (f) {
+            return " ";
+        },
+        getColor: function (f) {
+            return "grey";
+        },
 //		infoWidgetId: "id",
-		height:10
+        height: 10
 //		histogramColor:"lightblue"
-	},
-	gene:{
-		getLabel: function(f){
+    },
+    gene: {
+        label: function (f) {
             var name = (f.name != null) ? f.name : f.id;
-			var str = "";
-			str+= (f.strand < 0 || f.strand == '-') ? "<" : "";
-			str+= " "+name+" ";
-			str+= (f.strand > 0 || f.strand == '+') ? ">" : "";
-            if(f.biotype != null && f.biotype != ''){
-			    str+= " ["+f.biotype+"]";
+            var str = "";
+            str += (f.strand < 0 || f.strand == '-') ? "<" : "";
+            str += " " + name + " ";
+            str += (f.strand > 0 || f.strand == '+') ? ">" : "";
+            if (f.biotype != null && f.biotype != '') {
+                str += " [" + f.biotype + "]";
             }
-			return str;
-		},
-		getTipTitle: function(f){
+            return str;
+        },
+        tooltipTitle: function (f) {
             var name = (f.name != null) ? f.name : f.id;
-			return FEATURE_TYPES.formatTitle(f.featureType) +
-			' - <span class="ok">'+name+'</span>';
-		},
-		getTipText: function(f){
-			var color = GENE_BIOTYPE_COLORS[f.biotype];
-			return	'id:&nbsp;<span class="ssel">'+f.id+'</span><br>'+
-			'biotype:&nbsp;<span class="emph" style="color:'+color+';">'+f.biotype+'</span><br>'+
-			FEATURE_TYPES.getTipCommons(f)+
-			'source:&nbsp;<span class="ssel">'+f.source+'</span><br><br>'+
-            'description:&nbsp;<span class="emph">'+f.description+'</span><br>';
-		},
-		getColor: function(f){
-			return GENE_BIOTYPE_COLORS[f.biotype];
-		},
-		infoWidgetId: "id",
-		height:4,
-		histogramColor:"lightblue"
-	},
+            return FEATURE_TYPES.formatTitle('Gene') +
+                ' - <span class="ok">' + name + '</span>';
+        },
+        tooltipText: function (f) {
+            var color = GENE_BIOTYPE_COLORS[f.biotype];
+            return    'id:&nbsp;<span class="ssel">' + f.id + '</span><br>' +
+                'biotype:&nbsp;<span class="emph" style="color:' + color + ';">' + f.biotype + '</span><br>' +
+                FEATURE_TYPES.getTipCommons(f) +
+                'source:&nbsp;<span class="ssel">' + f.source + '</span><br><br>' +
+                'description:&nbsp;<span class="emph">' + f.description + '</span><br>';
+        },
+        color: function (f) {
+            return GENE_BIOTYPE_COLORS[f.biotype];
+        },
+        infoWidgetId: "id",
+        height: 4,
+        histogramColor: "lightblue",
+        handlers: {
+            'feature:click': function (event) {
+                console.log(event)
+                new GeneInfoWidget(null, _this.species).draw(event);
+            }
+        }
+    },
 //	geneorange:{
 //		getLabel: function(f){
 //			var str = "";
@@ -3730,497 +3750,447 @@ FEATURE_TYPES = {
 //		height:4,
 //		histogramColor:"lightblue"
 //	},
-	transcript:{
-		getLabel: function(f){
+    transcript: {
+        label: function (f) {
             var name = (f.name != null) ? f.name : f.id;
-			var str = "";
-			str+= (f.strand < 0) ? "<" : "";
-			str+= " "+name+" ";
-			str+= (f.strand > 0) ? ">" : "";
-            if(f.biotype != null && f.biotype != ''){
-                str+= " ["+f.biotype+"]";
+            var str = "";
+            str += (f.strand < 0) ? "<" : "";
+            str += " " + name + " ";
+            str += (f.strand > 0) ? ">" : "";
+            if (f.biotype != null && f.biotype != '') {
+                str += " [" + f.biotype + "]";
             }
-			return str;
-		},
-		getTipTitle: function(f){
+            return str;
+        },
+        tooltipTitle: function (f) {
             var name = (f.name != null) ? f.name : f.id;
-			return FEATURE_TYPES.formatTitle(f.featureType) +
-			' - <span class="ok">'+name+'</span>';
-		},
-		getTipText: function(f){
-			var color = GENE_BIOTYPE_COLORS[f.biotype];
-			return	'id:&nbsp;<span class="ssel">'+f.id+'</span><br>'+
-			'biotype:&nbsp;<span class="emph" style="color:'+color+';">'+f.biotype+'</span><br>'+
-			'description:&nbsp;<span class="emph">'+f.description+'</span><br>'+
-			FEATURE_TYPES.getTipCommons(f);
-		},
-		getColor: function(f){
-			return GENE_BIOTYPE_COLORS[f.biotype];
-		},
-		infoWidgetId: "id",
-		height:1,
-		histogramColor:"lightblue"
-	},
-	exon:{//not yet
-		getLabel: function(f){
+            return FEATURE_TYPES.formatTitle('Transcript') +
+                ' - <span class="ok">' + name + '</span>';
+        },
+        tooltipText: function (f) {
+            var color = GENE_BIOTYPE_COLORS[f.biotype];
+            return    'id:&nbsp;<span class="ssel">' + f.id + '</span><br>' +
+                'biotype:&nbsp;<span class="emph" style="color:' + color + ';">' + f.biotype + '</span><br>' +
+                'description:&nbsp;<span class="emph">' + f.description + '</span><br>' +
+                FEATURE_TYPES.getTipCommons(f);
+        },
+        color: function (f) {
+            return GENE_BIOTYPE_COLORS[f.biotype];
+        },
+        infoWidgetId: "id",
+        height: 1,
+        histogramColor: "lightblue"
+    },
+    exon: {//not yet
+        label: function (f) {
             var name = (f.name != null) ? f.name : f.id;
-			return name;
-		},
-		getTipTitle: function(f){
+            return name;
+        },
+        tooltipTitle: function (f) {
             var name = (f.name != null) ? f.name : f.id;
-            if (name == null){name = ''}
-			return FEATURE_TYPES.formatTitle(f.featureType)+' - <span class="ok">'+name+'</span>';
-		},
-		getTipText: function(e,t){
+            if (name == null) {
+                name = ''
+            }
+            return FEATURE_TYPES.formatTitle('Exon') + ' - <span class="ok">' + name + '</span>';
+        },
+        tooltipText: function (e, t) {
             var ename = (e.name != null) ? e.name : e.id;
             var tname = (t.name != null) ? t.name : t.id;
-			var color = GENE_BIOTYPE_COLORS[t.biotype];
-			return	'transcript name:&nbsp;<span class="ssel">'+t.name+'</span><br>'+
-			'transcript Ensembl&nbsp;ID:&nbsp;<span class="ssel">'+t.id+'</span><br>'+
-			'transcript biotype:&nbsp;<span class="emph" style="color:'+color+';">'+t.biotype+'</span><br>'+
-			'transcript description:&nbsp;<span class="emph">'+t.description+'</span><br>'+
-			'transcript start-end:&nbsp;<span class="emph">'+t.start+'-'+t.end+'</span><br>'+
-			'exon start-end:&nbsp;<span class="emph">'+e.start+'-'+e.end+'</span><br>'+
-			'strand:&nbsp;<span class="emph">'+t.strand+'</span><br>'+
-			'length:&nbsp;<span class="info">'+(e.end-e.start+1).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")+'</span><br>';
-		},
-		getColor: function(f){
-			return "black";
-		},
-		infoWidgetId: "id",
-		height:5,
-		histogramColor:"lightblue"
-	},
-	snp:{
-		getLabel: function(f){
-            var name = (f.name != null) ? f.name : f.id;
-			return name;
-		},
-		getTipTitle: function(f){
-            var name = (f.name != null) ? f.name : f.id;
-			return f.featureType.toUpperCase() +
-			' - <span class="ok">'+name+'</span>';
-		},
-		getTipText: function(f){
-			var color = SNP_BIOTYPE_COLORS[f.displaySoConsequence];
-			return 'alleles:&nbsp;<span class="ssel">'+f.alleleString+'</span><br>'+
-//			'ancestral allele:&nbsp;<span class="ssel">'+f.ancestralAllele+'</span><br>'+
-//			'SO consequence:&nbsp;<span class="emph" style="color:'+color+';">'+f.displaySoConsequence+'</span><br>'+
-			FEATURE_TYPES.getTipCommons(f)+
-			'source:&nbsp;<span class="ssel">'+f.source+'</span><br>';
-			
-		},
-		getColor: function(f){
-//			return SNP_BIOTYPE_COLORS[f.displaySoConsequence];
-			return 'lightblue';
-		},
-		infoWidgetId: "id",
-		height:8,
-		histogramColor:"orange"
-	},
-	cpg_island:{
-		getLabel: function(f){
-			return f.name;
-		},
-		getTipTitle: function(f){
-			return 'CpG island - <span class="ok">'+f.name+'</span>';
-		},
-		getTipText: function(f){
-			return 'CpG number:&nbsp;<span class="ssel">'+f.cpgNum+'</span><br>'+
-			'CpG precentage:&nbsp;<span class="ssel">'+f.perCpG+'</span><br>'+
-			'CG number:&nbsp;<span class="ssel">'+f.gcNum+'</span><br>'+
-			'CG percentage:&nbsp;<span class="ssel">'+f.perGc+'</span><br>'+
-			'observed-expected ratio:&nbsp;<span class="ssel">'+f.observedExpectedRatio+'</span><br>'+
-			FEATURE_TYPES.getTipCommons(f);
-		},
-		getColor: function(f){
-			return "Aquamarine";
-		},
-		infoWidgetId: "name",
-		height:8,
-		histogramColor:"Aquamarine"
-	},
-	mutation:{
-		getLabel: function(f){
-			return f.mutationCds;
-		},
-		getTipTitle: function(f){
-			return FEATURE_TYPES.formatTitle(f.featureType)+' - <span class="ok">'+f.mutationCds+'</span>';
-		},
-		getTipText: function(f){
-			return 'mutation CDS:&nbsp;<span class="ssel">'+f.mutationCds+'</span><br>'+
-			'mutation Aa:&nbsp;<span class="ssel">'+f.mutationAa+'</span><br>'+
-			'mutation description:&nbsp;<span class="ssel">'+f.mutationDescription+'</span><br>'+
-			'primary histology:&nbsp;<span class="ssel">'+f.primaryHistology+'</span><br>'+
-			'primary site:&nbsp;<span class="ssel">'+f.primarySite+'</span><br>'+
-			'site subtype:&nbsp;<span class="ssel">'+f.siteSubtype+'</span><br>'+
-			'gene name:&nbsp;<span class="ssel">'+f.geneName+'</span><br>'+
-			FEATURE_TYPES.getTipCommons(f)+
-			'source:&nbsp;<span class="ssel">'+f.source+'</span><br>';
-		},
-		getColor: function(f){
-			return "Chartreuse";
-		},
-		infoWidgetId: "mutationCds",
-		height:8,
-		histogramColor:"Chartreuse"
-	},
-    icgc_mutation:{
-        getLabel: function(f){
-            return f.id;
+            var color = GENE_BIOTYPE_COLORS[t.biotype];
+            return    'transcript name:&nbsp;<span class="ssel">' + t.name + '</span><br>' +
+                'transcript Ensembl&nbsp;ID:&nbsp;<span class="ssel">' + t.id + '</span><br>' +
+                'transcript biotype:&nbsp;<span class="emph" style="color:' + color + ';">' + t.biotype + '</span><br>' +
+                'transcript description:&nbsp;<span class="emph">' + t.description + '</span><br>' +
+                'transcript start-end:&nbsp;<span class="emph">' + t.start + '-' + t.end + '</span><br>' +
+                'exon start-end:&nbsp;<span class="emph">' + e.start + '-' + e.end + '</span><br>' +
+                'strand:&nbsp;<span class="emph">' + t.strand + '</span><br>' +
+                'length:&nbsp;<span class="info">' + (e.end - e.start + 1).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '</span><br>';
         },
-        getTipTitle: function(f){
-            return 'ICGC mutation'+' - <span class="ok">'+f.id+'</span>';
+        color: function (f) {
+            return "black";
         },
-        getTipText: function(f) {
-            var consequences = '';
-            for(var i = 0; i< f.consequences.length; i++) {
-                consequences += '&nbsp;'+f.consequences[i]+'<br>';
-            }
-            return 'mutation:&nbsp;<span class="ssel">'+f.mutation+'</span><br>'+
-                'reference allele:&nbsp;<span class="ssel">'+f.refGenAllele+'</span><br>'+
-                'mutation type:&nbsp;<span class="ssel">'+f.mutationType+'</span><br>'+
-                'project info:&nbsp;<span class="ssel">'+f.projectInfo[0]+'</span><br>'+
-                'consequences:<br>&nbsp;<span class="ssel">'+consequences+'</span><br>'+
-                'source:&nbsp;<span class="ssel">ICGC</span><br>' +
-                'start-end:&nbsp;<span class="emph">'+f.start+'-'+f.end+'</span><br>';
-        },
-        getColor: function(f){
-            return "Chartreuse";
-        },
-        infoWidgetId: "mutationCds",
-        height:8,
-        histogramColor:"Chartreuse"
+        infoWidgetId: "id",
+        height: 5,
+        histogramColor: "lightblue"
     },
-	structural_variation:{
-		getLabel: function(f){
-			return f.displayId;
-		},
-		getTipTitle: function(f){
-			return FEATURE_TYPES.formatTitle(f.featureType)+' - <span class="ok">'+f.displayId+'</span>';
-		},
-		getTipText: function(f){
-			return 'display ID:&nbsp;<span class="ssel">'+f.displayId+'</span><br>'+
-			'SO term:&nbsp;<span class="ssel">'+f.soTerm+'</span><br>'+
-			'study description:&nbsp;<span class="emph">'+f.studyDescription+'</span><br>'+
-			FEATURE_TYPES.getTipCommons(f)+
-			'source:&nbsp;<span class="ssel">'+f.source+'</span><br>';
-		},
-		getColor: function(f){
-			return "indigo";
-		},
-		infoWidgetId: "name",
-		height:8,
-		histogramColor:"indigo"
-	},
-	tfbs:{
-		getLabel: function(f){
+    snp: {
+        label: function (f) {
+            return ('name' in f) ? f.name : f.id;
+        },
+        tooltipTitle: function (f) {
             var name = (f.name != null) ? f.name : f.id;
-			return name;
-		},
-		getTipTitle: function(f){
-            var name = (f.name != null) ? f.name : f.id;
-			return 'TFBS - <span class="ok">'+name+'</span>';
-		},
-		getTipText: function(f){
-            var name = (f.name != null) ? f.name : f.id;
-			return 'TF name:&nbsp;<span class="ssel">'+name+'</span><br>'+
-//			'relative start:&nbsp;<span class="ssel">'+f.relativeStart+'</span><br>'+
-//			'relative end:&nbsp;<span class="ssel">'+f.relativeEnd+'</span><br>'+
-//			'target gene name:&nbsp;<span class="ssel">'+f.targetGeneName+'</span><br>'+
-			'score:&nbsp;<span class="ssel">'+f.score+'</span><br>'+
-//			'sequence:&nbsp;<span class="ssel">'+f.sequence+'</span><br>'+
-			FEATURE_TYPES.getTipCommons(f)+
-			'source:&nbsp;<span class="ssel">'+f.source+'</span><br>';
-		},
-		getColor: function(f){
-			return "blue";
-		},
-		infoWidgetId: "name",
-		height:8,
-		histogramColor:"blue"
-	},
-	mirna_target:{
-		getLabel: function(f){
-            var name = (f.name != null) ? f.name : f.id;
-			return name;
-		},
-		getTipTitle: function(f){
-            var name = (f.name != null) ? f.name : f.id;
-			return 'miRNA target - <span class="ok">'+name+'</span>';
-		},
-		getTipText: function(f){
-			return ''+
-//            'gene target name:&nbsp;<span class="ssel">'+f.geneTargetName+'</span><br>'+
-//			'experimental method:&nbsp;<span class="ssel">'+f.experimentalMethod+'</span><br>'+
-			'score:&nbsp;<span class="ssel">'+f.score+'</span><br>'+
-			FEATURE_TYPES.getTipCommons(f)+
-			'source:&nbsp;<span class="ssel">'+f.source+'</span><br>';
-		},
-		getColor: function(f){
-			return "#8b668b";
-		},
-		infoWidgetId: "name",
-		height:8,
-		histogramColor:"#8b668b"
-	},
-	conserved_region:{
-		getLabel: function(f){
-			return f.conservedRegionId;
-		},
-		getTipTitle: function(f){
-			return FEATURE_TYPES.formatTitle(f.featureType)+' - <span class="ok">'+f.conservedRegionId+'</span>';
-		},
-		getTipText: function(f){
-			return 'method:&nbsp;<span class="ssel">'+f.method+'</span><br>'+
-			'data range primate:&nbsp;<span class="ssel">'+f.dataRangePrimate+'</span><br>'+
-			'lower limit primate:&nbsp;<span class="ssel">'+f.lowerLimitPrimate+'</span><br>'+
-			'sumData primate:&nbsp;<span class="ssel">'+f.sumDataPrimate+'</span><br>'+
-			'sumSquare primate:&nbsp;<span class="ssel">'+f.sumSquarePrimate+'</span><br>'+
-			FEATURE_TYPES.getTipCommons(f);
-		},
-		getColor: function(f){
-			return "DodgerBlue";
-		},
-		infoWidgetId: "name",
-		height:8,
-		histogramColor:"DodgerBlue"
-	},
-	file:{
-		getLabel: function(f){
-			var str = "";
-			str+= f.label;
-			return str;
-		},
-		getTipTitle: function(f){
-			return FEATURE_TYPES.formatTitle(f.featureType);
-		},
-		getTipText: function(f){
-			return FEATURE_TYPES.getTipCommons(f);
-		},
-		getColor: function(f){
-			return "black";
-		},
-		height:8,
-		histogramColor:"orange"
-	},
-	vcf:{
-		getLabel: function(f){
-                return f.id;
-				try {
-						var fields = f.sampleData.split("\t");
-					} catch (e) {
-					//Uncaught TypeError: Cannot call method 'split' of undefined 
-						console.log(e)
-						debugger
-						
-					}
-			
-			if(fields.length>10 || fields.length==9)
-				return f.id+" "+f.ref+"/"+f.alt+"";
-			else{
-				var gt = fields[9].split(":")[0];
-				if(gt.indexOf(".")!= -1 || gt.indexOf("-")!= -1)
-					return gt;
-				var label = "";
-				var alt = f.alt.split(",");
-				if(gt.charAt(0)=='0')
-					label = f.ref;
-				else{
-					var pos = gt.charAt(0)-1
-					label = alt[pos] 
-				}				
-				label+=gt.charAt(1)
-				if(gt.charAt(2)=='0')
-					label += f.ref;
-				else{
-					var pos = gt.charAt(2)-1
-					label += alt[pos] 
-				}
-		
-				return label;
-			}
-		},
-		getTipTitle: function(f){
-			return 'VCF variant - <span class="ok">'+f.id+'</span>';
-		},
-		getTipText: function(f){
-			return 'alleles (ref/alt):&nbsp;<span class="emph">'+f.reference+"/"+f.alternate+'</span><br>'+
-			'quality:&nbsp;<span class="emph">'+f.quality+'</span><br>'+
-			'filter:&nbsp;<span class="emph">'+f.filter+'</span><br>'+
-			FEATURE_TYPES.getTipCommons(f);
-		},
-		getColor: function(f){
-			return "black";
-		},
-		infoWidgetId: "id",
-		height:8,
-		histogramColor:"gray"
-	},
-	gff2:{
-		getLabel: function(f){
-			var str = "";
-			str+= f.label;
-			return str;
-		},
-		getTipTitle: function(f){
-			return f.featureType.toUpperCase() +
-			' - <span class="ok">'+f.label+'</span>';
-		},
-		getTipText: function(f){
-			return 'score:&nbsp;<span class="emph">'+f.score+'</span><br>'+
-			'frame:&nbsp;<span class="emph">'+f.frame+'</span><br>'+
-			FEATURE_TYPES.getTipCommons(f);
-		},
-		getColor: function(f){
-			return "black";
-		},
-		height:8,
-		histogramColor:"gray"
-	},
-	gff3:{
-		getLabel: function(f){
-			var str = "";
-			str+= f.label;
-			return str;
-		},
-		getTipTitle: function(f){
-			return f.featureType.toUpperCase() +
-			' - <span class="ok">'+f.label+'</span>';
-		},
-		getTipText: function(f){
-			return 'score:&nbsp;<span class="emph">'+f.score+'</span><br>'+
-			'frame:&nbsp;<span class="emph">'+f.frame+'</span><br>'+
-			FEATURE_TYPES.getTipCommons(f);
-		},
-		getColor: function(f){
-			return "black";
-		},
-		height:8,
-		histogramColor:"gray"
-	},
-	gtf:{
-		getLabel: function(f){
-			var str = "";
-			str+= f.label;
-			return str;
-		},
-		getTipTitle: function(f){
-			return f.featureType.toUpperCase() +
-			' - <span class="ok">'+f.label+'</span>';
-		},
-		getTipText: function(f){
-			return 'score:&nbsp;<span class="emph">'+f.score+'</span><br>'+
-			'frame:&nbsp;<span class="emph">'+f.frame+'</span><br>'+
-			FEATURE_TYPES.getTipCommons(f);
-		},
-		getColor: function(f){
-			return "black";
-		},
-		height:8,
-		histogramColor:"gray"
-	},
-	bed:{
-		getLabel: function(f){
-			var str = "";
-			str+= f.label;
-			return str;
-		},
-		getTipTitle: function(f){
-			return FEATURE_TYPES.formatTitle(f.featureType);
-		},
-		getTipText: function(f){
-			return FEATURE_TYPES.getTipCommons(f);
-		},
-		getColor: function(f){
-			//XXX convert RGB to Hex
-	        var rgbColor = new Array();
-	        rgbColor = f.itemRgb.split(",");
-	        var hex = function (x) {
-	        	var hexDigits = ["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f"];
-	            return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
-	        };
-	        var hexColor = hex(rgbColor[0])+ hex(rgbColor[1]) + hex(rgbColor[2]);
-			return "#"+hexColor;
-		},
-		height:8,
-		histogramColor:"orange"
-	},
-	bam:{
-		explainFlags : function(flags) {
-			var summary = '<div style="background:#FFEF93;font-weight:bold;margin:0 15px 0 0;">flags : <span class="ssel">'+flags+'</span></div>';
-			for(var i = 0; i < SAM_FLAGS.length; i++) {
-				if(SAM_FLAGS[i][1] & flags) {
-					summary  += SAM_FLAGS[i][0] + "<br>";
-				} 
-			}
-			return summary;
-		},
-		getLabel: function(f){
-			return  "bam  "+f.chromosome+":"+f.start+"-"+f.end;
-		},
-		getTipTitle: function(f){
-			return FEATURE_TYPES.formatTitle(f.featureType)+' - <span class="ok">'+f.name+'</span>';
-		},
-		getTipText: function(f){
-			f.strand = FEATURE_TYPES.bam.getStrand(f);
-			var one =  'cigar:&nbsp;<span class="ssel">'+f.cigar+'</span><br>'+
-				'insert size:&nbsp;<span class="ssel">'+f.inferredInsertSize+'</span><br>'+
-				FEATURE_TYPES.getTipCommons(f)+'<br>'+
-				this.explainFlags(f.flags);
-			
-			var three = '<div style="background:#FFEF93;font-weight:bold;">attributes</div>';
-			delete f.attributes["BQ"];//for now because is too long
-			for (var key in f.attributes) {
-				three += key+":"+f.attributes[key]+"<br>";
-			}
-			var style = "background:#FFEF93;font-weight:bold;";
-			return '<div style="float:left">'+one+'</div>'+
-					'<div style="float:right">'+three+'</div>';
-		},
-		getColor: function(f, chr){
-			if(f.mateReferenceName != chr){return "lightgreen";}
-			return (parseInt(f.flags)&(0x10)) == 0 ? "DarkGray" : "LightGray";/**/
-		},
-		getStrokeColor: function(f){
-			if(this.getMateUnmappedFlag(f)){return "tomato"}
-			return "whitesmoke";
-		},
-		getStrand: function(f){
-			return (parseInt(f.flags)&(0x10)) == 0 ? "Forward" : "Reverse";
-		},
-		getReadPairedFlag: function(f){
-			return (parseInt(f.flags)&(0x1)) == 0 ? false : true;
-		},
-		getFirstOfPairFlag: function(f){
-			return (parseInt(f.flags)&(0x40)) == 0 ? false : true;
-		},
-		getMateUnmappedFlag: function(f){
-			return (parseInt(f.flags)&(0x8)) == 0 ? false : true;
-		},
-		height:8,
-		histogramColor:"grey"
-	},
-	das:{
-		getLabel: function(f){
-			var str = "";
-			str+= f.id;
-			return str;
-		},
-		getTipTitle: function(f){
-			return FEATURE_TYPES.formatTitle(f.featureType);
-		},
-		getTipText: function(f){
-			return FEATURE_TYPES.getTipCommons(f);
-		},
-		getColor: function(f){
-			return "black";
-		},
-		height:8,
-		histogramColor:"orange"
+            return f.featureType.toUpperCase() + ' - <span class="ok">' + name + '</span>';
+        },
+        tooltipText: function (f) {
+            return 'alleles:&nbsp;<span class="ssel">' + f.alleleString + '</span><br>' +
+                FEATURE_TYPES.getTipCommons(f) +
+                'source:&nbsp;<span class="ssel">' + f.source + '</span><br>';
+
+        },
+        color: 'lightblue',
+        infoWidgetId: "id",
+        height: 8,
+        histogramColor: "orange",
+        handlers: {
+            'feature:mouseover': function (e) {
+                console.log(e)
+            },
+            'feature:click': function (event) {
+                new SnpInfoWidget(null, genomeViewer.species).draw(event);
+            }
+        }
+    },
+    file: {
+        getLabel: function (f) {
+            var str = "";
+            str += f.label;
+            return str;
+        },
+        getTipTitle: function (f) {
+            return FEATURE_TYPES.formatTitle(f.featureType);
+        },
+        getTipText: function (f) {
+            return FEATURE_TYPES.getTipCommons(f);
+        },
+        getColor: function (f) {
+            return "black";
+        },
+        height: 8,
+        histogramColor: "orange"
+    },
+    vcf: {
+        label: function (f) {
+            return f.id;
+            try {
+                var fields = f.sampleData.split("\t");
+            } catch (e) {
+                //Uncaught TypeError: Cannot call method 'split' of undefined
+                console.log(e)
+                debugger
+
+            }
+
+            if (fields.length > 10 || fields.length == 9)
+                return f.id + " " + f.ref + "/" + f.alt + "";
+            else {
+                var gt = fields[9].split(":")[0];
+                if (gt.indexOf(".") != -1 || gt.indexOf("-") != -1)
+                    return gt;
+                var label = "";
+                var alt = f.alt.split(",");
+                if (gt.charAt(0) == '0')
+                    label = f.ref;
+                else {
+                    var pos = gt.charAt(0) - 1
+                    label = alt[pos]
+                }
+                label += gt.charAt(1)
+                if (gt.charAt(2) == '0')
+                    label += f.ref;
+                else {
+                    var pos = gt.charAt(2) - 1
+                    label += alt[pos]
+                }
+
+                return label;
+            }
+        },
+        tooltipTitle: function (f) {
+            return 'VCF variant - <span class="ok">' + f.id + '</span>';
+        },
+        tooltipText: function (f) {
+            return 'alleles (ref/alt):&nbsp;<span class="emph">' + f.reference + "/" + f.alternate + '</span><br>' +
+                'quality:&nbsp;<span class="emph">' + f.quality + '</span><br>' +
+                'filter:&nbsp;<span class="emph">' + f.filter + '</span><br>' +
+                FEATURE_TYPES.getTipCommons(f);
+        },
+        getColor: function (f) {
+            return "black";
+        },
+        infoWidgetId: "id",
+        height: 8,
+        histogramColor: "gray"
+    },
+    gff2: {
+        getLabel: function (f) {
+            var str = "";
+            str += f.label;
+            return str;
+        },
+        getTipTitle: function (f) {
+            return f.featureType.toUpperCase() +
+                ' - <span class="ok">' + f.label + '</span>';
+        },
+        getTipText: function (f) {
+            return 'score:&nbsp;<span class="emph">' + f.score + '</span><br>' +
+                'frame:&nbsp;<span class="emph">' + f.frame + '</span><br>' +
+                FEATURE_TYPES.getTipCommons(f);
+        },
+        getColor: function (f) {
+            return "black";
+        },
+        height: 8,
+        histogramColor: "gray"
+    },
+    gff3: {
+        getLabel: function (f) {
+            var str = "";
+            str += f.label;
+            return str;
+        },
+        getTipTitle: function (f) {
+            return f.featureType.toUpperCase() +
+                ' - <span class="ok">' + f.label + '</span>';
+        },
+        getTipText: function (f) {
+            return 'score:&nbsp;<span class="emph">' + f.score + '</span><br>' +
+                'frame:&nbsp;<span class="emph">' + f.frame + '</span><br>' +
+                FEATURE_TYPES.getTipCommons(f);
+        },
+        getColor: function (f) {
+            return "black";
+        },
+        height: 8,
+        histogramColor: "gray"
+    },
+    gtf: {
+        getLabel: function (f) {
+            var str = "";
+            str += f.label;
+            return str;
+        },
+        getTipTitle: function (f) {
+            return f.featureType.toUpperCase() +
+                ' - <span class="ok">' + f.label + '</span>';
+        },
+        getTipText: function (f) {
+            return 'score:&nbsp;<span class="emph">' + f.score + '</span><br>' +
+                'frame:&nbsp;<span class="emph">' + f.frame + '</span><br>' +
+                FEATURE_TYPES.getTipCommons(f);
+        },
+        getColor: function (f) {
+            return "black";
+        },
+        height: 8,
+        histogramColor: "gray"
+    },
+    bed: {
+        getLabel: function (f) {
+            var str = "";
+            str += f.label;
+            return str;
+        },
+        getTipTitle: function (f) {
+            return FEATURE_TYPES.formatTitle(f.featureType);
+        },
+        getTipText: function (f) {
+            return FEATURE_TYPES.getTipCommons(f);
+        },
+        getColor: function (f) {
+            //XXX convert RGB to Hex
+            var rgbColor = new Array();
+            rgbColor = f.itemRgb.split(",");
+            var hex = function (x) {
+                var hexDigits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
+                return isNaN(x) ? "00" : hexDigits[(x - x % 16) / 16] + hexDigits[x % 16];
+            };
+            var hexColor = hex(rgbColor[0]) + hex(rgbColor[1]) + hex(rgbColor[2]);
+            return "#" + hexColor;
+        },
+        height: 8,
+        histogramColor: "orange"
+    },
+    bam: {
+        explainFlags: function (flags) {
+            var summary = '<div style="background:#FFEF93;font-weight:bold;margin:0 15px 0 0;">flags : <span class="ssel">' + flags + '</span></div>';
+            for (var i = 0; i < SAM_FLAGS.length; i++) {
+                if (SAM_FLAGS[i][1] & flags) {
+                    summary += SAM_FLAGS[i][0] + "<br>";
+                }
+            }
+            return summary;
+        },
+        getLabel: function (f) {
+            return  "bam  " + f.chromosome + ":" + f.start + "-" + f.end;
+        },
+        getTipTitle: function (f) {
+            return FEATURE_TYPES.formatTitle(f.featureType) + ' - <span class="ok">' + f.name + '</span>';
+        },
+        getTipText: function (f) {
+            f.strand = FEATURE_TYPES.bam.getStrand(f);
+            var one = 'cigar:&nbsp;<span class="ssel">' + f.cigar + '</span><br>' +
+                'insert size:&nbsp;<span class="ssel">' + f.inferredInsertSize + '</span><br>' +
+                FEATURE_TYPES.getTipCommons(f) + '<br>' +
+                this.explainFlags(f.flags);
+
+            var three = '<div style="background:#FFEF93;font-weight:bold;">attributes</div>';
+            delete f.attributes["BQ"];//for now because is too long
+            for (var key in f.attributes) {
+                three += key + ":" + f.attributes[key] + "<br>";
+            }
+            var style = "background:#FFEF93;font-weight:bold;";
+            return '<div style="float:left">' + one + '</div>' +
+                '<div style="float:right">' + three + '</div>';
+        },
+        getColor: function (f, chr) {
+            if (f.mateReferenceName != chr) {
+                return "lightgreen";
+            }
+            return (parseInt(f.flags) & (0x10)) == 0 ? "DarkGray" : "LightGray";
+            /**/
+        },
+        getStrokeColor: function (f) {
+            if (this.getMateUnmappedFlag(f)) {
+                return "tomato"
+            }
+            return "whitesmoke";
+        },
+        getStrand: function (f) {
+            return (parseInt(f.flags) & (0x10)) == 0 ? "Forward" : "Reverse";
+        },
+        getReadPairedFlag: function (f) {
+            return (parseInt(f.flags) & (0x1)) == 0 ? false : true;
+        },
+        getFirstOfPairFlag: function (f) {
+            return (parseInt(f.flags) & (0x40)) == 0 ? false : true;
+        },
+        getMateUnmappedFlag: function (f) {
+            return (parseInt(f.flags) & (0x8)) == 0 ? false : true;
+        },
+        height: 8,
+        histogramColor: "grey"
+    },
+    das: {
+        getLabel: function (f) {
+            var str = "";
+            str += f.id;
+            return str;
+        },
+        getTipTitle: function (f) {
+            return FEATURE_TYPES.formatTitle(f.featureType);
+        },
+        getTipText: function (f) {
+            return FEATURE_TYPES.getTipCommons(f);
+        },
+        getColor: function (f) {
+            return "black";
+        },
+        height: 8,
+        histogramColor: "orange"
+    }
+};
+
+
+function DataSource() {
+	
+};
+
+DataSource.prototype.fetch = function(){
+
+};
+
+FileDataSource.prototype.fetch = DataSource.prototype.fetch;
+
+function FileDataSource(file) {
+	DataSource.prototype.constructor.call(this);
+	
+	this.file = file;
+	this.success = new Event();
+	this.error = new Event();
+};
+
+FileDataSource.prototype.error = function(){
+	alert("File is too big. Max file size is 100 Mbytes.");
+};
+
+FileDataSource.prototype.fetch = function(async){
+	var _this = this;
+	if(this.file.size <= (52428800*1)){
+		if(async){
+			var  reader = new FileReader();
+			reader.onload = function(evt) {
+				_this.success.notify(evt.target.result);
+			};
+			reader.readAsText(this.file, "UTF-8");
+		}else{
+			// FileReaderSync web workers only
+			var reader = new FileReaderSync();
+			return reader.readAsText(this.file, "UTF-8");
+		}
+	}else{
+		_this.error();
+		_this.error.notify();
 	}
 };
 
+StringDataSource.prototype.fetch = DataSource.prototype.fetch;
+
+function StringDataSource(str) {
+	DataSource.prototype.constructor.call(this);
+	
+	this.str = str;
+	this.success = new Event();
+};
+
+StringDataSource.prototype.fetch = function(async){
+	if(async){
+		this.success.notify(this.str);
+	}else{
+		return this.str;
+	}
+};
+
+UrlDataSource.prototype.fetch = DataSource.prototype.fetch;
+
+function UrlDataSource(url, args) {
+	DataSource.prototype.constructor.call(this);
+	
+	this.url = url;
+	this.proxy = CELLBASE_HOST+"/latest/utils/proxy?url=";
+	if(args != null){
+		if(args.proxy != null){
+			if(typeof(args.proxy) == "boolean"){
+				if(args.proxy == false){
+					this.proxy = false;
+				}
+				else{
+					this.url = this.proxy + url;
+				}
+			}else if(typeof(args.proxy) == "string"){
+				this.url = args.proxy + url;
+			}
+		}
+	}
+	this.success = new Event();
+	this.error = new Event();
+};
+
+UrlDataSource.prototype.fetch = function(async){
+	var _this = this;
+	
+	var datos = null;
+	
+	if(this.url){
+		$.ajax({
+			type : "GET",
+			url : this.url,
+			async : async,
+			success : function(data, textStatus, jqXHR) {
+				if(async){
+					_this.success.notify(data);
+				}else{
+					datos = data;
+				}
+			},
+			error : function(jqXHR, textStatus, errorThrown){
+				console.log("URL Data source: Ajax call returned : "+errorThrown+'\t'+textStatus+'\t'+jqXHR.statusText+" END");
+				_this.error.notify();
+			}
+		});
+		
+		return datos;
+	}
+};
 
 function CellBaseAdapter(args){
 
@@ -4375,7 +4345,7 @@ CellBaseAdapter.prototype.getData = function(args){
 		}
 		
 		for(var i = 0; i < data.result.length; i++) {
-			
+
 			//Check if is a single object
 			if(data.result[i].constructor != Array){
 				data.result[i] = [data.result[i]];
@@ -4737,6 +4707,405 @@ SequenceAdapter.prototype.getNucleotidByPosition = function(args){
     }
 };
 
+function FeatureDataAdapter(dataSource, args){
+	var _this = this;
+    _.extend(this, Backbone.Events);
+	
+	this.dataSource = dataSource;
+	this.gzip = true;
+	
+	this.params = {};
+	if (args != null){
+		if(args.gzip != null){
+			this.gzip = args.gzip;
+		}
+		if(args.species != null){
+			this.species = args.species;
+		}
+		if(args.params != null){
+			this.params = args.params;
+		}
+	}
+	
+	this.featureCache =  new FeatureCache({chunkSize:10000, gzip:this.gzip});
+	
+//	this.onLoad = new Event();
+//	this.onGetData = new Event();
+
+	//chromosomes loaded
+	this.chromosomesLoaded = {};
+}
+
+FeatureDataAdapter.prototype.getData = function(region){
+	
+	console.log("TODO comprobar histograma");
+	console.log(region);
+	this.params["dataType"] = "data";
+	this.params["chromosome"] = region.chromosome;
+
+	//check if the chromosome has been already loaded
+	if(this.chromosomesLoaded[region.chromosome] != true){
+		this._fetchData(region);
+		this.chromosomesLoaded[region.chromosome]=true;
+	}
+	
+	var itemList = this.featureCache.getFeatureChunksByRegion(region);
+	if(itemList != null){
+//		this.onGetData.notify({items:itemList, params:this.params, cached:true});
+		this.trigger('data:ready',{items:itemList, params:this.params, cached:true, sender:this});
+	}
+};
+
+FeatureDataAdapter.prototype._fetchData = function(region){
+	var _this = this;
+	if(this.dataSource!=null){//could be null in expression genomic attributer widget 59
+		if(this.async){
+			this.dataSource.success.addEventListener(function(sender,data){
+				_this.parse(data, region);
+//				_this.onLoad.notify();
+                _this.trigger('file:load',{sender:_this});
+			});
+			this.dataSource.fetch(this.async);
+		}else{
+			var data = this.dataSource.fetch(this.async);
+			this.parse(data,region);
+		}
+	}
+}
+
+FeatureDataAdapter.prototype.addFeatures = function(features){
+		this.featureCache.putFeatures(features, "data");
+};
+
+BEDDataAdapter.prototype.getData = FeatureDataAdapter.prototype.getData;
+BEDDataAdapter.prototype._fetchData = FeatureDataAdapter.prototype._fetchData;
+
+function BEDDataAdapter(dataSource, args){
+	FeatureDataAdapter.prototype.constructor.call(this, dataSource, args);
+	var _this = this;
+	
+	this.async = true;
+	
+	//stat atributes
+	this.featuresCount = 0;
+	this.featuresByChromosome = {};
+
+	if (args != null){
+		if(args.async != null){
+			this.async = args.async;
+		}
+	}
+};
+
+BEDDataAdapter.prototype.parse = function(data, region){
+	var _this = this;
+	var dataType = "data";
+	var lines = data.split("\n");
+//	console.log("creating objects");
+	for (var i = 0; i < lines.length; i++){
+		var line = lines[i].replace(/^\s+|\s+$/g,"");
+		if ((line != null)&&(line.length > 0)){
+			var fields = line.split("\t");
+			var chromosome = fields[0].replace("chr", "");
+			if(chromosome == region.chromosome){// load only one chromosome on the cache
+			
+				var feature = {
+						"label":fields[3],
+						"chromosome": chromosome, 
+						"start": parseFloat(fields[1]), 
+						"end": parseFloat(fields[2]), 
+						"score":fields[4],
+						"strand":fields[5],
+						"thickStart":fields[6],
+						"thickEnd":fields[7],
+						"itemRgb":fields[8],
+						"blockCount":fields[9],
+						"blockSizes":fields[10],
+						"blockStarts":fields[11],
+						"featureType":	"bed"
+				} ;
+
+				this.featureCache.putFeatures(feature, dataType);
+				
+				if (this.featuresByChromosome[chromosome] == null){
+					this.featuresByChromosome[chromosome] = 0;
+				}
+				this.featuresByChromosome[chromosome]++;
+				this.featuresCount++;
+			}
+		}
+	}
+};
+
+GFF2DataAdapter.prototype.getData = FeatureDataAdapter.prototype.getData;
+GFF2DataAdapter.prototype._fetchData = FeatureDataAdapter.prototype._fetchData;
+
+function GFF2DataAdapter(dataSource, args){
+	FeatureDataAdapter.prototype.constructor.call(this, dataSource, args);
+	var _this = this;
+	
+	this.async = true;
+	
+	//stat atributes
+	this.featuresCount = 0;
+	this.featuresByChromosome = {};
+
+	if (args != null){
+		if(args.async != null){
+			this.async = args.async;
+		}
+	}
+};
+
+GFF2DataAdapter.prototype.parse = function(data, region){
+	var _this = this;
+	var dataType = "data";
+	var lines = data.split("\n");
+//	console.log("creating objects");
+	for (var i = 0; i < lines.length; i++){
+		var line = lines[i].replace(/^\s+|\s+$/g,"");
+		if ((line != null)&&(line.length > 0)){
+			var fields = line.split("\t");
+			var chromosome = fields[0].replace("chr", "");
+			if(chromosome == region.chromosome){// load only one chromosome on the cache
+
+				//NAME  SOURCE  TYPE  START  END  SCORE  STRAND  FRAME  GROUP
+				var feature = {
+						"chromosome": chromosome, 
+						"label": fields[2], 
+						"start": parseInt(fields[3]), 
+						"end": parseInt(fields[4]), 
+						"score": fields[5],
+						"strand": fields[6], 
+						"frame": fields[7],
+						"group": fields[8],
+						"featureType":	"gff2"
+				} ;
+
+				this.featureCache.putFeatures(feature, dataType);
+				
+				if (this.featuresByChromosome[chromosome] == null){
+					this.featuresByChromosome[chromosome] = 0;
+				}
+				this.featuresByChromosome[chromosome]++;
+				this.featuresCount++;
+			}
+		}
+	}
+};
+
+GFF3DataAdapter.prototype.getData = FeatureDataAdapter.prototype.getData;
+GFF3DataAdapter.prototype._fetchData = FeatureDataAdapter.prototype._fetchData;
+
+function GFF3DataAdapter(dataSource, args){
+	FeatureDataAdapter.prototype.constructor.call(this, dataSource, args);
+	var _this = this;
+	
+	this.async = true;
+
+	//stat atributes
+	this.featuresCount = 0;
+	this.featuresByChromosome = {};
+
+	if (args != null){
+		if(args.async != null){
+			this.async = args.async;
+		}
+	}
+};
+
+GFF3DataAdapter.prototype.parse = function(data, region){
+	var _this = this;
+	
+	//parse attributes column
+	var getAttr = function(column){
+		var arr = column.split(";");
+		var obj = {};
+		for (var i = 0, li = arr.length; i<li ; i++){
+			var item = arr[i].split("=");
+			obj[item[0]] = item[1];
+		}
+		return obj;
+	};
+	
+	var dataType = "data";
+	var lines = data.split("\n");
+//	console.log("creating objects");
+	for (var i = 0; i < lines.length; i++){
+		var line = lines[i].replace(/^\s+|\s+$/g,"");
+		if ((line != null)&&(line.length > 0)){
+			var fields = line.split("\t");
+			var chromosome = fields[0].replace("chr", "");
+			if(chromosome == region.chromosome){// load only one chromosome on the cache
+
+				//NAME  SOURCE  TYPE  START  END  SCORE  STRAND  FRAME  GROUP
+				var feature = {
+						"chromosome": chromosome, 
+						"label": fields[2], 
+						"start": parseInt(fields[3]), 
+						"end": parseInt(fields[4]), 
+						"score": fields[5],
+						"strand": fields[6], 
+						"frame": fields[7],
+						"attributes": getAttr(fields[8]),
+						"featureType":	"gff3"
+				} ;
+
+				this.featureCache.putFeatures(feature, dataType);
+				if (this.featuresByChromosome[chromosome] == null){
+					this.featuresByChromosome[chromosome] = 0;
+				}
+				this.featuresByChromosome[chromosome]++;
+				this.featuresCount++;
+
+			}
+		}
+	}
+};
+
+GTFDataAdapter.prototype.getData = FeatureDataAdapter.prototype.getData;
+GTFDataAdapter.prototype._fetchData = FeatureDataAdapter.prototype._fetchData;
+
+function GTFDataAdapter(dataSource, args){
+	FeatureDataAdapter.prototype.constructor.call(this, dataSource, args);
+	var _this = this;
+	
+	this.async = true;
+	
+	//stat atributes
+	this.featuresCount = 0;
+	this.featuresByChromosome = {};
+
+	if (args != null){
+		if(args.async != null){
+			this.async = args.async;
+		}
+	}
+};
+
+GTFDataAdapter.prototype.parse = function(data, region){
+	var _this = this;
+	
+	//parse attributes column
+	var getAttr = function(column){
+		var arr = column.split(";");
+		var obj = {};
+		for (var i = 0, li = arr.length; i<li ; i++){
+			var item = arr[i].split("=");
+			obj[item[0]] = item[1];
+		}
+		return obj;
+	};
+	
+	var dataType = "data";
+	var lines = data.split("\n");
+//	console.log("creating objects");
+	for (var i = 0; i < lines.length; i++){
+		var line = lines[i].replace(/^\s+|\s+$/g,"");
+		if ((line != null)&&(line.length > 0)){
+			var fields = line.split("\t");
+			var chromosome = fields[0].replace("chr", "");
+			if(chromosome == region.chromosome){// load only one chromosome on the cache
+			
+				//NAME  SOURCE  TYPE  START  END  SCORE  STRAND  FRAME  GROUP
+				var feature = {
+						"chromosome": chromosome, 
+						"label": fields[2], 
+						"start": parseInt(fields[3]), 
+						"end": parseInt(fields[4]), 
+						"score": fields[5],
+						"strand": fields[6], 
+						"frame": fields[7],
+						"attributes": getAttr(fields[8]),
+						"featureType":	"gtf"
+				} ;
+
+				this.featureCache.putFeatures(feature, dataType);
+				if (this.featuresByChromosome[chromosome] == null){
+					this.featuresByChromosome[chromosome] = 0;
+				}
+				this.featuresByChromosome[chromosome]++;
+				this.featuresCount++;
+			}
+		}
+	}
+};
+
+VCFDataAdapter.prototype.getData = FeatureDataAdapter.prototype.getData;
+VCFDataAdapter.prototype._fetchData = FeatureDataAdapter.prototype._fetchData;
+
+function VCFDataAdapter(dataSource, args){
+	FeatureDataAdapter.prototype.constructor.call(this, dataSource, args);
+	var _this = this;
+	
+	this.async = true;
+	//stat atributes
+	this.featuresCount = 0;
+	this.featuresByChromosome = {};
+	
+	this.header = "";
+	this.samples = [];
+
+	if (args != null){
+		if(args.async != null){
+			this.async = args.async;
+		}
+	}
+}
+
+VCFDataAdapter.prototype.parse = function(data, region){
+	console.log(data);
+	var _this = this;
+	var dataType = "data";
+	var lines = data.split("\n");
+    debugger
+//	console.log("creating objects");
+	for (var i = 0; i < lines.length; i++){
+        debugger
+		var line = lines[i].replace(/^\s+|\s+$/g,"");
+		if ((line != null)&&(line.length > 0)){
+			var fields = line.split("\t");
+			if(fields[0]==region.chromosome){// load only one chromosome on the cache
+			
+				if(line.substr(0,1)==="#"){
+					if(line.substr(1,1)==="#"){
+						this.header+=line.replace(/</gi,"&#60;").replace(/>/gi,"&#62;")+"<br>";
+					}else{
+						this.samples = fields.slice(9);
+					}
+				}else{
+	//				_this.addQualityControl(fields[5]);
+					var feature = {
+							"chromosome": 	fields[0],
+							"position": 	parseInt(fields[1]), 
+							"start": 		parseInt(fields[1]),//added
+							"end": 			parseInt(fields[1]),//added
+							"id":  			fields[2],
+							"reference": 			fields[3],
+							"alternate": 			fields[4],
+							"quality": 		fields[5], 
+							"filter": 		fields[6], 
+							"info": 		fields[7].replace(/;/gi,"<br>"), 
+							"format": 		fields[8],
+							"sampleData":	line,
+	//						"record":		fields,
+	//						"label": 		fields[2] + " " +fields[3] + "/" + fields[4] + " Q:" + fields[5],
+							"featureType":	"vcf"
+					};
+					
+					this.featureCache.putFeatures(feature, dataType);
+					
+					if (this.featuresByChromosome[fields[0]] == null){
+						this.featuresByChromosome[fields[0]] = 0;
+					}
+					this.featuresByChromosome[fields[0]]++;
+					this.featuresCount++;
+				}
+			}
+		}
+	}
+};
+
 function Region(args) {
 
     this.chromosome = null;
@@ -4764,21 +5133,23 @@ Region.prototype = {
 
     parse: function (str) {
         var pattern = /^([a-zA-Z0-9])+\:([0-9])+\-([0-9])+$/;
-        if(!pattern.test(str)){
+        var pattern2 = /^([a-zA-Z0-9])+\:([0-9])+$/;
+        if(pattern.test(str) || pattern2.test(str) ){
+            var splitDots = str.split(":");
+            if (splitDots.length == 2) {
+                var splitDash = splitDots[1].split("-");
+                this.chromosome = splitDots[0];
+                this.start = parseInt(splitDash[0]);
+                if (splitDash.length == 2) {
+                    this.end = parseInt(splitDash[1]);
+                } else {
+                    this.end = this.start;
+                }
+            }
+            return true
+        }else{
             return false;
         }
-        var splitDots = str.split(":");
-        if (splitDots.length == 2) {
-            var splitDash = splitDots[1].split("-");
-            this.chromosome = splitDots[0];
-            this.start = parseInt(splitDash[0]);
-            if (splitDash.length == 2) {
-                this.end = parseInt(splitDash[1]);
-            } else {
-                this.end = this.start;
-            }
-        }
-        return true
     },
 
     center : function () {
@@ -7234,11 +7605,7 @@ function TrackListPanel(args) {//parent is a DOM div element
     this.onWindowSize = new Event();
     this.onMousePosition = new Event();
 
-    if('handlers' in this){
-        for(eventName in this.handlers){
-            this.on(eventName,this.handlers[eventName]);
-        }
-    }
+    this.on(this.handlers);
 
     this.rendered = false;
     if(this.autoRender){
@@ -7258,7 +7625,7 @@ TrackListPanel.prototype = {
         var _this = this;
 
         this.targetDiv = $('#' + this.targetId)[0];
-        this.div = $('<div id="tracklist-panel"></div>')[0];
+        this.div = $('<div id="tracklist-panel" style="height:100%;position: relative;"></div>')[0];
         $(this.targetDiv).append(this.div);
 
         if ('title' in this && this.title !== '') {
@@ -7796,7 +8163,7 @@ TrackListPanel.prototype = {
         this.on('trackSpecies:change', track.get('trackSpecies:change'));
         this.on('trackRegion:change', track.get('trackRegion:change'));
         this.on('trackRegion:move',track.get('trackRegion:move'));
-        this.on('trackWidth:change',track.set('trackWidth:change'));
+        this.on('trackWidth:change',track.get('trackWidth:change'));
         this.on('trackFeature:highlight', track.get('trackFeature:highlight'));
     },
 
@@ -8212,7 +8579,7 @@ Track.prototype = {
         $(svgdiv).css({
             'z-index': 3,
             'height':this.height,
-            'overflow-y': (this.resizable) ? 'scroll' : 'hidden',
+            'overflow-y': (this.resizable) ? 'auto' : 'hidden',
             'overflow-x': 'hidden'
         });
 
@@ -8924,6 +9291,7 @@ SequenceTrack.prototype.move = function(disp){
 //Parent class for all renderers
 function Renderer(args) {
 
+
 };
 
 Renderer.prototype = {
@@ -8936,8 +9304,13 @@ Renderer.prototype = {
         var middle = args.width / 2;
         var x = args.pixelPosition + middle - ((args.position - feature.start) * args.pixelBase);
         return x;
+    },
+
+    getDefaultConfig: function (type) {
+        return FEATURE_TYPES[type];
     }
-};
+}
+;
 //any item with chromosome start end
 FeatureRenderer.prototype = new Renderer({});
 
@@ -8947,15 +9320,16 @@ function FeatureRenderer(args) {
     _.extend(this, Backbone.Events);
 
     //set default args
-
-    //set instantiation args
-    _.extend(this, args);
-
-    if('handlers' in this){
-        for(eventName in this.handlers){
-            this.on(eventName,this.handlers[eventName]);
-        }
+    if (_.isString(args)) {
+        var config = this.getDefaultConfig(args);
+        _.extend(this, config);
     }
+    //set instantiation args
+    else if (_.isObject(args)) {
+        _.extend(this, args);
+    }
+
+    this.on(this.handlers);
 
     this.fontFamily = 'Source Sans Pro';
 };
@@ -8965,12 +9339,12 @@ FeatureRenderer.prototype.render = function (features, args) {
     var _this = this;
     var draw = function (feature) {
         //get feature render configuration
-        var color = Utils.isFunction(_this.color) ? _this.color(feature) : _this.color;
-        var label = Utils.isFunction(_this.label) ? _this.label(feature) : _this.label;
-        var height = Utils.isFunction(_this.height) ? _this.height(feature) : _this.height;
-        var tooltipTitle = Utils.isFunction(_this.tooltipTitle) ? _this.tooltipTitle(feature) : _this.tooltipTitle;
-        var tooltipText = Utils.isFunction(_this.tooltipText) ? _this.tooltipText(feature) : _this.tooltipText;
-        var infoWidgetId = Utils.isFunction(_this.infoWidgetId) ? _this.infoWidgetId(feature) : _this.infoWidgetId;
+        var color = _.isFunction(_this.color) ? _this.color(feature) : _this.color;
+        var label = _.isFunction(_this.label) ? _this.label(feature) : _this.label;
+        var height = _.isFunction(_this.height) ? _this.height(feature) : _this.height;
+        var tooltipTitle = _.isFunction(_this.tooltipTitle) ? _this.tooltipTitle(feature) : _this.tooltipTitle;
+        var tooltipText = _.isFunction(_this.tooltipText) ? _this.tooltipText(feature) : _this.tooltipText;
+        var infoWidgetId = _.isFunction(_this.infoWidgetId) ? _this.infoWidgetId(feature) : _this.infoWidgetId;
 
         //get feature genomic information
         var start = feature.start;
@@ -9032,21 +9406,21 @@ FeatureRenderer.prototype.render = function (features, args) {
                     text.textContent = label;
                 }
 
-                if('tooltipText' in _this ){
+                if ('tooltipText' in _this) {
                     $(featureGroup).qtip({
                         content: {text: tooltipText, title: tooltipTitle},
 //                        position: {target: "mouse", adjust: {x: 15, y: 0}, effect: false},
                         position: {target: "mouse", adjust: {x: 25, y: 15}},
-                        style: { width: true,  classes: 'font-lato ui-tooltip ui-tooltip-shadow'}
+                        style: { width: true, classes: 'font-lato ui-tooltip ui-tooltip-shadow'}
                     });
                 }
 
                 $(featureGroup).mouseover(function (event) {
-                    _this.trigger('feature:mouseover', {query: feature[infoWidgetId], feature: feature, featureType: feature.featureType, mouseoverEvent:event})
+                    _this.trigger('feature:mouseover', {query: feature[infoWidgetId], feature: feature, featureType: feature.featureType, mouseoverEvent: event})
                 });
 
                 $(featureGroup).click(function (event) {
-                    _this.trigger('feature:click', {query: feature[infoWidgetId], feature: feature, featureType: feature.featureType, clickEvent : event})
+                    _this.trigger('feature:click', {query: feature[infoWidgetId], feature: feature, featureType: feature.featureType, clickEvent: event})
                 });
                 break;
             }
@@ -9070,26 +9444,37 @@ function GeneRenderer(args) {
     _.extend(this, Backbone.Events);
 
     //set default args
-
-    //set instantiation args
-    _.extend(this, args);
-
-    if ('at' in this) {
-        for (eventName in this.at) {
-            this.on(eventName, this.at[eventName]);
-        }
+    if (_.isString(args)) {
+        _.extend(this, this.getDefaultConfig(args));
     }
+    //set instantiation args
+    else if (_.isObject(args)) {
+        _.extend(this, args);
+    }
+
+    this.on(this.handlers);
 
     this.fontFamily = 'Source Sans Pro';
 };
 
+GeneRenderer.prototype.setFeatureConfig = function(type){
+    _.extend(this, this.getDefaultConfig(type));
+};
 
 GeneRenderer.prototype.render = function (features, args) {
     var _this = this;
     var draw = function (feature) {
         //get feature render configuration
-        var settings = _this.featureConfig[feature.featureType];
-        var color = settings.getColor(feature);
+
+        //get feature render configuration
+        _this.setFeatureConfig('gene');
+        var color = _.isFunction(_this.color) ? _this.color(feature) : _this.color;
+        var label = _.isFunction(_this.label) ? _this.label(feature) : _this.label;
+        var height = _.isFunction(_this.height) ? _this.height(feature) : _this.height;
+        var tooltipTitle = _.isFunction(_this.tooltipTitle) ? _this.tooltipTitle(feature) : _this.tooltipTitle;
+        var tooltipText = _.isFunction(_this.tooltipText) ? _this.tooltipText(feature) : _this.tooltipText;
+        var infoWidgetId = _.isFunction(_this.infoWidgetId) ? _this.infoWidgetId(feature) : _this.infoWidgetId;
+
 
         //get feature genomic information
         var start = feature.start;
@@ -9106,12 +9491,12 @@ GeneRenderer.prototype.render = function (features, args) {
         var textHeight = 0;
         if (args.zoom > args.labelZoom) {
             textHeight = 9;
-            maxWidth = Math.max(width, settings.getLabel(feature).length * 8);
+            maxWidth = Math.max(width, label.length * 8);
         }
 
         var rowY = 0;
-        var textY = textHeight + settings.height + 1;
-        var rowHeight = textHeight + settings.height + 5;
+        var textY = textHeight + height + 1;
+        var rowHeight = textHeight + height + 5;
 
         while (true) {
             if (!(rowY in args.renderedArea)) {
@@ -9143,7 +9528,7 @@ GeneRenderer.prototype.render = function (features, args) {
                     'x': x,
                     'y': rowY,
                     'width': width,
-                    'height': settings.height,
+                    'height': height,
                     'stroke': '#3B0B0B',
                     'stroke-width': 0.5,
                     'fill': color,
@@ -9160,18 +9545,17 @@ GeneRenderer.prototype.render = function (features, args) {
                     'fill': 'black',
                     'cursor': 'pointer'
                 });
-                text.textContent = settings.getLabel(feature);
+                text.textContent = label;
 
                 $([rect, text]).qtip({
-                    content: {text: settings.getTipText(feature), title: settings.getTipTitle(feature)},
+                    content: {text: tooltipText, title: tooltipTitle},
 //                    position: {target: "mouse", adjust: {x: 15, y: 0}, viewport: $(window), effect: false},
                     position: {target: "mouse", adjust: {x: 25, y: 15}},
                     style: { width: true, classes: 'font-lato ui-tooltip ui-tooltip-shadow'}
                 });
 
                 $([rect, text]).click(function (event) {
-                    var settings = _this.featureConfig[feature.featureType];
-                    _this.trigger('feature:click', {query: feature[settings.infoWidgetId], feature: feature, featureType: feature.featureType});
+                    _this.trigger('feature:click', {query: feature[infoWidgetId], feature: feature, featureType: feature.featureType, clickEvent: event});
                 });
 
 
@@ -9188,11 +9572,16 @@ GeneRenderer.prototype.render = function (features, args) {
                         var transcriptWidth = (transcript.end - transcript.start + 1) * ( args.pixelBase);
 
                         //get type settings object
-                        var settings = _this.featureConfig[transcript.featureType];
-                        var color = settings.getColor(transcript);
+                        _this.setFeatureConfig('transcript');
+                        var transcriptColor = _.isFunction(_this.color) ? _this.color(transcript) : _this.color;
+                        var label = _.isFunction(_this.label) ? _this.label(transcript) : _this.label;
+                        var height = _.isFunction(_this.height) ? _this.height(transcript) : _this.height;
+                        var tooltipTitle = _.isFunction(_this.tooltipTitle) ? _this.tooltipTitle(transcript) : _this.tooltipTitle;
+                        var tooltipText = _.isFunction(_this.tooltipText) ? _this.tooltipText(transcript) : _this.tooltipText;
+                        var infoWidgetId = _.isFunction(_this.infoWidgetId) ? _this.infoWidgetId(transcript) : _this.infoWidgetId;
 
                         //se resta el trozo del final del gen hasta el principio del transcrito y se le suma el texto del transcrito
-                        var maxWidth = Math.max(width, width - ((feature.end - transcript.start) * ( args.pixelBase)) + settings.getLabel(transcript).length * 7);
+                        var maxWidth = Math.max(width, width - ((feature.end - transcript.start) * ( args.pixelBase)) + label.length * 7);
 
 
                         //add to the tree the transcripts size
@@ -9200,7 +9589,7 @@ GeneRenderer.prototype.render = function (features, args) {
 
 
                         var transcriptGroup = SVG.addChild(args.svgCanvasFeatures, 'g', {
-                            "widgetId": transcript[settings.infoWidgetId]
+                            "widgetId": transcript[infoWidgetId]
                         });
 
 
@@ -9208,7 +9597,7 @@ GeneRenderer.prototype.render = function (features, args) {
                             'x': transcriptX,
                             'y': checkRowY + 1,
                             'width': transcriptWidth,
-                            'height': settings.height,
+                            'height': height,
                             'fill': 'gray',
                             'cursor': 'pointer',
                             'feature_id': transcript.id
@@ -9222,24 +9611,23 @@ GeneRenderer.prototype.render = function (features, args) {
                             'fill': 'black',
                             'cursor': 'pointer'
                         });
-                        text.textContent = settings.getLabel(transcript);
+                        text.textContent = label;
 
 
                         $(transcriptGroup).qtip({
-                            content: {text: settings.getTipText(transcript), title: settings.getTipTitle(transcript)},
+                            content: {text: tooltipText, title: tooltipTitle},
 //                            position: {target: 'mouse', adjust: {x: 15, y: 0}, viewport: $(window), effect: false},
                             position: {target: "mouse", adjust: {x: 25, y: 15}},
                             style: { width: true, classes: 'font-lato ui-tooltip ui-tooltip-shadow'}
                         });
                         $(transcriptGroup).click(function (event) {
                             var query = this.getAttribute("widgetId");
-                            _this.trigger('feature:click', {query: query, feature: transcript, featureType: transcript.featureType});
+                            _this.trigger('feature:click', {query: query, feature: transcript, featureType: transcript.featureType, clickEvent: event});
                         });
 
                         //paint exons
                         for (var e = 0, lene = feature.transcripts[i].exons.length; e < lene; e++) {/* loop over exons*/
                             var exon = feature.transcripts[i].exons[e];
-                            var exonSettings = _this.featureConfig[exon.featureType];
                             var exonStart = parseInt(exon.start);
                             var exonEnd = parseInt(exon.end);
                             var middle = args.width / 2;
@@ -9247,10 +9635,19 @@ GeneRenderer.prototype.render = function (features, args) {
                             var exonX = args.pixelPosition + middle - ((args.position - exonStart) * args.pixelBase);
                             var exonWidth = (exonEnd - exonStart + 1) * ( args.pixelBase);
 
+
+                            _this.setFeatureConfig('exon');
+                            var color = _.isFunction(_this.color) ? _this.color(exon) : _this.color;
+                            var label = _.isFunction(_this.label) ? _this.label(exon) : _this.label;
+                            var height = _.isFunction(_this.height) ? _this.height(exon) : _this.height;
+                            var tooltipTitle = _.isFunction(_this.tooltipTitle) ? _this.tooltipTitle(exon) : _this.tooltipTitle;
+                            var tooltipText = _.isFunction(_this.tooltipText) ? _this.tooltipText(exon,transcript) : _this.tooltipText;
+                            var infoWidgetId = _.isFunction(_this.infoWidgetId) ? _this.infoWidgetId(exon) : _this.infoWidgetId;
+
                             var exonGroup = SVG.addChild(args.svgCanvasFeatures, "g");
 
                             $(exonGroup).qtip({
-                                content: {text: exonSettings.getTipText(exon, transcript), title: exonSettings.getTipTitle(exon)},
+                                content: {text: tooltipText, title: tooltipTitle},
 //                                position: {target: 'mouse', adjust: {x: 15, y: 0}, viewport: $(window), effect: false},
                                 position: {target: "mouse", adjust: {x: 25, y: 15}},
                                 style: { width: true, classes: 'font-lato ui-tooltip ui-tooltip-shadow'}
@@ -9261,7 +9658,7 @@ GeneRenderer.prototype.render = function (features, args) {
                                 "x": exonX,
                                 "y": checkRowY - 1,
                                 "width": exonWidth,
-                                "height": exonSettings.height,
+                                "height": height,
                                 "stroke": "gray",
                                 "stroke-width": 1,
                                 "fill": "white",
@@ -9300,10 +9697,10 @@ GeneRenderer.prototype.render = function (features, args) {
                                     "x": codingX,
                                     "y": checkRowY - 1,
                                     "width": codingWidth,
-                                    "height": exonSettings.height,
-                                    "stroke": color,
+                                    "height": height,
+                                    "stroke": transcriptColor,
                                     "stroke-width": 1,
-                                    "fill": color,
+                                    "fill": transcriptColor,
                                     "cursor": "pointer"
                                 });
                                 //XXX draw phase only at zoom 100, where this.pixelBase=10
@@ -9313,7 +9710,7 @@ GeneRenderer.prototype.render = function (features, args) {
                                         "x": codingX + (p * 10),
                                         "y": checkRowY - 1,
                                         "width": args.pixelBase,
-                                        "height": exonSettings.height,
+                                        "height": height,
                                         "stroke": color,
                                         "stroke-width": 1,
                                         "fill": 'white',
@@ -9340,104 +9737,6 @@ GeneRenderer.prototype.render = function (features, args) {
     for (var i = 0, leni = features.length; i < leni; i++) {
         draw(features[i]);
     }
-};
-
-GeneRenderer.prototype.featureConfig = {
-    gene: {
-        getLabel: function (f) {
-            var name = (f.name != null) ? f.name : f.id;
-            var str = "";
-            str += (f.strand < 0 || f.strand == '-') ? "<" : "";
-            str += " " + name + " ";
-            str += (f.strand > 0 || f.strand == '+') ? ">" : "";
-            if (f.biotype != null && f.biotype != '') {
-                str += " [" + f.biotype + "]";
-            }
-            return str;
-        },
-        getTipTitle: function (f) {
-            var name = (f.name != null) ? f.name : f.id;
-            return FEATURE_TYPES.formatTitle(f.featureType) +
-                ' - <span class="ok">' + name + '</span>';
-        },
-        getTipText: function (f) {
-            var color = GENE_BIOTYPE_COLORS[f.biotype];
-            return    'id:&nbsp;<span class="ssel">' + f.id + '</span><br>' +
-                'biotype:&nbsp;<span class="emph" style="color:' + color + ';">' + f.biotype + '</span><br>' +
-                FEATURE_TYPES.getTipCommons(f) +
-                'source:&nbsp;<span class="ssel">' + f.source + '</span><br><br>' +
-                'description:&nbsp;<span class="emph">' + f.description + '</span><br>';
-        },
-        getColor: function (f) {
-            return GENE_BIOTYPE_COLORS[f.biotype];
-        },
-        infoWidgetId: "id",
-        height: 4,
-        histogramColor: "lightblue"
-    },
-    transcript: {
-        getLabel: function (f) {
-            var name = (f.name != null) ? f.name : f.id;
-            var str = "";
-            str += (f.strand < 0) ? "<" : "";
-            str += " " + name + " ";
-            str += (f.strand > 0) ? ">" : "";
-            if (f.biotype != null && f.biotype != '') {
-                str += " [" + f.biotype + "]";
-            }
-            return str;
-        },
-        getTipTitle: function (f) {
-            var name = (f.name != null) ? f.name : f.id;
-            return FEATURE_TYPES.formatTitle(f.featureType) +
-                ' - <span class="ok">' + name + '</span>';
-        },
-        getTipText: function (f) {
-            var color = GENE_BIOTYPE_COLORS[f.biotype];
-            return    'id:&nbsp;<span class="ssel">' + f.id + '</span><br>' +
-                'biotype:&nbsp;<span class="emph" style="color:' + color + ';">' + f.biotype + '</span><br>' +
-                'description:&nbsp;<span class="emph">' + f.description + '</span><br>' +
-                FEATURE_TYPES.getTipCommons(f);
-        },
-        getColor: function (f) {
-            return GENE_BIOTYPE_COLORS[f.biotype];
-        },
-        infoWidgetId: "id",
-        height: 1,
-        histogramColor: "lightblue"
-    },
-    exon: {
-        getLabel: function (f) {
-            var name = (f.name != null) ? f.name : f.id;
-            return name;
-        },
-        getTipTitle: function (f) {
-            var name = (f.name != null) ? f.name : f.id;
-            if (name == null) {
-                name = ''
-            }
-            return FEATURE_TYPES.formatTitle(f.featureType) + ' - <span class="ok">' + name + '</span>';
-        },
-        getTipText: function (e, t) {
-            var ename = (e.name != null) ? e.name : e.id;
-            var tname = (t.name != null) ? t.name : t.id;
-            var color = GENE_BIOTYPE_COLORS[t.biotype];
-            return    'transcript name:&nbsp;<span class="ssel">' + t.name + '</span><br>' +
-                'transcript Ensembl&nbsp;ID:&nbsp;<span class="ssel">' + t.id + '</span><br>' +
-                'transcript biotype:&nbsp;<span class="emph" style="color:' + color + ';">' + t.biotype + '</span><br>' +
-                'transcript description:&nbsp;<span class="emph">' + t.description + '</span><br>' +
-                'transcript start-end:&nbsp;<span class="emph">' + t.start + '-' + t.end + '</span><br>' +
-                'exon start-end:&nbsp;<span class="emph">' + e.start + '-' + e.end + '</span><br>' +
-                'strand:&nbsp;<span class="emph">' + t.strand + '</span><br>' +
-                'length:&nbsp;<span class="info">' + (e.end - e.start + 1).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '</span><br>';
-        },
-        getColor: function (f) {
-            return "black";
-        },
-        infoWidgetId: "id",
-        height: 5,
-        histogramColor: "lightblue"
-    },
 };
 HistogramRenderer.prototype = new Renderer({});
 
@@ -9653,7 +9952,7 @@ function FileWidget(args){
 //    	_this.panel.setLoading(false);
 //	});
     
-    this.chartWidgetByChromosome = new ChartWidget({height:200,width:570});
+//    this.chartWidgetByChromosome = new ChartWidget({height:200,width:570});
 };
 
 FileWidget.prototype.getTitleName = function(){
@@ -9669,9 +9968,9 @@ FileWidget.prototype.loadFileFromLocal = function(){
 	//abstract method
 };
 
-FileWidget.prototype.getChartItems = function(){
-	return [this.chartWidgetByChromosome.getChart(["features","chromosome"])];
-};
+//FileWidget.prototype.getChartItems = function(){
+//	return [this.chartWidgetByChromosome.getChart(["features","chromosome"])];
+//};
 
 FileWidget.prototype.getFileUpload = function(){
 	var _this = this;
@@ -9690,7 +9989,7 @@ FileWidget.prototype.getFileUpload = function(){
 				fn : function() {
 					_this.panel.setLoading();
 					var file = document.getElementById(_this.uploadField.fileInputEl.id).files[0];
-                    debugger
+
 					_this.trackNameField.setValue(file.name);
 					_this.fileNameLabel.setText('<span class="emph">'+ file.name +'</span> <span class="info">(local)</span>',false);
 					_this.loadFileFromLocal(file);
@@ -9726,7 +10025,7 @@ FileWidget.prototype.draw = function(){
 	//		padding: "0 0 10 0",
 			height:230,
 			title: "Previsualization",
-		    items : this.getChartItems(),
+//		    items : this.getChartItems(),
 		    bbar:featureCountBar
 		});
 		
@@ -9791,9 +10090,9 @@ FileWidget.prototype.draw = function(){
 			}
 		});
 		
-		this.openDialog = Ext.create('Ext.ux.Window', {
+		this.openDialog = Ext.create('Ext.window.Window', {
 			title : 'Open '+this.title+' file',
-			taskbar:Ext.getCmp(this.args.viewer.id+'uxTaskbar'),
+//			taskbar:Ext.getCmp(this.args.viewer.id+'uxTaskbar'),
 			width : 600,
 	//		bodyPadding : 10,
 			resizable:false,
@@ -9815,17 +10114,17 @@ FileWidget.prototype.draw = function(){
 	this.openDialog.show();
 };
 
-FileWidget.prototype._loadChartInfo = function(){
-
-	var datastore = new Array();
- 	for ( var chromosome in this.adapter.featuresByChromosome) {
-		datastore.push({ features: this.adapter.featuresByChromosome[chromosome], chromosome: chromosome });
-	}
- 	this.chartWidgetByChromosome.getStore().loadData(datastore);
- 	
- 	this.panel.setLoading(false);
- 	this.featureCountLabel.setText("Features count: " + this.adapter.featuresCount, false);
-};
+//FileWidget.prototype._loadChartInfo = function(){
+//
+//	var datastore = new Array();
+// 	for ( var chromosome in this.adapter.featuresByChromosome) {
+//		datastore.push({ features: this.adapter.featuresByChromosome[chromosome], chromosome: chromosome });
+//	}
+// 	this.chartWidgetByChromosome.getStore().loadData(datastore);
+//
+// 	this.panel.setLoading(false);
+// 	this.featureCountLabel.setText("Features count: " + this.adapter.featuresCount, false);
+//};
 
 
 
@@ -9999,9 +10298,9 @@ VCFFileWidget.prototype.loadFileFromLocal = function(file){
 	var _this = this;
 	this.file = file;
 	this.adapter = new VCFDataAdapter(new FileDataSource(file),{species:this.viewer.species});
-	this.adapter.onLoad.addEventListener(function(sender){
+	this.adapter.on('file:load',function(sender){
 		console.log(_this.adapter.featuresByChromosome);
-		_this._loadChartInfo();
+//		_this._loadChartInfo();
 	});
 	_this.btnOk.enable();
 };
@@ -10009,7 +10308,7 @@ VCFFileWidget.prototype.loadFileFromLocal = function(file){
 VCFFileWidget.prototype.loadFileFromServer = function(data){
 	this.file = {name:data.filename};
 	this.adapter = new VCFDataAdapter(new StringDataSource(data.data),{async:false,species:this.viewer.species});
-	this._loadChartInfo();
+//	this._loadChartInfo();
 	this.btnOk.enable();
 };
 
@@ -10025,9 +10324,13 @@ function GenomeViewer(args) {
     this.version = 'Genome Viewer v1';
     this.targetId;
     this.drawNavigationBar = true;
+    this.drawKaryotypePanel = true;
+    this.drawChromosomePanel = true;
+    this.drawRegionOverviewPanel = true;
     this.border = true;
     this.resizable = true;
     this.sidePanel = true;//enable or disable sidePanel at construction
+    this.trackListTitle = 'Detailed information';//enable or disable sidePanel at construction
     this.trackPanelScrollWidth = 18;
     this.availableSpecies = {
         "text": "Species",
@@ -10036,7 +10339,7 @@ function GenomeViewer(args) {
                 "text": "Vertebrates",
                 "items": [
                     {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "13", "start": 32889611, "end": 32889611}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
-                    {"text": "Mus musculus", "assembly": "GRCm38.p1", "region":{"chromosome":"1","start":18422009,"end":18422009}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"}
+                    {"text": "Mus musculus", "assembly": "GRCm38.p1", "region": {"chromosome": "1", "start": 18422009, "end": 18422009}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"}
                 ]
             }
         ]
@@ -10051,7 +10354,7 @@ function GenomeViewer(args) {
 
     this.width;
     this.height;
-    this.sidePanelWidth = (this.sidePanel) ? 25 : 0;
+    this.sidePanelWidth = (this.sidePanel) ? 25 : 18;
 
     console.log(this.targetId);
     console.log(this.id);
@@ -10080,19 +10383,19 @@ GenomeViewer.prototype = {
         }
         console.log("Initializing GenomeViewer structure.");
         this.targetDiv = $('#' + this.targetId)[0];
-        this.div = $('<div id="'+this.id+'"></div>')[0];
+        this.div = $('<div id="' + this.id + '" class="ocb-gv ocb-box-vertical"></div>')[0];
         $(this.targetDiv).append(this.div);
 
         var width = Math.max($(this.div).width(), $(this.targetDiv).width())
-        if(width == 0){
+        if (width == 0) {
             console.log('target div width is zero');
             return
         }
         this._setWidth(width);
 
-        if(this.border){
+        if (this.border) {
             var border = (Utils.isString(this.border)) ? this.border : '1px solid lightgray';
-            $(this.div).css({border:border});
+            $(this.div).css({border: border});
         }
 
 
@@ -10100,40 +10403,46 @@ GenomeViewer.prototype = {
         this._recalculateZoom();
 
 
-        this.navigationbarDiv = $('<div id="navigation-'+this.id+'"></div>')[0];
+        this.navigationbarDiv = $('<div id="navigation-' + this.id + '" class="ocb-gv-navigation"></div>')[0];
         $(this.div).append(this.navigationbarDiv);
 
-        this.centerPanelDiv = $('<div id="center-'+this.id+'" style="position:relative"></div>')[0];
+        this.centerPanelDiv = $('<div id="center-' + this.id + '" class="ocb-gv-center"></div>')[0];
         $(this.div).append(this.centerPanelDiv);
 
-        this.sidebarDiv = $('<div id="sidebar-'+this.id+'" style="position:absolute; z-index:50;right:0px;height:100%"></div>')[0];
-        $(this.centerPanelDiv).append(this.sidebarDiv);
-
-        this.mainPanel = $('<div id="main-'+this.id+'" style="z-index:1"></div>')[0];
-        $(this.centerPanelDiv).append(this.mainPanel);
-
-        this.karyotypeDiv = $('<div id="karyotype-'+this.id+'"></div>');
-        this.chromosomeDiv = $('<div id="chromosome-'+this.id+'"></div>');
-        this.regionDiv = $('<div id="region-'+this.id+'"></div>');
-        this.tracksDiv = $('<div id="tracks-'+this.id+'"></div>');
-
-        $(this.mainPanel).append(this.karyotypeDiv);
-        $(this.mainPanel).append(this.chromosomeDiv);
-        $(this.mainPanel).append(this.regionDiv);
-        $(this.mainPanel).append(this.tracksDiv);
-
-        this.statusbarDiv = $('<div id="statusbar-'+this.id+'"></div>');
+        this.statusbarDiv = $('<div id="statusbar-' + this.id + '" class="ocb-gv-status"></div>');
         $(this.div).append(this.statusbarDiv);
+
+
+        this.rightSidebarDiv = $('<div id="rightsidebar-' + this.id + '" style="position:absolute; z-index:50;right:0px;box-shadow: 2px 2px 1px #bbbbbb;"></div>')[0];
+        this.leftSidebarDiv = $('<div id="leftsidebar-' + this.id + '" style="position:absolute; z-index:50;left:0px;box-shadow: 2px 2px 1px #bbbbbb;"></div>')[0];
+        $(this.centerPanelDiv).append(this.rightSidebarDiv);
+        $(this.centerPanelDiv).append(this.leftSidebarDiv);
+
+
+        this.karyotypeDiv = $('<div id="karyotype-' + this.id + '"></div>');
+        $(this.centerPanelDiv).append(this.karyotypeDiv);
+
+        this.chromosomeDiv = $('<div id="chromosome-' + this.id + '"></div>');
+        $(this.centerPanelDiv).append(this.chromosomeDiv);
+
+        this.regionDiv = $('<div id="region-' + this.id + '" ></div>');
+        $(this.centerPanelDiv).append(this.regionDiv);
+
+        this.tracksDiv = $('<div id="tracks-' + this.id + '" ></div>');
+        $(this.centerPanelDiv).append(this.tracksDiv);
 
         this.rendered = true;
     },
-    getSidePanelId : function(){
-        return $(this.sidebarDiv).attr('id');
+    getRightSidePanelId: function () {
+        return $(this.rightSidebarDiv).attr('id');
     },
-    getNavigationPanelId : function(){
+    getLeftSidePanelId: function () {
+        return $(this.rightSidebarDiv).attr('id');
+    },
+    getNavigationPanelId: function () {
         return $(this.navigationbarDiv).attr('id');
     },
-    setNavigationBar : function(navigationBar){
+    setNavigationBar: function (navigationBar) {
         this.navigationBar = navigationBar;
         var config = {
             availableSpecies: this.availableSpecies,
@@ -10144,9 +10453,7 @@ GenomeViewer.prototype = {
             zoom: this.zoom
         };
         _.extend(this.navigationBar, config);
-        if(navigationBar.autoRender){
-            navigationBar.render(this.getNavigationPanelId());
-        }
+        navigationBar.render(this.getNavigationPanelId());
     },
     _setWidth: function (width) {
         this.width = width;
@@ -10228,12 +10535,12 @@ GenomeViewer.prototype = {
         var _this = this;
 
         // Resize
-        if(this.resizable){
+        if (this.resizable) {
             $(window).resize(function (event) {
-                if(event.target == window){
-                    if(!_this.resizing){//avoid multiple resize events
+                if (event.target == window) {
+                    if (!_this.resizing) {//avoid multiple resize events
                         _this.resizing = true;
-                        _this._setWidth($(_this.div).width());
+                        _this._setWidth($(_this.targetDiv).width());
                         setTimeout(function () {
                             _this.resizing = false;
                         }, 400);
@@ -10241,28 +10548,33 @@ GenomeViewer.prototype = {
                 }
             });
             $(this.targetDiv).resizable({
-                handles: 'e, s',
+                handles: 'e',
                 ghost: true,
-                stop: function( event, ui ) {
+                stop: function (event, ui) {
                     _this._setWidth($(_this.targetDiv).width());
                 }
             });
         }
 
         /* Navigation Bar */
-        if(this.drawNavigationBar){
+        if (this.drawNavigationBar) {
             this.navigationBar = this._createNavigationBar($(this.navigationbarDiv).attr('id'));
         }
 
         /*karyotype Panel*/
-        this.karyotypePanel = this._drawKaryotypePanel($(this.karyotypeDiv).attr('id'));
+        if (this.drawKaryotypePanel) {
+            this.karyotypePanel = this._drawKaryotypePanel($(this.karyotypeDiv).attr('id'));
+        }
 
         /* Chromosome Panel */
-        this.chromosomePanel = this._drawChromosomePanel($(this.chromosomeDiv).attr('id'));
+        if (this.drawChromosomePanel) {
+            this.chromosomePanel = this._drawChromosomePanel($(this.chromosomeDiv).attr('id'));
+        }
 
         /* Region Panel, is a TrackListPanel Class */
-        this.regionOverviewPanel = this._createRegionOverviewPanel($(this.regionDiv).attr('id'));
-
+        if (this.drawRegionOverviewPanel) {
+            this.regionOverviewPanel = this._createRegionOverviewPanel($(this.regionDiv).attr('id'));
+        }
         /*TrackList Panel*/
         this.trackListPanel = this._createTrackListPanel($(this.tracksDiv).attr('id'));
 
@@ -10327,11 +10639,11 @@ GenomeViewer.prototype = {
                 },
                 'fullscreen:click': function (event) {
                     if (_this.fullscreen) {
-                        $(_this.div).css({width:'auto'});
+                        $(_this.div).css({width: 'auto'});
                         Utils.cancelFullscreen();//no need to pass the dom object;
                         _this.fullscreen = false;
                     } else {
-                        $(_this.div).css({width:screen.width});
+                        $(_this.div).css({width: screen.width});
                         Utils.launchFullScreen(_this.div);
                         _this.fullscreen = true;
                     }
@@ -10491,43 +10803,7 @@ GenomeViewer.prototype = {
             titleVisibility: 'hidden',
             featureTypes: FEATURE_TYPES,
 
-            renderer: new FeatureRenderer({
-                label: function (f) {
-                    var name = (f.name != null) ? f.name : f.id;
-                    var str = "";
-                    str += (f.strand < 0 || f.strand == '-') ? "<" : "";
-                    str += " " + name + " ";
-                    str += (f.strand > 0 || f.strand == '+') ? ">" : "";
-                    if (f.biotype != null && f.biotype != '') {
-                        str += " [" + f.biotype + "]";
-                    }
-                    return str;
-                },
-                tooltipTitle: function (f) {
-                    var name = (f.name != null) ? f.name : f.id;
-                    return FEATURE_TYPES.formatTitle(f.featureType) +
-                        ' - <span class="ok">' + name + '</span>';
-                },
-                tooltipText: function (f) {
-                    var color = GENE_BIOTYPE_COLORS[f.biotype];
-                    return    'id:&nbsp;<span class="ssel">' + f.id + '</span><br>' +
-                        'biotype:&nbsp;<span class="emph" style="color:' + color + ';">' + f.biotype + '</span><br>' +
-                        FEATURE_TYPES.getTipCommons(f) +
-                        'source:&nbsp;<span class="ssel">' + f.source + '</span><br><br>' +
-                        'description:&nbsp;<span class="emph">' + f.description + '</span><br>';
-                },
-                color: function (f) {
-                    return GENE_BIOTYPE_COLORS[f.biotype];
-                },
-                infoWidgetId: "id",
-                height: 4,
-                histogramColor: "lightblue",
-                handlers: {
-                    'feature:click': function (event) {
-                        new GeneInfoWidget(null, _this.species).draw(event);
-                    }
-                }
-            }),
+            renderer: new FeatureRenderer('gene'),
 
             dataAdapter: new CellBaseAdapter({
                 category: "genomic",
@@ -10552,7 +10828,7 @@ GenomeViewer.prototype = {
             autoRender: true,
             width: this.width - this.sidePanelWidth,
             zoom: this.zoom,
-            title: 'Detailed information',
+            title: this.trackListTitle,
             region: this.region,
             handlers: {
                 'region:change': function (event) {
@@ -10686,175 +10962,175 @@ GenomeViewer.prototype.checkRenderedTrack = function (trackId) {
 };
 
 
-//XXX BOTTOM BAR
+//OLD BOTTOM BAR
 
-GenomeViewer.prototype._getBottomBar = function () {
-    var geneLegendPanel = new LegendPanel({title: 'Gene legend'});
-    var snpLegendPanel = new LegendPanel({title: 'SNP legend'});
-
-//	var scaleLabel = Ext.create('Ext.draw.Component', {
-//		id:this.id+"scaleLabel",
-//        width: 100,
-//        height: 20,
-//        items:[
-//            {type: 'text',text: 'Scale number',fill: '#000000',x: 10,y: 9,width: 5, height: 20},
-//            {type: 'rect',fill: '#000000',x: 0,y: 0,width: 2, height: 20},
-//			{type: 'rect',fill: '#000000',x: 2,y: 12, width: 100,height: 3},
-//			{type: 'rect',fill: '#000000',x: 101,y: 0, width: 2,height: 20}
-//		]
-//	});
-//	scale.surface.items.items[0].setAttributes({text:'num'},true);
-
-    var versionLabel = Ext.create('Ext.toolbar.TextItem', {
-        id: this.id + "versionLabel",
-        text: ''
-    });
-
-    var mouseLabel = Ext.create('Ext.toolbar.TextItem', {
-        id: this.id + "mouseLabel",
-        width: 110,
-        text: '<span class="ssel">Position: -</span>'
-    });
-    var mouseNucleotidLabel = Ext.create('Ext.toolbar.TextItem', {
-        id: this.id + "mouseNucleotidLabel",
-        width: 10,
-        text: '-'
-    });
-    var windowSize = Ext.create('Ext.toolbar.TextItem', {
-        id: this.id + "windowSize",
-        width: 150,
-        text: '<span class="emph">Window size: -</span>'
-    });
-
-    var taskbar = Ext.create('Ext.toolbar.Toolbar', {
-        id: this.id + 'uxTaskbar',
-        winMgr: new Ext.ZIndexManager(),
-        enableOverflow: true,
-        cls: 'bio-hiddenbar',
-        height: 28,
-        flex: 1
-    });
-
-    var legendBar = Ext.create('Ext.toolbar.Toolbar', {
-        id: this.id + 'legendBar',
-        cls: 'bio-hiddenbar',
-        width: 610,
-        height: 28,
-        items: [/*scaleLabel, */
-            '-', mouseLabel, mouseNucleotidLabel, windowSize,
-            geneLegendPanel.getButton(GENE_BIOTYPE_COLORS),
-            snpLegendPanel.getButton(SNP_BIOTYPE_COLORS),
-            '->', versionLabel]
-    });
-
-    var bottomBar = Ext.create('Ext.container.Container', {
-        id: this.id + 'bottomBar',
-        layout: 'hbox',
-        region: "south",
-        cls: "bio-botbar unselectable",
-        height: 30,
-        border: true,
-        items: [taskbar, legendBar]
-    });
-    return bottomBar;
-};
-//BOTTOM BAR
-
-
-GenomeViewer.prototype.openListWidget = function (args) {
-    var _this = this;
-
-    console.log(args.query)
-
-    var cellBaseManager = new CellBaseManager(this.species);
-    cellBaseManager.success.addEventListener(function (evt, data) {
-        if (data.result[0].length > 1) {
-            var genomicListWidget = new GenomicListWidget(_this.species, {title: args.title, gridFields: args.gridField, viewer: _this});
-            genomicListWidget.draw(data);
-
-            genomicListWidget.onSelected.addEventListener(function (evt, feature) {
-//			console.log(feature);
-                if (feature != null && feature.chromosome != null) {
-                    if (_this.chromosome != feature.chromosome || _this.position != feature.start) {
-                        _this.onRegionChange.notify({sender: "", chromosome: feature.chromosome, position: feature.start});
-                    }
-                }
-            });
-
-            genomicListWidget.onTrackAddAction.addEventListener(function (evt, event) {
-                var track = new TrackData(event.fileName, {
-                    adapter: event.adapter
-                });
-                _this.trackSvgLayout.addTrack(track, {
-                    id: event.fileName,
-                    featuresRender: "MultiFeatureRender",
-//					histogramZoom:80,
-                    height: 150,
-                    visibleRange: {start: 0, end: 100},
-                    featureTypes: FEATURE_TYPES
-                });
-            });
-        } else {
-            var feature = data.result[0][0];
-            if (feature != null) {
-                _this.region.load(feature);
-                _this.onRegionChange.notify({sender: ""});
-            } else {
-                Ext.example.msg('Feature <span class="ssel">' + args.query + '</span> not found', "");
-            }
-        }
-    });
-    cellBaseManager.get(args.category, args.subcategory, args.query, args.resource, args.params);
-};
-GenomeViewer.prototype.openGeneListWidget = function (name) {
-    this.openListWidget({
-        category: "feature",
-        subcategory: "id",
-        query: name.toString(),
-        resource: "gene",
-        title: "Gene List"
-    });
-};
-
-GenomeViewer.prototype.openTranscriptListWidget = function (name) {
-    this.openListWidget({
-        category: "feature",
-        subcategory: "transcript",
-        query: name.toString(),
-        resource: "info",
-        title: "Transcript List",
-        gridField: ["externalName", "stableId", "biotype", "chromosome", "start", "end", "strand", "description"]
-    });
-};
-
-GenomeViewer.prototype.openExonListWidget = function (name) {
-    this.openListWidget({
-        category: "feature",
-        subcategory: "exon",
-        query: name.toString(),
-        resource: "info",
-        title: "Exon List",
-        gridField: ["stableId", "chromosome", "start", "end", "strand"]
-    });
-};
-
-GenomeViewer.prototype.openSNPListWidget = function (name) {
-    this.openListWidget({
-        category: "feature",
-        subcategory: "id",
-        query: name.toString(),
-        resource: "snp",
-        title: "SNP List",
-        gridField: ["name", "variantAlleles", "ancestralAllele", "mapWeight", "position", "sequence", "chromosome", "start", "end"]
-    });
-};
-
-GenomeViewer.prototype.openGOListWidget = function (name) {
-    this.openListWidget({
-        category: "feature",
-        subcategory: "id",
-        query: name.toString(),
-        resource: "gene",
-        title: "Gene List by GO"
-    });
-};
+//GenomeViewer.prototype._getBottomBar = function () {
+//    var geneLegendPanel = new LegendPanel({title: 'Gene legend'});
+//    var snpLegendPanel = new LegendPanel({title: 'SNP legend'});
+//
+////	var scaleLabel = Ext.create('Ext.draw.Component', {
+////		id:this.id+"scaleLabel",
+////        width: 100,
+////        height: 20,
+////        items:[
+////            {type: 'text',text: 'Scale number',fill: '#000000',x: 10,y: 9,width: 5, height: 20},
+////            {type: 'rect',fill: '#000000',x: 0,y: 0,width: 2, height: 20},
+////			{type: 'rect',fill: '#000000',x: 2,y: 12, width: 100,height: 3},
+////			{type: 'rect',fill: '#000000',x: 101,y: 0, width: 2,height: 20}
+////		]
+////	});
+////	scale.surface.items.items[0].setAttributes({text:'num'},true);
+//
+//    var versionLabel = Ext.create('Ext.toolbar.TextItem', {
+//        id: this.id + "versionLabel",
+//        text: ''
+//    });
+//
+//    var mouseLabel = Ext.create('Ext.toolbar.TextItem', {
+//        id: this.id + "mouseLabel",
+//        width: 110,
+//        text: '<span class="ssel">Position: -</span>'
+//    });
+//    var mouseNucleotidLabel = Ext.create('Ext.toolbar.TextItem', {
+//        id: this.id + "mouseNucleotidLabel",
+//        width: 10,
+//        text: '-'
+//    });
+//    var windowSize = Ext.create('Ext.toolbar.TextItem', {
+//        id: this.id + "windowSize",
+//        width: 150,
+//        text: '<span class="emph">Window size: -</span>'
+//    });
+//
+//    var taskbar = Ext.create('Ext.toolbar.Toolbar', {
+//        id: this.id + 'uxTaskbar',
+//        winMgr: new Ext.ZIndexManager(),
+//        enableOverflow: true,
+//        cls: 'bio-hiddenbar',
+//        height: 28,
+//        flex: 1
+//    });
+//
+//    var legendBar = Ext.create('Ext.toolbar.Toolbar', {
+//        id: this.id + 'legendBar',
+//        cls: 'bio-hiddenbar',
+//        width: 610,
+//        height: 28,
+//        items: [/*scaleLabel, */
+//            '-', mouseLabel, mouseNucleotidLabel, windowSize,
+//            geneLegendPanel.getButton(GENE_BIOTYPE_COLORS),
+//            snpLegendPanel.getButton(SNP_BIOTYPE_COLORS),
+//            '->', versionLabel]
+//    });
+//
+//    var bottomBar = Ext.create('Ext.container.Container', {
+//        id: this.id + 'bottomBar',
+//        layout: 'hbox',
+//        region: "south",
+//        cls: "bio-botbar unselectable",
+//        height: 30,
+//        border: true,
+//        items: [taskbar, legendBar]
+//    });
+//    return bottomBar;
+//};
+////BOTTOM BAR
+//
+//
+//GenomeViewer.prototype.openListWidget = function (args) {
+//    var _this = this;
+//
+//    console.log(args.query)
+//
+//    var cellBaseManager = new CellBaseManager(this.species);
+//    cellBaseManager.success.addEventListener(function (evt, data) {
+//        if (data.result[0].length > 1) {
+//            var genomicListWidget = new GenomicListWidget(_this.species, {title: args.title, gridFields: args.gridField, viewer: _this});
+//            genomicListWidget.draw(data);
+//
+//            genomicListWidget.onSelected.addEventListener(function (evt, feature) {
+////			console.log(feature);
+//                if (feature != null && feature.chromosome != null) {
+//                    if (_this.chromosome != feature.chromosome || _this.position != feature.start) {
+//                        _this.onRegionChange.notify({sender: "", chromosome: feature.chromosome, position: feature.start});
+//                    }
+//                }
+//            });
+//
+//            genomicListWidget.onTrackAddAction.addEventListener(function (evt, event) {
+//                var track = new TrackData(event.fileName, {
+//                    adapter: event.adapter
+//                });
+//                _this.trackSvgLayout.addTrack(track, {
+//                    id: event.fileName,
+//                    featuresRender: "MultiFeatureRender",
+////					histogramZoom:80,
+//                    height: 150,
+//                    visibleRange: {start: 0, end: 100},
+//                    featureTypes: FEATURE_TYPES
+//                });
+//            });
+//        } else {
+//            var feature = data.result[0][0];
+//            if (feature != null) {
+//                _this.region.load(feature);
+//                _this.onRegionChange.notify({sender: ""});
+//            } else {
+//                Ext.example.msg('Feature <span class="ssel">' + args.query + '</span> not found', "");
+//            }
+//        }
+//    });
+//    cellBaseManager.get(args.category, args.subcategory, args.query, args.resource, args.params);
+//};
+//GenomeViewer.prototype.openGeneListWidget = function (name) {
+//    this.openListWidget({
+//        category: "feature",
+//        subcategory: "id",
+//        query: name.toString(),
+//        resource: "gene",
+//        title: "Gene List"
+//    });
+//};
+//
+//GenomeViewer.prototype.openTranscriptListWidget = function (name) {
+//    this.openListWidget({
+//        category: "feature",
+//        subcategory: "transcript",
+//        query: name.toString(),
+//        resource: "info",
+//        title: "Transcript List",
+//        gridField: ["externalName", "stableId", "biotype", "chromosome", "start", "end", "strand", "description"]
+//    });
+//};
+//
+//GenomeViewer.prototype.openExonListWidget = function (name) {
+//    this.openListWidget({
+//        category: "feature",
+//        subcategory: "exon",
+//        query: name.toString(),
+//        resource: "info",
+//        title: "Exon List",
+//        gridField: ["stableId", "chromosome", "start", "end", "strand"]
+//    });
+//};
+//
+//GenomeViewer.prototype.openSNPListWidget = function (name) {
+//    this.openListWidget({
+//        category: "feature",
+//        subcategory: "id",
+//        query: name.toString(),
+//        resource: "snp",
+//        title: "SNP List",
+//        gridField: ["name", "variantAlleles", "ancestralAllele", "mapWeight", "position", "sequence", "chromosome", "start", "end"]
+//    });
+//};
+//
+//GenomeViewer.prototype.openGOListWidget = function (name) {
+//    this.openListWidget({
+//        category: "feature",
+//        subcategory: "id",
+//        query: name.toString(),
+//        resource: "gene",
+//        title: "Gene List by GO"
+//    });
+//};

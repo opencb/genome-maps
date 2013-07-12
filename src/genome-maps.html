@@ -58,6 +58,7 @@
     <!-- build:script js -->
     <script type="text/javascript" src="./gm-config.js"></script>
     <script type="text/javascript" src="./gm-plugins-config.js"></script>
+    <script type="text/javascript" src="./gm-navigation-bar.js"></script>
     <script type="text/javascript" src="./genome-maps.js"></script>
     <!-- /build -->
 
@@ -83,10 +84,17 @@
         });
     </script>
     <STYLE type="text/css">
+        html{
+        overflow-y: scroll;
+        }
+        body{
+            background-color:#f5f5f5;
+            padding:5px;
+        }
     </STYLE>
 </head>
-<body style="overflow: hidden">
+<body>
 <div id="checkBrowser"></div>
-<div id="application"></div>
+<div id="application" style=""></div>
 </body>
 </html>

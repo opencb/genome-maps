@@ -31,6 +31,7 @@ function GenomeMaps(args) {
     this.title = 'Genome Maps';
     this.description = "Genomic data visualization";
     this.version = "3.1.1";
+    this.border = true;
     this.trackIdCounter = 1;
     this.targetId;
     this.width;
@@ -63,8 +64,12 @@ GenomeMaps.prototype = {
         $(this.div).append('<div id="gm-header-widget"></div>');
         $(this.div).append('<div id="gm-genome-viewer"></div>');
 
-
         this.width = ($(this.div).width());
+
+        if (this.border) {
+            var border = (Utils.isString(this.border)) ? this.border : '1px solid lightgray';
+            $(this.div).css({border: border});
+        }
 
         // Resize
         if (this.resizable) {
@@ -166,8 +171,10 @@ GenomeMaps.prototype = {
         this.headerWidget = this._createHeaderWidget('gm-header-widget');
         /* Genome Viewer  */
         this.genomeViewer = this._createGenomeViewer('gm-genome-viewer');
+        /* Navigation Bar */
+        this.navigationBar = this._createNavigationBar(this.genomeViewer.getNavigationPanelId());
         /* Genome Viewer  */
-        this.sidePanel = this._createSidePanel(this.genomeViewer.getSidePanelId());
+        this.sidePanel = this._createSidePanel(this.genomeViewer.getRightSidePanelId());
 
 
         //check login
@@ -250,11 +257,13 @@ GenomeMaps.prototype = {
             species: speciesObj,
             border: false,
             version: this.version,
+            resizable:false,
 //            zoom: urlZoom,
 //            confPanelHidden: confPanelHidden,
 //            regionPanelHidden: regionPanelHidden,
             availableSpecies: AVAILABLE_SPECIES,
             popularSpecies: POPULAR_SPECIES,
+            drawNavigationBar: false,
 //            height: this.height - this.headerWidget.height,
             width: this.width,
             handlers: {
@@ -270,12 +279,97 @@ GenomeMaps.prototype = {
         genomeViewer.draw();
         return genomeViewer;
     },
-    _createSidePanel: function (targetId) {
+    _createNavigationBar: function (targetId) {
         var _this = this;
+        var navigationBar = new GmNavigationBar({
+            targetId: targetId,
+            availableSpecies: this.genomeViewer.availableSpecies,
+            species: this.genomeViewer.species,
+            region: this.genomeViewer.region,
+            width: this.genomeViewer.width,
+            svgCanvasWidthOffset: this.genomeViewer.trackPanelScrollWidth + this.genomeViewer.sidePanelWidth,
+            zoom: this.genomeViewer.zoom,
+            autoRender: true,
+            handlers: {
+                'region:change': function (event) {
+                    Utils.setMinRegion(event.region, _this.genomeViewer.getSVGCanvasWidth())
+                    _this.genomeViewer.trigger('region:change', event);
+                },
+                'karyotype-button:change': function (event) {
+                    if (event.selected) {
+                        _this.genomeViewer.karyotypePanel.show();
+                    } else {
+                        _this.genomeViewer.karyotypePanel.hide();
+                    }
+                },
+                'chromosome-button:change': function (event) {
+                    if (event.selected) {
+                        _this.genomeViewer.chromosomePanel.show();
+                    } else {
+                        _this.genomeViewer.chromosomePanel.hide();
+                    }
+                },
+                'region-button:change': function (event) {
+                    if (event.selected) {
+                        _this.genomeViewer.regionOverviewPanel.show();
+                    } else {
+                        _this.genomeViewer.regionOverviewPanel.hide();
+                    }
+                },
+                'region:move': function (event) {
+                    _this.genomeViewer.trigger('region:move', event);
+                },
+                'species:change': function (event) {
+                    _this.genomeViewer.trigger('species:change', event);
+                    _this.genomeViewer.setRegion(event.species.region);
+                },
+                'fullscreen:click': function (event) {
+                    if (_this.genomeViewer.fullscreen) {
+                        $(_this.genomeViewer.div).css({width: 'auto'});
+                        Utils.cancelFullscreen();//no need to pass the dom object;
+                        _this.genomeViewer.fullscreen = false;
+                    } else {
+                        $(_this.genomeViewer.div).css({width: screen.width});
+                        Utils.launchFullScreen(_this.genomeViewer.div);
+                        _this.genomeViewer.fullscreen = true;
+                    }
+                },
+                'restoreDefaultRegion:click': function (event) {
+                    Utils.setMinRegion(_this.genomeViewer.defaultRegion, _this.genomeViewer.getSVGCanvasWidth());
+                    event.region = _this.genomeViewer.defaultRegion;
+                    _this.genomeViewer.trigger('region:change', event);
+                }
+            }
+        });
+
+        this.genomeViewer.on('region:change', function (event) {
+            if (event.sender != navigationBar) {
+                navigationBar.setRegion(event.region);
+            }
+        });
+        this.genomeViewer.on('region:move', function (event) {
+            if (event.sender != navigationBar) {
+                navigationBar.moveRegion(event.region);
+            }
+        });
+        this.genomeViewer.on('width:change', function (event) {
+            navigationBar.setWidth(event.width);
+        });
+
+        navigationBar.draw();
+
+        return navigationBar;
+    },
+    _createSidePanel: function (targetId) {
+
+        var _this = this;
+//        var height = $(window).height() - this.headerWidget.height-26;
+//        var height = $(this.genomeViewer.rightSidebarDiv).height();
+
         var sidePanel = Ext.create('Ext.panel.Panel', {
             title: 'Configuration',
             width: 300,
-            height: '100%',
+            height: 600,
             collapsible: true,
             titleCollapse: true,
             layout: 'accordion',
@@ -1506,23 +1600,39 @@ GenomeMaps.prototype.addFileTrack = function (text, updateActiveTracksPanel) {
             fileWidget.sessionFinished();
         });
         fileWidget.onOk.addEventListener(function (sender, event) {
-            var fileTrack = new TrackData(event.fileName, {
-                adapter: event.adapter
-            });
-
             var id = _this.genTrackId();
             var type = text;
 
-            _this.genomeViewer.addTrack(fileTrack, {
+            var fileTrack = new FeatureTrack({
+                targetId: null,
                 id: id,
                 title: event.fileName,
-                type: type,
-                featuresRender: "MultiFeatureRender",
-                //					histogramZoom:80,
+//                histogramZoom: 70,
+//                labelZoom: 80,
                 height: 150,
                 visibleRange: {start: 0, end: 100},
-                featureTypes: FEATURE_TYPES
+                featureTypes: FEATURE_TYPES,
+                renderer: new FeatureRenderer(FEATURE_TYPES.vcf),
+                dataAdapter: event.adapter
             });
+
+            _this.genomeViewer.addTrack(fileTrack);
+
+//            var fileTrack = new TrackData(event.fileName, {
+//                adapter:
+//            });
+
+
+//            _this.genomeViewer.addTrack(fileTrack, {
+//                id: id,
+//                title: event.fileName,
+//                type: type,
+//                featuresRender: "MultiFeatureRender",
+//                //					histogramZoom:80,
+//                height: 150,
+//                visibleRange: {start: 0, end: 100},
+//                featureTypes: FEATURE_TYPES
+//            });
 
             var title = event.fileName + '-' + id;
             updateActiveTracksPanel(type, title, id, true);

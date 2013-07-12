@@ -1,4 +1,4 @@
-/*! Genome Viewer - v1.0.2 - 2013-07-08
+/*! Genome Viewer - v1.0.2 - 2013-07-12
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 function UserListWidget (args){
@@ -1322,9 +1322,9 @@ HeaderWidget.prototype = {
             var userbar = new Ext.create('Ext.toolbar.Toolbar', {
                 id : this.id+'userbar',
                 dock: 'top',
-                border:true,
-                cls:'bio-userbar',
-//                cls:'bio-linkbar',
+                border:false,
+//                cls:'bio-userbar',
+                cls:'bio-linkbar',
                 height:27,
                 minHeight:27,
                 maxHeight:27,
