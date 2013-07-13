@@ -1,7 +1,7 @@
-/*! Genome Viewer - v1.0.2 - 2013-07-12
+/*! Genome Viewer - v1.0.2 - 2013-07-13
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
-/*! Genome Viewer - v1.0.2 - 2013-07-12
+/*! Genome Viewer - v1.0.2 - 2013-07-13
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 var Utils = {
@@ -482,7 +482,7 @@ var SVG = {
 //	
 //};
 
-/*! Genome Viewer - v1.0.2 - 2013-07-12
+/*! Genome Viewer - v1.0.2 - 2013-07-13
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 function CellBaseManager(species, args) {
@@ -10413,8 +10413,8 @@ GenomeViewer.prototype = {
         $(this.div).append(this.statusbarDiv);
 
 
-        this.rightSidebarDiv = $('<div id="rightsidebar-' + this.id + '" style="position:absolute; z-index:50;right:0px;box-shadow: 2px 2px 1px #bbbbbb;"></div>')[0];
-        this.leftSidebarDiv = $('<div id="leftsidebar-' + this.id + '" style="position:absolute; z-index:50;left:0px;box-shadow: 2px 2px 1px #bbbbbb;"></div>')[0];
+        this.rightSidebarDiv = $('<div id="rightsidebar-' + this.id + '" style="position:absolute; z-index:50;right:0px;"></div>')[0];
+        this.leftSidebarDiv = $('<div id="leftsidebar-' + this.id + '" style="position:absolute; z-index:50;left:0px;"></div>')[0];
         $(this.centerPanelDiv).append(this.rightSidebarDiv);
         $(this.centerPanelDiv).append(this.leftSidebarDiv);
 

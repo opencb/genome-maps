@@ -221,6 +221,15 @@ GmNavigationBar.prototype = {
                     }
                 },
                 '->',
+                {
+                    tooltip: 'Configuration',
+                    text: 'Configuration',
+                    margin:'0 15 0 0',
+                    menu: {
+                        id: this.id + 'configurationMenu',
+                        plain: true
+                    }
+                },
                 this._createSearchComboBox(),
                 {
                     tooltip: 'Search',
@@ -235,113 +244,10 @@ GmNavigationBar.prototype = {
         this._setSpeciesMenu();
         this._setChromosomeMenu();
 
-
-//        var navgationHtml =
-//                '<button id="regionHistoryButton">&nbsp;</button>' +
-//                '<ul id="regionHistoryMenu" style="display: inline-block; position: absolute; width: 150px; z-index:100000"></ul>' +
-//                '<button id="speciesButton"><span id="speciesText">' + this.species.text + '</span></button>' +
-//                '<ul id="speciesMenu" style="display: inline-block; position: absolute; width: 200px; z-index:100000"></ul>' +
-//                '<button id="chromosomesButton"> <span id="chromosomesText">' + this.region.chromosome + '</span></button>' +
-//                '<ul id="chromosomesMenu" style="display: inline-block; position: absolute; width: 100px; z-index:100000"></ul>' +
-//                '<div class="buttonset inlineblock">' +
-//                '<input type="checkbox" checked="true" id="karyotypeButton" /><label for="karyotypeButton"></label>' +
-//                '<input type="checkbox" checked="true" id="chromosomeButton" /><label for="chromosomeButton"></label>' +
-//                '<input type="checkbox" checked="true" id="regionButton" /><label for="regionButton"></label>' +
-//                '</div>' +
-//                '<a id="zoomOutButton">&nbsp;</a>' +
-//                '<div id="slider" class="ocb-zoom-slider"></div>' +
-//                '<a id="zoomInButton">&nbsp;</a>' +
-//                '<label class="ocb-text" style="margin-left:10px" for="regionField">Position:</label><input id="regionField" class="ocb-input-text" placeholder="Enter region..." type="text">' +
-//                '<button id="goButton">Go!</button>' +
-//                '<div class="buttonset inlineblock">' +
-//                '<a id="moveFurtherLeftButton">&nbsp;</a>' +
-//                '<a id="moveLeftButton">&nbsp;</a>' +
-//                '<a id="moveRightButton">&nbsp;</a>' +
-//                '<a id="moveFurtherRightButton">&nbsp;</a>' +
-//                '</div>' +
-//                '<label class="ocb-text" style="margin-left:10px" for="searchField">Search</label><input id="searchField" class="ocb-input-text" placeholder="gene, snp..." size="8" type="text">' +
-//                '<a id="fullScreenButton" style="margin-left:10px" >&nbsp;</a>' +
-//                '';
-//
-//
-//
-//        this.zoomInButton = $(this.div).find('#zoomInButton').button({icons: {primary: 'ocb-icon-plus'}, text: false});
-//        this.zoomOutButton = $(this.div).find('#zoomOutButton').button({icons: {primary: 'ocb-icon-minus'}, text: false});
-//        $(this.zoomOutButton).click(function () {
-//            _this._handleZoomOutButton();
-//        });
-//        $(this.zoomInButton).click(function () {
-//            _this._handleZoomInButton();
-//        });
-//
-//        this.regionField = $(this.div).find('#regionField')[0];
-//        $(this.regionField).bind('keypress', function (e) {
-//            var code = (e.keyCode ? e.keyCode : e.which);
-//            if (code == 13) { //Enter keycode
-//                _this._goRegion($(this).val());
-//            }
-//        });
-//        $(this.regionField).val(this.region.toString());
-//
-//        this.goButton = $(this.div).find('#goButton').button();
-//        $(this.goButton).click(function () {
-//            _this._goRegion($(_this.regionField).val());
-//
-//        });
-//
-//        this.moveFurtherLeftButton = $(this.div).find('#moveFurtherLeftButton').button({icons: {primary: 'ocb-icon-arrow-w-bold'}, text: false});
-//        this.moveFurtherRightButton = $(this.div).find('#moveFurtherRightButton').button({icons: {primary: 'ocb-icon-arrow-e-bold'}, text: false});
-//        this.moveLeftButton = $(this.div).find('#moveLeftButton').button({icons: {primary: 'ocb-icon-arrow-w'}, text: false});
-//        this.moveRightButton = $(this.div).find('#moveRightButton').button({icons: {primary: 'ocb-icon-arrow-e'}, text: false});
-//
-//        $(this.moveFurtherLeftButton).click(function () {
-//            _this._handleMoveRegion(10);
-//        });
-//
-//        $(this.moveFurtherRightButton).click(function () {
-//            _this._handleMoveRegion(-10);
-//        });
-//
-//        $(this.moveLeftButton).click(function () {
-//            _this._handleMoveRegion(1);
-//        });
-//
-//        $(this.moveRightButton).click(function () {
-//            _this._handleMoveRegion(-1);
-//        });
-//
-//
-//        this.fullScreenButton = $(this.div).find('#fullScreenButton').button({icons: {primary: 'ocb-icon-resize'}, text: false});
-//
-//        $(this.fullScreenButton).click(function (e) {
-//            _this.trigger('fullscreen:click', {clickEvent: e, sender: {}})
-//        });
-//
-////        this.searchButton = $(this.div).find('#searchButton');
-//        this.searchField = $(this.div).find('#searchField');
-//
-//
-//        $(this.searchField).autocomplete({
-//            source: function (query, process) {
-//                process(_this._quickSearch(query));
-//            },
-//            minLength: 3
-//        });
-//        $(this.searchField).bind('keypress', function (e) {
-//            var code = (e.keyCode ? e.keyCode : e.which);
-//            if (code == 13) { //Enter keycode
-////                _this._goFeature();
-//            }
-//        });
-//
-//
-////
-////        $(this.searchButton).click(function () {
-////            _this._goFeature();
-////        });
-////
-
         this.rendered = true;
+    },
+    setConfigurationMenu:function(panel){
+        Ext.getCmp(this.id + 'configurationMenu').add(panel);
     },
 
     _addRegionHistoryMenuItem: function (region) {

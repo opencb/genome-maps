@@ -174,7 +174,7 @@ GenomeMaps.prototype = {
         /* Navigation Bar */
         this.navigationBar = this._createNavigationBar(this.genomeViewer.getNavigationPanelId());
         /* Genome Viewer  */
-        this.sidePanel = this._createSidePanel(this.genomeViewer.getRightSidePanelId());
+        this.sidePanel = this._createSidePanel();
 
 
         //check login
@@ -367,15 +367,16 @@ GenomeMaps.prototype = {
 //        var height = $(this.genomeViewer.rightSidebarDiv).height();
 
         var sidePanel = Ext.create('Ext.panel.Panel', {
-            title: 'Configuration',
+//            title: 'Configuration',
             width: 300,
             height: 600,
-            collapsible: true,
-            titleCollapse: true,
+//            collapsible: true,
+//            titleCollapse: true,
             layout: 'accordion',
             items: this.getSidePanelItems(),
             renderTo: targetId
         });
+        this.navigationBar.setConfigurationMenu(sidePanel);
         return sidePanel;
     }
 }
