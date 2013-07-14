@@ -1,7 +1,7 @@
-/*! Genome Viewer - v1.0.2 - 2013-07-13
+/*! Genome Viewer - v1.0.2 - 2013-07-14
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
-/*! Genome Viewer - v1.0.2 - 2013-07-13
+/*! Genome Viewer - v1.0.2 - 2013-07-14
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 var Utils = {
@@ -482,7 +482,7 @@ var SVG = {
 //	
 //};
 
-/*! Genome Viewer - v1.0.2 - 2013-07-13
+/*! Genome Viewer - v1.0.2 - 2013-07-14
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 function CellBaseManager(species, args) {
@@ -10354,7 +10354,7 @@ function GenomeViewer(args) {
 
     this.width;
     this.height;
-    this.sidePanelWidth = (this.sidePanel) ? 25 : 18;
+    this.sidePanelWidth = (this.sidePanel) ? 25 : 0;
 
     console.log(this.targetId);
     console.log(this.id);

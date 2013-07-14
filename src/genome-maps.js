@@ -117,7 +117,7 @@ GenomeMaps.prototype = {
         if (typeof urlSpecies !== 'undefined' && urlSpecies != '') {
             speciesObj = Utils.getSpeciesFromAvailable(AVAILABLE_SPECIES, urlSpecies) || speciesObj;
         }
-        this.species = Utils.getSpeciesCode(speciesObj.text);
+        this.species = speciesObj;
         this.region.load(speciesObj.region);
         //console.log(speciesObj);
 
@@ -176,6 +176,7 @@ GenomeMaps.prototype = {
         /* Genome Viewer  */
         this.sidePanel = this._createSidePanel();
 
+        this.headerWidget.setDescription(this.species.text);
 
         //check login
         if ($.cookie('bioinfo_sid') != null) {
@@ -252,7 +253,7 @@ GenomeMaps.prototype = {
         var genomeViewer = new GenomeViewer({
             targetId: targetId,
             autoRender: true,
-            sidePanel: true,
+            sidePanel: false,
             region: this.region,
             species: speciesObj,
             border: false,
@@ -267,16 +268,19 @@ GenomeMaps.prototype = {
 //            height: this.height - this.headerWidget.height,
             width: this.width,
             handlers: {
-                'species:change': function (sender, data) {
+                'species:change': function (event) {
 //            _this._setTracks();
 //            _this.setTracksMenu();
-//                    _this.headerWidget.setDescription(_this.genomeViewer.speciesName);
-                    _this.species = _this.genomeViewer.species;
+                    _this.species = event.species;
+                    _this.headerWidget.setDescription(_this.species.text);
 //                    _this._refreshInitialTracksConfig();
                 }
             }
         });
         genomeViewer.draw();
+
+
+
         return genomeViewer;
     },
     _createNavigationBar: function (targetId) {
@@ -407,7 +411,8 @@ GenomeMaps.prototype.setSize = function (width, height) {
 };
 
 GenomeMaps.prototype.getRegionByFeature = function (name, feature) {
-    var url = CELLBASE_HOST + "/latest/" + this.species + "/feature/" + feature + "/" + name + "/info?of=json";
+    var speciesCode = Utils.getSpeciesCode(this.species.text);
+    var url = CELLBASE_HOST + "/latest/" + speciesCode + "/feature/" + feature + "/" + name + "/info?of=json";
     var f;
     $.ajax({
         url: url,
@@ -460,7 +465,7 @@ GenomeMaps.prototype.getTrackSvgById = function (trackId) {
 
 GenomeMaps.prototype._loadInitialTracksConfig = function (args) {
     //Load initial TRACKS config
-    var categories = TRACKS[SPECIES_TRACKS_GROUP[this.species]];
+    var categories = TRACKS[SPECIES_TRACKS_GROUP[Utils.getSpeciesCode(this.species.text)]];
     var activeTracks = [];
     var cellbaseTracks = [];
     for (var i = 0, leni = categories.length; i < leni; i++) {
@@ -494,7 +499,8 @@ GenomeMaps.prototype._loadInitialDasTrackConfig = function () {
     var das_tracks = DAS_TRACKS;
     var dasChilds = [];
     for (var i = 0, leni = das_tracks.length; i < leni; i++) {
-        if (das_tracks[i].species == this.species) {
+        var speciesCode = Utils.getSpeciesCode(this.species.text);
+        if (das_tracks[i].species == speciesCode) {
             for (var j = 0, lenj = das_tracks[i].categories.length; j < lenj; j++) {
                 var sourceName, sourceUrl, checked;
                 var subChilds = [];

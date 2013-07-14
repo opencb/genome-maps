@@ -314,7 +314,7 @@ var TRACKS ={"group1":[
 };
 
 var DAS_TRACKS = [
-				{"species":"hsa",
+				{"species":"hsapiens",
 				   "categories":[
 				      {"name":"Core",
 					   "sources":[
@@ -332,7 +332,7 @@ var DAS_TRACKS = [
 				      }
 				   ]
 				},
-				{"species":"mmu",
+				{"species":"mmusculus",
 				   "categories":[
 				      {"name":"Core",
 					   "sources":[]
@@ -347,7 +347,7 @@ var DAS_TRACKS = [
 				      }
 				   ]
 				},
-				{"species":"dre",
+				{"species":"drerio",
 				   "categories":[
 				      {"name":"Core",
 					   "sources":[]
@@ -360,7 +360,7 @@ var DAS_TRACKS = [
 				      }
 				   ]
 				},
-				{"species":"rno",
+				{"species":"rnorvegicus",
 				   "categories":[
 				      {"name":"Core",
 					   "sources":[]
@@ -375,7 +375,7 @@ var DAS_TRACKS = [
 				      }
 				   ]
 				},
-				{"species":"dme",
+				{"species":"dmelanogaster",
 				   "categories":[
 				      {"name":"Core",
 					   "sources":[]
@@ -388,7 +388,7 @@ var DAS_TRACKS = [
 				      }
 				   ]
 				},
-				{"species":"sce",
+				{"species":"scerevisiae",
 				   "categories":[
 				      {"name":"Core",
 					   "sources":[]
@@ -401,7 +401,7 @@ var DAS_TRACKS = [
 				      }
 				   ]
 				},
-				{"species":"cel",
+				{"species":"celegans",
 				   "categories":[
 				      {"name":"Core",
 					   "sources":[]

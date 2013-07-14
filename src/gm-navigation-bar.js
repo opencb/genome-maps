@@ -79,6 +79,10 @@ GmNavigationBar.prototype = {
                     }
                 },
                 {
+                  xtype:'tbtext',
+                  text:'Chromosome'
+                },
+                {
                     id: this.id + 'chromosomesButton',
                     tooltip: 'Chromosomes menu',
 //                    iconCls: 'ocb-icon-chromosome',
