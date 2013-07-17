@@ -1,7 +1,7 @@
-/*! Genome Viewer - v1.0.2 - 2013-07-14
+/*! Genome Viewer - v1.0.2 - 2013-07-17
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
-/*! Genome Viewer - v1.0.2 - 2013-07-14
+/*! Genome Viewer - v1.0.2 - 2013-07-17
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 var Utils = {
@@ -482,7 +482,63 @@ var SVG = {
 //	
 //};
 
-/*! Genome Viewer - v1.0.2 - 2013-07-14
+/*Nuevo tipo ventana*/
+	Ext.define("Ext.ux.Window",{
+		extend:"Ext.window.Window",
+		minimizable:true,
+		constrain:true,
+		collapsible:true,
+		initComponent: function () {
+			this.callParent();
+			if(this.taskbar!=null){//si no existe, las ventanas funcionan como hasta ahora
+				this.zIndexManager = this.taskbar.winMgr;
+				this.iconCls='icon-grid';
+				this.button=Ext.create('Ext.button.Button', {
+					text:this.title,
+					window:this,
+					iconCls : this.iconCls,
+					handler:function(){
+						if(this.window.zIndexManager.front==this.window){
+							this.window.minimize();
+						}else{
+							this.window.show();
+						}
+					}
+				});
+				this.taskbar.add(this.button);
+				
+				
+				this.contextMenu = new Ext.menu.Menu({
+					items: [{
+						text: 'Close',
+						window:this,
+						iconCls:'tools-icons x-tool-close',
+						handler:function(){this.window.close();}
+					}]
+				});
+				this.button.getEl().on('contextmenu', function(e){
+													e.preventDefault();
+													this.contextMenu.showAt(e.getX(),e.getY()-10-(this.contextMenu.items.length)*25);
+													},this);
+				
+				this.button.on('destroy', function(){this.window.close();});
+				
+				//Taskbar button can be destroying
+				this.on('destroy',function(){if(this.button.destroying!=true){this.button.destroy();}});
+				
+				this.on('minimize',function(){this.hide();});
+				this.on('deactivate',function(){
+					if(this.zIndexManager && this.zIndexManager.front.ghostPanel){
+						this.zIndexManager.unregister(this.zIndexManager.front.ghostPanel);
+					}
+					this.button.toggle(false);
+				});
+				this.on('activate',function(){this.button.toggle(true);});
+				
+			}
+		}
+	});
+/*! Genome Viewer - v1.0.2 - 2013-07-17
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 function CellBaseManager(species, args) {
@@ -3685,13 +3741,13 @@ FEATURE_TYPES = {
 //		histogramColor:"lightblue"
     },
     gene: {
-        label: function (f) {
+        label: function (f, zoom) {
             var name = (f.name != null) ? f.name : f.id;
             var str = "";
             str += (f.strand < 0 || f.strand == '-') ? "<" : "";
             str += " " + name + " ";
             str += (f.strand > 0 || f.strand == '+') ? ">" : "";
-            if (f.biotype != null && f.biotype != '') {
+            if (f.biotype != null && f.biotype != '' && zoom > 25) {
                 str += " [" + f.biotype + "]";
             }
             return str;
@@ -8362,7 +8418,7 @@ TrackListPanel.prototype = {
         }
 //        this.mouseLine.setAttribute('stroke',SEQUENCE_COLORS[base]);
 //        this.mouseLine.setAttribute('fill',SEQUENCE_COLORS[base]);
-        return '<span style="font-family: this.fontFamily; font-size:14px;' + colorStyle + '">' + base + '</span>';
+        return '<span style="' + colorStyle + '">' + base + '</span>';
     },
 
     getSequenceNucleotid: function (position) {
@@ -8439,6 +8495,162 @@ StatusBar.prototype = {
     }
 
 }
+function LegendPanel(args){
+	this.width = 200;
+	this.height = 250;
+	
+	if (args != null){
+        if (args.title!= null){
+        	this.title = args.title;       
+        }
+        if (args.targetId!= null){
+        	this.targetId = args.targetId;       
+        }
+        if (args.width!= null){
+        	this.width = args.width;       
+        }
+        if (args.height!= null){
+        	this.height = args.height;       
+        }
+    }
+	
+	
+};
+
+LegendPanel.prototype.getColorItems = function(legend){
+	panelsArray = new Array();
+	
+	for ( var item in legend) {
+//		var color = legend[item].toString().replace("#", "");
+//		var cp = new Ext.picker.Color();
+//		cp.width = 20;
+//		cp.colors = [color];
+		var size=15;
+		var color = Ext.create('Ext.draw.Component', {
+        width: size,
+        height: size,
+        items:[{
+				type: 'rect',
+				fill: legend[item],
+				x:0,y:0,
+				width: size,
+				height : size
+				}]
+		});
+		
+		var name = Utils.formatText(item, "_");
+		
+		var panel = Ext.create('Ext.panel.Panel', {
+			height:size,
+			border:false,
+			flex:1,
+			margin:"1 0 0 1",
+		    layout: {type: 'hbox',align:'stretch' },
+		    items: [color, {xtype: 'tbtext',text:name, margin:"1 0 0 3"} ]
+		});
+		
+		panelsArray.push(panel);
+	}
+	
+	return panelsArray;
+};
+
+
+
+
+LegendPanel.prototype.getPanel = function(legend){
+	var _this=this;
+	
+	if (this.panel == null){
+		
+		var items = this.getColorItems(legend);
+		
+		this.panel  = Ext.create('Ext.panel.Panel', {
+			bodyPadding:'0 0 0 2',
+			border:false,
+			layout: {
+		        type: 'vbox',
+		        align:'stretch' 
+		    },
+			items:items,
+			width:this.width,
+			height:items.length*20
+		});		
+	}	
+	
+	return this.panel;
+};
+
+LegendPanel.prototype.getButton = function(legend){
+	var _this=this;
+	
+	if (this.button == null){
+		
+		this.button = Ext.create('Ext.button.Button', {
+			text : this.title,
+			menu : {
+                plain:true,
+                items: [this.getPanel(legend)]
+            }
+		});
+	}	
+	return this.button;
+	
+};
+
+function LegendWidget(args){
+	
+	this.width = 300;
+	this.height = 300;
+	this.title = "Legend";
+	
+	if (args != null){
+        if (args.title!= null){
+        	this.title = args.title;       
+        }
+        if (args.targetId!= null){
+        	this.targetId = args.targetId;       
+        }
+        if (args.width!= null){
+        	this.width = args.width;       
+        }
+        if (args.height!= null){
+        	this.height = args.height;       
+        }
+    }
+	
+	this.legendPanel = new LegendPanel();
+	
+};
+
+LegendWidget.prototype.draw = function(legend){
+	var _this = this;
+	if(this.panel==null){
+		
+		var item = this.legendPanel.getPanel(legend);
+	
+		this.panel = Ext.create('Ext.ux.Window', {
+			title : this.title,
+			resizable: false,
+			constrain:true,
+			closable:true,
+			width: item.width+10,
+			height: item.height+70,
+			items : [item],
+			buttonAlign:'right',
+			 layout: {
+		        type: 'hbox',
+		        align:'stretch' 
+		    },
+			buttons:[
+					{text:'Close', handler: function(){_this.panel.close();}}
+			]
+		});
+	}
+	this.panel.show();
+	
+	
+};
 function Track(args) {
     this.width = 200;
     this.height = 200;
@@ -9340,7 +9552,7 @@ FeatureRenderer.prototype.render = function (features, args) {
     var draw = function (feature) {
         //get feature render configuration
         var color = _.isFunction(_this.color) ? _this.color(feature) : _this.color;
-        var label = _.isFunction(_this.label) ? _this.label(feature) : _this.label;
+        var label = _.isFunction(_this.label) ? _this.label(feature, args.zoom) : _this.label;
         var height = _.isFunction(_this.height) ? _this.height(feature) : _this.height;
         var tooltipTitle = _.isFunction(_this.tooltipTitle) ? _this.tooltipTitle(feature) : _this.tooltipTitle;
         var tooltipText = _.isFunction(_this.tooltipText) ? _this.tooltipText(feature) : _this.tooltipText;
@@ -9469,7 +9681,7 @@ GeneRenderer.prototype.render = function (features, args) {
         //get feature render configuration
         _this.setFeatureConfig('gene');
         var color = _.isFunction(_this.color) ? _this.color(feature) : _this.color;
-        var label = _.isFunction(_this.label) ? _this.label(feature) : _this.label;
+        var label = _.isFunction(_this.label) ? _this.label(feature, args.zoom) : _this.label;
         var height = _.isFunction(_this.height) ? _this.height(feature) : _this.height;
         var tooltipTitle = _.isFunction(_this.tooltipTitle) ? _this.tooltipTitle(feature) : _this.tooltipTitle;
         var tooltipText = _.isFunction(_this.tooltipText) ? _this.tooltipText(feature) : _this.tooltipText;
@@ -9775,18 +9987,24 @@ HistogramRenderer.prototype.render = function(features, args) {
         var width = (feature.end-feature.start);
         //get type settings object
 
-        var settings = args.featureTypes[feature.featureType];
-        var color = settings.histogramColor;
+        try{
+            var settings = args.featureTypes[feature.featureType];
+            var color = settings.histogramColor;
+        }catch(e){
+            var color = 'gray'
+        }
 
         width = width * args.pixelBase;
         var x = args.pixelPosition+middle-((args.position-feature.start)*args.pixelBase);
 
 
-        var height = /*histogramHeight * */ features[i].value;
+        var height = /*histogramHeight * */ features[i].features_count;
         if(height == null){
-            height = features[i].features_count;
+            height = features[i].value;
+            height = histogramHeight * height;
+        }else{
+            height = height*multiplier;
         }
-        height = height*multiplier;
 
         points += (x+(width/2))+","+(histogramHeight - height)+" ";
 
@@ -10327,6 +10545,7 @@ function GenomeViewer(args) {
     this.drawKaryotypePanel = true;
     this.drawChromosomePanel = true;
     this.drawRegionOverviewPanel = true;
+    this.drawStatusBar = true;
     this.border = true;
     this.resizable = true;
     this.sidePanel = true;//enable or disable sidePanel at construction
@@ -10437,10 +10656,13 @@ GenomeViewer.prototype = {
         return $(this.rightSidebarDiv).attr('id');
     },
     getLeftSidePanelId: function () {
-        return $(this.rightSidebarDiv).attr('id');
+        return $(this.leftSidebarDiv).attr('id');
     },
     getNavigationPanelId: function () {
         return $(this.navigationbarDiv).attr('id');
+    },
+    getStatusPanelId: function () {
+        return $(this.statusbarDiv).attr('id');
     },
     setNavigationBar: function (navigationBar) {
         this.navigationBar = navigationBar;
@@ -10547,13 +10769,13 @@ GenomeViewer.prototype = {
                     }
                 }
             });
-            $(this.targetDiv).resizable({
-                handles: 'e',
-                ghost: true,
-                stop: function (event, ui) {
-                    _this._setWidth($(_this.targetDiv).width());
-                }
-            });
+//            $(this.targetDiv).resizable({
+//                handles: 'e',
+//                ghost: true,
+//                stop: function (event, ui) {
+//                    _this._setWidth($(_this.targetDiv).width());
+//                }
+//            });
         }
 
         /* Navigation Bar */
@@ -10579,7 +10801,9 @@ GenomeViewer.prototype = {
         this.trackListPanel = this._createTrackListPanel($(this.tracksDiv).attr('id'));
 
         /*Status Bar*/
-        this.statusBar = this._createStatusBar($(this.statusbarDiv).attr('id'));
+        if (this.drawStatusBar) {
+            this.statusBar = this._createStatusBar($(this.statusbarDiv).attr('id'));
+        }
 
 
         this.on('region:change region:move', function (event) {

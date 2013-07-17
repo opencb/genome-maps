@@ -32,7 +32,13 @@ module.exports = function (grunt) {
                 stripBanners: true
             },
             build: {
-                src: ['src/gm-config.js','src/gm-plugins-config.js','gm-navigation-bar.js','src/genome-maps.js'],
+                src: [
+                    'src/gm-config.js',
+                    'src/gm-plugins-config.js',
+                    'gm-navigation-bar.js',
+                    'gm-status-bar.js',
+                    'src/genome-maps.js'
+                ],
                 dest: 'build/<%= meta.version %>/genome-maps-<%= meta.version %>.js'
             }
         },

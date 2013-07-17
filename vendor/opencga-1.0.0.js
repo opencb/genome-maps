@@ -1,4 +1,4 @@
-/*! Genome Viewer - v1.0.2 - 2013-07-14
+/*! Genome Viewer - v1.0.2 - 2013-07-17
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 function UserListWidget (args){
@@ -1053,6 +1053,7 @@ function HeaderWidget(args){
 	this.suiteId=-1;
 	this.news='';
     this.checkTimeInterval = 4000;
+    this.version = '';
 
     //set instantiation args, must be last
     _.extend(this, args);
@@ -1159,7 +1160,7 @@ HeaderWidget.prototype = {
         delete this.accountInfoInterval;
     },
     setDescription : function (text){
-        $("#"+this.id+'description').text(text);
+        $("#"+this.id+'description').html(text);
     },
     draw : function(){
         if (!this.rendered) {
@@ -1365,7 +1366,9 @@ HeaderWidget.prototype = {
                         xtype: 'tbtext',
                         margin:'15 0 0 20',
                         //		        	html: '<span class="appName">Vitis vinifera&nbsp; '+this.args.appname +'</span> <span class="appDesc">'+this.args.description+'</span>&nbsp;&nbsp;&nbsp;&nbsp;<span><img height="30" src="http://www.demeter.es/imagenes/l_demeter.gif"></span>',
-                        text: '<span class="appName">' + this.appname + '</span> <span id="' + this.id + 'description" class="appDesc">' + this.description + '</span>' +
+                        text: '<span class="appName">' + this.appname + '</span> ' +
+                            '<span id="' + this.id + 'description" class="appDesc">' + this.description + '</span>' +
+                            '<span id="' + this.id + 'version" class="appVersion">' + this.version + '</span>' +
 //                        '<span class="appDesc" style="color:orangered;margin-left:20px">New version 3.1 beta2</span>' +
                             '',
                         padding: '0 0 0 10',

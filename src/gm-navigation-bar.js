@@ -130,7 +130,7 @@ GmNavigationBar.prototype = {
                 {
                     xtype: 'slider',
                     id: this.id + 'zoomSlider',
-                    width: 170,
+                    width: 140,
                     maxValue: 100,
                     minValue: 0,
                     value: this.zoom,
@@ -225,15 +225,6 @@ GmNavigationBar.prototype = {
                     }
                 },
                 '->',
-                {
-                    tooltip: 'Configuration',
-                    text: 'Configuration',
-                    margin:'0 15 0 0',
-                    menu: {
-                        id: this.id + 'configurationMenu',
-                        plain: true
-                    }
-                },
                 this._createSearchComboBox(),
                 {
                     tooltip: 'Search',
@@ -241,7 +232,22 @@ GmNavigationBar.prototype = {
                     handler: function () {
 
                     }
-                }
+                },
+                {
+                    tooltip: 'Configure',
+                    text: '<span class="emph"> Configure</span>',
+                    margin:'0 0 0 15',
+                    enableToggle: true,
+                    iconCls: 'ocb-icon-gear',
+                    pressed: true,
+                    toggleHandler: function () {
+                        _this.trigger('configuration-button:change', {selected: this.pressed, sender: _this});
+                    }
+//                    menu: {
+//                        id: this.id + 'configurationMenu',
+//                        plain: true
+//                    }
+                },
             ]
         });
         this._addRegionHistoryMenuItem(this.region);
@@ -315,7 +321,7 @@ GmNavigationBar.prototype = {
 
         var createEntry = function (species) {
             return Ext.create('Ext.menu.Item', {
-                text: species.text,
+                text: species.text+' '+species.assembly,
                 handler: function () {
                     _this.species = species;
                     button.setText(this.text);
@@ -494,10 +500,11 @@ GmNavigationBar.prototype = {
             hideTrigger: true,
             fieldLabel: 'Search:',
             labelWidth: 40,
-            width: 200,
+            width: 150,
             store: searchResults,
             queryMode: 'local',
             typeAhead: true,
+
             minChars:3,
             autoSelect: false,
             forceSelection: true,

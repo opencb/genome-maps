@@ -169,14 +169,23 @@ GenomeMaps.prototype = {
 
 //      /* Header Widget */
         this.headerWidget = this._createHeaderWidget('gm-header-widget');
+
         /* Genome Viewer  */
         this.genomeViewer = this._createGenomeViewer('gm-genome-viewer');
+
         /* Navigation Bar */
         this.navigationBar = this._createNavigationBar(this.genomeViewer.getNavigationPanelId());
-        /* Genome Viewer  */
-        this.sidePanel = this._createSidePanel();
 
-        this.headerWidget.setDescription(this.species.text);
+        /* Side Panel  */
+        this.sidePanel = this._createSidePanel(this.genomeViewer.getRightSidePanelId());
+
+        /* Genome Viewer  */
+        this.statusBar = this._createStatusBar(this.genomeViewer.getStatusPanelId());
+
+        this.drawStatusBar
+
+        var text = _this.species.text+' <span style="color: #8396b2">'+_this.species.assembly+'</span>';
+        this.headerWidget.setDescription(text);
 
         //check login
         if ($.cookie('bioinfo_sid') != null) {
@@ -226,7 +235,7 @@ GenomeMaps.prototype = {
             autoRender: true,
             appname: this.title,
             description: this.description,
-            version: this.version,
+//            version: this.version,
             suiteId: this.suiteId,
             accountData: this.accountData
         });
@@ -265,6 +274,7 @@ GenomeMaps.prototype = {
             availableSpecies: AVAILABLE_SPECIES,
             popularSpecies: POPULAR_SPECIES,
             drawNavigationBar: false,
+            drawStatusBar: false,
 //            height: this.height - this.headerWidget.height,
             width: this.width,
             handlers: {
@@ -272,7 +282,8 @@ GenomeMaps.prototype = {
 //            _this._setTracks();
 //            _this.setTracksMenu();
                     _this.species = event.species;
-                    _this.headerWidget.setDescription(_this.species.text);
+                    var text = _this.species.text+' <span style="color: #8396b2">'+_this.species.assembly+'</span>';
+                    _this.headerWidget.setDescription(text);
 //                    _this._refreshInitialTracksConfig();
                 }
             }
@@ -298,6 +309,13 @@ GenomeMaps.prototype = {
                 'region:change': function (event) {
                     Utils.setMinRegion(event.region, _this.genomeViewer.getSVGCanvasWidth())
                     _this.genomeViewer.trigger('region:change', event);
+                },
+                'configuration-button:change': function (event) {
+                    if (event.selected) {
+                        _this.sidePanel.show();
+                    } else {
+                        _this.sidePanel.hide();
+                    }
                 },
                 'karyotype-button:change': function (event) {
                     if (event.selected) {
@@ -372,16 +390,35 @@ GenomeMaps.prototype = {
 
         var sidePanel = Ext.create('Ext.panel.Panel', {
 //            title: 'Configuration',
-            width: 300,
+            width: 250,
             height: 600,
 //            collapsible: true,
 //            titleCollapse: true,
+//            border:false,
             layout: 'accordion',
             items: this.getSidePanelItems(),
             renderTo: targetId
         });
-        this.navigationBar.setConfigurationMenu(sidePanel);
+//        this.navigationBar.setConfigurationMenu(sidePanel);
         return sidePanel;
+    },
+    _createStatusBar: function (targetId) {
+        var _this = this;
+        var statusBar = new GmStatusBar({
+            targetId: targetId,
+            autoRender: true,
+            region: this.genomeViewer.region,
+            width: this.genomeViewer.width,
+            version: this.genomeViewer.version
+        });
+
+        this.genomeViewer.trackListPanel.on('mousePosition:change', function (event) {
+            statusBar.setMousePosition(event);
+        });
+        this.genomeViewer.on('region:change', function (event) {
+            statusBar.setRegion(event);
+        });
+        return  statusBar;
     }
 }
 
@@ -1217,7 +1254,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 targetId: null,
                 id: id,
                 title: 'Gene',
-                histogramZoom: 20,
+                histogramZoom: 15,
                 transcriptZoom: 50,
                 height: 140,
                 visibleRange: {start: 0, end: 100},
