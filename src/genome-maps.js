@@ -184,7 +184,7 @@ GenomeMaps.prototype = {
 
         this.drawStatusBar
 
-        var text = _this.species.text+' <span style="color: #8396b2">'+_this.species.assembly+'</span>';
+        var text = _this.species.text + ' <span style="color: #8396b2">' + _this.species.assembly + '</span>';
         this.headerWidget.setDescription(text);
 
         //check login
@@ -267,7 +267,7 @@ GenomeMaps.prototype = {
             species: speciesObj,
             border: false,
             version: this.version,
-            resizable:false,
+            resizable: false,
 //            zoom: urlZoom,
 //            confPanelHidden: confPanelHidden,
 //            regionPanelHidden: regionPanelHidden,
@@ -282,14 +282,13 @@ GenomeMaps.prototype = {
 //            _this._setTracks();
 //            _this.setTracksMenu();
                     _this.species = event.species;
-                    var text = _this.species.text+' <span style="color: #8396b2">'+_this.species.assembly+'</span>';
+                    var text = _this.species.text + ' <span style="color: #8396b2">' + _this.species.assembly + '</span>';
                     _this.headerWidget.setDescription(text);
 //                    _this._refreshInitialTracksConfig();
                 }
             }
         });
         genomeViewer.draw();
-
 
 
         return genomeViewer;
@@ -622,7 +621,6 @@ GenomeMaps.prototype._loadInitialPluginTrackConfig = function () {
 
 GenomeMaps.prototype.getSidePanelItems = function () {
     var _this = this;
-
 
     var tracks = this._loadInitialTracksConfig({addTrack: true});
     var pluginTracks = this._loadInitialPluginTrackConfig();
@@ -1554,43 +1552,109 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
             break;
 
         case "bam":
-            var bamTrack = new TrackData(id, {
-                adapter: new BamAdapter({
+//            var bamTrack = new TrackData(id, {
+//                adapter: new BamAdapter({
+//                    category: "bam",
+//                    host: host,
+//                    //resource: trackTitle.substr(0,trackTitle.length-4),
+//                    resource: object,
+//                    species: this.genomeViewer.species,
+//                    featureCache: {
+//                        gzip: false,
+//                        chunkSize: 5000
+//                    },
+//                    filters: {},
+//                    options: {},
+//                    featureConfig: FEATURE_CONFIG.bam
+//                })
+//            });
+//            this.genomeViewer.addTrack(bamTrack, {
+//                id: id,
+//                type: trackType,
+//                title: trackTitle,
+//                featuresRender: "BamRender",
+//                histogramZoom: 60,
+//                height: 24,
+//                visibleRange: {start: 0, end: 100},
+//                featureTypes: FEATURE_TYPES
+//            });
+//            break;
+
+
+            var bamTrack = new BamTrack({
+                targetId: null,
+                id: id,
+                title: trackTitle,
+                histogramZoom: 60,
+                height: 200,
+                visibleRange: {start: 0, end: 100},
+
+                renderer: new BamRenderer('bam'),
+
+                dataAdapter: new BamAdapter({
                     category: "bam",
                     host: host,
-                    //resource: trackTitle.substr(0,trackTitle.length-4),
                     resource: object,
                     species: this.genomeViewer.species,
                     featureCache: {
-                        gzip: false,
+                        gzip: true,
                         chunkSize: 5000
                     },
                     filters: {},
                     options: {},
-                    featureConfig: FEATURE_CONFIG.bam
+                    featureConfig: FEATURE_CONFIG.gene
                 })
             });
-            this.genomeViewer.addTrack(bamTrack, {
-                id: id,
-                type: trackType,
-                title: trackTitle,
-                featuresRender: "BamRender",
-                histogramZoom: 60,
-                height: 24,
-                visibleRange: {start: 0, end: 100},
-                featureTypes: FEATURE_TYPES
-            });
+            this.genomeViewer.addTrack(bamTrack);
             break;
 
+
         case "vcf":
-            var vcfTrack = new TrackData(id, {
-                adapter: new OpencgaAdapter({
+
+//            var vcfTrack = new TrackData(id, {
+//                adapter: new OpencgaAdapter({
+//                    category: "vcf",
+//                    //resource: trackTitle.substr(0,trackTitle.length-4),
+//                    resource: object,
+//                    species: this.genomeViewer.species,
+//                    featureCache: {
+//                        gzip: false,
+//                        chunkSize: 5000
+//                    },
+//                    filters: {},
+//                    options: {},
+//                    featureConfig: FEATURE_CONFIG.vcf
+//                })
+//            });
+//            this.genomeViewer.addTrack(vcfTrack, {
+//                id: id,
+//                type: trackType,
+//                title: trackTitle,
+//                featuresRender: "MultiFeatureRender",
+//                histogramZoom: 60,
+//                height: 150,
+//                visibleRange: {start: 0, end: 100},
+//                featureTypes: FEATURE_TYPES
+//            });
+//            break;
+
+            var vcfTrack = new FeatureTrack({
+                targetId: null,
+                id: id,
+                title: trackTitle,
+                histogramZoom: 60,
+                height: 150,
+                visibleRange: {start: 0, end: 100},
+
+                renderer: new FeatureRenderer('vcf'),
+
+                dataAdapter: new OpencgaAdapter({
                     category: "vcf",
-                    //resource: trackTitle.substr(0,trackTitle.length-4),
+                    host: host,
                     resource: object,
                     species: this.genomeViewer.species,
                     featureCache: {
-                        gzip: false,
+                        gzip: true,
                         chunkSize: 5000
                     },
                     filters: {},
@@ -1598,17 +1662,9 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                     featureConfig: FEATURE_CONFIG.vcf
                 })
             });
-            this.genomeViewer.addTrack(vcfTrack, {
-                id: id,
-                type: trackType,
-                title: trackTitle,
-                featuresRender: "MultiFeatureRender",
-                histogramZoom: 60,
-                height: 150,
-                visibleRange: {start: 0, end: 100},
-                featureTypes: FEATURE_TYPES
-            });
+            this.genomeViewer.addTrack(vcfTrack);
             break;
+
         default:
             return null;
     }

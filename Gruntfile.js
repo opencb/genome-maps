@@ -158,44 +158,7 @@ module.exports = function (grunt) {
             }
         },
         'curl-dir': {
-            long: {
-                src: [
-                    'http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js',
-                    'http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js',
-                    'http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js',
-                    'http://hub.chemdoodle.com/cwc/5.1.0/ChemDoodleWeb.css',
-                    'http://hub.chemdoodle.com/cwc/5.1.0/ChemDoodleWeb.js',
-                    'http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.0.6/jquery.mousewheel.min.js',
-                    'https://raw.github.com/toji/gl-matrix/master/dist/gl-matrix-min.js',
-                    'http://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.3.1/jquery.cookie.js',
-                    'http://cdnjs.cloudflare.com/ajax/libs/jquery-url-parser/2.2.1/purl.min.js',
-                    'http://jsapi.bioinfo.cipf.es/ext-libs/jquery-plugins/jquery.sha1.js',
-                    'http://jsapi.bioinfo.cipf.es/ext-libs/qtip2/jquery.qtip.min.js',
-                    'http://jsapi.bioinfo.cipf.es/ext-libs/qtip2/jquery.qtip.min.css',
-                    'http://jsapi.bioinfo.cipf.es/ext-libs/rawdeflate.js'
-                ],
-                dest: 'vendor'
-            },
-            bootstrapjs: {
-                src: [
-                    'http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js'
-                ],
-                dest: 'vendor/bootstrap/js/'
-            },
-            bootstrapcss: {
-                src: [
-                    'http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css',
-                    'http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap-responsive.min.css'
-                ],
-                dest: 'vendor/bootstrap/css/'
-            },
-            bootstrapimg: {
-                src: [
-                    'http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/img/glyphicons-halflings.png',
-                    'http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/img/glyphicons-halflings-white.png'
-                ],
-                dest: 'vendor/bootstrap/img/'
-            }
+            
         }
 
     });

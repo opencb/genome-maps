@@ -1,7 +1,7 @@
-/*! Genome Viewer - v1.0.2 - 2013-07-17
+/*! Genome Viewer - v1.0.2 - 2013-07-19
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
-/*! Genome Viewer - v1.0.2 - 2013-07-17
+/*! Genome Viewer - v1.0.2 - 2013-07-19
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 var Utils = {
@@ -482,63 +482,7 @@ var SVG = {
 //	
 //};
 
-/*Nuevo tipo ventana*/
-	Ext.define("Ext.ux.Window",{
-		extend:"Ext.window.Window",
-		minimizable:true,
-		constrain:true,
-		collapsible:true,
-		initComponent: function () {
-			this.callParent();
-			if(this.taskbar!=null){//si no existe, las ventanas funcionan como hasta ahora
-				this.zIndexManager = this.taskbar.winMgr;
-				this.iconCls='icon-grid';
-				this.button=Ext.create('Ext.button.Button', {
-					text:this.title,
-					window:this,
-					iconCls : this.iconCls,
-					handler:function(){
-						if(this.window.zIndexManager.front==this.window){
-							this.window.minimize();
-						}else{
-							this.window.show();
-						}
-					}
-				});
-				this.taskbar.add(this.button);
-				
-				
-				this.contextMenu = new Ext.menu.Menu({
-					items: [{
-						text: 'Close',
-						window:this,
-						iconCls:'tools-icons x-tool-close',
-						handler:function(){this.window.close();}
-					}]
-				});
-				this.button.getEl().on('contextmenu', function(e){
-													e.preventDefault();
-													this.contextMenu.showAt(e.getX(),e.getY()-10-(this.contextMenu.items.length)*25);
-													},this);
-				
-				this.button.on('destroy', function(){this.window.close();});
-				
-				//Taskbar button can be destroying
-				this.on('destroy',function(){if(this.button.destroying!=true){this.button.destroy();}});
-				
-				this.on('minimize',function(){this.hide();});
-				this.on('deactivate',function(){
-					if(this.zIndexManager && this.zIndexManager.front.ghostPanel){
-						this.zIndexManager.unregister(this.zIndexManager.front.ghostPanel);
-					}
-					this.button.toggle(false);
-				});
-				this.on('activate',function(){this.button.toggle(true);});
-				
-			}
-		}
-	});
-/*! Genome Viewer - v1.0.2 - 2013-07-17
+/*! Genome Viewer - v1.0.2 - 2013-07-19
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 function CellBaseManager(species, args) {
@@ -936,7 +880,7 @@ InfoWidget.prototype.draw = function (args){
 
 InfoWidget.prototype.render = function (){
 		/**MAIN PANEL**/
-		this.panel = Ext.create('Ext.ux.Window', {
+		this.panel = Ext.create('Ext.window.Window', {
 		    title: this.title +" "+ this.query,
 		    id : this.title +" "+ this.query,
 //		    resizable: false,
@@ -4066,14 +4010,14 @@ FEATURE_TYPES = {
             }
             return summary;
         },
-        getLabel: function (f) {
+        label: function (f) {
             return  "bam  " + f.chromosome + ":" + f.start + "-" + f.end;
         },
-        getTipTitle: function (f) {
+        tooltipTitle: function (f) {
             return FEATURE_TYPES.formatTitle(f.featureType) + ' - <span class="ok">' + f.name + '</span>';
         },
-        getTipText: function (f) {
-            f.strand = FEATURE_TYPES.bam.getStrand(f);
+        tooltipText: function (f) {
+            f.strand = FEATURE_TYPES.bam.strand(f);
             var one = 'cigar:&nbsp;<span class="ssel">' + f.cigar + '</span><br>' +
                 'insert size:&nbsp;<span class="ssel">' + f.inferredInsertSize + '</span><br>' +
                 FEATURE_TYPES.getTipCommons(f) + '<br>' +
@@ -4088,31 +4032,32 @@ FEATURE_TYPES = {
             return '<div style="float:left">' + one + '</div>' +
                 '<div style="float:right">' + three + '</div>';
         },
-        getColor: function (f, chr) {
+        color: function (f, chr) {
             if (f.mateReferenceName != chr) {
                 return "lightgreen";
             }
             return (parseInt(f.flags) & (0x10)) == 0 ? "DarkGray" : "LightGray";
             /**/
         },
-        getStrokeColor: function (f) {
-            if (this.getMateUnmappedFlag(f)) {
+        strokeColor: function (f) {
+            if (this.mateUnmappedFlag(f)) {
                 return "tomato"
             }
             return "whitesmoke";
         },
-        getStrand: function (f) {
+        strand: function (f) {
             return (parseInt(f.flags) & (0x10)) == 0 ? "Forward" : "Reverse";
         },
-        getReadPairedFlag: function (f) {
+        readPairedFlag: function (f) {
             return (parseInt(f.flags) & (0x1)) == 0 ? false : true;
         },
-        getFirstOfPairFlag: function (f) {
+        firstOfPairFlag: function (f) {
             return (parseInt(f.flags) & (0x40)) == 0 ? false : true;
         },
-        getMateUnmappedFlag: function (f) {
+        mateUnmappedFlag: function (f) {
             return (parseInt(f.flags) & (0x8)) == 0 ? false : true;
         },
+        infoWidgetId: "id",
         height: 8,
         histogramColor: "grey"
     },
@@ -4763,6 +4708,346 @@ SequenceAdapter.prototype.getNucleotidByPosition = function(args){
     }
 };
 
+function BamAdapter(args){
+
+    _.extend(this, Backbone.Events);
+
+    if(typeof args != 'undefined'){
+        this.host = args.host || this.host;
+        this.category = args.category || this.category;
+		this.resource = args.resource || this.resource;
+		this.params = args.params || this.params;
+		this.filters = args.filters || this.filters;
+		this.options = args.options || this.options;
+        this.species = args.species || this.species;
+        var argsFeatureCache = args.featureCache || {};
+    }
+	if (args != null){
+		if(args.featureConfig != null){
+			if(args.featureConfig.filters != null){
+				this.filtersConfig = args.featureConfig.filters;
+			}
+			if(args.featureConfig.options != null){//apply only check boxes
+				this.optionsConfig = args.featureConfig.options;
+				for(var i = 0; i < this.optionsConfig.length; i++){
+					if(this.optionsConfig[i].checked == true){
+						this.options[this.optionsConfig[i].name] = true;
+						this.params[this.optionsConfig[i].name] = true;
+					}				
+				}
+			}
+		}
+	}
+
+	this.featureCache = new BamCache(argsFeatureCache);
+//	this.onGetData = new Event();
+}
+
+BamAdapter.prototype = {
+    host : null,
+    gzip : true,
+    params : {}
+};
+
+BamAdapter.prototype.clearData = function(){
+	this.featureCache.clear();
+};
+
+BamAdapter.prototype.setFilters = function(filters){
+	this.clearData();
+	this.filters = filters;
+	for(filter in filters){
+		var value = filters[filter].toString();
+		delete this.params[filter];
+		if(value != ""){
+			this.params[filter] = value;
+		}
+	}
+};
+BamAdapter.prototype.setOption = function(opt, value){
+	if(opt.fetch){
+		this.clearData();
+	}
+	this.options[opt.name] = value;
+	for(option in this.options){
+		if(this.options[opt.name] != null){
+			this.params[opt.name] = this.options[opt.name];
+		}else{
+			delete this.params[opt.name];
+		}
+	}
+};
+
+
+BamAdapter.prototype.getData = function(args){
+	var _this = this;
+	//region check
+	this.params["histogram"] = args.histogram;
+	this.params["histogramLogarithm"] = args.histogramLogarithm;
+	this.params["histogramMax"] = args.histogramMax;
+	this.params["interval"] = args.interval;
+	this.params["transcript"] = args.transcript;
+	this.params["chromosome"] = args.chromosome;
+	this.params["resource"] = this.resource.id;
+	this.params["category"] = this.category;
+	this.params["species"] = Utils.getSpeciesCode(this.species.text);
+
+
+	if(args.start<1){
+		args.start=1;
+	}
+	if(args.end>300000000){
+		args.end=300000000;
+	}
+	
+	var dataType = "data";
+	if(args.histogram){
+		dataType = "histogram"+args.interval;
+	}
+
+	this.params["dataType"] = dataType;
+	
+	var firstChunk = this.featureCache._getChunk(args.start);
+	var lastChunk = this.featureCache._getChunk(args.end);
+	var chunks = [];
+	var itemList = [];
+	for(var i=firstChunk; i<=lastChunk; i++){
+		var key = args.chromosome+":"+i;
+		if(this.featureCache.cache[key] == null || this.featureCache.cache[key][dataType] == null) {
+			chunks.push(i);
+		}else{
+			var item = this.featureCache.getFeatureChunk(key);
+			itemList.push(item);
+		}
+	}
+	
+	//CellBase data process
+	var opencgaManager = new OpencgaManager(this.host);
+	opencgaManager.onRegion.addEventListener(function (evt, data){
+		var splitDots = data.query.split(":");
+		var splitDash = splitDots[1].split("-");
+		var query = {chromosome:splitDots[0],start:splitDash[0],end:splitDash[1]};
+
+
+		var dataType = "data";
+		if(data.params.histogram){
+			dataType = "histogram"+data.params.interval;
+		    _this.featureCache.putHistogramFeaturesByRegion(data.result, query, data.resource, dataType);
+		}else{
+		    _this.featureCache.putFeaturesByRegion(data.result, query, data.resource, dataType);
+        }
+
+		var items = _this.featureCache.getFeatureChunksByRegion(query, dataType);
+		itemList = itemList.concat(items);
+		if(itemList.length > 0){
+            _this.trigger('data:ready',{items:itemList, params:_this.params, cached:false, sender:_this});
+//			_this.onGetData.notify({items:itemList, params:_this.params, cached:false});
+		}
+	});
+
+	var querys = [];
+	var updateStart = true;
+	var updateEnd = true;
+	if(chunks.length > 0){//chunks needed to retrieve
+//		console.log(chunks);
+		
+		for ( var i = 0; i < chunks.length; i++) {
+			
+			if(updateStart){
+				var chunkStart = parseInt(chunks[i] * this.featureCache.chunkSize);
+				updateStart = false;
+			}
+			if(updateEnd){
+				var chunkEnd = parseInt((chunks[i] * this.featureCache.chunkSize) + this.featureCache.chunkSize-1);
+				updateEnd = false;
+			}
+			
+			if(chunks[i+1]!=null){
+				if(chunks[i]+1==chunks[i+1]){
+					updateEnd =true;
+				}else{
+					var query = args.chromosome+":"+chunkStart+"-"+chunkEnd;
+					querys.push(query);
+					updateStart = true;
+					updateEnd = true;
+				}
+			}else{
+				var query = args.chromosome+":"+chunkStart+"-"+chunkEnd;
+				querys.push(query);
+				updateStart = true;
+				updateEnd = true;
+			}
+		}
+//		console.log(querys);
+		for ( var i = 0, li = querys.length; i < li; i++) {
+			console.time("dqs");
+			//accountId, sessionId, bucketname, objectname, region,
+			opencgaManager.region($.cookie("bioinfo_account"), $.cookie("bioinfo_sid"),"default", this.resource.id, querys[i], this.params);
+		}
+	}else{//no server call
+		if(itemList.length > 0){
+            _this.trigger('data:ready',{items:itemList, params:this.params, cached:false, sender:this});
+//			this.onGetData.notify({items:itemList, params:this.params});
+		}
+	}
+};
+
+function OpencgaAdapter(args){
+
+    _.extend(this, Backbone.Events);
+
+	this.host = null;
+	this.gzip = true;
+	
+	this.params={};
+	if (args != null){
+		if(args.host != null){
+			this.host = args.host;
+		}
+		if(args.category != null){
+			this.category = args.category;
+		}
+		if(args.resource != null){
+			this.resource = args.resource;
+		}
+		if(args.featureCache != null){
+			var argsFeatureCache = args.featureCache;
+		}
+		if(args.params != null){
+			this.params = args.params;
+		}
+	}
+	this.featureCache =  new FeatureCache(argsFeatureCache);
+//	this.onGetData = new Event();
+}
+
+OpencgaAdapter.prototype.getData = function(args){
+	var _this = this;
+	//region check
+	
+	this.params["histogram"] = args.histogram;
+    this.params["histogramLogarithm"] = args.histogramLogarithm;
+    this.params["histogramMax"] = args.histogramMax;
+	this.params["interval"] = args.interval;
+	this.params["transcript"] = args.transcript;
+	
+	
+	if(args.start<1){
+		args.start=1;
+	}
+	if(args.end>300000000){
+		args.end=300000000;
+	}
+	
+	var type = "data";
+	if(args.histogram){
+		type = "histogram"+args.interval;
+	}
+	
+	var firstChunk = this.featureCache._getChunk(args.start);
+	var lastChunk = this.featureCache._getChunk(args.end);
+
+	var chunks = [];
+	var itemList = [];
+	for(var i=firstChunk; i<=lastChunk; i++){
+		var key = args.chromosome+":"+i;
+		if(this.featureCache.cache[key] == null || this.featureCache.cache[key][type] == null) {
+			chunks.push(i);
+		}else{
+			var items = this.featureCache.getFeatureChunk(key, type);
+			itemList = itemList.concat(items);
+		}
+	}
+////	//notify all chunks
+//	if(itemList.length>0){
+//		this.onGetData.notify({data:itemList, params:this.params, cached:true});
+//	}
+	
+	
+	//CellBase data process
+	var opencgaManager = new OpencgaManager(this.host);
+	var calls = 0;
+	var querys = [];
+	opencgaManager.onRegion.addEventListener(function (evt, data){
+		console.timeEnd("dqs");
+		console.time("dqs-cache");
+		var type = "data";
+		if(data.params.histogram){
+			type = "histogram"+data.params.interval;
+		}
+        _this.params["dataType"] = type;
+
+		var splitDots = data.query.split(":");
+		var splitDash = splitDots[1].split("-");
+		var query = {chromosome:splitDots[0],start:splitDash[0],end:splitDash[1]};
+
+        //check if features contains positon or start-end
+        if(data.result[0] != null && data.result[0]['position'] != null){
+            for(var i = 0; i < data.result.length; i++) {
+                data.result[i]['start'] = data.result[i].position;
+                data.result[i]['end'] =  data.result[i].position;
+            }
+        }
+
+		_this.featureCache.putFeaturesByRegion(data.result, query, _this.category, type);
+		var items = _this.featureCache.getFeatureChunksByRegion(query, type);
+		console.timeEnd("dqs-cache");
+		if(items != null){
+			itemList = itemList.concat(items);
+		}
+		if(calls == querys.length ){
+//			_this.onGetData.notify({items:itemList, params:_this.params, cached:false});
+            _this.trigger('data:ready',{items:itemList, params:_this.params, cached:false, sender:_this});
+		}
+	});
+
+	var updateStart = true;
+	var updateEnd = true;
+	if(chunks.length > 0){
+//		console.log(chunks);
+		
+		for ( var i = 0; i < chunks.length; i++) {
+			
+			if(updateStart){
+				var chunkStart = parseInt(chunks[i] * this.featureCache.chunkSize);
+				updateStart = false;
+			}
+			if(updateEnd){
+				var chunkEnd = parseInt((chunks[i] * this.featureCache.chunkSize) + this.featureCache.chunkSize-1);
+				updateEnd = false;
+			}
+			
+			if(chunks[i+1]!=null){
+				if(chunks[i]+1==chunks[i+1]){
+					updateEnd =true;
+				}else{
+					var query = args.chromosome+":"+chunkStart+"-"+chunkEnd;
+					querys.push(query);
+					updateStart = true;
+					updateEnd = true;
+				}
+			}else{
+				var query = args.chromosome+":"+chunkStart+"-"+chunkEnd;
+				
+				querys.push(query);
+				updateStart = true;
+				updateEnd = true;
+			}
+		}
+//		console.log(querys)
+		for ( var i = 0, li = querys.length; i < li; i++) {
+			console.time("dqs");
+			calls++;
+//			opencgaManager.region(this.category, this.resource, querys[i], this.params);
+            opencgaManager.region($.cookie("bioinfo_account"), $.cookie("bioinfo_sid"),"default", this.resource.id, querys[i], this.params);
+		}
+	}else{
+		if(itemList.length > 0){
+            this.trigger('data:ready',{items:itemList, params:this.params, cached:false, sender:this});
+//			this.onGetData.notify({items:itemList, params:this.params});
+		}
+	}
+};
 function FeatureDataAdapter(dataSource, args){
 	var _this = this;
     _.extend(this, Backbone.Events);
@@ -5729,6 +6014,273 @@ FeatureCache.prototype.putChunk = function(featureDataList, chunkRegion, dataTyp
 	//for ( var inter in  intervalList) {
 		//intervalList[inter]=intervalList[inter]/this.maxFeaturesInterval;
 	//}
+//};
+
+BamCache.prototype.putHistogramFeaturesByRegion = FeatureCache.prototype.putFeaturesByRegion;
+
+function BamCache(args) {
+	this.args = args;
+	this.id = Math.round(Math.random() * 10000000); // internal id for this class
+
+	this.chunkSize = 50000;
+	this.gzip = true;
+	this.maxSize = 10*1024*1024;
+	this.size = 0;
+	
+	if (args != null){
+		if(args.chunkSize != null){
+			this.chunkSize = args.chunkSize;
+		}
+		if(args.gzip != null){
+			this.gzip = args.gzip;
+		}
+	}
+	
+	this.cache = {};
+
+	//deprecated trackSvg has this object now
+	//this.chunksDisplayed = {};
+	
+	this.maxFeaturesInterval = 0;//for local histogram
+	
+	//XXX
+	this.gzip = false;
+};
+
+BamCache.prototype._getChunk = function(position){
+	return Math.floor(position/this.chunkSize);
+};
+
+//new 
+BamCache.prototype.getFeatureChunk = function(key){
+	if(this.cache[key] != null) {
+		return this.cache[key];
+	}
+	return null;
+};
+//new
+BamCache.prototype.getFeatureChunksByRegion = function(region){
+	var firstRegionChunk, lastRegionChunk,  chunks = [], key;
+	firstRegionChunk = this._getChunk(region.start);
+	lastRegionChunk = this._getChunk(region.end);
+	for(var i=firstRegionChunk; i<=lastRegionChunk; i++){
+		key = region.chromosome+":"+i;
+		// check if this key exists in cache (features from files)
+		if(this.cache[key] != null ){
+			chunks.push(this.cache[key]);
+		}
+		
+	}
+	//if(chunks.length == 0){
+		//return null;
+	//}
+	return chunks;
+};
+
+
+
+BamCache.prototype.putFeaturesByRegion = function(resultObj, region, featureType, dataType){
+	var key, firstChunk, lastChunk, firstRegionChunk, lastRegionChunk, read, gzipRead;
+	var reads = resultObj.reads;
+	var coverage = resultObj.coverage;
+	
+	//initialize region
+	firstRegionChunk = this._getChunk(region.start);
+	lastRegionChunk = this._getChunk(region.end);
+	
+	var chunkIndex = 0;
+	console.time("BamCache.prototype.putFeaturesByRegion1")
+	//TODO the region for now is a chunk region, so this for is always 1 loop
+	for(var i=firstRegionChunk, c=0; i<=lastRegionChunk; i++, c++){
+		key = region.chromosome+":"+i;
+		if(this.cache[key]==null || this.cache[key][dataType] == null){
+			this.cache[key] = {};
+			this.cache[key][dataType] = [];
+			this.cache[key].key = key;
+			this.cache[key].start = parseInt(region.start)+(c*this.chunkSize);
+			this.cache[key].end = parseInt(region.start)+((c+1)*this.chunkSize)-1;
+		}
+        if(dataType === 'data'){
+            //divide the coverage array in multiple arrays of chunksize length
+    //		var chunkCoverage = coverage.slice(chunkIndex,chunkIndex+this.chunkSize);
+            var chunkCoverageAll = coverage.all.slice(chunkIndex,chunkIndex+this.chunkSize);
+            var chunkCoverageA = coverage.a.slice(chunkIndex,chunkIndex+this.chunkSize);
+            var chunkCoverageC = coverage.c.slice(chunkIndex,chunkIndex+this.chunkSize);
+            var chunkCoverageG = coverage.g.slice(chunkIndex,chunkIndex+this.chunkSize);
+            var chunkCoverageT = coverage.t.slice(chunkIndex,chunkIndex+this.chunkSize);
+            var chunkCoverage = {
+                "all":chunkCoverageAll,
+                "a":chunkCoverageA,
+                "c":chunkCoverageC,
+                "g":chunkCoverageG,
+                "t":chunkCoverageT
+            };
+        }
+
+		if(this.gzip) {
+			this.cache[key]["coverage"]=RawDeflate.deflate(JSON.stringify(chunkCoverage));
+		}else{
+			this.cache[key]["coverage"]=chunkCoverage;
+		}
+		chunkIndex+=this.chunkSize;
+	}
+	console.timeEnd("BamCache.prototype.putFeaturesByRegion1")
+	console.time("BamCache.prototype.putFeaturesByRegion")
+	var ssss = 0;
+
+
+    if(dataType === 'data'){
+        for(var index = 0, len = reads.length; index<len; index++) {
+            read = reads[index];
+            read.featureType = 'bam';
+            firstChunk = this._getChunk(read.start);
+            lastChunk = this._getChunk(read.end == 0?read.end=-1:read.end);//0 is not a position, i set to -1 to avoid enter in for
+    //		Some reads has end = 0. So will not be drawn IGV does not draw those reads
+
+            if(this.gzip) {
+                gzipRead = RawDeflate.deflate(JSON.stringify(read));
+                //ssss+= gzipRead.length;
+            }else{
+                gzipRead = read;
+                //ssss+= JSON.stringify(gzipRead).length;
+            }
+
+            for(var i=firstChunk, c=0; i<=lastChunk; i++, c++) {
+                if(i >= firstRegionChunk && i<= lastRegionChunk){//only if is inside the called region
+                    key = read.chromosome+":"+i;
+//                    if(this.cache[key].start==null){
+//                        this.cache[key].start = parseInt(region.start)+(c*this.chunkSize);
+//                    }
+//                    if(this.cache[key].end==null){
+//                        this.cache[key].end = parseInt(region.start)+((c+1)*this.chunkSize)-1;
+//                    }
+//                    if(this.cache[key][dataType] != null){
+//                        this.cache[key][dataType] = [];
+                        this.cache[key][dataType].push(gzipRead);
+//                    }
+
+                }
+            }
+        }
+    }
+
+
+	console.timeEnd("BamCache.prototype.putFeaturesByRegion");
+	console.log("BamCache.prototype.putFeaturesByRegion"+ssss)
+};
+
+BamCache.prototype.clear = function(){
+	this.size = 0;		
+	this.cache = {};
+	console.log("bamCache cleared")
+};
+
+/*
+BamCache.prototype.getFeaturesByChunk = function(key, dataType){
+	var features =  [];
+	var feature, firstChunk, lastChunk, chunk;
+	var chr = key.split(":")[0], chunkId = key.split(":")[1];
+	var region = {chromosome:chr,start:chunkId*this.chunkSize,end:chunkId*this.chunkSize+this.chunkSize-1};
+	
+	if(this.cache[key] != null && this.cache[key][dataType] != null) {
+		if(this.gzip) {
+			coverage = JSON.parse(RawDeflate.inflate(this.cache[key]["coverage"]));
+		}else{
+			coverage = this.cache[key]["coverage"];
+		}
+		
+		for ( var i = 0, len = this.cache[key]["data"].length; i < len; i++) {
+			if(this.gzip) {
+				feature = JSON.parse(RawDeflate.inflate(this.cache[key]["data"][i]));
+			}else{
+				feature = this.cache[key]["data"][i];
+			}
+			
+			//check if any feature chunk has been already displayed 
+			var displayed = false;
+			firstChunk = this._getChunk(feature.start);
+			lastChunk = this._getChunk(feature.end);
+			for(var f=firstChunk; f<=lastChunk; f++){
+				var fkey = feature.chromosome+":"+f;
+				if(this.chunksDisplayed[fkey+dataType]==true){
+					displayed = true;
+					break;
+				}
+			}
+			
+			if(!displayed){
+				features.push(feature);
+				returnNull = false;
+			}
+		}
+		this.chunksDisplayed[key+dataType]=true;
+		chunk = {reads:features,coverage:coverage,region:region};
+		return chunk;
+	}
+	
+};
+
+BamCache.prototype.getFeaturesByRegion = function(region, dataType){
+	var firstRegionChunk, lastRegionChunk, firstChunk, lastChunk, chunks = [], feature, key, coverage, features = [], displayed;
+	firstRegionChunk = this._getChunk(region.start);
+	lastRegionChunk = this._getChunk(region.end);
+	for(var i=firstRegionChunk; i<=lastRegionChunk; i++){
+		key = region.chromosome+":"+i;
+		if(this.cache[key] != null){
+			if(this.gzip) {
+				coverage = JSON.parse(RawDeflate.inflate(this.cache[key]["coverage"]));
+			}else{
+				coverage = this.cache[key]["coverage"];
+			}
+
+			for ( var j = 0, len = this.cache[key]["data"].length; j < len; j++) {
+				if(this.gzip) {
+					feature = JSON.parse(RawDeflate.inflate(this.cache[key]["data"][j]));
+				}else{
+					feature = this.cache[key]["data"][j];
+				}
+				
+				
+//				check if any feature chunk has been already displayed 
+				displayed = false;
+				firstChunk = this._getChunk(feature.start);
+				lastChunk = this._getChunk(feature.end);
+				for(var f=firstChunk; f<=lastChunk; f++){
+					var fkey = region.chromosome+":"+f;
+					if(this.chunksDisplayed[fkey+dataType]==true){
+						displayed = true;
+						break;
+					}
+				}
+				
+				if(!displayed){
+					features.push(feature);
+				}
+				
+			}
+		}
+		this.chunksDisplayed[key+dataType]=true;//mark chunk as displayed
+		chunks.push({reads:features,coverage:coverage,region:region});
+	}
+	return chunks;
+};
+*/
+
+
+
+//BamCache.prototype.remove = function(region){
+//	var firstChunk = this._getChunk(region.start);
+//	var lastChunk = this._getChunk(region.end);
+//	for(var i=firstChunk; i<=lastChunk; i++){
+//		var key = region.chromosome+":"+i;
+//		this.cache[key] = null;
+//	}
+//};
+//
+
+//
+//BamCache.prototype.clearType = function(dataType){
+//	this.cache[dataType] = null;
 //};
 
 function NavigationBar(args) {
@@ -8979,6 +9531,176 @@ Track.prototype = {
 
     }
 };
+BamTrack.prototype = new Track({});
+
+function BamTrack(args) {
+    Track.call(this,args);
+    // Using Underscore 'extend' function to extend and add Backbone Events
+    _.extend(this, Backbone.Events);
+
+    //set default args
+
+    //save default render reference;
+    this.defaultRenderer = this.renderer;
+    this.histogramRenderer = new HistogramRenderer();
+
+
+    this.chunksDisplayed = {};
+
+    //set instantiation args, must be last
+    _.extend(this, args);
+};
+
+BamTrack.prototype.render = function(targetId){
+    var _this = this;
+    this.initializeDom(targetId);
+
+    this.svgCanvasOffset = (this.width * 3 / 2) / this.pixelBase;
+    this.svgCanvasLeftLimit = this.region.start - this.svgCanvasOffset*2;
+    this.svgCanvasRightLimit = this.region.start + this.svgCanvasOffset*2
+
+    this.dataAdapter.on('data:ready',function(event){
+        if(event.params.histogram == true){
+            _this.renderer = _this.histogramRenderer;
+        }else{
+            _this.renderer = _this.defaultRenderer;
+        }
+//        _this.setHeight(_this.height - trackSvg.getHeight());//modify height before redraw
+        var features = _this._removeDisplayedChunks(event);
+        _this.renderer.render(features, {
+            svgCanvasFeatures : _this.svgCanvasFeatures,
+            featureTypes:_this.featureTypes,
+            renderedArea:_this.renderedArea,
+            pixelBase : _this.pixelBase,
+            position : _this.region.center(),
+            region : _this.region,
+            width : _this.width,
+            zoom : _this.zoom,
+            labelZoom : _this.labelZoom,
+            pixelPosition : _this.pixelPosition
+        });
+
+        _this.updateHeight();
+        _this.setLoading(false);
+    });
+
+};
+
+BamTrack.prototype.draw = function(){
+    var _this = this;
+
+    this.svgCanvasOffset = (this.width * 3 / 2) / this.pixelBase;
+    this.svgCanvasLeftLimit = this.region.start - this.svgCanvasOffset*2;
+    this.svgCanvasRightLimit = this.region.start + this.svgCanvasOffset*2
+
+    this.updateHistogramParams();
+    this.cleanSvg();
+//    setCallRegion();
+
+    if( this.zoom >= this.visibleRange.start && this.zoom <= this.visibleRange.end ){
+        this.setLoading(true);
+        var data = this.dataAdapter.getData({
+            chromosome:this.region.chromosome,
+            start:this.region.start-this.svgCanvasOffset*2,
+            end:this.region.end+this.svgCanvasOffset*2,
+            histogram:this.histogram,
+            histogramLogarithm:this.histogramLogarithm,
+            histogramMax:this.histogramMax,
+            interval:this.interval
+        });
+
+        this.invalidZoomText.setAttribute("visibility", "hidden");
+    }else{
+        this.invalidZoomText.setAttribute("visibility", "visible");
+    }
+
+};
+
+
+BamTrack.prototype.move = function(disp){
+    var _this = this;
+//    trackSvg.position = _this.region.center();
+    _this.region.center();
+    var pixelDisplacement = disp*_this.pixelBase;
+    this.pixelPosition-=pixelDisplacement;
+
+    //parseFloat important
+    var move =  parseFloat(this.svgCanvasFeatures.getAttribute("x")) + pixelDisplacement;
+    this.svgCanvasFeatures.setAttribute("x",move);
+
+    var virtualStart = parseInt(this.region.start - this.svgCanvasOffset);
+    var virtualEnd = parseInt(this.region.end + this.svgCanvasOffset);
+    // check if track is visible in this zoom
+    if(this.zoom >= this.visibleRange.start && this.zoom <= this.visibleRange.end){
+
+        if(disp>0 && virtualStart < this.svgCanvasLeftLimit){
+            this.dataAdapter.getData({
+                chromosome:_this.region.chromosome,
+                start:parseInt(this.svgCanvasLeftLimit-this.svgCanvasOffset),
+                end:this.svgCanvasLeftLimit,
+                histogram:this.histogram,
+                histogramLogarithm:this.histogramLogarithm,
+                histogramMax:this.histogramMax,
+                interval:this.interval
+            });
+            this.svgCanvasLeftLimit = parseInt(this.svgCanvasLeftLimit - this.svgCanvasOffset);
+        }
+
+        if(disp<0 && virtualEnd > this.svgCanvasRightLimit){
+            this.dataAdapter.getData({
+                chromosome:_this.region.chromosome,
+                start:this.svgCanvasRightLimit,
+                end:parseInt(this.svgCanvasRightLimit+this.svgCanvasOffset),
+                histogram:this.histogram,
+                histogramLogarithm:this.histogramLogarithm,
+                histogramMax:this.histogramMax,
+                interval:this.interval
+            });
+            this.svgCanvasRightLimit = parseInt(this.svgCanvasRightLimit+this.svgCanvasOffset);
+        }
+
+    }
+
+};
+
+BamTrack.prototype._removeDisplayedChunks = function(response){
+    //Returns an array avoiding already drawn features in this.chunksDisplayed
+    var chunks = response.items;
+    var newChunks = [];
+    var dataType = response.params.dataType;
+    var chromosome = response.params.chromosome;
+
+    var feature, displayed, featureFirstChunk, featureLastChunk, features = [];
+    for ( var i = 0, leni = chunks.length; i < leni; i++) {//loop over chunks
+        if(this.chunksDisplayed[chunks[i].key+dataType] != true){//check if any chunk is already displayed and skip it
+
+            features = []; //initialize array, will contain features not drawn by other drawn chunks
+            for ( var j = 0, lenj = chunks[i][dataType].length; j < lenj; j++) {
+                feature = chunks[i][dataType][j];
+
+                //check if any feature has been already displayed by another chunk
+                displayed = false;
+                featureFirstChunk = this.dataAdapter.featureCache._getChunk(feature.start);
+                featureLastChunk = this.dataAdapter.featureCache._getChunk(feature.end);
+                for(var f=featureFirstChunk; f<=featureLastChunk; f++){//loop over chunks touched by this feature
+                    var fkey = chromosome+":"+f;
+                    if(this.chunksDisplayed[fkey+dataType]==true){
+                        displayed = true;
+                        break;
+                    }
+                }
+                if(!displayed){
+                    features.push(feature);
+                }
+            }
+            this.chunksDisplayed[chunks[i].key+dataType]=true;
+            chunks[i][dataType] = features;//update features array
+            newChunks.push(chunks[i]);
+        }
+    }
+    response.items = newChunks;
+    return response;
+};
 FeatureTrack.prototype = new Track({});
 
 function FeatureTrack(args) {
@@ -9524,6 +10246,463 @@ Renderer.prototype = {
 }
 ;
 //any item with chromosome start end
+BamRenderer.prototype = new Renderer({});
+
+function BamRenderer(args) {
+    Renderer.call(this, args);
+    // Using Underscore 'extend' function to extend and add Backbone Events
+    _.extend(this, Backbone.Events);
+
+    //set default args
+    if (_.isString(args)) {
+        var config = this.getDefaultConfig(args);
+        _.extend(this, config);
+    }
+    //set instantiation args
+    else if (_.isObject(args)) {
+        _.extend(this, args);
+    }
+
+    this.on(this.handlers);
+
+    this.fontFamily = 'Source Sans Pro';
+};
+
+
+BamRenderer.prototype.render = function (response, args) {
+    var _this = this;
+
+    //CHECK VISUALIZATON MODE
+    var viewAsPairs = false;
+    if (response.params["view_as_pairs"] != null) {
+        viewAsPairs = true;
+    }
+    console.log("viewAsPairs " + viewAsPairs);
+    var insertSizeMin = 0;
+    var insertSizeMax = 0;
+    var variantColor = "orangered";
+    if (response.params["insert_size_interval"] != null) {
+        insertSizeMin = response.params["insert_size_interval"].split(",")[0];
+        insertSizeMax = response.params["insert_size_interval"].split(",")[1];
+    }
+    console.log("insertSizeMin " + insertSizeMin);
+    console.log("insertSizeMin " + insertSizeMax);
+
+    //Prevent browser context menu
+    $(this.features).contextmenu(function (e) {
+        console.log("click derecho")
+        //e.preventDefault();
+    });
+
+    console.time("BamRender " + response.params.resource);
+
+    var chunkList = response.items;
+
+//    var middle = this.width / 2;
+
+    var bamCoverGroup = SVG.addChild(args.svgCanvasFeatures, "g", {
+        "class": "bamCoverage",
+        "cursor": "pointer"
+    });
+    var bamReadGroup = SVG.addChild(args.svgCanvasFeatures, "g", {
+        "class": "bamReads",
+        "cursor": "pointer"
+    });
+
+    var drawCoverage = function (chunk) {
+        //var coverageList = chunk.coverage.all;
+        var coverageList = chunk.coverage.all;
+        var coverageListA = chunk.coverage.a;
+        var coverageListC = chunk.coverage.c;
+        var coverageListG = chunk.coverage.g;
+        var coverageListT = chunk.coverage.t;
+        var start = parseInt(chunk.start);
+        var end = parseInt(chunk.end);
+        var pixelWidth = (end - start + 1) * args.pixelBase;
+
+        var middle = args.width / 2;
+        var points = "", pointsA = "", pointsC = "", pointsG = "", pointsT = "";
+        var baseMid = (args.pixelBase / 2) - 0.5;//4.5 cuando pixelBase = 10
+
+        var x, y, p = parseInt(chunk.start);
+        var lineA = "", lineC = "", lineG = "", lineT = "";
+        var coverageNorm = 200, covHeight = 50;
+        for (var i = 0; i < coverageList.length; i++) {
+            //x = _this.pixelPosition+middle-((_this.position-p)*_this.pixelBase)+baseMid;
+            x = args.pixelPosition + middle - ((args.position - p) * args.pixelBase);
+            xx = args.pixelPosition + middle - ((args.position - p) * args.pixelBase) + args.pixelBase;
+
+            lineA += x + "," + coverageListA[i] / coverageNorm * covHeight + " ";
+            lineA += xx + "," + coverageListA[i] / coverageNorm * covHeight + " ";
+            lineC += x + "," + (coverageListC[i] + coverageListA[i]) / coverageNorm * covHeight + " ";
+            lineC += xx + "," + (coverageListC[i] + coverageListA[i]) / coverageNorm * covHeight + " ";
+            lineG += x + "," + (coverageListG[i] + coverageListC[i] + coverageListA[i]) / coverageNorm * covHeight + " ";
+            lineG += xx + "," + (coverageListG[i] + coverageListC[i] + coverageListA[i]) / coverageNorm * covHeight + " ";
+            lineT += x + "," + (coverageListT[i] + coverageListG[i] + coverageListC[i] + coverageListA[i]) / coverageNorm * covHeight + " ";
+            lineT += xx + "," + (coverageListT[i] + coverageListG[i] + coverageListC[i] + coverageListA[i]) / coverageNorm * covHeight + " ";
+
+            p++;
+        }
+
+        //reverse to draw the polylines(polygons) for each nucleotid
+        var rlineC = lineC.split(" ").reverse().join(" ").trim();
+        var rlineG = lineG.split(" ").reverse().join(" ").trim();
+        var rlineT = lineT.split(" ").reverse().join(" ").trim();
+
+        var firstPoint = args.pixelPosition + middle - ((args.position - parseInt(chunk.start)) * args.pixelBase) + baseMid;
+        var lastPoint = args.pixelPosition + middle - ((args.position - parseInt(chunk.end)) * args.pixelBase) + baseMid;
+
+        var polA = SVG.addChild(bamCoverGroup, "polyline", {
+            "points": firstPoint + ",0 " + lineA + lastPoint + ",0",
+            //"opacity":"1",
+            //"stroke-width":"1",
+            //"stroke":"gray",
+            "fill": "green"
+        });
+        var polC = SVG.addChild(bamCoverGroup, "polyline", {
+            "points": lineA + " " + rlineC,
+            //"opacity":"1",
+            //"stroke-width":"1",
+            //"stroke":"black",
+            "fill": "blue"
+        });
+        var polG = SVG.addChild(bamCoverGroup, "polyline", {
+            "points": lineC + " " + rlineG,
+            //"opacity":"1",
+            //"stroke-width":"1",
+            //"stroke":"black",
+            "fill": "gold"
+        });
+        var polT = SVG.addChild(bamCoverGroup, "polyline", {
+            "points": lineG + " " + rlineT,
+            //"opacity":"1",
+            //"stroke-width":"1",
+            //"stroke":"black",
+            "fill": "red"
+        });
+
+        var dummyRect = SVG.addChild(bamCoverGroup, "rect", {
+            "x": args.pixelPosition + middle - ((args.position - start) * args.pixelBase),
+            "y": 0,
+            "width": pixelWidth,
+            "height": covHeight,
+            "opacity": "0.5",
+            "fill": "lightgray",
+            "cursor": "pointer"
+        });
+
+
+        $(dummyRect).qtip({
+            content: " ",
+            position: {target: 'mouse', adjust: {x: 15, y: 0}, viewport: $(window), effect: false},
+            style: { width: true, classes: 'ui-tooltip-shadow'}
+        });
+
+
+//        args.trackSvgLayout.onMousePosition.addEventListener(function (sender, obj) {
+//            var pos = obj.mousePos - parseInt(chunk.start);
+//            //if(coverageList[pos]!=null){
+//            var str = 'depth: <span class="ssel">' + coverageList[pos] + '</span><br>' +
+//                '<span style="color:green">A</span>: <span class="ssel">' + chunk.coverage.a[pos] + '</span><br>' +
+//                '<span style="color:blue">C</span>: <span class="ssel">' + chunk.coverage.c[pos] + '</span><br>' +
+//                '<span style="color:darkgoldenrod">G</span>: <span class="ssel">' + chunk.coverage.g[pos] + '</span><br>' +
+//                '<span style="color:red">T</span>: <span class="ssel">' + chunk.coverage.t[pos] + '</span><br>';
+//            $(dummyRect).qtip('option', 'content.text', str);
+//            //}
+//        });
+    };
+
+    var drawSingleRead = function (feature) {
+        //var start = feature.start;
+        //var end = feature.end;
+        var start = feature.unclippedStart;
+        var end = feature.unclippedEnd;
+        var length = (end - start) + 1;
+        var diff = feature.diff;
+
+        //get feature render configuration
+        var color = _.isFunction(_this.color) ? _this.color(feature, args.region.chromosome) : _this.color;
+        var strokeColor = _.isFunction(_this.strokeColor) ? _this.strokeColor(feature,args.region.chromosome) : _this.strokeColor;
+        var label = _.isFunction(_this.label) ? _this.label(feature, args.zoom) : _this.label;
+        var height = _.isFunction(_this.height) ? _this.height(feature) : _this.height;
+        var tooltipTitle = _.isFunction(_this.tooltipTitle) ? _this.tooltipTitle(feature) : _this.tooltipTitle;
+        var tooltipText = _.isFunction(_this.tooltipText) ? _this.tooltipText(feature) : _this.tooltipText;
+        var strand = _.isFunction(_this.strand) ? _this.strand(feature) : _this.strand;
+        var mateUnmappedFlag = _.isFunction(_this.mateUnmappedFlag) ? _this.mateUnmappedFlag(feature) : _this.mateUnmappedFlag;
+        var infoWidgetId = _.isFunction(_this.infoWidgetId) ? _this.infoWidgetId(feature) : _this.infoWidgetId;
+
+        if (insertSizeMin != 0 && insertSizeMax != 0 && !mateUnmappedFlag) {
+            if (Math.abs(feature.inferredInsertSize) > insertSizeMax) {
+                color = 'maroon';
+            }
+            if (Math.abs(feature.inferredInsertSize) < insertSizeMin) {
+                color = 'navy';
+            }
+        }
+
+        //transform to pixel position
+        var width = length * args.pixelBase;
+        //calculate x to draw svg rect
+        var x = _this.getFeatureX(feature, args);
+//		try{
+//			var maxWidth = Math.max(width, /*settings.getLabel(feature).length*8*/0); //XXX cuidado : text.getComputedTextLength()
+//		}catch(e){
+//			var maxWidth = 72;
+//		}
+        maxWidth = width;
+
+        var rowHeight = 12;
+        var rowY = 70;
+//		var textY = 12+settings.height;
+        while (true) {
+            if (args.renderedArea[rowY] == null) {
+                args.renderedArea[rowY] = new FeatureBinarySearchTree();
+            }
+            var enc = args.renderedArea[rowY].add({start: x, end: x + maxWidth - 1});
+            if (enc) {
+                var featureGroup = SVG.addChild(bamReadGroup, "g", {'feature_id': feature.name});
+                var points = {
+                    "Reverse": x + "," + (rowY + (height / 2)) + " " + (x + 5) + "," + rowY + " " + (x + width - 5) + "," + rowY + " " + (x + width - 5) + "," + (rowY + height) + " " + (x + 5) + "," + (rowY + height),
+                    "Forward": x + "," + rowY + " " + (x + width - 5) + "," + rowY + " " + (x + width) + "," + (rowY + (height / 2)) + " " + (x + width - 5) + "," + (rowY + height) + " " + x + "," + (rowY + height)
+                }
+                var poly = SVG.addChild(featureGroup, "polygon", {
+                    "points": points[strand],
+                    "stroke": strokeColor,
+                    "stroke-width": 1,
+                    "fill": color,
+                    "cursor": "pointer"
+                });
+
+                //var rect = SVG.addChild(featureGroup,"rect",{
+                //"x":x+offset[strand],
+                //"y":rowY,
+                //"width":width-4,
+                //"height":settings.height,
+                //"stroke": "white",
+                //"stroke-width":1,
+                //"fill": color,
+                //"clip-path":"url(#"+_this.id+"cp)",
+                //"fill": 'url(#'+_this.id+'bamStrand'+strand+')',
+                //});
+                //readEls.push(rect);
+
+                if (diff != null && args.zoom > 95) {
+                    //var	t = SVG.addChild(featureGroup,"text",{
+                    //"x":x+1,
+                    //"y":rowY+settings.height-1,
+                    //"font-size":13,
+                    //"fill":"darkred",
+                    //"textLength":width,
+                    //"cursor": "pointer",
+                    //"font-family": "Ubuntu Mono"
+                    //});
+                    //t.setAttributeNS("http://www.w3.org/XML/1998/namespace", "xml:space","preserve");
+                    //t.textContent = diff;
+                    //readEls.push(t);
+                    var path = SVG.addChild(featureGroup, "path", {
+                        "d": Utils.genBamVariants(diff, args.pixelBase, x, rowY),
+                        "fill": variantColor
+                    });
+                }
+                $(featureGroup).qtip({
+                    content: {text:tooltipText, title: tooltipTitle},
+                    position: {target: "mouse", adjust: {x: 25, y: 15}},
+                    style: { width: 300, classes: 'font-lato ui-tooltip ui-tooltip-shadow'},
+                    show: 'click',
+                    hide: 'click mouseleave'
+                });
+
+
+//                $(featureGroup).click(function (event) {
+//                    console.log(feature);
+//                    _this.trigger('feature:click', {query: feature[infoWidgetId], feature: feature, featureType: feature.featureType, clickEvent: event})
+////                    _this.showInfoWidget({query: feature[settings.infoWidgetId], feature: feature, featureType: feature.featureType, adapter: _this.trackData.adapter});
+//                });
+                break;
+            }
+            rowY += rowHeight;
+//			textY += rowHeight;
+        }
+    };
+
+    var drawPairedReads = function (read, mate) {
+        var readStart = read.unclippedStart;
+        var readEnd = read.unclippedEnd;
+        var mateStart = mate.unclippedStart;
+        var mateEnd = mate.unclippedEnd;
+        var readDiff = read.diff;
+        var mateDiff = mate.diff;
+        /*get type settings object*/
+        var readSettings = _this.types[read.featureType];
+        var mateSettings = _this.types[mate.featureType];
+        var readColor = readSettings.getColor(read, _this.region.chromosome);
+        var mateColor = mateSettings.getColor(mate, _this.region.chromosome);
+        var readStrand = readSettings.getStrand(read);
+        var matestrand = mateSettings.getStrand(mate);
+
+        if (insertSizeMin != 0 && insertSizeMax != 0) {
+            if (Math.abs(read.inferredInsertSize) > insertSizeMax) {
+                readColor = 'maroon';
+                mateColor = 'maroon';
+            }
+            if (Math.abs(read.inferredInsertSize) < insertSizeMin) {
+                readColor = 'navy';
+                mateColor = 'navy';
+            }
+        }
+
+        var pairStart = readStart;
+        var pairEnd = mateEnd;
+        if (mateStart <= readStart) {
+            pairStart = mateStart;
+        }
+        if (readEnd >= mateEnd) {
+            pairEnd = readEnd;
+        }
+
+        /*transform to pixel position*/
+        var pairWidth = ((pairEnd - pairStart) + 1) * _this.pixelBase;
+        var pairX = _this.pixelPosition + middle - ((_this.position - pairStart) * _this.pixelBase);
+
+        var readWidth = ((readEnd - readStart) + 1) * _this.pixelBase;
+        var readX = _this.pixelPosition + middle - ((_this.position - readStart) * _this.pixelBase);
+
+        var mateWidth = ((mateEnd - mateStart) + 1) * _this.pixelBase;
+        var mateX = _this.pixelPosition + middle - ((_this.position - mateStart) * _this.pixelBase);
+
+        var rowHeight = 12;
+        var rowY = 70;
+//		var textY = 12+settings.height;
+
+        while (true) {
+            if (args.renderedArea[rowY] == null) {
+                args.renderedArea[rowY] = new FeatureBinarySearchTree();
+            }
+            var enc = args.renderedArea[rowY].add({start: pairX, end: pairX + pairWidth - 1});
+            if (enc) {
+                var readEls = [];
+                var mateEls = [];
+                var readPoints = {
+                    "Reverse": readX + "," + (rowY + (readSettings.height / 2)) + " " + (readX + 5) + "," + rowY + " " + (readX + readWidth - 5) + "," + rowY + " " + (readX + readWidth - 5) + "," + (rowY + readSettings.height) + " " + (readX + 5) + "," + (rowY + readSettings.height),
+                    "Forward": readX + "," + rowY + " " + (readX + readWidth - 5) + "," + rowY + " " + (readX + readWidth) + "," + (rowY + (readSettings.height / 2)) + " " + (readX + readWidth - 5) + "," + (rowY + readSettings.height) + " " + readX + "," + (rowY + readSettings.height)
+                }
+                var readPoly = SVG.addChild(bamReadGroup, "polygon", {
+                    "points": readPoints[readStrand],
+                    "stroke": readSettings.getStrokeColor(read),
+                    "stroke-width": 1,
+                    "fill": readColor,
+                    "cursor": "pointer"
+                });
+                readEls.push(readPoly);
+                var matePoints = {
+                    "Reverse": mateX + "," + (rowY + (mateSettings.height / 2)) + " " + (mateX + 5) + "," + rowY + " " + (mateX + mateWidth - 5) + "," + rowY + " " + (mateX + mateWidth - 5) + "," + (rowY + mateSettings.height) + " " + (mateX + 5) + "," + (rowY + mateSettings.height),
+                    "Forward": mateX + "," + rowY + " " + (mateX + mateWidth - 5) + "," + rowY + " " + (mateX + mateWidth) + "," + (rowY + (mateSettings.height / 2)) + " " + (mateX + mateWidth - 5) + "," + (rowY + mateSettings.height) + " " + mateX + "," + (rowY + mateSettings.height)
+                }
+                var matePoly = SVG.addChild(bamReadGroup, "polygon", {
+                    "points": matePoints[matestrand],
+                    "stroke": mateSettings.getStrokeColor(mate),
+                    "stroke-width": 1,
+                    "fill": mateColor,
+                    "cursor": "pointer"
+                });
+                mateEls.push(matePoly);
+
+                var line = SVG.addChild(bamReadGroup, "line", {
+                    "x1": (readX + readWidth),
+                    "y1": (rowY + (readSettings.height / 2)),
+                    "x2": mateX,
+                    "y2": (rowY + (readSettings.height / 2)),
+                    "stroke-width": "1",
+                    "stroke": "gray",
+                    //"stroke-color": "black",
+                    "cursor": "pointer"
+                });
+
+                if (_this.zoom > 95) {
+                    if (readDiff != null) {
+                        var readPath = SVG.addChild(bamReadGroup, "path", {
+                            "d": Utils.genBamVariants(readDiff, _this.pixelBase, readX, rowY),
+                            "fill": variantColor
+                        });
+                        readEls.push(readPath);
+                    }
+                    if (mateDiff != null) {
+                        var matePath = SVG.addChild(bamReadGroup, "path", {
+                            "d": Utils.genBamVariants(mateDiff, _this.pixelBase, mateX, rowY),
+                            "fill": variantColor
+                        });
+                        mateEls.push(matePath);
+                    }
+                }
+
+                $(readEls).qtip({
+                    content: {text: readSettings.getTipText(read), title: readSettings.getTipTitle(read)},
+                    position: {target: "mouse", adjust: {x: 15, y: 0}, viewport: $(window), effect: false},
+                    style: { width: 280, classes: 'ui-tooltip ui-tooltip-shadow'},
+                    show: 'click',
+                    hide: 'click mouseleave'
+                });
+                $(readEls).click(function (event) {
+                    console.log(read);
+                    _this.showInfoWidget({query: read[readSettings.infoWidgetId], feature: read, featureType: read.featureType, adapter: _this.trackData.adapter});
+                });
+                $(mateEls).qtip({
+                    content: {text: mateSettings.getTipText(mate), title: mateSettings.getTipTitle(mate)},
+                    position: {target: "mouse", adjust: {x: 15, y: 0}, viewport: $(window), effect: false},
+                    style: { width: 280, classes: 'ui-tooltip ui-tooltip-shadow'},
+                    show: 'click',
+                    hide: 'click mouseleave'
+                });
+                $(mateEls).click(function (event) {
+                    console.log(mate);
+                    _this.showInfoWidget({query: mate[mateSettings.infoWidgetId], feature: mate, featureType: mate.featureType, adapter: _this.trackData.adapter});
+                });
+                break;
+            }
+            rowY += rowHeight;
+//			textY += rowHeight;
+        }
+    };
+
+    var drawChunk = function (chunk) {
+        drawCoverage(chunk);
+        var readList = chunk.data;
+        for (var i = 0, li = readList.length; i < li; i++) {
+            var read = readList[i];
+            if (viewAsPairs) {
+                var nextRead = readList[i + 1];
+                if (nextRead != null) {
+                    if (read.name == nextRead.name) {
+                        drawPairedReads(read, nextRead);
+                        i++;
+                    } else {
+                        drawSingleRead(read);
+                    }
+                }
+            } else {
+                drawSingleRead(read);
+            }
+        }
+    };
+
+    //process features
+    if (chunkList.length > 0) {
+        for (var i = 0, li = chunkList.length; i < li; i++) {
+            if (chunkList[i].data.length > 0) {
+                drawChunk(chunkList[i]);
+            }
+        }
+//        var newHeight = Object.keys(this.renderedArea).length * 24;
+//        if (newHeight > 0) {
+//            this.setHeight(newHeight + /*margen entre tracks*/10 + 70);
+//        }
+        //TEST
+//        this.setHeight(200);
+    }
+    console.timeEnd("BamRender " + response.params.resource);
+};
+
+//any item with chromosome start end
 FeatureRenderer.prototype = new Renderer({});
 
 function FeatureRenderer(args) {
@@ -9703,7 +10882,7 @@ GeneRenderer.prototype.render = function (features, args) {
         var textHeight = 0;
         if (args.zoom > args.labelZoom) {
             textHeight = 9;
-            maxWidth = Math.max(width, label.length * 8);
+            maxWidth = Math.max(width, label.length * 9);
         }
 
         var rowY = 0;
