@@ -33,10 +33,10 @@ module.exports = function (grunt) {
             },
             build: {
                 src: [
-                    'src/gm-config.js',
+//                    'src/gm-config.js',
                     'src/gm-plugins-config.js',
-                    'gm-navigation-bar.js',
-                    'gm-status-bar.js',
+                    'src/gm-navigation-bar.js',
+                    'src/gm-status-bar.js',
                     'src/genome-maps.js'
                 ],
                 dest: 'build/<%= meta.version %>/genome-maps-<%= meta.version %>.js'
@@ -94,7 +94,8 @@ module.exports = function (grunt) {
             build: {
                 files: [
                     {   expand: true, cwd: './', src: ['vendor/**'], dest: 'build/<%= meta.version %>/' },
-                    {   expand: true, cwd: './', src: ['styles/**'], dest: 'build/<%= meta.version %>/' } // includes files in path and its subdirs
+                    {   expand: true, cwd: './', src: ['styles/**'], dest: 'build/<%= meta.version %>/' }, // includes files in path and its subdirs
+                    {   expand: true, cwd: './src', src: ['gm-config.js'], dest: 'build/<%= meta.version %>/' }
                 ]
             },
             genomeviewer: {
@@ -159,6 +160,13 @@ module.exports = function (grunt) {
         },
         'curl-dir': {
             
+        },
+        rename: {
+            html: {
+                files: [
+                    {src: ['build/<%= meta.version %>/genome-maps.html'], dest: 'build/<%= meta.version %>/index.html'}
+                ]
+            }
         }
 
     });
@@ -171,11 +179,12 @@ module.exports = function (grunt) {
 //    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-rename');
     grunt.loadNpmTasks('grunt-html-build');
     grunt.loadNpmTasks('grunt-curl');
 
     // Default task.
-    grunt.registerTask('default', ['clean', 'concat', 'uglify', 'copy', 'htmlbuild']);
+    grunt.registerTask('default', ['clean', 'concat', 'uglify', 'copy', 'htmlbuild','rename:html']);
     grunt.registerTask('vendor', ['curl-dir']);
 
     // dependencies from js-common-libs

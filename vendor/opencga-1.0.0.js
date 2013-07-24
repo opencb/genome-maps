@@ -1,4 +1,4 @@
-/*! Genome Viewer - v1.0.2 - 2013-07-19
+/*! Genome Viewer - v1.0.2 - 2013-07-23
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 function UserListWidget (args){
@@ -58,6 +58,7 @@ function GenericFormPanel(analysis) {
     this.paramsWS = {};
     this.opencgaManager = new OpencgaManager();
     this.panelId = this.analysis + "-FormPanel";
+    this.testing = false;
 
     this.opencgaManager.onRunAnalysis.addEventListener(function (sender, response) {
         if (response.data.indexOf("ERROR") != -1) {
@@ -197,7 +198,11 @@ GenericFormPanel.prototype.beforeRun = function () {
 GenericFormPanel.prototype.run = function () {
     this.setAccountParams();
     (this.paramsWS['outdir'] === '') ? delete this.paramsWS['outdir'] : console.log(this.paramsWS['outdir']);
-    this.opencgaManager.runAnalysis(this.analysis, this.paramsWS);
+
+    if(!this.testing){
+        this.opencgaManager.runAnalysis(this.analysis, this.paramsWS);
+    }
+
     Ext.example.msg('Job Launched', 'It will be listed soon');
     //debug
     console.log(this.paramsWS);
@@ -1368,8 +1373,7 @@ HeaderWidget.prototype = {
                         //		        	html: '<span class="appName">Vitis vinifera&nbsp; '+this.args.appname +'</span> <span class="appDesc">'+this.args.description+'</span>&nbsp;&nbsp;&nbsp;&nbsp;<span><img height="30" src="http://www.demeter.es/imagenes/l_demeter.gif"></span>',
                         text: '<span class="appName">' + this.appname + '</span> ' +
                             '<span id="' + this.id + 'description" class="appDesc">' + this.description + '</span>' +
-                            '<span id="' + this.id + 'version" class="appVersion">' + this.version + '</span>' +
-//                        '<span class="appDesc" style="color:orangered;margin-left:20px">New version 3.1 beta2</span>' +
+                            '<span id="' + this.id + 'version" class="appVersion"></span>' +
                             '',
                         padding: '0 0 0 10',
                         listeners:{

@@ -73,14 +73,14 @@ GmStatusBar.prototype = {
                 '->',
                 {
                     xtype: 'tbtext',
-                    text: 'Mouse: ',
+                    text: 'Mouse position: ',
                     style:'color:slategray'
                 },
                 {
                     id: this.id + 'mousePosition',
+                    text: '<span id="'+this.id+'mousePositionEl">&nbsp;</span>',
                     xtype: 'tbtext',
-                    width:100,
-                    text: ''
+                    width:100
                 },
                 geneLegendPanel.getButton(GENE_BIOTYPE_COLORS),
                 snpLegendPanel.getButton(SNP_BIOTYPE_COLORS),
@@ -110,11 +110,11 @@ GmStatusBar.prototype = {
     setRegion: function (event) {
         this.region.load(event.region);
         var text = Utils.formatNumber(event.region.center());
-        Ext.getCmp(this.id + 'mousePosition').setText(text);
+        $('#'+this.id + 'mousePositionEl').html(text);
     },
     setMousePosition: function (event) {
         var text = event.baseHtml + ' ' + this.region.chromosome + ':' + Utils.formatNumber(event.mousePos);
-        Ext.getCmp(this.id + 'mousePosition').setText(text);
+        $('#'+this.id + 'mousePositionEl').html(text);
     }
 
 }

@@ -35,6 +35,7 @@ function GmNavigationBar(args) {
     //set instantiation args, must be last
     _.extend(this, args);
 
+
     //set new region object
     this.region = new Region(this.region);
 
@@ -73,14 +74,14 @@ GmNavigationBar.prototype = {
                 {
                     id: this.id + 'speciesButton',
                     tooltip: 'Species menu',
-                    text: this.species.text,
+                    text: this.species.text+' '+this.species.assembly,
                     menu: {
                         id: this.id + 'speciesMenu'
                     }
                 },
                 {
                   xtype:'tbtext',
-                  text:'Chromosome'
+                  text:'<span style="color:#708090;">Chr</span>'
                 },
                 {
                     id: this.id + 'chromosomesButton',
@@ -89,6 +90,7 @@ GmNavigationBar.prototype = {
                     text: this.region.chromosome,
                     margin:'0 15 0 0',
                     menu: {
+                        plain:true,
                         id: this.id + 'chromosomesMenu'
                     }
                 },
@@ -296,21 +298,65 @@ GmNavigationBar.prototype = {
 
         this.currentChromosomeList = list;
         //add bootstrap elements to the menu
-        for (var i in list) {
-            var chromosomeName = list[i];
-            var menuEntry = Ext.create('Ext.menu.Item', {
-                text: chromosomeName,
-                handler: function () {
-                    console.log(this.text);
-                    button.setText(this.text);
-                    _this.region.chromosome = this.text;
-                    _this._recalculateZoom();
-                    _this._addRegionHistoryMenuItem(_this.region);
-                    _this.trigger('region:change', {region: _this.region, sender: _this});
-                }
-            });
-            menu.add(menuEntry);
+
+        var chromosomeData = [];
+        for (var i = 0; i < list.length; i++) {
+            chromosomeData.push({'name':list[i]});
         }
+        var chrStore = Ext.create('Ext.data.Store', {
+            id:this.id+"chrStore",
+            fields: ["name"],
+            autoLoad:false,
+            data:chromosomeData
+        });
+        /*Chromolendar*/
+        var chrView = Ext.create('Ext.view.View', {
+            id:this.id+"chrView",
+            width:125,
+            style:'background-color:#fff',
+            store : chrStore,
+            selModel: {
+                mode: 'SINGLE',
+                listeners: {
+                    selectionchange:function(este,selNodes){
+                        if(selNodes.length>0){
+                            var chr = selNodes[0].data.name;
+                            console.log(chr);
+                            button.setText(chr);
+                            _this.region.chromosome = chr;
+                            Ext.getCmp(_this.id + 'regionField').setValue(_this.region.toString());
+                            _this._recalculateZoom();
+                            _this._addRegionHistoryMenuItem(_this.region);
+                            _this.trigger('region:change', {region: _this.region, sender: _this});
+                        }
+                        menu.hide();
+                    }
+                }
+            },
+            cls: 'list',
+            trackOver: true,
+            overItemCls: 'list-item-hover',
+            itemSelector: '.chromosome-item',
+            tpl: '<tpl for="."><div style="float:left;" class="chromosome-item">{name}</div></tpl>'
+        });
+        /*END chromolendar*/
+
+        menu.add(chrView);
+//        for (var i in list) {
+//            var chromosomeName = list[i];
+//            var menuEntry = Ext.create('Ext.menu.Item', {
+//                text: chromosomeName,
+//                handler: function () {
+//                    console.log(this.text);
+//                    button.setText(this.text);
+//                    _this.region.chromosome = this.text;
+//                    _this._recalculateZoom();
+//                    _this._addRegionHistoryMenuItem(_this.region);
+//                    _this.trigger('region:change', {region: _this.region, sender: _this});
+//                }
+//            });
+//            menu.add(menuEntry);
+//        }
     },
 
     _setSpeciesMenu: function () {
@@ -318,6 +364,7 @@ GmNavigationBar.prototype = {
 
         var menu = Ext.getCmp(this.id + 'speciesMenu');
         var button = Ext.getCmp(this.id + 'speciesButton');
+        var popularEntries = [];
 
         var createEntry = function (species) {
             return Ext.create('Ext.menu.Item', {
@@ -334,7 +381,11 @@ GmNavigationBar.prototype = {
             var entries = [];
             for (var i in items) {
                 var species = items[i];
-                entries.push(createEntry(species))
+                var entry = createEntry(species);
+                entries.push(entry);
+                if(_this.popularSpecies && _this.popularSpecies.indexOf(species.text) != -1){
+                    popularEntries.push(entry);
+                }
             }
             return entries;
         };
@@ -346,10 +397,17 @@ GmNavigationBar.prototype = {
                 }
             });
         };
+        var items = [];
         for (var i in this.availableSpecies.items) {
             var phylo = this.availableSpecies.items[i];
-            menu.add(createSubMenu(phylo));
+            items.push(createSubMenu(phylo));
         }
+        if(this.popularSpecies){
+            popularEntries.sort(function(a, b) {return a.text.localeCompare(b.text);});
+            menu.add(popularEntries);
+            menu.add('-');
+        }
+        menu.add(items);
     },
 
     _goRegion: function (value) {
@@ -620,3 +678,159 @@ GmNavigationBar.prototype = {
     }
 
 }
+
+//
+//
+////Creates the species empty menu if not exist and returns it
+//GenomeViewer.prototype._getSpeciesMenu = function() {
+//    //items must be added by using  setSpeciesMenu()
+//    if(this._specieMenu == null){
+//        this._specieMenu = Ext.create('Ext.menu.Menu', {
+//            id:this.id+"_specieMenu",
+//            margin : '0 0 10 0',
+//            floating : true,
+//            plain:true,
+//            items : []
+//        });
+//    }
+//    return this._specieMenu;
+//};
+////Sets the species buttons in the menu
+//GenomeViewer.prototype.setSpeciesMenu = function(speciesObj, popular) {
+//    var _this = this;
+//
+//    var menu = this._getSpeciesMenu();
+//    //Auto generate menu items depending of AVAILABLE_SPECIES config
+//    menu.hide();//Hide the menu panel before remove
+//    menu.removeAll(); // Remove the old species
+//
+//    var popularSpecies = [];
+//
+//    for(var i = 0; i < speciesObj.items.length; i++){
+//        var phyloSpecies = speciesObj.items[i].items;
+//        var pyhlo = speciesObj.items[i];
+//        pyhlo.menu = {items:phyloSpecies};
+//        for(var j = 0; j < phyloSpecies.length; j++){
+//            var species = phyloSpecies[j];
+//            var text = species.text+' ('+species.assembly+')';
+////            species.id = this.id+text;
+//            species.name = species.text;
+//            species.species = Utils.getSpeciesCode(species.text);
+//            species.text = text;
+//            species.speciesObj = species;
+//            species.iconCls = '';
+////            species.icon = 'http://static.ensembl.org/i/species/48/Danio_rerio.png';
+//            species.handler = function(me){
+//                _this.setSpecies(me.speciesObj);
+//            };
+//
+//            if(popular.indexOf(species.name) != -1){
+//                popularSpecies.push(species);
+//            }
+//        }
+//    }
+//    popularSpecies.sort(function(a, b) {return a.text.localeCompare(b.text);});
+//    popularSpecies.push('-');
+//    var items = popularSpecies.concat(speciesObj.items);
+//    menu.add(items);
+//};
+//
+////Sets the new specie and fires an event
+//GenomeViewer.prototype.setSpecies = function(data){
+//    this.region.load(data.region);
+//    data["sender"]="setSpecies";
+//    this.onRegionChange.notify(data);
+//};
+//
+//GenomeViewer.prototype._getChromosomeMenu = function() {
+//    var _this = this;
+//    var chrStore = Ext.create('Ext.data.Store', {
+//        id:this.id+"chrStore",
+//        fields: ["name"],
+//        autoLoad:false
+//    });
+//    /*Chromolendar*/
+//    var chrView = Ext.create('Ext.view.View', {
+//        id:this.id+"chrView",
+//        width:125,
+//        style:'background-color:#fff',
+//        store : chrStore,
+//        selModel: {
+//            mode: 'SINGLE',
+//            listeners: {
+//                selectionchange:function(este,selNodes){
+//                    if(selNodes.length>0){
+//                        _this.region.chromosome = selNodes[0].data.name;
+//                        _this.onRegionChange.notify({sender:"_getChromosomeMenu"});
+//// 					_this.setChromosome(selNodes[0].data.name);
+//                    }
+//                    chromosomeMenu.hide();
+//                }
+//            }
+//        },
+//        cls: 'list',
+//        trackOver: true,
+//        overItemCls: 'list-item-hover',
+//        itemSelector: '.chromosome-item',
+//        tpl: '<tpl for="."><div style="float:left" class="chromosome-item">{name}</div></tpl>'
+////	        tpl: '<tpl for="."><div class="chromosome-item">chr {name}</div></tpl>'
+//    });
+//    /*END chromolendar*/
+//
+//    var chromosomeMenu = Ext.create('Ext.menu.Menu', {
+//        id:this.id+"chromosomeMenu",
+//        almacen :chrStore,
+//        plain: true,
+//        items : [/*{xtype:'textfield', width:125},*/chrView]
+////        items:[ //TODO alternative
+////            {
+////                xtype: 'buttongroup',
+////                id:this.id+'chrButtonGroup',
+//////                title: 'User options',
+////                columns: 5,
+////                defaults: {
+////                    xtype: 'button',
+//////                    scale: 'large',
+////                    iconAlign: 'left',
+////                    handler:function(){}
+////                },
+//////                items : [chrView]
+//////                items: []
+////            }
+////        ]
+//    });
+//    this._updateChrStore();
+//    return chromosomeMenu;
+//};
+//
+//GenomeViewer.prototype._updateChrStore = function(){
+//    var _this = this;
+//    var chrStore = Ext.getStore(this.id+"chrStore");
+//    var chrView = Ext.getCmp(this.id+"chrView");
+////	var chrButtonGroup = Ext.getCmp(this.id+"chrButtonGroup");
+//    var cellBaseManager = new CellBaseManager(this.species);
+//    cellBaseManager.success.addEventListener(function(sender,data){
+//        var chromosomeData = [];
+//        var chrItems = [];
+//        var sortfunction = function(a, b) {
+//            var IsNumber = true;
+//            for (var i = 0; i < a.length && IsNumber == true; i++) {
+//                if (isNaN(a[i])) {
+//                    IsNumber = false;
+//                }
+//            }
+//            if (!IsNumber) return 1;
+//            return (a - b);
+//        };
+//        data.result.sort(sortfunction);
+//        for (var i = 0; i < data.result.length; i++) {
+//            chromosomeData.push({'name':data.result[i]});
+////            chrItems.push({text:data.result[i],iconAlign: 'left'});
+//        }
+//        chrStore.loadData(chromosomeData);
+////        chrButtonGroup.removeAll();
+////        chrButtonGroup.add(chrItems);
+////		chrView.getSelectionModel().select(chrStore.find("name",_this.chromosome));
+//    });
+//    cellBaseManager.get('feature', 'chromosome', null, 'list');
+//};

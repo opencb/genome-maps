@@ -33,6 +33,7 @@ function GenomeMaps(args) {
     this.version = "3.1.1";
     this.border = true;
     this.trackIdCounter = 1;
+    this.resizable = true;
     this.targetId;
     this.width;
     this.height;
@@ -182,7 +183,6 @@ GenomeMaps.prototype = {
         /* Genome Viewer  */
         this.statusBar = this._createStatusBar(this.genomeViewer.getStatusPanelId());
 
-        this.drawStatusBar
 
         var text = _this.species.text + ' <span style="color: #8396b2">' + _this.species.assembly + '</span>';
         this.headerWidget.setDescription(text);
@@ -194,6 +194,14 @@ GenomeMaps.prototype = {
             this.sessionFinished();
         }
 
+
+        /*Load example account info*/
+        var opencgaManager = new OpencgaManager();
+        opencgaManager.onGetAccountInfo.addEventListener(function (evt, response) {
+            _this._loadOpencgaTracks(response, 'example');
+        });
+        opencgaManager.getAccountInfo('example', 'example', 'example');
+        /**/
 
         /*****************************************/
 
@@ -235,7 +243,7 @@ GenomeMaps.prototype = {
             autoRender: true,
             appname: this.title,
             description: this.description,
-//            version: this.version,
+            version: this.version,
             suiteId: this.suiteId,
             accountData: this.accountData
         });
@@ -299,6 +307,7 @@ GenomeMaps.prototype = {
             targetId: targetId,
             availableSpecies: this.genomeViewer.availableSpecies,
             species: this.genomeViewer.species,
+            popularSpecies: POPULAR_SPECIES,
             region: this.genomeViewer.region,
             width: this.genomeViewer.width,
             svgCanvasWidthOffset: this.genomeViewer.trackPanelScrollWidth + this.genomeViewer.sidePanelWidth,
@@ -418,6 +427,11 @@ GenomeMaps.prototype = {
             statusBar.setRegion(event);
         });
         return  statusBar;
+    },
+    setWidth: function (width) {
+        this.width = width;
+        this.genomeViewer.setWidth(width);
+        this.headerWidget.setWidth(width);
     }
 }
 
@@ -558,7 +572,12 @@ GenomeMaps.prototype._loadInitialDasTrackConfig = function () {
 };
 
 
-GenomeMaps.prototype._loadOpencgaTracks = function (response) {
+GenomeMaps.prototype._loadOpencgaTracks = function (response, treeId) {
+
+    if (!treeId) {
+        treeId = 'import';
+    }
+
     for (var i = 0; i < response.buckets.length; i++) {
         var files = [];
         var bucketId = response.buckets[i].id;
@@ -572,10 +591,11 @@ GenomeMaps.prototype._loadOpencgaTracks = function (response) {
                 opencgaObj["icon"] = Utils.images.r;
                 opencgaObj["leaf"] = true;
                 opencgaObj["oid"] = opencgaObj.id || opencgaObj["oid"];
+                opencgaObj["account"] = response.accountId;
                 files.push(opencgaObj);
             }
         }
-        Ext.getStore(this.id + 'import').getRootNode().findChild("id", "opencga").appendChild({text: response.buckets[i].name, iconCls: "icon-blue-box", expanded: true, children: files});
+        Ext.getStore(this.id + treeId).getRootNode().findChild("id", "opencga").appendChild({text: response.buckets[i].name, iconCls: "icon-blue-box", expanded: true, children: files});
 //        Ext.getStore(this.id+'import').getRootNode().collapse();
 //        Ext.getStore(this.id+'import').getRootNode().expand();
     }
@@ -898,17 +918,17 @@ GenomeMaps.prototype.getSidePanelItems = function () {
                                     case 'exon':
                                         var items = [];
                                         var featList = data.result[i];
-                                        var width = (featList.length > 1) ? 244 : 250;
+                                        var width = (featList.length > 1) ? 229 : 235;
                                         for (var j = 0, lenj = featList.length; j < lenj; j++) {
                                             var features = featList[j];
                                             var st = Ext.create('Ext.data.Store', {
                                                 fields: [id, 'chromosome', 'start', 'end'], data: features,
                                                 proxy: {type: 'memory'}, pageSize: 5
                                             });
-                                            items.push({xtype: 'grid', store: st, hideHeaders: true, width: width, height: 180, loadMask: true, margin: '2 0 0 0',
+                                            items.push({xtype: 'grid', store: st, hideHeaders: true, width: width, height: 165, loadMask: true, margin: '2 0 0 0',
                                                 title: '<span class="info">' + queryStr + '</span> <span style="font-family: Oxygen;color:slategray">' + features.length + '</span>', collapsible: true, collapsed: collapsed, titleCollapse: true,
                                                 columns: [
-                                                    {text: 'id', dataIndex: id, width: 230}
+                                                    {text: 'id', dataIndex: id, width: 215}
                                                 ],
                                                 plugins: 'bufferedrenderer', loadMask: true,
                                                 //                                    dockedItems: [{items:{xtype:'field'}}],
@@ -924,7 +944,7 @@ GenomeMaps.prototype.getSidePanelItems = function () {
                                             boxes.push(items[0]);
                                         } else {
                                             boxes.push({xtype: 'panel', title: '<span class="info">' + queryStr + '</span> - <span style="font-family: Oxygen;color:slategray">' + items.length + ' genes</span>', bodyPadding: "0 2 2 2",
-                                                collapsible: true, collapsed: false, titleCollapse: true, width: 250, items: items});
+                                                collapsible: true, collapsed: false, titleCollapse: true, width: 235, items: items});
                                         }
 
                                         break;
@@ -956,7 +976,7 @@ GenomeMaps.prototype.getSidePanelItems = function () {
                                             items = items[0].items
                                         }
                                         boxes.push({xtype: 'panel', title: '<span class="info">' + queryStr + '</span>', margin: "2 0 0 0",
-                                            collapsible: true, collapsed: false, titleCollapse: true, width: 250, items: items});
+                                            collapsible: true, collapsed: false, titleCollapse: true, width: 235, items: items});
 
                                         break;
                                     default:
@@ -977,7 +997,7 @@ GenomeMaps.prototype.getSidePanelItems = function () {
                                             });
                                         }
                                         boxes.push({xtype: 'panel', title: '<span class="info">' + queryStr + '</span>', margin: "2 0 0 0",
-                                            collapsible: true, collapsed: false, titleCollapse: true, width: 250, items: items});
+                                            collapsible: true, collapsed: false, titleCollapse: true, width: 235, items: items});
 
                                         break;
 
@@ -1049,7 +1069,15 @@ GenomeMaps.prototype.getSidePanelItems = function () {
         ]
     });
 
-    return [activeTracksPanel, curatedTree, importTree, /*pluginsTree,*/searchSidePanel];
+    var exampleTree = this._createTracksTreePanel({
+        title: 'Example data',
+        id: 'example',
+        nodes: [
+            { text: 'Browse example data', id: 'opencga', iconCls: 'icon-box', expanded: true, children: [] }
+        ]
+    });
+
+    return [activeTracksPanel, curatedTree, importTree, exampleTree, /*pluginsTree,*/searchSidePanel];
 
     //,{
     //title:"Settings",
@@ -1130,6 +1158,7 @@ GenomeMaps.prototype._createTracksTreePanel = function (args) {
                 icon: Utils.images.add,
                 renderer: function (value, metaData, record) {
                     if (record.isLeaf()) {
+
                         this.icon = Utils.images.add;
                         this.tooltip = "Add";
                         if (record.raw.disabled) {
@@ -1168,6 +1197,7 @@ GenomeMaps.prototype._createTracksTreePanel = function (args) {
                     var text = record.data.text;
                     var idText = record.data.id;
                     if (record.isLeaf()) {
+
                         if (record.isAncestor(store.getRootNode().findChild("id", "cellbase"))) {
                             if (!record.raw.disabled) {
                                 var type = text;
@@ -1188,6 +1218,7 @@ GenomeMaps.prototype._createTracksTreePanel = function (args) {
                         if (record.isAncestor(store.getRootNode().findChild("id", "opencga"))) {
                             if (!record.raw.disabled) {
                                 var type = record.raw.fileFormat;
+
                                 var id = _this.addTrack(type, text, record.raw);
                                 if (id != null) {
                                     var title = text;
@@ -1244,6 +1275,7 @@ GenomeMaps.prototype._createTracksTreePanel = function (args) {
 
 
 GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
+    var _this = this;
     var id = this.genTrackId();
     //console.log(trackId);
     switch (trackType) {
@@ -1362,7 +1394,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                             console.log(e)
                         },
                         'feature:click': function (event) {
-                            new SnpInfoWidget(null, genomeViewer.species).draw(event);
+                            new SnpInfoWidget(null, _this.genomeViewer.species).draw(event);
                         }
                     }
                 }),
@@ -1579,7 +1611,6 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
 //                featureTypes: FEATURE_TYPES
 //            });
 //            break;
-
 
             var bamTrack = new BamTrack({
                 targetId: null,
