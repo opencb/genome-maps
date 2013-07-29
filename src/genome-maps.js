@@ -1325,7 +1325,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 title: 'Gene',
                 histogramZoom: 15,
                 transcriptZoom: 50,
-                height: 140,
+                height: 160,
                 visibleRange: {start: 0, end: 100},
                 featureTypes: FEATURE_TYPES,
 
@@ -1357,7 +1357,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 title: 'Sequence',
                 histogramZoom: 20,
                 transcriptZoom: 50,
-                height: 30,
+                height: 25,
                 visibleRange: {start: 99, end: 100},
                 featureTypes: FEATURE_TYPES,
 
@@ -1407,7 +1407,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 title: 'SNP',
                 histogramZoom: 70,
                 labelZoom: 80,
-                height: 100,
+                height: 120,
                 visibleRange: {start: 0, end: 100},
                 featureTypes: FEATURE_TYPES,
                 renderer: new FeatureRenderer({
