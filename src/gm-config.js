@@ -26,8 +26,8 @@ if(
    window.location.href.indexOf("http://bioinfo.cipf.es/apps-beta")!=-1
 ){
 
-//    CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbasebeta2/rest";
-	CELLBASE_HOST = "http://fsalavert:8080/cellbase/rest";
+    CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbasebeta2/rest";
+//	CELLBASE_HOST = "http://fsalavert:8080/cellbase/rest";
 	//CELLBASE_HOST = "http://rsanchez:8080/cellbase/rest";
 	//CELLBASE_HOST = "http://imedina:8080/cellbase/rest";
 	//CELLBASE_HOST = "http://ralonso:8080/naranjoma-ws/rest";
