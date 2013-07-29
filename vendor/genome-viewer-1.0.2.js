@@ -1,7 +1,7 @@
-/*! Genome Viewer - v1.0.2 - 2013-07-23
+/*! Genome Viewer - v1.0.2 - 2013-07-29
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
-/*! Genome Viewer - v1.0.2 - 2013-07-23
+/*! Genome Viewer - v1.0.2 - 2013-07-29
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 var Utils = {
@@ -482,296 +482,158 @@ var SVG = {
 //	
 //};
 
-/*! Genome Viewer - v1.0.2 - 2013-07-23
+/*! Genome Viewer - v1.0.2 - 2013-07-29
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 function CellBaseManager(species, args) {
 //	console.log(species);
-	
-	this.host = CELLBASE_HOST;
-	this.version = CELLBASE_VERSION;
+
+    _.extend(this, Backbone.Events);
+
+    this.version = CELLBASE_VERSION;
 
     //species can be the species code or an object with text attribute
-    if(typeof species === 'string'){
-	    this.species = species;
-    }else if(species != null){
+    if (typeof species === 'string') {
+        this.species = species;
+    } else if (species != null) {
         this.species = Utils.getSpeciesCode(species.text);
     }
 
-	this.category = null;
-	this.subcategory = null;
+    this.category = null;
+    this.subcategory = null;
 
-	// commons query params
-	this.contentformat = "json";
-	this.fileformat = "";
-	this.outputcompress = false;
-	this.dataType = "script";
+    // commons query params
+    this.contentformat = "json";
+    this.fileformat = "";
+    this.outputcompress = false;
+    this.dataType = "script";
 
-	this.query = null;
-	this.originalQuery = "";
-	this.resource = "";
+    this.query = null;
+    this.originalQuery = "";
+    this.resource = "";
 
-	this.params = {};
-	
-	this.async = true;
-	
-	//Queue of queries
-	this.maxQuery = 30;
-	this.numberQueries = 0;
-	this.results = new Array();
-	this.resultsCount = new Array();
-	this.batching = false;
-	
-	
-	if (args != null){
-		if(args.host != null){
-			this.host = args.host;
-		}
-		if(args.async != null){
-			this.async = args.async;
-		}
-	}
-	
-	
-	
-	//Events
-	this.completed = new Event();
-	this.success = new Event();
-	this.batchSuccessed = new Event();
-	this.error = new Event();
+    this.params = {};
 
-	this.setVersion = function(version){
-		this.version = version;
-	},
-	
-	this.setSpecies = function(specie){
-		this.species = specie;
-	},
-	
-	this.getVersion = function(){
-		return this.version;
-	},
-	
-	this.getSpecies = function(){
-		return this.species;
-	},
-	
-	
-	
-	/** Cross-domain requests and dataType: "jsonp" requests do not support synchronous operation. 
-	 * Note that synchronous requests may temporarily lock the browser, disabling any actions while the request is active. **/
-	this.setAsync = function(async){
-		this.async = async;
-	};
+    this.async = true;
 
-	this.getUrl = function() {
-		if (this.query != null) {
-			return this.host + "/" + this.version + "/" + this.species + "/"+ this.category + "/" + this.subcategory + "/" + this.query+ "/" + this.resource; // + "?contentformat=" + this.contentformat;
-		} else {
-			return this.host + "/" + this.version + "/" + this.species + "/"+ this.category + "/" + this.subcategory + "/"+ this.resource; // + "?contentformat=" +;
-		}
+    //set instantiation args, must be last
+    _.extend(this, args);
 
-	};
+    this.host = CELLBASE_HOST || this.host;
 
-	this.get = function(category, subcategory, query, resource, params, callbackFunction) {
-		if(params!=null){
-			this.params = params;
-		}
-//		if(query instanceof Array){
-//				this.originalQuery = query;
-//				this.batching = true;
-//				this.results= new Array();
-//				return this.getMultiple(category, subcategory, query, resource);
-//		}else{
-//				query = new String(query);
-//				query = query.replace(/\s/g, "");
-//				var querySplitted = query.split(",");
-//				this.originalQuery = querySplitted;
-//				if (this.maxQuery <querySplitted.length){
-//					this.batching = true;
-//					this.getMultiple(category, subcategory, querySplitted, resource, callbackFunction);
-//				}
-//				else{
-//					this.batching = false;
-//					return this.getSingle(category, subcategory, query, resource, callbackFunction);
-//				}
-//		}
-
-        if(query != null){
-            var querys;
-            if(query instanceof Array){
-                querys = query;
-            }else{
-                querys = query.split(',');
-            }
-            this.originalQuery = querys;
-            if(querys.length > 1){
-                this.batching = true;
-                this.results= new Array();
-                return this.getMultiple(category, subcategory, querys, resource);
-            }else{
-                if (this.maxQuery < querys.length){
-                    this.batching = true;
-                    this.getMultiple(category, subcategory, querys, resource, callbackFunction);
-                } else{
-                    this.batching = false;
-                    return this.getSingle(category, subcategory, querys[0], resource, callbackFunction);
-                }
-            }
-        }else{
-            return this.getSingle(category, subcategory, query, resource, callbackFunction);
-        }
-
-	},
-//	this.getAllSpecies = function() {
-//		
-//		//Este código todavía no funciona xq el this._callServer(url) cellBase no tiene una respuesta preparada para this._callServer(url)
-//		//es decir, no devuelve jsonp, cuando este todo implementado ya merecerá la pena hacerlo bien
-//		var url = this.host + "/" + this.version + "/species";
-//		this._callServer(url);
-//	},
-	this._joinToResults = function(response){
-		this.resultsCount.push(true);
-		this.results[response.id] = response.data;
-		if (this.numberQueries == this.resultsCount.length){
-			var result = [];
-			
-			for (var i = 0; i< this.results.length; i++){
-				for (var j = 0; j< this.results[i].length; j++){
-					result.push(this.results[i][j]);
-				}
-			}
-			this.success.notify({
-				"result": result, 
-				"category":  this.category, 
-				"subcategory": this.subcategory, 
-				"query": this.originalQuery, 
-				"resource":this.resource, 
-				"params":this.params, 
-				"error": ''
-			});
-		}
-	},
-	
-	this.getSingle = function(category, subcategory, query, resource, batchID, callbackFunction) {
-		this.category = category;
-		this.subcategory = subcategory;
-		this.query = query;
-		this.resource = resource;
-		var url = this.getUrl();
-		return this._callServer(url, batchID, callbackFunction);
-	},
-	
-	this.getMultiple = function(category, subcategory, queryArray, resource, callbackFunction) {
-		var pieces = new Array();
-		//Primero dividimos el queryArray en trocitos tratables
-		if (queryArray.length > this.maxQuery){
-			for (var i = 0; i < queryArray.length; i=i+this.maxQuery){
-				pieces.push(queryArray.slice(i, i+(this.maxQuery)));
-			}
-		}else{
-			pieces.push(queryArray);
-		}
-		
-		this.numberQueries = pieces.length;
-		var _this = this;
-		
-		this.batchSuccessed.addEventListener(function (evt, response){
-			_this._joinToResults(response);
-		});	
-		
-		for (var i = 0; i < pieces.length; i++){
-		//	this.get(category, subcategory, pieces[i].toString(), resource);
-			this.results.push(new Array());
-			this.getSingle(category, subcategory, pieces[i].toString(), resource, i);
-		}
-	},
-
-
-	this._callServer = function(url, batchID, callbackFunction) {
-		var _this = this;
-		this.params["of"] = this.contentformat;
-//			jQuery.support.cors = true;
-			url = url + this.getQuery(this.params,url);
-			console.log(url);
-			if(this.async == true){
-				$.ajax({
-					type : "GET",
-					url : url,
-                    dataType: 'json',//still firefox 20 does not auto serialize JSON, You can force it to always do the parsing by adding dataType: 'json' to your call.
-					async : this.async,
-					success : function(data, textStatus, jqXHR) {
-//							if(data==""){console.log("data is empty");data="[]";}
-//							var jsonResponse = JSON.parse(data);
-							var jsonResponse = data;
-
-							if (_this.batching){
-								_this.batchSuccessed.notify({data:jsonResponse, id:batchID});
-							}else{
-								//TODO no siempre el resource coincide con el featureType, ejemplo: mirna es el featureType del resource mirna_targets
-								_this.success.notify({
-									"result": jsonResponse, 
-									"category":  _this.category, 
-									"subcategory": _this.subcategory, 
-									"query": _this.originalQuery, 
-									"resource":_this.resource, 
-									"params":_this.params, 
-									"error": ''
-								});
-							}
-						
-					},
-					complete : function() {
-						_this.completed.notify();
-						
-					},
-					error : function(jqXHR, textStatus, errorThrown) {
-						console.log("CellBaseManager: Ajax call returned : "+errorThrown+'\t'+textStatus+'\t'+jqXHR.statusText+" END");
-						_this.error.notify();
-						
-					}
-				});
-			}else{
-				var response = null;
-				$.ajax({
-					type : "GET",
-					url : url,
-                    dataType: 'json',
-					async : this.async,
-					success : function(data, textStatus, jqXHR) {
-//							if(data==""){console.log("data is empty");data="[]";}
-							var jsonResponse = data;
-							response =  {
-									"result": jsonResponse,
-									"category":  _this.category,
-									"subcategory": _this.subcategory,
-									"query": _this.originalQuery,
-									"resource":_this.resource,
-									"params":_this.params,
-									"error": ''
-							}
-					},
-					error : function(jqXHR, textStatus, errorThrown) {
-					}
-				});
-				return response;
-			}
-	};
+    //Events
+    this.completed = new Event();
+    this.success = new Event();
+    this.batchSuccessed = new Event();
+    this.error = new Event();
 }
 
-CellBaseManager.prototype.getQuery = function(paramsWS,url){
-	var chr = "?";
-	if(url.indexOf("?")!=-1){
-		chr = "&";
-	}
-	var query = "";
-	for ( var key in paramsWS) {
-		if(paramsWS[key]!=null)
-			query+=key+"="+paramsWS[key].toString()+"&";
-	}
-	if(query!="")
-		query = chr+query.substring(0, query.length-1);
-	return query;
+CellBaseManager.prototype = {
+    setVersion : function (version) {
+        this.version = version;
+    },
+    setSpecies : function (specie) {
+        this.species = specie;
+    },
+    getVersion : function () {
+        return this.version;
+    },
+    getSpecies : function () {
+        return this.species;
+    },
+    setAsync : function (async) {
+        this.async = async;
+    },
+
+    getQuery: function (paramsWS, url) {
+        var chr = "?";
+        if (url.indexOf("?") != -1) {
+            chr = "&";
+        }
+        var query = "";
+        for (var key in paramsWS) {
+            if (paramsWS[key] != null)
+                query += key + "=" + paramsWS[key].toString() + "&";
+        }
+        if (query != "")
+            query = chr + query.substring(0, query.length - 1);
+        return query;
+    },
+    getUrl: function () {
+        if (this.query != null) {
+            return this.host + "/" + this.version + "/" + this.species + "/" + this.category + "/" + this.subcategory + "/" + this.query + "/" + this.resource;
+        } else {
+            return this.host + "/" + this.version + "/" + this.species + "/" + this.category + "/" + this.subcategory + "/" + this.resource;
+        }
+    },
+    get: function (category, subcategory, query, resource, params) {
+        var _this = this;
+        if (params != null) {
+            this.params = params;
+        }
+        this.category = category;
+        this.subcategory = subcategory;
+        if(_.isArray(query)){
+            query = query.toString();
+        }
+        this.query = query;
+
+        this.resource = resource;
+
+        var url = this.getUrl();
+        this.params["of"] = this.contentformat;
+        url = url + this.getQuery(this.params, url);
+        console.log(url);
+
+        if (this.async == true) {
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: 'json',//still firefox 20 does not auto serialize JSON, You can force it to always do the parsing by adding dataType: 'json' to your call.
+                async: this.async,
+                success: function (data, textStatus, jqXHR) {
+                    if(data.metadata){
+                        data.metadata.params = _this.params;
+                        data.metadata.resource = _this.resource;
+                        data.metadata.category = _this.category;
+                        data.metadata.subcategory = _this.subcategory;
+                    }
+                    _this.success.notify(data);
+                },
+                complete: function () {
+                    _this.completed.notify();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log("CellBaseManager: Ajax call returned : " + errorThrown + '\t' + textStatus + '\t' + jqXHR.statusText + " END");
+                    _this.error.notify();
+
+                }
+            });
+        } else {
+            var response = null;
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: 'json',
+                async: this.async,
+                success: function (data, textStatus, jqXHR) {
+                    if(data.metadata){
+                        data.metadata.params = _this.params;
+                        data.metadata.resource = _this.resource;
+                        data.metadata.category = _this.category;
+                        data.metadata.subcategory = _this.subcategory;
+                    }
+                    response = data;
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log("CellBaseManager: Ajax call returned : " + errorThrown + '\t' + textStatus + '\t' + jqXHR.statusText + " END");
+                    _this.error.notify();
+
+                }
+            });
+            return response;
+        }
+    }
 };
 
 function InfoWidget(targetId, species, args){
@@ -805,7 +667,7 @@ function InfoWidget(targetId, species, args){
         }
     }
 	
-	switch (species){
+	switch (Utils.getSpeciesCode(species.text)){
 	case "hsapiens":
 		this.ensemblSpecie = "Homo_sapiens"; 
 		this.reactomeSpecie = "48887"; 
@@ -1034,6 +896,7 @@ InfoWidget.prototype.getTranscriptTemplate = function (){
 		    '<div><span class="w100 infokey s90">Description: </span> <span><tpl if="description == &quot;&quot;">No description available</tpl>{description}</span></div>',
 		    '',
 		    '<div><span class="w100 infokey s90">CDS &nbsp; (start-end): </span> {genomicCodingStart}-{genomicCodingEnd} <span style="margin-left:50px" class="w100 infokey s90">CDNA (start-end): </span> {cdnaCodingStart}-{cdnaCodingEnd}</div>',
+            '<div><span class="w100 infokey s90">Protein: </span> {proteinID}</div>',
 		    '<div><span class="w100 infokey s90">External DB: </span> {externalDb}</div>',
 		    '<div><span class="w100 infokey s90">Status: </span> {status}</div><br>'// +  '<br>'+str
 		);
@@ -1081,9 +944,12 @@ InfoWidget.prototype.getSnpTemplate = function (){
 
 InfoWidget.prototype.getExonTemplate = function (){
 	return new Ext.XTemplate(
-			'<span ><span class="panel-border-bottom"><span class="ssel s110">{id}</span></span></span>',
-			'<span><span style="margin-left:30px" class="infokey s90"> Location: </span> <span class="">{chromosome}:{start}-{end} </span></span>',
-			'<span><span style="margin-left:30px" class="infokey s90"> Strand: </span> {strand}</span>'
+			'<span><span class="panel-border-bottom"><span class="ssel s110">{id}</span></span></span><br><br>',
+			'<span><span class="infokey s90"> Location: </span> <span class="">{chromosome}:{start}-{end} </span></span><br>',
+			'<span><span class="infokey s90"> Genomic coding (start-end) : </span> <span class="">{genomicCodingStart}-{genomicCodingEnd} </span></span><br>',
+			'<span><span class="infokey s90"> cDNA (start-end) : </span> <span class="">{cdnaCodingStart}-{cdnaCodingEnd} </span></span><br>',
+			'<span><span class="infokey s90"> CDS (start-end) : </span> <span class="">{cdsStart}-{cdsEnd} </span></span><br>',
+			'<span><span class="infokey s90"> Phase: </span> {phase}</span><br>'
 		);
 };
 
@@ -1180,8 +1046,8 @@ InfoWidget.prototype.getSnpTranscriptTemplate = function (){
 		    '<div><span class="panel-border-bottom"><span class="ssel s130">{[this.getStableId(values)]}</span></span>',
 		    ' &nbsp; <a target="_blank" href="http://www.ensembl.org/'+this.ensemblSpecie+'/Transcript/Transcript?t={[this.getStableId(values)]}">Ensembl</a>',
 		    '</div><br>',
-		    '<div><span class="w140 infokey s90">CDS &nbsp; (start : end): </span> {cdsStart} : {cdsEnd} <span style="margin-left:50px" class="w100 infokey s90">cDNA (start : end): </span> {cdnaStart} : {cdnaEnd}</div>',
-		    '<div><span class="w140 infokey s90">Translation (start : end): </span> {translationStart} : {translationEnd}</div>',
+		    '<div><span class="w140 infokey s90">CDS &nbsp; (start - end): </span> {cdsStart} - {cdsEnd} <span style="margin-left:50px" class="w100 infokey s90">cDNA (start - end): </span> {cdnaStart} - {cdnaEnd}</div>',
+		    '<div><span class="w140 infokey s90">Translation (start - end): </span> {translationStart} - {translationEnd}</div>',
 		    '<div><span class="w140 infokey s90">Peptide allele: </span> {peptideAlleleString}</div>',
 //		    '<div><span class="w140 infokey s90">Alt. peptide allele: </span> {alternativePeptideAlleleString}</div>',
 			'<div><span class="w140 infokey s90">Codon: </span> {codonAlleleString}</div>',
@@ -1679,12 +1545,12 @@ GeneInfoWidget.prototype.getData = function (){
 //	category, subcategory, query, resource, callbackFunction
 	var cellBaseManager = new CellBaseManager(this.species);
 	cellBaseManager.success.addEventListener(function(sender,data){
-		_this.dataReceived(data.result);//TODO
+		_this.dataReceived(data[_this.query].result[0]);
 	});
-	cellBaseManager.get("feature","gene", this.query, "fullinfo");
+	cellBaseManager.get("feature","gene", this.query, "info");
 };
 GeneInfoWidget.prototype.dataReceived = function (data){
-	this.data=data[0][0];
+	this.data=data;
 	console.log(this.data);
 	this.optionClick({"text":"Information","leaf":"true"});
 	this.panel.enable();
@@ -2470,37 +2336,43 @@ SnpInfoWidget.prototype.getConsequenceTypePanel = function(data){
     	var tpl = this.getConsequenceTypeTemplate();
 
 
-//        var groupField = '';
-//        var modelName = 'SNPs';
-//        var fields = ['chromosome','start','end','name',"strand","alleleString","displaySoConsequence"];
-//        var columns = [
-//            {header : 'Name',dataIndex: 'name',flex:2},
-//            {header : 'Location: chr:start-end (strand)', xtype:'templatecolumn', tpl:'{chromosome}:{start}-{end} ({strand})',flex:2},
-//            {header : 'Alleles',dataIndex: 'alleleString',flex:0.7},
-//            {header : 'Most severe SO term',dataIndex: 'displaySoConsequence',flex:2}
-//        ];
-//        this.snpsGrid = this.doGrid(columns,fields,modelName,groupField);
-//        this.snpsGrid.store.loadData(data);
+        var data2 = [];
+        for(var i = 0; i<data.length; i++){
+            for(var j = 0; j<data[i].consequenceTypes.length; j++){
+                var consequenceType = data[i].consequenceTypes[j];
+                data[i].consequenceType = consequenceType;
+                data2.push(data[i]);
+            }
+        }
 
-//        debugger
-    	var panels = [];
-    	for ( var i = 0; i < data.length; i++) {	
-			var consPanel = Ext.create('Ext.container.Container',{
-				padding:5,
-				data:data[i],
-				tpl:tpl
-			});
-			panels.push(consPanel);
-    	}
-		this.consequencePanel = Ext.create('Ext.panel.Panel',{
-			title:"Consequence type ("+i+")",
-			border:false,
-			cls:'panel-border-left',
-			flex:3,    
-			bodyPadding:5,
-			autoScroll:true,
-			items:panels
-		});
+        var groupField = 'consequenceType';
+        var modelName = 'transcriptVariation';
+        var fields = ['transcriptId','consequenceType'];
+        var columns = [
+            {header : 'Transcript id',dataIndex: 'transcriptId',flex:1},
+            {header : 'Consequence type',dataIndex: 'consequenceType',flex:1}
+        ];
+        this.consequencePanel = this.doGrid(columns,fields,modelName,groupField);
+        this.consequencePanel.store.loadData(data2);
+
+//    	var panels = [];
+//    	for ( var i = 0; i < data.length; i++) {
+//			var consPanel = Ext.create('Ext.container.Container',{
+//				padding:5,
+//				data:data[i],
+//				tpl:tpl
+//			});
+//			panels.push(consPanel);
+//    	}
+//		this.consequencePanel = Ext.create('Ext.panel.Panel',{
+//			title:"Consequence type ("+i+")",
+//			border:false,
+//			cls:'panel-border-left',
+//			flex:3,
+//			bodyPadding:5,
+//			autoScroll:true,
+//			items:panels
+//		});
     }
     return this.consequencePanel;
 };
@@ -2574,7 +2446,7 @@ SnpInfoWidget.prototype.getData = function (){
 //	category, subcategory, query, resource, callbackFunction
 	var cellBaseManager = new CellBaseManager(this.species);
 	cellBaseManager.success.addEventListener(function (sender,data){
-        _this.dataReceived(data.result);//TODO
+        _this.dataReceived(data[_this.query].result[0]);
 	});
 	cellBaseManager.get("feature","snp", this.query, "info");
 };
@@ -2586,7 +2458,7 @@ SnpInfoWidget.prototype.dataReceived = function (data){
 //			console.log(mappedSnps[i]);
 //		}
 //	}
-    this.data=data[0][0];
+    this.data=data;
     console.log(this.data);
 	this.optionClick({"text":"Information","leaf":"true"});
 	this.panel.enable();
@@ -3092,12 +2964,12 @@ TranscriptInfoWidget.prototype.getData = function (){
 	
 	var cellBaseManager = new CellBaseManager(this.species);
 	cellBaseManager.success.addEventListener(function(sender,data){
-		_this.dataReceived(data.result);//TODO
+        _this.dataReceived(data[_this.query].result[0].transcripts);
 	});
-	cellBaseManager.get("feature","transcript", this.query, "fullinfo");
+	cellBaseManager.get("feature","transcript", this.query, "info");
 };
 TranscriptInfoWidget.prototype.dataReceived = function (data){
-	this.data=data[0][0];
+	this.data=data;
 	console.log(this.data);
 	this.optionClick({"text":"Information","leaf":"true"});
 	this.panel.enable();
@@ -3732,13 +3604,7 @@ FEATURE_TYPES = {
         },
         infoWidgetId: "id",
         height: 4,
-        histogramColor: "lightblue",
-        handlers: {
-            'feature:click': function (event) {
-                console.log(event)
-                new GeneInfoWidget(null, _this.species).draw(event);
-            }
-        }
+        histogramColor: "lightblue"
     },
 //	geneorange:{
 //		getLabel: function(f){
@@ -4341,57 +4207,62 @@ CellBaseAdapter.prototype.getData = function(args){
 	var cellBaseManager = new CellBaseManager(this.species,{host: this.host});
 	cellBaseManager.success.addEventListener(function(sender,data){
 		var dataType = "data";
-		if(data.params.transcript){
+		if(data.metadata.params.transcript){
 			dataType = "withTranscripts";
 		}
-		if(data.params.histogram){
-			dataType = "histogram"+data.params.interval;
+		if(data.metadata.params.histogram){
+			dataType = "histogram"+data.metadata.params.interval;
 		}
 
 		//XXX quitar cuando este arreglado el ws
-		if(data.params.histogram == true){
+		if(data.metadata.params.histogram == true){
 			data.result = [data.result];
 		}
 
-        var featureType = data.resource;
+        var featureType = data.metadata.resource;
 		//XXX
+//		var queryList = [];
+//		for(var i = 0; i < data.metadata.queryIds.length; i++) {
+//			var splitDots = data.metadata.queryIds[i].split(":");
+//			var splitDash = splitDots[1].split("-");
+//			queryList.push({chromosome:splitDots[0],start:splitDash[0],end:splitDash[1]});
+//		}
 		
-		var queryList = [];
-		for(var i = 0; i < data.query.length; i++) {
-			var splitDots = data.query[i].split(":");
-			var splitDash = splitDots[1].split("-");
-			queryList.push({chromosome:splitDots[0],start:splitDash[0],end:splitDash[1]});
-		}
-		
-		for(var i = 0; i < data.result.length; i++) {
+		for(var i = 0; i < data.metadata.queryIds.length; i++) {
+            var splitDots = data.metadata.queryIds[i].split(":");
+            var splitDash = splitDots[1].split("-");
+            var q = {chromosome:splitDots[0],start:splitDash[0],end:splitDash[1]};
 
-			//Check if is a single object
-			if(data.result[i].constructor != Array){
-				data.result[i] = [data.result[i]];
-			}
+            var queryId = data.metadata.queryIds[i];
+            var features = data[queryId].result;
 
-			if(data.params.histogram != true && featureType == "gene" && data.params.transcript==true){
-				for ( var j = 0, lenj = data.result[i].length; j < lenj; j++) {
-					for (var t = 0, lent = data.result[i][j].transcripts.length; t < lent; t++){
-						data.result[i][j].transcripts[t].featureType = "transcript";
+//			//Check if is a single object
+//			if(data.result[i].constructor != Array){
+//				data.result[i] = [data.result[i]];
+//			}
+
+			if(data.metadata.params.histogram != true && featureType == "gene" && data.metadata.params.transcript==true){
+				for ( var j = 0, lenj = features.length; j < lenj; j++) {
+					for (var t = 0, lent = features[j].transcripts.length; t < lent; t++){
+                        features[j].transcripts[t].featureType = "transcript";
 						//loop over exons
-						for (var e = 0, lene = data.result[i][j].transcripts[t].exons.length; e < lene; e++){
-							data.result[i][j].transcripts[t].exons[e].featureType = "exon";
+						for (var e = 0, lene = features[j].transcripts[t].exons.length; e < lene; e++){
+                            features[j].transcripts[t].exons[e].featureType = "exon";
 						}
 					}
 				}
 			}
 
             if(featureType == "regulatory"){
-                featureType = data.params.type;
+                featureType = data.metadata.params.type;
                 if(featureType == 'TF_binding_site_motif'){
                     featureType = 'tfbs';
                 }
             }
 
 			console.time(_this.resource+" save "+rnd);
-			_this.featureCache.putFeaturesByRegion(data.result[i], queryList[i], featureType, dataType);
-			var items = _this.featureCache.getFeatureChunksByRegion(queryList[i]);
+			_this.featureCache.putFeaturesByRegion(features, q, featureType, dataType);
+			var items = _this.featureCache.getFeatureChunksByRegion(q);
 			console.timeEnd(_this.resource+" save "+rnd);
 			if(items != null){
 				itemList = itemList.concat(items);
@@ -4601,68 +4472,119 @@ SequenceAdapter.prototype._getSequenceQuery = function(args){
 
 SequenceAdapter.prototype._processSequenceQuery = function(data, throwNotify){
 	var _this = this;
-	var seqResponse = data.result;
-	var params = data.params;
-	var chromosome = data.params.chromosome;
+	var params = data.metadata.params;
 
-	for(var i = 0; i < seqResponse.length; i++){
-		var splitDots = data.query[i].split(":");
-		var splitDash = splitDots[1].split("-");
-		var queryStart = parseInt(splitDash[0]);
-		var queryEnd = parseInt(splitDash[1]);
-		
-		if(this.sequence[chromosome] == null){
-			this.sequence[chromosome] = seqResponse[i].sequence;
-//			this.phastCons[chromosome] = seqResponse[i].phastCons;
+    for(i in data.metadata.queryIds) {
+
+        var splitDots = data.metadata.queryIds[i].split(":");
+        var splitDash = splitDots[1].split("-");
+        var queryStart = parseInt(splitDash[0]);
+        var queryEnd = parseInt(splitDash[1]);
+
+        var queryId = data.metadata.queryIds[i];
+	    var seqResponse = data[queryId].result;
+	    var chromosome = seqResponse.chromosome;
+
+        if(this.sequence[chromosome] == null){
+            this.sequence[chromosome] =  seqResponse.sequence;
+//          this.phastCons[chromosome] = seqResponse[i].phastCons;
 //			this.phylop[chromosome] = seqResponse[i].phylop;
-		}else{
-			if(queryStart == this.start[chromosome]){
-				this.sequence[chromosome] = seqResponse[i].sequence + this.sequence[chromosome];
+        }else{
+            if(queryStart == this.start[chromosome]){
+                this.sequence[chromosome] = seqResponse.sequence + this.sequence[chromosome];
 //				this.phastCons[chromosome] = seqResponse[i].phastCons.concat(this.phastCons[chromosome]);
 //				this.phylop[chromosome] = seqResponse[i].phylop.concat(this.phylop[chromosome]);
-			}else{
-				this.sequence[chromosome] = this.sequence[chromosome] + seqResponse[i].sequence;
+            }else{
+                this.sequence[chromosome] = this.sequence[chromosome] + seqResponse.sequence;
 //				this.phastCons[chromosome] = this.phastCons[chromosome].concat(seqResponse[i].phastCons);
 //				this.phylop[chromosome] = this.phylop[chromosome].concat(seqResponse[i].phylop);
-			}
-		}
+            }
+        }
 
-		if(this.sender == "move" && throwNotify == true){
-			this.onGetData.notify({
-                items:{
-                    sequence:seqResponse[i].sequence,
-                    phastCons:seqResponse[i].phastCons,
-                    phylop:seqResponse[i].phylop,
-                    start:queryStart,
-                    end:queryEnd
-                },
-                params:params
-            });
+        if(this.sender == "move" && throwNotify == true){
+//            this.onGetData.notify({
+//                items:{
+//                    sequence:seqResponse.sequence,
+////                    phastCons:seqResponse[i].phastCons,
+////                    phylop:seqResponse[i].phylop,
+//                    start:queryStart,
+//                    end:queryEnd
+//                },
+//                params:params
+//            });
             this.trigger('data:ready',{
                 items:{
-                    sequence:seqResponse[i].sequence,
-                    phastCons:seqResponse[i].phastCons,
-                    phylop:seqResponse[i].phylop,
+                    sequence:seqResponse.sequence,
+//                    phastCons:seqResponse[i].phastCons,
+//                    phylop:seqResponse[i].phylop,
                     start:queryStart,
                     end:queryEnd
                 },
                 params:params,
                 sender:this
             });
-		}
-	}
+        }
+    }
+
+
+//	for(var i = 0; i < seqResponse.length; i++){
+//		var splitDots = data.query[i].split(":");
+//		var splitDash = splitDots[1].split("-");
+//		var queryStart = parseInt(splitDash[0]);
+//		var queryEnd = parseInt(splitDash[1]);
+//
+//		if(this.sequence[chromosome] == null){
+//			this.sequence[chromosome] = seqResponse[i].sequence;
+////			this.phastCons[chromosome] = seqResponse[i].phastCons;
+////			this.phylop[chromosome] = seqResponse[i].phylop;
+//		}else{
+//			if(queryStart == this.start[chromosome]){
+//				this.sequence[chromosome] = seqResponse[i].sequence + this.sequence[chromosome];
+////				this.phastCons[chromosome] = seqResponse[i].phastCons.concat(this.phastCons[chromosome]);
+////				this.phylop[chromosome] = seqResponse[i].phylop.concat(this.phylop[chromosome]);
+//			}else{
+//				this.sequence[chromosome] = this.sequence[chromosome] + seqResponse[i].sequence;
+////				this.phastCons[chromosome] = this.phastCons[chromosome].concat(seqResponse[i].phastCons);
+////				this.phylop[chromosome] = this.phylop[chromosome].concat(seqResponse[i].phylop);
+//			}
+//		}
+//
+//		if(this.sender == "move" && throwNotify == true){
+//			this.onGetData.notify({
+//                items:{
+//                    sequence:seqResponse[i].sequence,
+//                    phastCons:seqResponse[i].phastCons,
+//                    phylop:seqResponse[i].phylop,
+//                    start:queryStart,
+//                    end:queryEnd
+//                },
+//                params:params
+//            });
+//            this.trigger('data:ready',{
+//                items:{
+//                    sequence:seqResponse[i].sequence,
+//                    phastCons:seqResponse[i].phastCons,
+//                    phylop:seqResponse[i].phylop,
+//                    start:queryStart,
+//                    end:queryEnd
+//                },
+//                params:params,
+//                sender:this
+//            });
+//		}
+//	}
 	//if not onMove the svg was cleared so all sequence is sent to redraw
 	if(this.sender != "move" && throwNotify == true){
-		this.onGetData.notify({
-            items:{
-                sequence:this.sequence[chromosome],
-                phastCons:this.phastCons[chromosome],
-                phylop:this.phylop[chromosome],
-                start:this.start[chromosome],
-                end:this.end[chromosome]
-            },
-            params:params
-        });
+//		this.onGetData.notify({
+//            items:{
+//                sequence:this.sequence[chromosome],
+//                phastCons:this.phastCons[chromosome],
+//                phylop:this.phylop[chromosome],
+//                start:this.start[chromosome],
+//                end:this.end[chromosome]
+//            },
+//            params:params
+//        });
         this.trigger('data:ready',{
             items:{
                 sequence:this.sequence[chromosome],
@@ -4900,8 +4822,9 @@ BamAdapter.prototype.getData = function(args){
 		for ( var i = 0, li = querys.length; i < li; i++) {
 			console.time("dqs");
 			//accountId, sessionId, bucketname, objectname, region,
-
-			opencgaManager.region(this.resource.account, $.cookie("bioinfo_sid"),this.resource.bucketId, this.resource.id, querys[i], this.params);
+            var cookie = $.cookie("bioinfo_sid");
+            cookie = ( cookie != '' && cookie != null ) ?  cookie : 'dummycookie';
+			opencgaManager.region(this.resource.account, cookie ,this.resource.bucketId, this.resource.id, querys[i], this.params);
 		}
 	}else{//no server call
 		if(itemList.length > 0){
@@ -5058,7 +4981,9 @@ OpencgaAdapter.prototype.getData = function(args){
 			console.time("dqs");
 			calls++;
 //			opencgaManager.region(this.category, this.resource, querys[i], this.params);
-            opencgaManager.region(this.resource.account, $.cookie("bioinfo_sid"),this.resource.bucketId, this.resource.id, querys[i], this.params);
+            var cookie = $.cookie("bioinfo_sid");
+            cookie = ( cookie != '' && cookie != null ) ?  cookie : 'dummycookie';
+            opencgaManager.region(this.resource.account, cookie,this.resource.bucketId, this.resource.id, querys[i], this.params);
 		}
 	}else{
 		if(itemList.length > 0){
@@ -7409,7 +7334,8 @@ function ChromosomePanel(args) {
         }
     }
 
-    this.rendered=false;
+    this.contentHidden=false;
+
     if(this.autoRender){
         this.render();
     }
@@ -7421,6 +7347,14 @@ ChromosomePanel.prototype = {
     },
     hide: function () {
         $(this.div).css({display: 'none'});
+    },
+    showContent: function () {
+        $(this.svg).css({display: 'inline'});
+        this.contentHidden=false;
+    },
+    hideContent: function () {
+        $(this.svg).css({display: 'none'});
+        this.contentHidden=true;
     },
     setVisible: function (bool) {
         if(bool) {
@@ -7445,6 +7379,7 @@ ChromosomePanel.prototype = {
     },
 
     render : function(targetId){
+        var _this = this;
         this.targetId = (targetId) ? targetId : this.targetId;
         if($('#' + this.targetId).length < 1){
             console.log('targetId not found in DOM');
@@ -7455,7 +7390,23 @@ ChromosomePanel.prototype = {
         $(this.targetDiv).append(this.div);
 
         if ('title' in this && this.title !== '') {
+            this.collapseDiv = $('<div class="ocb-icon ocb-icon-collapse" style="margin:0px 0px -2px 10px;display:inline-block; vertical-align:bottom"></div>');
             this.titleDiv = $('<div id="tl-title" class="gv-panel-title unselectable">' + this.title + '</div>')[0];
+            $(this.titleDiv).dblclick(function(){
+                if(_this.contentHidden){
+                    _this.showContent();
+                }else{
+                    _this.hideContent();
+                }
+            });
+            $(this.collapseDiv).click(function(){
+                if(_this.contentHidden){
+                    _this.showContent();
+                }else{
+                    _this.hideContent();
+                }
+            });
+            $(this.titleDiv).append(this.collapseDiv);
             $(this.div).append(this.titleDiv);
         }
 
@@ -7491,11 +7442,11 @@ ChromosomePanel.prototype = {
         console.log('In chromosome-widget: ' + this.region)
         var cellBaseManager = new CellBaseManager(this.species);
         cellBaseManager.success.addEventListener(function (sender, data) {
-            _this.data = data.result[0];
+            _this.data = data.result.result[0].chromosomes;
             _this.data.cytobands.sort(sortfunction);
             _this._drawSvg(_this.data);
         });
-        cellBaseManager.get("feature", "chromosome", this.region.chromosome, "info");
+        cellBaseManager.get("genomic", "chromosome", this.region.chromosome, "info");
         this.lastChromosome = this.region.chromosome;
     },
 
@@ -7884,6 +7835,8 @@ function KaryotypePanel(args) {
         }
     }
 
+    this.contentHidden=false;
+
     this.rendered=false;
     if(this.autoRender){
         this.render();
@@ -7894,9 +7847,16 @@ KaryotypePanel.prototype = {
     show: function () {
         $(this.div).css({display: 'block'});
     },
-
     hide: function () {
         $(this.div).css({display: 'none'});
+    },
+    showContent: function () {
+        $(this.svg).css({display: 'inline'});
+        this.contentHidden=false;
+    },
+    hideContent: function () {
+        $(this.svg).css({display: 'none'});
+        this.contentHidden=true;
     },
     setVisible: function (bool) {
         if(bool) {
@@ -7920,6 +7880,7 @@ KaryotypePanel.prototype = {
     },
 
     render : function(targetId){
+        var _this = this;
         this.targetId = (targetId) ? targetId : this.targetId;
         if($('#' + this.targetId).length < 1){
             console.log('targetId not found in DOM');
@@ -7930,7 +7891,23 @@ KaryotypePanel.prototype = {
         $(this.targetDiv).append(this.div);
 
         if ('title' in this && this.title !== '') {
+            this.collapseDiv = $('<div class="ocb-icon ocb-icon-collapse" style="margin:0px 0px -2px 10px;display:inline-block; vertical-align:bottom"></div>');
             this.titleDiv = $('<div id="tl-title" class="gv-panel-title unselectable">' + this.title + '</div>')[0];
+            $(this.titleDiv).dblclick(function(){
+                if(_this.contentHidden){
+                    _this.showContent();
+                }else{
+                    _this.hideContent();
+                }
+            });
+            $(this.collapseDiv).click(function(){
+                if(_this.contentHidden){
+                    _this.showContent();
+                }else{
+                    _this.hideContent();
+                }
+            });
+            $(this.titleDiv).append(this.collapseDiv);
             $(this.div).append(this.titleDiv);
         }
 
@@ -7975,11 +7952,11 @@ KaryotypePanel.prototype = {
 
         var cellBaseManager = new CellBaseManager(this.species);
         cellBaseManager.success.addEventListener(function(sender,data){
-            _this.chromosomeList = data.result;
+            _this.chromosomeList = data.result.result[0].chromosomes;
             _this.chromosomeList.sort(sortfunction);
             _this._drawSvg(_this.chromosomeList);
         });
-        cellBaseManager.get('feature', 'chromosome', null , 'all');
+        cellBaseManager.get('genomic', 'chromosome', null , 'all');
     },
 
     _drawSvg: function(chromosomeList){
@@ -11802,6 +11779,9 @@ GenomeViewer.prototype = {
         console.log("Initializing GenomeViewer structure.");
         this.targetDiv = $('#' + this.targetId)[0];
         this.div = $('<div id="' + this.id + '" class="ocb-gv ocb-box-vertical"></div>')[0];
+//        $(this.div).css({
+//            position:'relative'
+//        });
         $(this.targetDiv).append(this.div);
 
         var width = Math.max($(this.div).width(), $(this.targetDiv).width())
@@ -11828,6 +11808,12 @@ GenomeViewer.prototype = {
         $(this.div).append(this.centerPanelDiv);
 
         this.statusbarDiv = $('<div id="statusbar-' + this.id + '" class="ocb-gv-status"></div>');
+//        $(this.statusbarDiv).css({
+//            position:'absolute',
+//            bottom:'0px',
+//            'z-index':'10',
+//            height:'26'
+//        });
         $(this.div).append(this.statusbarDiv);
 
 
@@ -12215,6 +12201,14 @@ GenomeViewer.prototype = {
             trackListPanel.setSpecies(event.species);
         });
 
+
+        var renderer = new FeatureRenderer('gene');
+        renderer.on({
+            'feature:click': function (event) {
+                console.log(event)
+                new GeneInfoWidget(null, _this.species).draw(event);
+            }
+        });
         var gene = new FeatureTrack({
             targetId: null,
             id: 2,
@@ -12226,12 +12220,15 @@ GenomeViewer.prototype = {
             titleVisibility: 'hidden',
             featureTypes: FEATURE_TYPES,
 
-            renderer: new FeatureRenderer('gene'),
+            renderer: renderer,
 
             dataAdapter: new CellBaseAdapter({
                 category: "genomic",
                 subCategory: "region",
                 resource: "gene",
+                params:{
+                    exclude:'transcripts'
+                },
                 species: this.species,
                 featureCache: {
                     gzip: true,
@@ -12240,6 +12237,7 @@ GenomeViewer.prototype = {
             })
         });
         trackListPanel.addTrack(gene);
+
 
         return  trackListPanel;
     },

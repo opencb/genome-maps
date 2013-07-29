@@ -89,7 +89,7 @@ GmStatusBar.prototype = {
                     xtype: 'tbtext',
                     margin: '0 10 0 15',
                     style:'color:slategray',
-                    text: ' Genome Maps v' + this.version
+                    text: ' Genome Maps ' + this.version
                 }
             ]
         });
