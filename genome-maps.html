@@ -217,11 +217,11 @@
 	
 	Ext.onReady(run);
 	var genomeMaps;
-	function run(){
+	function run() {
 		CheckBrowser();
 // 		var pathname = window.location.href;
 // 		console.log(pathname);
-		genomeMaps = new GenomeMaps("mydiv"); //the div must exist
+		genomeMaps = new GenomeMaps("genome-maps"); //the div must exist
 		
 // 		genomeMaps.addPlugin();
 // 		console.log(Ext.ComponentManager.getCount());
@@ -230,17 +230,7 @@
 		
 // 		gv = new GenomeViewer("mydiv");
 // 		gv.draw();
-	
-	
-	// gv1.setSpecies("Mus musculus");
-	// var gv2 = new GenomeViewer("gv_div1");
-	// // vamos par alla!!!
-// 	gv2.draw();
-	
-	
-	
-	
-	
+
 	//GenomeViewer v2
 // 	gv1 = new GenomeViewer("mydiv",AVAILABLE_SPECIES[0],{
 // 		//toolbar: Ext.create('Ext.toolbar.Toolbar', {height:27}),
@@ -261,6 +251,7 @@
 </head>
 <body style="overflow: hidden">
 	<div id="checkBrowser"></div>
-	<div id="mydiv"></div>
+    <div id="genome-maps"></div>
+
 </body>
 </html>
