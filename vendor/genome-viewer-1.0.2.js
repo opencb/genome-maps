@@ -1,7 +1,7 @@
-/*! Genome Viewer - v1.0.2 - 2013-07-29
+/*! Genome Viewer - v1.0.2 - 2013-07-30
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
-/*! Genome Viewer - v1.0.2 - 2013-07-29
+/*! Genome Viewer - v1.0.2 - 2013-07-30
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 var Utils = {
@@ -482,7 +482,7 @@ var SVG = {
 //	
 //};
 
-/*! Genome Viewer - v1.0.2 - 2013-07-29
+/*! Genome Viewer - v1.0.2 - 2013-07-30
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 function CellBaseManager(species, args) {
@@ -517,6 +517,7 @@ function CellBaseManager(species, args) {
     this.async = true;
 
     //set instantiation args, must be last
+
     _.extend(this, args);
 
     this.host = CELLBASE_HOST || this.host;
@@ -966,9 +967,9 @@ InfoWidget.prototype.getProteinTemplate = function (){
 
 InfoWidget.prototype.getVCFVariantTemplate = function (){
 	return new Ext.XTemplate(
-			'<div><span><span class="panel-border-bottom"><span class="ssel s130">{chromosome}:{start}-{alt}</span> &nbsp; <span class="emph s120"> {label} </span></span></span></div><br>',
-			'<div><span class="w75 infokey s90">Alt: </span> {alt}</div>',
-			'<div><span class="w75 infokey s90">Ref: </span> {ref}</div>',
+			'<div><span><span class="panel-border-bottom"><span class="ssel s130">{chromosome}:{start}-{alternate}</span> &nbsp; <span class="emph s120"> {id} </span></span></span></div><br>',
+			'<div><span class="w75 infokey s90">Alt: </span> {alternate}</div>',
+			'<div><span class="w75 infokey s90">Ref: </span> {reference}</div>',
 			'<div><span class="w75 infokey s90">Quality: </span> {quality}</div>',
 			'<div><span class="w75 infokey s90">Format: </span> {format}</div>',
 			'<div><span class="w75 infokey s90">Samples: </span> {samples}</div>',
@@ -3242,7 +3243,7 @@ VCFVariantInfoWidget.prototype.getEffectPanel = function(data){
 		if(data[i].aminoacidChange == ""){data[i].aminoacidChange="-";}
 
 	}
-	
+
     if(this.effectGrid==null){
     	var groupField = 'consequence';
     	var modelName = "effectGridModel";
@@ -3340,10 +3341,13 @@ VCFVariantInfoWidget.prototype.getData = function (){
 	this.panel.setLoading("Getting information...");
 //	category, subcategory, query, resource, callbackFunction
 	var cellBaseManager = new CellBaseManager(this.species);
+    cellBaseManager.host = 'http://ws-beta.bioinfo.cipf.es/cellbase/rest';
+    cellBaseManager.species = cellBaseManager.species.substr(0,3);
+    cellBaseManager.version = 'v2';
 	cellBaseManager.success.addEventListener(function(sender,data){
-		_this.dataReceived(data.result);
+		_this.dataReceived(data);
 	});
-	var query = this.feature.chromosome+":"+this.feature.start+":"+this.feature.ref+":"+this.feature.alt;
+	var query = this.feature.chromosome+":"+this.feature.start+":"+this.feature.reference+":"+this.feature.alternate;
 	cellBaseManager.get("genomic","variant", query, "consequence_type");
 };
 
@@ -3360,7 +3364,7 @@ VCFVariantInfoWidget.prototype.dataReceived = function (data){
 
 GV_CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
 
-CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbasebeta/rest";
+CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbasebeta2/rest";
 CELLBASE_VERSION = "v3";
 
 FEATURE_CONFIG = {
@@ -7819,6 +7823,7 @@ function KaryotypePanel(args) {
     this.species;
     this.width = 600;
     this.height = 75;
+    this.titleCollapse = false,
 
     //set instantiation args, must be last
     _.extend(this, args);
@@ -7965,6 +7970,11 @@ KaryotypePanel.prototype = {
             _this._drawSvg(_this.chromosomeList);
         });
         cellBaseManager.get('genomic', 'chromosome', null , 'all');
+
+
+        if(this.titleCollapse){
+            _this.hideContent();
+        }
     },
 
     _drawSvg: function(chromosomeList){
@@ -10707,6 +10717,57 @@ BamRenderer.prototype.render = function (response, args) {
     console.timeEnd("BamRender " + response.params.resource);
 };
 
+ConservedRenderer.prototype = new Renderer({});
+
+function ConservedRenderer(args){
+    Renderer.call(this,args);
+    // Using Underscore 'extend' function to extend and add Backbone Events
+    _.extend(this, Backbone.Events);
+
+    //set default args
+    //set instantiation args
+    _.extend(this, args);
+
+};
+
+
+ConservedRenderer.prototype.render = function(features, args) {
+    var middle = args.width/2;
+    var multiplier = 20;
+    var histogramHeight = 75;
+    var points = '';
+    var width = args.pixelBase;
+
+    var firstFeature = features[0];
+    var x = args.pixelPosition+middle-((args.position-parseInt(firstFeature.start))*args.pixelBase);
+    points = (x+(width/2))+','+histogramHeight+' ';
+
+    for ( var i = 0, len = features.length; i < len; i++) {
+        var feature = features[i];
+        feature.start = parseInt(feature.start);
+        feature.end = parseInt(feature.end);
+
+        for ( var j = 0, len = feature.values; j < len; j++) {
+            var value = feature.values[j];
+            var height = value*multiplier;
+            var s = start+j;
+            var x = args.pixelPosition+middle-((args.position-s)*args.pixelBase);
+            points += (x+(width/2))+","+(histogramHeight - height)+" ";
+        }
+    }
+    points += (x+(width/2))+","+(histogramHeight)+" ";
+
+    var pol = SVG.addChild(args.svgCanvasFeatures,"polyline",{
+        "points":points,
+        "stroke": "#000000",
+        "stroke-width": 0.2,
+        "fill": 'salmon',
+        "cursor": "pointer"
+    });
+
+
+};
+
 //any item with chromosome start end
 FeatureRenderer.prototype = new Renderer({});
 
@@ -12100,6 +12161,7 @@ GenomeViewer.prototype = {
             height: 125,
             species: this.species,
             title: 'Karyotype',
+            titleCollapse: true,
             region: this.region,
             autoRender: true,
             handlers: {

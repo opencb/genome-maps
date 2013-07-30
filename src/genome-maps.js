@@ -432,6 +432,7 @@ GenomeMaps.prototype = {
         this.width = width;
         this.genomeViewer.setWidth(width);
         this.headerWidget.setWidth(width);
+        $('#status').css({'width':width});
     }
 }
 
@@ -1562,13 +1563,49 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
             });
             break;
         case "TFBS":
-            var tfbsTrack = new TrackData(id, {
-                adapter: new CellBaseAdapter({
+
+            var tfbsTrack = new FeatureTrack({
+                targetId: null,
+                id: id,
+                title: 'TFBS',
+                histogramZoom: 0,
+                labelZoom: 80,
+                height: 120,
+                visibleRange: {start: 0, end: 100},
+                featureTypes: FEATURE_TYPES,
+                renderer: new FeatureRenderer({
+                    label: function (f) {
+                        return ('name' in f) ? f.name : f.id;
+                    },
+                    tooltipTitle: function (f) {
+                        var name = (f.name != null) ? f.name : f.id;
+                        return f.featureType.toUpperCase() + ' - <span class="ok">' + name + '</span>';
+                    },
+                    tooltipText: function (f) {
+                        return 'alleles:&nbsp;<span class="ssel">' + f.alleleString + '</span><br>' +
+                            FEATURE_TYPES.getTipCommons(f) +
+                            'source:&nbsp;<span class="ssel">' + f.source + '</span><br>';
+
+                    },
+                    color: 'lightblue',
+                    infoWidgetId: "id",
+                    height: 8,
+                    histogramColor: "orange",
+                    handlers: {
+                        'feature:mouseover': function (e) {
+                            console.log(e)
+                        },
+                        'feature:click': function (event) {
+                            new SnpInfoWidget(null, _this.genomeViewer.species).draw(event);
+                        }
+                    }
+                }),
+
+                dataAdapter: new CellBaseAdapter({
                     category: "genomic",
                     subCategory: "region",
-                    resource: "regulatory",
+                    resource: "tfbs",
                     params: {
-                        type: 'TF_binding_site_motif'
                     },
                     species: this.genomeViewer.species,
                     featureCache: {
@@ -1577,16 +1614,34 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                     }
                 })
             });
-            this.genomeViewer.addTrack(tfbsTrack, {
-                id: id,
-                type: trackType,
-                title: trackTitle,
-                featuresRender: "MultiFeatureRender",
-                histogramZoom: 0,
-                height: 150,
-                visibleRange: {start: 0, end: 100},
-                featureTypes: FEATURE_TYPES
-            });
+
+            this.genomeViewer.addTrack(tfbsTrack);
+
+//            var tfbsTrack = new TrackData(id, {
+//                adapter: new CellBaseAdapter({
+//                    category: "genomic",
+//                    subCategory: "region",
+//                    resource: "regulatory",
+//                    params: {
+//                        type: 'TF_binding_site_motif'
+//                    },
+//                    species: this.genomeViewer.species,
+//                    featureCache: {
+//                        gzip: true,
+//                        chunkSize: 10000
+//                    }
+//                })
+//            });
+//            this.genomeViewer.addTrack(tfbsTrack, {
+//                id: id,
+//                type: trackType,
+//                title: trackTitle,
+//                featuresRender: "MultiFeatureRender",
+//                histogramZoom: 0,
+//                height: 150,
+//                visibleRange: {start: 0, end: 100},
+//                featureTypes: FEATURE_TYPES
+//            });
             break;
 //	case "Histone":
 //
@@ -1598,11 +1653,49 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
 //
 //		break;
         case "Conserved regions":
-            var conservedTrack = new TrackData(id, {
-                adapter: new CellBaseAdapter({
+            var conservedTrack = new FeatureTrack({
+                targetId: null,
+                id: id,
+                title: 'Conserved Region',
+                histogramZoom: 0,
+                labelZoom: 80,
+                height: 120,
+                visibleRange: {start: 0, end: 100},
+                featureTypes: FEATURE_TYPES,
+                renderer: new ConservedRenderer({
+                    label: function (f) {
+                        return f.chromosome + ":" + f.start + "-" + f.end;
+                    },
+                    tooltipTitle: function (f) {
+                        var name = (f.name != null) ? f.name : f.id;
+                        return f.featureType.toUpperCase() + ' - <span class="ok">' + name + '</span>';
+                    },
+                    tooltipText: function (f) {
+                        return 'alleles:&nbsp;<span class="ssel">' + f.alleleString + '</span><br>' +
+                            FEATURE_TYPES.getTipCommons(f) +
+                            'source:&nbsp;<span class="ssel">' + f.source + '</span><br>';
+
+                    },
+                    color: 'lightblue',
+                    infoWidgetId: "id",
+                    height: 8,
+                    histogramColor: "orange",
+                    handlers: {
+                        'feature:mouseover': function (e) {
+                            console.log(e)
+                        },
+                        'feature:click': function (event) {
+                            new SnpInfoWidget(null, _this.genomeViewer.species).draw(event);
+                        }
+                    }
+                }),
+
+                dataAdapter: new CellBaseAdapter({
                     category: "genomic",
                     subCategory: "region",
-                    resource: "conserved_region2",
+                    resource: "conserved_region",
+                    params: {
+                    },
                     species: this.genomeViewer.species,
                     featureCache: {
                         gzip: true,
@@ -1610,18 +1703,31 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                     }
                 })
             });
-            this.genomeViewer.addTrack(conservedTrack, {
-                id: id,
-                type: trackType,
-                title: trackTitle,
-                featuresRender: "MultiFeatureRender",
-                histogramZoom: 50,
-                height: 150,
-                visibleRange: {start: 0, end: 100},
-                featureTypes: FEATURE_TYPES
-            });
-            break;
 
+            this.genomeViewer.addTrack(conservedTrack);
+            break;
+//            var conservedTrack = new TrackData(id, {
+//                adapter: new CellBaseAdapter({
+//                    category: "genomic",
+//                    subCategory: "region",
+//                    resource: "conserved_region2",
+//                    species: this.genomeViewer.species,
+//                    featureCache: {
+//                        gzip: true,
+//                        chunkSize: 10000
+//                    }
+//                })
+//            });
+//            this.genomeViewer.addTrack(conservedTrack, {
+//                id: id,
+//                type: trackType,
+//                title: trackTitle,
+//                featuresRender: "MultiFeatureRender",
+//                histogramZoom: 50,
+//                height: 150,
+//                visibleRange: {start: 0, end: 100},
+//                featureTypes: FEATURE_TYPES
+//            });
         case "bam":
 //            var bamTrack = new TrackData(id, {
 //                adapter: new BamAdapter({
@@ -1708,6 +1814,28 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
 //            });
 //            break;
 
+
+            var adapter = new OpencgaAdapter({
+                category: "vcf",
+                host: host,
+                resource: object,
+                species: this.genomeViewer.species,
+                featureCache: {
+                    gzip: true,
+                    chunkSize: 5000
+                },
+                filters: {},
+                options: {},
+                featureConfig: FEATURE_CONFIG.vcf
+            });
+            var renderer = new FeatureRenderer('vcf');
+            renderer.on({
+                'feature:click': function (event) {
+
+                   var vcfInfo =  new VCFVariantInfoWidget(null, _this.genomeViewer.species,{adapter:adapter}).draw(event);
+                }
+            });
+
             var vcfTrack = new FeatureTrack({
                 targetId: null,
                 id: id,
@@ -1715,22 +1843,8 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 histogramZoom: 60,
                 height: 150,
                 visibleRange: {start: 0, end: 100},
-
-                renderer: new FeatureRenderer('vcf'),
-
-                dataAdapter: new OpencgaAdapter({
-                    category: "vcf",
-                    host: host,
-                    resource: object,
-                    species: this.genomeViewer.species,
-                    featureCache: {
-                        gzip: true,
-                        chunkSize: 5000
-                    },
-                    filters: {},
-                    options: {},
-                    featureConfig: FEATURE_CONFIG.vcf
-                })
+                renderer: renderer,
+                dataAdapter: adapter
             });
             this.genomeViewer.addTrack(vcfTrack);
             break;
