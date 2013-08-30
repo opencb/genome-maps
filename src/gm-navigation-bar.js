@@ -459,7 +459,23 @@ GmNavigationBar.prototype = {
             if (featureName.slice(0, "rs".length) == "rs" || featureName.slice(0, "AFFY_".length) == "AFFY_" || featureName.slice(0, "SNP_".length) == "SNP_" || featureName.slice(0, "VAR_".length) == "VAR_" || featureName.slice(0, "CRTAP_".length) == "CRTAP_" || featureName.slice(0, "FKBP10_".length) == "FKBP10_" || featureName.slice(0, "LEPRE1_".length) == "LEPRE1_" || featureName.slice(0, "PPIB_".length) == "PPIB_") {
                 this.openSNPListWidget(featureName);
             } else {
-                this.openGeneListWidget(featureName);
+                console.log(featureName);
+                // TO-DO: gene list widget to be implemented
+                // this.openGeneListWidget(featureName);
+
+                // meanwhile the location of feature is set
+                console.log(this.species);
+                var _this = this;
+                var cellBaseManager = new CellBaseManager(this.species);
+                cellBaseManager.success.addEventListener(function (evt, data) {
+                    var feat = data[featureName].result[0];
+                    var regionStr = feat.chromosome+":"+feat.start+"-"+feat.end;
+                    var region = new Region();
+                    region.parse(regionStr);
+                    _this.region = region;
+                    _this.trigger('region:change', {region: _this.region, sender: _this});
+                });
+                cellBaseManager.get('feature', 'gene', featureName, 'info', 'of=json');
             }
         }
     },

@@ -23,7 +23,8 @@ if(
    window.location.host.indexOf("fsalavert")!=-1 ||
    window.location.host.indexOf("rsanchez")!=-1 ||
    window.location.host.indexOf("imedina")!=-1 ||
-   window.location.href.indexOf("http://bioinfo.cipf.es/apps-beta")!=-1
+   window.location.href.indexOf("http://bioinfo.cipf.es/apps-beta")!=-1 ||
+   window.location.protocol === "file:"
 ){
 
     CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbasebeta2/rest";
