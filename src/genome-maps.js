@@ -184,6 +184,18 @@ GenomeMaps.prototype = {
         this.statusBar = this._createStatusBar('status');
 
 
+        //TEST SCROLL BAR
+        var centerHeight = $(window).height() - ($(this.navigationBar.div).height() + $(this.statusBar.div).height() + this.headerWidget.height)-7;
+        $(this.genomeViewer.centerPanelDiv).css({
+//            height: centerHeight,
+//            'overflow-y': 'scroll',
+//            'overflow-x': 'hidden',
+        });
+        $(this.genomeViewer.trackListPanel.div).css({
+            'margin-bottom':'22px'
+        });
+
+
         var text = _this.species.text + ' <span style="color: #8396b2">' + _this.species.assembly + '</span>';
         this.headerWidget.setDescription(text);
 
@@ -276,6 +288,7 @@ GenomeMaps.prototype = {
             border: false,
             version: this.version,
             resizable: false,
+//            trackPanelScrollWidth: 36,
 //            zoom: urlZoom,
 //            confPanelHidden: confPanelHidden,
 //            regionPanelHidden: regionPanelHidden,
@@ -284,7 +297,7 @@ GenomeMaps.prototype = {
             drawNavigationBar: false,
             drawStatusBar: false,
 //            height: this.height - this.headerWidget.height,
-            width: this.width,
+//            width: this.width-18,
             handlers: {
                 'species:change': function (event) {
 //            _this._setTracks();
@@ -297,7 +310,6 @@ GenomeMaps.prototype = {
             }
         });
         genomeViewer.draw();
-
 
         return genomeViewer;
     },
@@ -416,7 +428,6 @@ GenomeMaps.prototype = {
             targetId: targetId,
             autoRender: true,
             region: this.genomeViewer.region,
-            width: this.genomeViewer.width,
             version: this.genomeViewer.version
         });
 

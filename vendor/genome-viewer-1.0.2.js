@@ -1,7 +1,7 @@
-/*! Genome Viewer - v1.0.2 - 2013-08-29
+/*! Genome Viewer - v1.0.2 - 2013-09-04
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
-/*! Genome Viewer - v1.0.2 - 2013-08-29
+/*! Genome Viewer - v1.0.2 - 2013-09-04
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 var Utils = {
@@ -482,7 +482,7 @@ var SVG = {
 //	
 //};
 
-/*! Genome Viewer - v1.0.2 - 2013-08-29
+/*! Genome Viewer - v1.0.2 - 2013-09-04
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 function CellBaseManager(species, args) {
@@ -7447,7 +7447,6 @@ ChromosomePanel.prototype = {
             return (a.start - b.start);
         };
 
-        console.log('In chromosome-widget: ' + this.region)
         var cellBaseManager = new CellBaseManager(this.species);
         cellBaseManager.success.addEventListener(function (sender, data) {
             _this.data = data.result.result[0].chromosomes;
@@ -8109,7 +8108,7 @@ KaryotypePanel.prototype = {
 //            this.positionBox.setAttribute("x2",this.chrOffsetX[this.region.chromosome]+23);
 //        }
 //
-        console.log(this.lastSpecies != this.species)
+//        console.log(this.lastSpecies != this.species)
         if (this.lastSpecies != this.species) {
             needDraw = true;
             this.lastSpecies = this.species;
@@ -8203,6 +8202,7 @@ function TrackListPanel(args) {//parent is a DOM div element
     this.windowSize;
 
     this.zoomMultiplier = 1;
+    this.showRegionOverviewBox = false;
 
     this.fontFamily = 'Source Sans Pro';
 
@@ -8352,7 +8352,8 @@ TrackListPanel.prototype = {
             'left': mid,
             'top': 0,
             'width': this.pixelBase,
-            'height': '100%',
+//            'height': '100%',
+            'height': 'calc(100% - 8px)',
             'opacity': 0.5,
             'border': '1px solid orangered',
             'background-color': 'orange'
@@ -8367,7 +8368,7 @@ TrackListPanel.prototype = {
             'left': -20,
             'top': 0,
             'width': this.pixelBase,
-            'height': '100%',
+            'height': 'calc(100% - 8px)',
             'border': '1px solid lightgray',
             'opacity': 0.7,
             'visibility': 'hidden',
@@ -8391,7 +8392,40 @@ TrackListPanel.prototype = {
             'background-color': 'honeydew'
         });
 
-//	if(this.parentLayout==null){
+        if(this.showRegionOverviewBox){
+            var regionOverviewBoxLeft = $('<div id="' + this.id + 'regionOverviewBoxLeft"></div>')[0];
+            var regionOverviewBoxRight = $('<div id="' + this.id + 'regionOverviewBoxRight"></div>')[0];
+            $(panelDiv).append(regionOverviewBoxLeft);
+            $(panelDiv).append(regionOverviewBoxRight);
+            var regionOverviewBoxWidth = this.region.length()*this.pixelBase;
+            var regionOverviewDarkBoxWidth = (this.width - regionOverviewBoxWidth)/ 2
+//            debugger
+            $(regionOverviewBoxLeft).css({
+                'z-index': 0,
+                'position': 'absolute',
+                'left': 1,
+                'top': 0,
+                'width': regionOverviewDarkBoxWidth,
+                'height': 'calc(100% - 8px)',
+                'border': '1px solid gray',
+                'opacity': 0.5,
+                //            'visibility': 'hidden',
+                'background-color': 'lightgray'
+            });
+            $(regionOverviewBoxRight).css({
+                'z-index': 0,
+                'position': 'absolute',
+                'left': (regionOverviewDarkBoxWidth + regionOverviewBoxWidth),
+                'top': 0,
+                'width': regionOverviewDarkBoxWidth,
+                'height': 'calc(100% - 8px)',
+                'border': '1px solid gray',
+                'opacity': 0.5,
+                //            'visibility': 'hidden',
+                'background-color': 'lightgray'
+            });
+        }
+
 
         $(this.div).mousemove(function (event) {
             var centerPosition = _this.region.center();
@@ -8751,6 +8785,8 @@ TrackListPanel.prototype = {
 
 
         track.set('trackFeature:highlight', function (event) {
+
+
             var attrName = event.attrName || 'feature_id';
             if ('attrValue' in event) {
                 event.attrValue = ($.isArray(event.attrValue)) ? event.attrValue : [event.attrValue];
@@ -9233,7 +9269,7 @@ function Track(args) {
     this.transcriptZoom;
     this.height = 100;
     this.visibleRange = {start:0,end:100},
-    this.fontFamily = 'Source Sans Pro';
+    this.fontClass = 'ocb-font-sourcesanspro ocb-font-size-14';
 
     _.extend(this, args);
 
@@ -9349,10 +9385,11 @@ Track.prototype = {
         $(div).append(titlediv);
         $(div).append(svgdiv);
 
+        $(titlediv).addClass(this.fontClass);
         $(titlediv).css({
-            'font-family':'Source Sans Pro',
-            'font-size':'14px',
-            'height':'16px'
+            'height':'16px',
+            'line-height':'16px',
+            'padding-left':'4px'
         });
 
         $(svgdiv).css({
@@ -9372,8 +9409,7 @@ Track.prototype = {
         });
 
         if(this.resizable){
-            var resizediv = $('<div id="' + this.id + '-resizediv"></div>')[0];
-            $(resizediv).css({'background-color': 'lightgray', 'height': 3, opacity:0.3});
+            var resizediv = $('<div id="' + this.id + '-resizediv" class="ocb-track-resize"></div>')[0];
 
             $(resizediv).mousedown(function (event) {
                 $('html').addClass('unselectable');
@@ -9423,8 +9459,6 @@ Track.prototype = {
 //        var titleText = SVG.addChild(titleGroup, "text", {
 //            "x": 4,
 //            "y": 14,
-//            "font-size": 14,
-//            'font-family':_this.fontFamily,
 //            "opacity": "0.4",
 //            "fill": "black"
 //        });
@@ -9436,6 +9470,7 @@ Track.prototype = {
             "width": this.svgCanvasWidth,
             "height": this.height
         });
+
 
 
         this.fnTitleMouseEnter = function () {
@@ -9458,11 +9493,10 @@ Track.prototype = {
         this.invalidZoomText = SVG.addChild(titleGroup, "text", {
             "x": 154,
             "y": 18,
-            "font-size": 12,
-            'font-family':_this.fontFamily,
             "opacity": "0.6",
             "fill": "black",
-            "visibility": "hidden"
+            "visibility": "hidden",
+            "class":this.fontClass
         });
         this.invalidZoomText.textContent = "This level of zoom isn't appropiate for this track";
 
@@ -10111,187 +10145,6 @@ GeneTrack.prototype.showInfoWidget = function (args) {
     }
 };
 
-IcgcTrack.prototype = new Track({});
-
-function IcgcTrack(args) {
-    Track.call(this,args);
-    // Using Underscore 'extend' function to extend and add Backbone Events
-    _.extend(this, Backbone.Events);
-
-    //set default args
-
-    //save default render reference;
-    this.defaultRenderer = this.renderer;
-    this.histogramRenderer = new HistogramRenderer();
-
-
-    this.chunksDisplayed = {};
-
-
-    //set instantiation args, must be last
-    _.extend(this, args);
-};
-
-IcgcTrack.prototype.initialize = function(targetId){
-    var _this = this;
-    this.initializeDom(targetId);
-
-    this.svgCanvasOffset = (this.width * 3 / 2) / this.pixelBase;
-    this.svgCanvasLeftLimit = this.region.start - this.svgCanvasOffset*2;
-    this.svgCanvasRightLimit = this.region.start + this.svgCanvasOffset*2
-
-    this.dataAdapter.on('data:ready',function(event){
-//        if(event.params.histogram == true){
-//            _this.renderer = _this.histogramRenderer;
-//        }else{
-//            _this.renderer = _this.defaultRenderer;
-//        }
-        _this.renderer = _this.defaultRenderer;
-
-//        _this.setHeight(_this.height - trackSvg.getHeight());//modify height before redraw
-        var features = _this._getFeaturesByChunks(event);
-
-        _this.renderer.render(features, {
-            svgCanvasFeatures : _this.svgCanvasFeatures,
-            featureTypes:_this.featureTypes,
-            renderedArea:_this.renderedArea,
-            pixelBase : _this.pixelBase,
-            position : _this.region.center(),
-            width : _this.width,
-            zoom : _this.zoom,
-            labelZoom : _this.labelZoom,
-            pixelPosition : _this.pixelPosition
-
-        });
-        _this.updateHeight();
-        _this.setLoading(false);
-    });
-
-    this.renderer.on('feature:click',function(event){
-        _this.showInfoWidget(event);
-    });
-};
-
-IcgcTrack.prototype.draw = function(){
-    var _this = this;
-
-    this.svgCanvasLeftLimit = this.region.start - this.svgCanvasOffset*2;
-    this.svgCanvasRightLimit = this.region.start + this.svgCanvasOffset*2
-
-    this.updateHistogramParams();
-    this.cleanSvg();
-//    setCallRegion();
-
-    if( this.zoom >= this.visibleRange.start && this.zoom <= this.visibleRange.end ){
-        this.setLoading(true);
-        var data = this.dataAdapter.getData({
-            chromosome:this.region.chromosome,
-            start:this.region.start-this.svgCanvasOffset*2,
-            end:this.region.end+this.svgCanvasOffset*2,
-            histogram:this.histogram,
-            histogramLogarithm:this.histogramLogarithm,
-            histogramMax:this.histogramMax,
-            interval:this.interval
-        });
-
-        this.invalidZoomText.setAttribute("visibility", "hidden");
-    }else{
-        this.invalidZoomText.setAttribute("visibility", "visible");
-    }
-
-};
-
-
-IcgcTrack.prototype.move = function(disp){
-    var _this = this;
-//    trackSvg.position = _this.region.center();
-    _this.region.center();
-    var pixelDisplacement = disp*_this.pixelBase;
-    this.pixelPosition-=pixelDisplacement;
-
-    //parseFloat important
-    var move =  parseFloat(this.svgCanvasFeatures.getAttribute("x")) + pixelDisplacement;
-    this.svgCanvasFeatures.setAttribute("x",move);
-
-    var virtualStart = parseInt(this.region.start - this.svgCanvasOffset);
-    var virtualEnd = parseInt(this.region.end + this.svgCanvasOffset);
-    // check if track is visible in this zoom
-    if(this.zoom >= this.visibleRange.start && this.zoom <= this.visibleRange.end){
-
-        if(disp>0 && virtualStart < this.svgCanvasLeftLimit){
-            this.dataAdapter.getData({
-                chromosome:_this.region.chromosome,
-                start:parseInt(this.svgCanvasLeftLimit-this.svgCanvasOffset),
-                end:this.svgCanvasLeftLimit,
-                histogram:this.histogram,
-                interval:this.interval
-            });
-            this.svgCanvasLeftLimit = parseInt(this.svgCanvasLeftLimit - this.svgCanvasOffset);
-        }
-
-        if(disp<0 && virtualEnd > this.svgCanvasRightLimit){
-            this.dataAdapter.getData({
-                chromosome:_this.region.chromosome,
-                start:this.svgCanvasRightLimit,
-                end:parseInt(this.svgCanvasRightLimit+this.svgCanvasOffset),
-                histogram:this.histogram,
-                interval:this.interval,
-                transcript:this.transcript
-            });
-            this.svgCanvasRightLimit = parseInt(this.svgCanvasRightLimit+this.svgCanvasOffset);
-        }
-
-    }
-
-};
-
-IcgcTrack.prototype._getFeaturesByChunks = function(response, filters){
-    //Returns an array avoiding already drawn features in this.chunksDisplayed
-    var chunks = response.items;
-    var dataType = response.params.dataType;
-    var chromosome = response.params.chromosome;
-    var features = [];
-
-
-    var feature, displayed, featureFirstChunk, featureLastChunk, features = [];
-    for ( var i = 0, leni = chunks.length; i < leni; i++) {
-
-        if(this.chunksDisplayed[chunks[i].key+dataType]!=true){//check if any chunk is already displayed and skip it
-
-            for ( var j = 0, lenj = chunks[i][dataType].length; j < lenj; j++) {
-                feature = chunks[i][dataType][j];
-
-                //check if any feature has been already displayed by another chunk
-                displayed = false;
-                featureFirstChunk = this.dataAdapter.featureCache._getChunk(feature.start);
-                featureLastChunk = this.dataAdapter.featureCache._getChunk(feature.end);
-                for(var f=featureFirstChunk; f<=featureLastChunk; f++){
-                    var fkey = chromosome+":"+f;
-                    if(this.chunksDisplayed[fkey+dataType]==true){
-                        displayed = true;
-                        break;
-                    }
-                }
-                if(!displayed){
-                    //apply filter
-                    // if(filters != null) {
-                    //		var pass = true;
-                    // 		for(filter in filters) {
-                    // 			pass = pass && filters[filter](feature);
-                    //			if(pass == false) {
-                    //				break;
-                    //			}
-                    // 		}
-                    //		if(pass) features.push(feature);
-                    // } else {
-                    features.push(feature);
-                }
-            }
-            this.chunksDisplayed[chunks[i].key+dataType]=true;
-        }
-    }
-    return features;
-};
 SequenceTrack.prototype = new Track({});
 
 function SequenceTrack(args) {
@@ -10449,6 +10302,9 @@ function BamRenderer(args) {
     // Using Underscore 'extend' function to extend and add Backbone Events
     _.extend(this, Backbone.Events);
 
+    this.fontClass = 'ocb-font-sourcesanspro ocb-font-size-12';
+    this.toolTipfontClass = 'ocb-font-default';
+
     //set default args
     if (_.isString(args)) {
         var config = this.getDefaultConfig(args);
@@ -10460,8 +10316,6 @@ function BamRenderer(args) {
     }
 
     this.on(this.handlers);
-
-    this.fontFamily = 'Source Sans Pro';
 };
 
 
@@ -10591,7 +10445,7 @@ BamRenderer.prototype.render = function (response, args) {
         $(dummyRect).qtip({
             content: " ",
             position: {target: 'mouse', adjust: {x: 15, y: 0}, viewport: $(window), effect: false},
-            style: { width: true, classes: 'ui-tooltip-shadow'}
+            style: { width: true, classes: _this.toolTipfontClass+' ui-tooltip-shadow'}
         });
 
 
@@ -10686,11 +10540,9 @@ BamRenderer.prototype.render = function (response, args) {
                     //var	t = SVG.addChild(featureGroup,"text",{
                     //"x":x+1,
                     //"y":rowY+settings.height-1,
-                    //"font-size":13,
                     //"fill":"darkred",
                     //"textLength":width,
-                    //"cursor": "pointer",
-                    //"font-family": "Ubuntu Mono"
+                    //"cursor": "pointer"
                     //});
                     //t.setAttributeNS("http://www.w3.org/XML/1998/namespace", "xml:space","preserve");
                     //t.textContent = diff;
@@ -10703,7 +10555,7 @@ BamRenderer.prototype.render = function (response, args) {
                 $(featureGroup).qtip({
                     content: {text:tooltipText, title: tooltipTitle},
                     position: {target: "mouse", adjust: {x: 25, y: 15}},
-                    style: { width: 300, classes: 'ui-tooltip ui-tooltip-shadow'},
+                    style: { width: 300, classes: _this.toolTipfontClass+' ui-tooltip ui-tooltip-shadow'},
                     show: 'click',
                     hide: 'click mouseleave'
                 });
@@ -10834,7 +10686,7 @@ BamRenderer.prototype.render = function (response, args) {
                 $(readEls).qtip({
                     content: {text: readSettings.getTipText(read), title: readSettings.getTipTitle(read)},
                     position: {target: "mouse", adjust: {x: 15, y: 0}, viewport: $(window), effect: false},
-                    style: { width: 280, classes: 'ui-tooltip ui-tooltip-shadow'},
+                    style: { width: 280, classes: _this.toolTipfontClass+' ui-tooltip ui-tooltip-shadow'},
                     show: 'click',
                     hide: 'click mouseleave'
                 });
@@ -10845,7 +10697,7 @@ BamRenderer.prototype.render = function (response, args) {
                 $(mateEls).qtip({
                     content: {text: mateSettings.getTipText(mate), title: mateSettings.getTipTitle(mate)},
                     position: {target: "mouse", adjust: {x: 15, y: 0}, viewport: $(window), effect: false},
-                    style: { width: 280, classes: 'ui-tooltip ui-tooltip-shadow'},
+                    style: { width: 280, classes: _this.toolTipfontClass+' ui-tooltip ui-tooltip-shadow'},
                     show: 'click',
                     hide: 'click mouseleave'
                 });
@@ -10957,6 +10809,9 @@ function FeatureRenderer(args) {
     // Using Underscore 'extend' function to extend and add Backbone Events
     _.extend(this, Backbone.Events);
 
+    this.fontClass = 'ocb-font-sourcesanspro ocb-font-size-12';
+    this.toolTipfontClass = 'ocb-font-default';
+
     //set default args
     if (_.isString(args)) {
         var config = this.getDefaultConfig(args);
@@ -10968,8 +10823,6 @@ function FeatureRenderer(args) {
     }
 
     this.on(this.handlers);
-
-    this.fontFamily = 'Source Sans Pro';
 };
 
 
@@ -11034,12 +10887,11 @@ FeatureRenderer.prototype.render = function (features, args) {
                         'i': i,
                         'x': x,
                         'y': textY,
-                        'font-size': 12,
-                        'font-family': _this.fontFamily,
                         'font-weight': 400,
                         'opacity': null,
                         'fill': 'black',
-                        'cursor': 'pointer'
+                        'cursor': 'pointer',
+                        'class':_this.fontClass
                     });
                     text.textContent = label;
                 }
@@ -11049,7 +10901,7 @@ FeatureRenderer.prototype.render = function (features, args) {
                         content: {text: tooltipText, title: tooltipTitle},
 //                        position: {target: "mouse", adjust: {x: 15, y: 0}, effect: false},
                         position: {target: "mouse", adjust: {x: 25, y: 15}},
-                        style: { width: true, classes: 'ui-tooltip ui-tooltip-shadow'}
+                        style: { width: true, classes: _this.toolTipfontClass+' ui-tooltip ui-tooltip-shadow'}
                     });
                 }
 
@@ -11081,6 +10933,9 @@ function GeneRenderer(args) {
     // Using Underscore 'extend' function to extend and add Backbone Events
     _.extend(this, Backbone.Events);
 
+    this.fontClass = 'ocb-font-sourcesanspro ocb-font-size-12';
+    this.toolTipfontClass = 'ocb-font-default';
+
     //set default args
     if (_.isString(args)) {
         _.extend(this, this.getDefaultConfig(args));
@@ -11091,8 +10946,6 @@ function GeneRenderer(args) {
     }
 
     this.on(this.handlers);
-
-    this.fontFamily = 'Source Sans Pro';
 };
 
 GeneRenderer.prototype.setFeatureConfig = function(type){
@@ -11178,10 +11031,9 @@ GeneRenderer.prototype.render = function (features, args) {
                     'i': i,
                     'x': x,
                     'y': textY,
-                    'font-size': 12,
-                    'font-family': _this.fontFamily,
                     'fill': 'black',
-                    'cursor': 'pointer'
+                    'cursor': 'pointer',
+                    'class':_this.fontClass
                 });
                 text.textContent = label;
 
@@ -11189,7 +11041,7 @@ GeneRenderer.prototype.render = function (features, args) {
                     content: {text: tooltipText, title: tooltipTitle},
 //                    position: {target: "mouse", adjust: {x: 15, y: 0}, viewport: $(window), effect: false},
                     position: {target: "mouse", adjust: {x: 25, y: 15}},
-                    style: { width: true, classes: 'ui-tooltip ui-tooltip-shadow'}
+                    style: { width: true, classes: _this.toolTipfontClass+' ui-tooltip ui-tooltip-shadow'}
                 });
 
                 $([rect, text]).click(function (event) {
@@ -11243,11 +11095,10 @@ GeneRenderer.prototype.render = function (features, args) {
                         var text = SVG.addChild(transcriptGroup, 'text', {
                             'x': transcriptX,
                             'y': checkTextY,
-                            'font-size': 12,
-                            'font-family': _this.fontFamily,
                             'opacity': null,
                             'fill': 'black',
-                            'cursor': 'pointer'
+                            'cursor': 'pointer',
+                            'class':_this.fontClass
                         });
                         text.textContent = label;
 
@@ -11256,7 +11107,7 @@ GeneRenderer.prototype.render = function (features, args) {
                             content: {text: tooltipText, title: tooltipTitle},
 //                            position: {target: 'mouse', adjust: {x: 15, y: 0}, viewport: $(window), effect: false},
                             position: {target: "mouse", adjust: {x: 25, y: 15}},
-                            style: { width: true, classes: 'ui-tooltip ui-tooltip-shadow'}
+                            style: { width: true, classes: _this.toolTipfontClass+' ui-tooltip ui-tooltip-shadow'}
                         });
                         $(transcriptGroup).click(function (event) {
                             var query = this.getAttribute("widgetId");
@@ -11288,7 +11139,7 @@ GeneRenderer.prototype.render = function (features, args) {
                                 content: {text: tooltipText, title: tooltipTitle},
 //                                position: {target: 'mouse', adjust: {x: 15, y: 0}, viewport: $(window), effect: false},
                                 position: {target: "mouse", adjust: {x: 25, y: 15}},
-                                style: { width: true, classes: 'ui-tooltip ui-tooltip-shadow'}
+                                style: { width: true, classes: _this.toolTipfontClass+' ui-tooltip ui-tooltip-shadow'}
                             });
 
                             var eRect = SVG.addChild(exonGroup, "rect", {//paint exons in white without coding region
@@ -11504,6 +11355,9 @@ function SequenceRenderer(args){
     // Using Underscore 'extend' function to extend and add Backbone Events
     _.extend(this, Backbone.Events);
 
+    this.fontClass = 'ocb-font-ubuntumono ocb-font-size-16';
+    this.toolTipfontClass = 'ocb-font-default';
+
     //set default args
     //set instantiation args
     _.extend(this, args);
@@ -11514,11 +11368,6 @@ function SequenceRenderer(args){
 SequenceRenderer.prototype.render = function(features, args) {
 
     console.time("Sequence render "+features.items.sequence.length);
-    var chromeFontSize = "16";
-    if(this.zoom == 95){
-        chromeFontSize = "10";
-    }
-
     var middle = args.width/2;
 
     var start = features.items.start;
@@ -11530,17 +11379,16 @@ SequenceRenderer.prototype.render = function(features, args) {
         start++;
 
         var text = SVG.addChild(args.svgCanvasFeatures,"text",{
-            "x":x+1,
-            "y":12,
-            "font-size":chromeFontSize,
-            "font-family": "Ubuntu Mono",
-            "fill":SEQUENCE_COLORS[seqString.charAt(i)]
+            'x':x+1,
+            'y':12,
+            'fill':SEQUENCE_COLORS[seqString.charAt(i)],
+            'class': this.fontClass
         });
         text.textContent = seqString.charAt(i);
         $(text).qtip({
             content:seqString.charAt(i)+" "+(seqStart+i).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,")/*+'<br>'+phastCons[i]+'<br>'+phylop[i]*/,
             position: {target: 'mouse', adjust: {x:15, y:0}, viewport: $(window), effect: false},
-            style: { width:true, classes: 'qtip-light qtip-shadow'}
+            style: { width:true, classes: this.toolTipfontClass+' qtip-light qtip-shadow'}
         });
     }
 
@@ -12001,8 +11849,8 @@ function GenomeViewer(args) {
     this.height;
     this.sidePanelWidth = (this.sidePanel) ? 25 : 0;
 
-    console.log(this.targetId);
-    console.log(this.id);
+//    console.log(this.targetId);
+//    console.log(this.id);
 
     //events attachments
     this.on(this.handlers);
@@ -12026,7 +11874,7 @@ GenomeViewer.prototype = {
             console.log('targetId not found in DOM');
             return;
         }
-        console.log("Initializing GenomeViewer structure.");
+//        console.log("Initializing GenomeViewer structure.");
         this.targetDiv = $('#' + this.targetId)[0];
         this.div = $('<div id="' + this.id + '" class="ocb-gv ocb-box-vertical"></div>')[0];
 //        $(this.div).css({
@@ -12419,6 +12267,7 @@ GenomeViewer.prototype = {
             zoom: this.zoom,
             zoomMultiplier: 8,
             title: 'Region overview',
+            showRegionOverviewBox : true,
             region: this.region,
             handlers: {
                 'region:change': function (event) {

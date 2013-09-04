@@ -105,13 +105,19 @@ module.exports = function (grunt) {
             },
             opencga: {
                 files: [
-                    {   expand: true, cwd: '<%= meta.commons.opencga.dir %>', src: ['opencga*.js','worker*'], dest: 'vendor' }
+                    {   expand: true, cwd: '<%= meta.commons.opencga.dir %>', src: ['opencga*.js', 'worker*'], dest: 'vendor' }
                 ]
             },
             styles: {
                 files: [
                     {   expand: true, cwd: '<%= meta.commons.dir %>styles/', src: ['**'], dest: 'styles' },
                     {   expand: true, cwd: '<%= meta.commons.dir %>vendor/', src: ['jquery-ui-*custom/**'], dest: 'vendor' }
+                ]
+            },
+            vendor: {
+                files: [
+                    {   expand: true, cwd: '<%= meta.commons.dir %>vendor/', src: ['jquery.min.map'], dest: 'vendor' },
+                    {   expand: true, cwd: '<%= meta.commons.dir %>vendor/', src: ['backbone-min.map'], dest: 'vendor' }
                 ]
             }
         },
@@ -159,7 +165,7 @@ module.exports = function (grunt) {
             }
         },
         'curl-dir': {
-            
+
         },
         rename: {
             html: {
@@ -167,8 +173,16 @@ module.exports = function (grunt) {
                     {src: ['build/<%= meta.version %>/genome-maps.html'], dest: 'build/<%= meta.version %>/index.html'}
                 ]
             }
+        },
+        watch: {
+            commons: {
+                files: ['<%= meta.commons.genomeviewer.dir %>*/**','<%= meta.commons.opencga.dir %>*/**'],
+                tasks: ['commons'],
+                options: {
+                    spawn: false
+                }
+            }
         }
-
     });
 
     // These plugins provide necessary tasks.
@@ -182,12 +196,13 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-rename');
     grunt.loadNpmTasks('grunt-html-build');
     grunt.loadNpmTasks('grunt-curl');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     // Default task.
-    grunt.registerTask('default', ['clean', 'concat', 'uglify', 'copy', 'htmlbuild','rename:html']);
+    grunt.registerTask('default', ['clean', 'concat', 'uglify', 'copy', 'htmlbuild', 'rename:html']);
     grunt.registerTask('vendor', ['curl-dir']);
 
     // dependencies from js-common-libs
-    grunt.registerTask('commons', ['copy:genomeviewer','copy:opencga','copy:styles']);
+    grunt.registerTask('commons', ['copy:genomeviewer', 'copy:opencga', 'copy:styles']);
 
 };
