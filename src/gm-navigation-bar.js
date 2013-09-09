@@ -226,6 +226,13 @@ GmNavigationBar.prototype = {
                         plain: true
                     }
                 },
+                {
+                    tooltip: 'Tracks height will be calculated automatically',
+                    iconCls: 'ocb-icon-chromosome',
+                    handler: function () {
+                        _this.trigger('autoHeight-button:click', {sender: _this});
+                    }
+                },
                 '->',
                 this._createSearchComboBox(),
                 {
@@ -249,7 +256,7 @@ GmNavigationBar.prototype = {
 //                        id: this.id + 'configurationMenu',
 //                        plain: true
 //                    }
-                },
+                }
             ]
         });
         this._addRegionHistoryMenuItem(this.region);

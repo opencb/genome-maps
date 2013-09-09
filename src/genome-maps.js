@@ -64,7 +64,11 @@ GenomeMaps.prototype = {
 
         $(this.div).append('<div id="gm-header-widget"></div>');
         $(this.div).append('<div id="gm-genome-viewer"></div>');
-
+        $(this.div).append('<div id="gm-dummy" style="height:22px;background-color: #eee"></div>');
+//        $(this.genomeViewer.trackListPanel.div).css({
+//            'margin-bottom':'22px',
+//            'background':'gray'
+//        });
         this.width = ($(this.div).width());
 
         if (this.border) {
@@ -162,13 +166,13 @@ GenomeMaps.prototype = {
 
     },
     draw: function () {
+        var _this = this;
         if (!this.rendered) {
             console.info('Genome Maps is not rendered yet');
             return;
         }
-        var _this = this;
 
-//      /* Header Widget */
+        /* Header Widget */
         this.headerWidget = this._createHeaderWidget('gm-header-widget');
 
         /* Genome Viewer  */
@@ -190,9 +194,6 @@ GenomeMaps.prototype = {
 //            height: centerHeight,
 //            'overflow-y': 'scroll',
 //            'overflow-x': 'hidden',
-        });
-        $(this.genomeViewer.trackListPanel.div).css({
-            'margin-bottom':'22px'
         });
 
 
@@ -380,6 +381,9 @@ GenomeMaps.prototype = {
                     Utils.setMinRegion(_this.genomeViewer.defaultRegion, _this.genomeViewer.getSVGCanvasWidth());
                     event.region = _this.genomeViewer.defaultRegion;
                     _this.genomeViewer.trigger('region:change', event);
+                },
+                'autoHeight-button:click':function(event){
+                    _this.genomeViewer.enableAutoHeight();
                 }
             }
         });

@@ -1,4 +1,4 @@
-/*! Genome Viewer - v1.0.2 - 2013-07-29
+/*! Genome Viewer - v1.0.2 - 2013-09-09
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 function UserListWidget (args){
@@ -105,7 +105,8 @@ GenericFormPanel.prototype.getForm = function () {
 
         this.form = Ext.create('Ext.form.Panel', {
             border: false,
-            bodyPadding: "5",
+            bodyPadding: '5',
+            width:'95%',
             layout: 'vbox',
             items: items
         });
@@ -158,7 +159,7 @@ GenericFormPanel.prototype.getJobPanel = function () {
         border: true,
         bodyPadding: "5",
         margin: "0 0 5 0",
-        width: "99%",
+        width:'99%',
         buttonAlign: 'center',
         items: [jobNameField, jobDescriptionField, jobFolder]
     });
@@ -1059,6 +1060,7 @@ function HeaderWidget(args){
 	this.news='';
     this.checkTimeInterval = 4000;
     this.version = '';
+    this.allowLogin = true;
 
     //set instantiation args, must be last
     _.extend(this, args);
@@ -1335,6 +1337,7 @@ HeaderWidget.prototype = {
                     }
                 },{
                     id: this.id+'btnSignin',
+                    disabled:!this.allowLogin,
                     text: '<span class="emph">sign in</span>',
                     handler: function (){
                         _this.loginWidget.draw();
@@ -1369,7 +1372,7 @@ HeaderWidget.prototype = {
                     items:[{
                         id: this.id + "appTextItem",
                         xtype: 'tbtext',
-                        margin:'15 0 0 20',
+                        margin:'25 0 0 20',
                         //		        	html: '<span class="appName">Vitis vinifera&nbsp; '+this.args.appname +'</span> <span class="appDesc">'+this.args.description+'</span>&nbsp;&nbsp;&nbsp;&nbsp;<span><img height="30" src="http://www.demeter.es/imagenes/l_demeter.gif"></span>',
                         text: '<span class="appName">' + this.appname + '</span> ' +
                             '<span id="' + this.id + 'description" class="appDesc">' + this.description + '</span>' +
@@ -1478,7 +1481,6 @@ function JobListWidget (args){
 	this.bar = new Ext.create('Ext.toolbar.Toolbar', {
 //		vertical : true,
 		id:this.id+"jobsFilterBar",
-		style : 'border : 0',
 		dock : 'top',
 		items :  [
                   //this.projectFilterButton,
@@ -1538,6 +1540,13 @@ function JobListWidget (args){
 ///*HARDCODED check job status*/
 
 	
+};
+
+JobListWidget.prototype.show = function (){
+    this.pagedListViewWidget.show();
+};
+JobListWidget.prototype.hide = function (){
+    this.pagedListViewWidget.hide();
 };
 
 //override
@@ -3222,7 +3231,7 @@ PagedViewListWidget.prototype.render = function() {
 						padding:15,
 						store: this.store,
 					    tpl: this.tpl,
-					    height:$(document).height()-200,
+					    height:this.height,
 					    trackOver: true,
 					    autoScroll:true,
 	           			overItemCls: 'list-item-hover',
@@ -3361,14 +3370,14 @@ PagedViewListWidget.prototype.render = function() {
 				
 				this.panel = Ext.create('Ext.panel.Panel', {
 					id : this.panelId,
-					//title : this.title,
+					title : this.title,
 					border:this.border,
 				    width: this.width,
 				    tbar : this.pagBar,
 				    items: [pan]
 				});
+
 //				this.view.setHeight(this.panel.getHeight());
-				
 				var target = Ext.getCmp(this.targetId);
 				if (target instanceof Ext.panel.Panel){
 					target.insert(this.order, this.panel);
@@ -3381,6 +3390,16 @@ PagedViewListWidget.prototype.render = function() {
 	}
 };
 
+PagedViewListWidget.prototype.show = function (){
+    if (this.panel != null){
+        this.panel.show();
+    }
+};
+PagedViewListWidget.prototype.hide = function (){
+    if (this.panel != null){
+        this.panel.hide();
+    }
+};
 
 /** Paging bar Events **/
 //PagedViewListWidget.prototype.onPageChange = function (object, event, option){

@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html>
+    
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Genome Maps</title>
+        <link rel="stylesheet" type="text/css" href="http://cdn.sencha.io/ext/gpl/4.2.1/resources/css/ext-all-gray.css">
+        <!-- CSS from vendors -->
+        <link type="text/css" rel="stylesheet" href="build/3.1.1/vendor/ChemDoodleWeb.css" />
+        <link type="text/css" rel="stylesheet" href="build/3.1.1/vendor/jquery.qtip.min.css" />
+        <link type="text/css" rel="stylesheet" href="build/3.1.1/vendor/jquery-ui-1.10.3.custom/css/smoothgray/jquery-ui-1.10.3.custom.min.css" />
+        <!-- CSS from Styles -->
+        <link type="text/css" rel="stylesheet" href="build/3.1.1/styles/css/style.css" />
+        <!-- Sencha Ext -->
+        <script type="text/javascript" src="http://cdn.sencha.io/ext/gpl/4.2.1/ext-all.js"></script>
+        <script type="text/javascript" src="http://cdn.sencha.io/ext/gpl/4.2.1/examples/shared/examples.js"></script>
+        <!-- Workers directory -->
+        <script type="text/javascript">
+            WORKERS_PATH = "vendor/";
+        </script>
+        <!-- JS from vendors -->
+        <script type="text/javascript" src="vendor/jquery.min.js"></script>
+        <script type="text/javascript" src="build/3.1.1/vendor/underscore-min.js"></script>
+        <script type="text/javascript" src="build/3.1.1/vendor/backbone-min.js"></script>
+        <script type="text/javascript" src="build/3.1.1/vendor/jquery.mousewheel.min.js"></script>
+        <script type="text/javascript" src="build/3.1.1/vendor/gl-matrix-min.js"></script>
+        <script type="text/javascript" src="build/3.1.1/vendor/ChemDoodleWeb.js"></script>
+        <script type="text/javascript" src="build/3.1.1/vendor/jquery.cookie.js"></script>
+        <script type="text/javascript" src="build/3.1.1/vendor/purl.min.js"></script>
+        <script type="text/javascript" src="build/3.1.1/vendor/jquery.sha1.js"></script>
+        <script type="text/javascript" src="build/3.1.1/vendor/jquery.qtip.min.js"></script>
+        <script type="text/javascript" src="build/3.1.1/vendor/rawdeflate.js"></script>
+        <script type="text/javascript" src="build/3.1.1/vendor/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>
+        <script type="text/javascript" src="build/3.1.1/vendor/genome-viewer-1.0.2.min.js"></script>
+        <script type="text/javascript" src="build/3.1.1/vendor/opencga-1.0.0.min.js"></script>
+        <!-- JS from GenomeMaps -->
+        <script type="text/javascript" src="./gm-config.js"></script>
+        <script>
+            Ext.Loader.setConfig({
+                    enabled: true
+                });
+            Ext.Loader.setPath('Ext.ux', 'http://cdn.sencha.io/ext/gpl/4.2.1/examples/ux');
+            Ext.QuickTips.init();
+            Ext.require([
+                    'Ext.ux.grid.FiltersFeature',
+                    'Ext.grid.plugin.BufferedRenderer'
+                    //	    'Ext.grid.PagingScroller',
+                    //	    'Ext.ux.data.PagingMemoryProxy'
+                ]);
+
+            var genomeMaps;
+            Ext.onReady(function() {
+                CheckBrowser();
+                genomeMaps = new GenomeMaps({
+                        targetId: 'application',
+                        autoRender: true
+                    }); //the div must exist
+                genomeMaps.draw();
+            });
+        </script>
+        <STYLE type="text/css">
+            html {
+                overflow-y: scroll;
+                overflow-x: hidden;
+            }
+            #status {
+                position: fixed;
+                left:4px;
+                right:4px;
+                bottom: 0px;
+                height: 28px;
+                border:1px solid lightgrey;
+                z-index:50;
+            }
+            body {
+                background-color: #f5f5f5;
+                padding: 4px;
+            }
+        </STYLE>
+    </head>
+    
+    <body>
+        <div id="checkBrowser"></div>
+        <div id="application"></div>
+        <div id="status"></div>
+    </body>
+
+</html>

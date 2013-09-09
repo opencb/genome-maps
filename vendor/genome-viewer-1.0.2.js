@@ -1,7 +1,7 @@
-/*! Genome Viewer - v1.0.2 - 2013-09-04
+/*! Genome Viewer - v1.0.2 - 2013-09-09
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
-/*! Genome Viewer - v1.0.2 - 2013-09-04
+/*! Genome Viewer - v1.0.2 - 2013-09-09
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 var Utils = {
@@ -482,7 +482,7 @@ var SVG = {
 //	
 //};
 
-/*! Genome Viewer - v1.0.2 - 2013-09-04
+/*! Genome Viewer - v1.0.2 - 2013-09-09
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 function CellBaseManager(species, args) {
@@ -8193,6 +8193,8 @@ function TrackListPanel(args) {//parent is a DOM div element
     //set default args
     this.id = Utils.genId("TrackListPanel");
 
+    this.fontClass = 'ocb-font-sourcesanspro ocb-font-size-14';
+
     this.trackSvgList = [];
     this.swapHash = {};
     this.zoomOffset = 0;//for region overview panel, that will keep zoom higher, 0 by default
@@ -8204,7 +8206,6 @@ function TrackListPanel(args) {//parent is a DOM div element
     this.zoomMultiplier = 1;
     this.showRegionOverviewBox = false;
 
-    this.fontFamily = 'Source Sans Pro';
 
     this.height = 0;
 
@@ -8279,66 +8280,60 @@ TrackListPanel.prototype = {
 
         var mid = this.width / 2;
 
-        this.positionText = SVG.addChild(this.svgTop, "text", {
-            "x": mid - 30,
-            "y": 24,
-            "font-size": 12,
-            'font-family':_this.fontFamily,
-            "fill": "green"
+        this.positionText = SVG.addChild(this.svgTop, 'text', {
+            'x': mid - 30,
+            'y': 24,
+            'fill': 'green',
+            'class': this.fontClass
         });
-        this.nucleotidText = SVG.addChild(this.svgTop, "text", {
-            "x": mid + 35,
-            "y": 24,
-//        "font-family": "Ubuntu Mono",
-            'font-family':_this.fontFamily,
-            "font-size": 13
+        this.nucleotidText = SVG.addChild(this.svgTop, 'text', {
+            'x': mid + 35,
+            'y': 24,
+            'class': this.fontClass
         });
-        this.firstPositionText = SVG.addChild(this.svgTop, "text", {
-            "x": 0,
-            "y": 24,
-            "font-size": 12,
-            'font-family':_this.fontFamily,
-            "fill": "green"
+        this.firstPositionText = SVG.addChild(this.svgTop, 'text', {
+            'x': 0,
+            'y': 24,
+            'fill': 'green',
+            'class': this.fontClass
         });
-        this.lastPositionText = SVG.addChild(this.svgTop, "text", {
-            "x": this.width - 70,
-            "y": 24,
-            "font-size": 12,
-            'font-family':_this.fontFamily,
-            "fill": "green"
+        this.lastPositionText = SVG.addChild(this.svgTop, 'text', {
+            'x': this.width - 70,
+            'y': 24,
+            'fill': 'green',
+            'class': this.fontClass
         });
-        this.viewNtsArrow = SVG.addChild(this.svgTop, "rect", {
-            "x": 2,
-            "y": 6,
-            "width": this.width - 4,
-            "height": 2,
-            "opacity": "0.5",
-            "fill": "black"
+        this.viewNtsArrow = SVG.addChild(this.svgTop, 'rect', {
+            'x': 2,
+            'y': 6,
+            'width': this.width - 4,
+            'height': 2,
+            'opacity': '0.5',
+            'fill': 'black'
         });
-        this.viewNtsArrowLeft = SVG.addChild(this.svgTop, "polyline", {
-            "points": "0,1 2,1 2,13 0,13",
-            "opacity": "0.5",
-            "fill": "black"
+        this.viewNtsArrowLeft = SVG.addChild(this.svgTop, 'polyline', {
+            'points': '0,1 2,1 2,13 0,13',
+            'opacity': '0.5',
+            'fill': 'black'
         });
-        this.viewNtsArrowRight = SVG.addChild(this.svgTop, "polyline", {
-            "points": this.width + ",1 " + (this.width - 2) + ",1 " + (this.width - 2) + ",13 " + this.width + ",13",
-            "opacity": "0.5",
-            "fill": "black"
+        this.viewNtsArrowRight = SVG.addChild(this.svgTop, 'polyline', {
+            'points': this.width + ',1 ' + (this.width - 2) + ',1 ' + (this.width - 2) + ',13 ' + this.width + ',13',
+            'opacity': '0.5',
+            'fill': 'black'
         });
-        this.windowSize = "Window size: " + this.region.length() + " nts";
-        this.viewNtsTextBack = SVG.addChild(this.svgTop, "rect", {
-            "x": mid - 40,
-            "y": 0,
-            "width": this.windowSize.length * 6,
-            "height": 13,
-            "fill": "white"
+        this.windowSize = 'Window size: ' + this.region.length() + ' nts';
+        this.viewNtsTextBack = SVG.addChild(this.svgTop, 'rect', {
+            'x': mid - 40,
+            'y': 0,
+            'width': this.windowSize.length * 7,
+            'height': 13,
+            'fill': 'white'
         });
-        this.viewNtsText = SVG.addChild(this.svgTop, "text", {
-            "x": mid - 30,
-            "y": 11,
-            "font-size": 12,
-            'font-family':_this.fontFamily,
-            "fill": "black"
+        this.viewNtsText = SVG.addChild(this.svgTop, 'text', {
+            'x': mid - 30,
+            'y': 11,
+            'fill': 'black',
+            'class': this.fontClass
         });
         this.viewNtsText.textContent = this.windowSize;
         this._setTextPosition();
@@ -8862,6 +8857,13 @@ TrackListPanel.prototype = {
 //        this._showTrack(track.id);
     },
 
+    enableAutoHeight: function(){
+        for (var i = 0; i < this.trackSvgList.length; i++) {
+            var track = this.trackSvgList[i];
+            track.enableAutoHeight();
+        }
+    },
+
     _redraw: function () {
         $(this.tlTracksDiv)
         for (var i = 0; i < this.trackSvgList.length; i++) {
@@ -8999,7 +9001,7 @@ TrackListPanel.prototype = {
         this.lastPositionText.textContent = Utils.formatNumber(this.visualRegion.end);
 
         this.viewNtsText.textContent = "Window size: " + this.visualRegion.length() + " nts";
-        this.viewNtsTextBack.setAttribute("width", this.viewNtsText.textContent.length * 6);
+        this.viewNtsTextBack.setAttribute("width", this.viewNtsText.textContent.length * 7);
         this.windowSize = this.viewNtsText.textContent;
     },
 
@@ -9262,6 +9264,7 @@ function Track(args) {
     this.renderer;
     this.labelZoom = -1;
     this.resizable = true;
+    this.autoHeight = true;
     this.targetId;
     this.id;
     this.title;
@@ -9330,9 +9333,17 @@ Track.prototype = {
         }else{
             var height = this.height;
         }
-        this.main.setAttribute("height",height);
-        this.svgCanvasFeatures.setAttribute("height",height);
-        this.titlebar.setAttribute("height",height);
+        this.main.setAttribute('height',height);
+        this.svgCanvasFeatures.setAttribute('height',height);
+        this.titlebar.setAttribute('height',height);
+
+        if(this.autoHeight){
+            $(this.svgdiv).css({'height': height+10});
+        }
+    },
+    enableAutoHeight: function(){
+        this.autoHeight = true;
+        this.updateHeight();
     },
 
     setTitle : function(title){
@@ -9420,6 +9431,7 @@ Track.prototype = {
                     var actualHeight = $(svgdiv).outerHeight();
                     $(svgdiv).css({height: actualHeight + despY});
                     downY = event.clientY;
+                    _this.autoHeight = false;
                 });
             });
             $('html').mouseup(function (event) {
@@ -9796,7 +9808,8 @@ FeatureTrack.prototype.render = function(targetId){
             width : _this.width,
             zoom : _this.zoom,
             labelZoom : _this.labelZoom,
-            pixelPosition : _this.pixelPosition
+            pixelPosition : _this.pixelPosition,
+            frontSvg:_this.titlebar
 
         });
         _this.updateHeight();
@@ -9977,7 +9990,8 @@ GeneTrack.prototype.render = function (targetId) {
             width: _this.width,
             zoom: _this.zoom,
             labelZoom: _this.labelZoom,
-            pixelPosition: _this.pixelPosition
+            pixelPosition: _this.pixelPosition,
+            frontSvg:_this.titlebar
 
         });
         _this.updateHeight();
@@ -10080,7 +10094,6 @@ GeneTrack.prototype.move = function (disp) {
             });
             this.svgCanvasRightLimit = parseInt(this.svgCanvasRightLimit + this.svgCanvasOffset);
         }
-
     }
 
 };
@@ -10982,7 +10995,7 @@ GeneRenderer.prototype.render = function (features, args) {
         var textHeight = 0;
         if (args.zoom > args.labelZoom) {
             textHeight = 9;
-            maxWidth = Math.max(width, label.length * 9);
+            maxWidth = Math.max(width, label.length * 12);
         }
 
         var rowY = 0;
@@ -11305,7 +11318,7 @@ HistogramRenderer.prototype.render = function(features, args) {
 
 //    if(!this.axis){//Create axis values for histogram
 //        this.axis = true;
-//        var text = SVG.addChild(this.histogramLegend,"text",{
+//        var text = SVG.addChild(args.frontSvg,"text",{
 //            "x":10,
 //            "y":histogramHeight+4,
 //            "font-size": 12,
@@ -11315,7 +11328,7 @@ HistogramRenderer.prototype.render = function(features, args) {
 //            "visibility":"visible"
 //        });
 //        text.textContent = "-0";
-//        var text = SVG.addChild(this.histogramLegend,"text",{
+//        var text = SVG.addChild(args.frontSvg,"text",{
 //            "x":10,
 //            "y":histogramHeight+4 - (Math.log(10)*multiplier),
 //            "font-size": 12,
@@ -11325,7 +11338,7 @@ HistogramRenderer.prototype.render = function(features, args) {
 //            "visibility":"visible"
 //        });
 //        text.textContent = "-10";
-//        var text = SVG.addChild(this.histogramLegend,"text",{
+//        var text = SVG.addChild(args.frontSvg,"text",{
 //            "x":10,
 //            "y":histogramHeight+4 - (Math.log(100)*multiplier),
 //            "font-size": 12,
@@ -11335,7 +11348,7 @@ HistogramRenderer.prototype.render = function(features, args) {
 //            "visibility":"visible"
 //        });
 //        text.textContent = "-100";
-//        var text = SVG.addChild(this.histogramLegend,"text",{
+//        var text = SVG.addChild(args.frontSvg,"text",{
 //            "x":10,
 //            "y":histogramHeight+4 - (Math.log(1000)*multiplier),
 //            "font-size": 12,
@@ -12030,6 +12043,11 @@ GenomeViewer.prototype = {
 
     highlight: function (args) {
         this.trigger('feature:highlight', args);
+    },
+
+    enableAutoHeight: function(){
+        this.trackListPanel.enableAutoHeight();
+        this.regionOverviewPanel.enableAutoHeight();
     },
 
     draw: function () {
