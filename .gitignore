@@ -1,2 +1,3 @@
 build/
-add_gpl_license.sh
+node_modules/
+
