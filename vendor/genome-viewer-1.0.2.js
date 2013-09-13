@@ -1,7 +1,7 @@
-/*! Genome Viewer - v1.0.2 - 2013-09-09
+/*! Genome Viewer - v1.0.2 - 2013-09-11
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
-/*! Genome Viewer - v1.0.2 - 2013-09-09
+/*! Genome Viewer - v1.0.2 - 2013-09-11
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 var Utils = {
@@ -482,7 +482,7 @@ var SVG = {
 //	
 //};
 
-/*! Genome Viewer - v1.0.2 - 2013-09-09
+/*! Genome Viewer - v1.0.2 - 2013-09-11
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 function CellBaseManager(species, args) {
@@ -9271,8 +9271,8 @@ function Track(args) {
     this.histogramZoom;
     this.transcriptZoom;
     this.height = 100;
-    this.visibleRange = {start:0,end:100},
-    this.fontClass = 'ocb-font-sourcesanspro ocb-font-size-14';
+    this.visibleRange = {start: 0, end: 100},
+        this.fontClass = 'ocb-font-sourcesanspro ocb-font-size-14';
 
     _.extend(this, args);
 
@@ -9296,14 +9296,14 @@ function Track(args) {
 
     this.renderedArea = {};//used for renders to store binary trees
 
-    if('handlers' in this){
-        for(eventName in this.handlers){
-            this.on(eventName,this.handlers[eventName]);
+    if ('handlers' in this) {
+        for (eventName in this.handlers) {
+            this.on(eventName, this.handlers[eventName]);
         }
     }
 
     this.rendered = false;
-    if(this.autoRender){
+    if (this.autoRender) {
         this.render();
     }
 };
@@ -9323,30 +9323,30 @@ Track.prototype = {
         this.dataAdapter.species = this.species
     },
 
-    setWidth : function(width){
-        this.width=width;
-        this.main.setAttribute("width",width);
+    setWidth: function (width) {
+        this.width = width;
+        this.main.setAttribute("width", width);
     },
-    updateHeight : function(){
-        if(!this.histogram){
+    updateHeight: function () {
+        if (!this.histogram) {
             var height = Object.keys(this.renderedArea).length * 20;//this must be passed by config, 20 for test
-        }else{
+        } else {
             var height = this.height;
         }
-        this.main.setAttribute('height',height);
-        this.svgCanvasFeatures.setAttribute('height',height);
-        this.titlebar.setAttribute('height',height);
+        this.main.setAttribute('height', height);
+        this.svgCanvasFeatures.setAttribute('height', height);
+        this.titlebar.setAttribute('height', height);
 
-        if(this.autoHeight){
-            $(this.svgdiv).css({'height': height+10});
+        if (this.autoHeight) {
+            $(this.svgdiv).css({'height': height + 10});
         }
     },
-    enableAutoHeight: function(){
+    enableAutoHeight: function () {
         this.autoHeight = true;
         this.updateHeight();
     },
 
-    setTitle : function(title){
+    setTitle: function (title) {
         $(this.titlediv).html(title);
     },
 
@@ -9372,9 +9372,17 @@ Track.prototype = {
             this.histogramMax = undefined;
             this.interval = undefined;
         }
+
+        if (this.histogramRenderer) {
+            if (this.zoom <= this.histogramZoom) {
+                this.histogramGroup.setAttribute('visibility', 'visible');
+            } else {
+                this.histogramGroup.setAttribute('visibility', 'hidden');
+            }
+        }
     },
 
-    cleanSvg : function(filters){//clean
+    cleanSvg: function (filters) {//clean
 //        console.time("-----------------------------------------empty");
         while (this.svgCanvasFeatures.firstChild) {
             this.svgCanvasFeatures.removeChild(this.svgCanvasFeatures.firstChild);
@@ -9388,7 +9396,7 @@ Track.prototype = {
 
         var _this = this;
         var div = $('<div id="' + this.id + '-div"></div>')[0];
-        var titlediv = $('<div id="' + this.id + '-titlediv">'+this.title+'</div>')[0];
+        var titlediv = $('<div id="' + this.id + '-titlediv">' + this.title + '</div>')[0];
         var svgdiv = $('<div id="' + this.id + '-svgdiv"></div>')[0];
 
         $(targetId).addClass("unselectable");
@@ -9398,28 +9406,28 @@ Track.prototype = {
 
         $(titlediv).addClass(this.fontClass);
         $(titlediv).css({
-            'height':'16px',
-            'line-height':'16px',
-            'padding-left':'4px'
+            'height': '16px',
+            'line-height': '16px',
+            'padding-left': '4px'
         });
 
         $(svgdiv).css({
             'z-index': 3,
-            'height':this.height,
+            'height': this.height,
             'overflow-y': (this.resizable) ? 'auto' : 'hidden',
             'overflow-x': 'hidden'
         });
 
-        var main = SVG.addChild(svgdiv, "svg", {
-            "id": this.id,
-            "class": "trackSvg",
-            "x": 0,
-            "y": 0,
-            "width": this.width,
-            "height": this.height
+        var main = SVG.addChild(svgdiv, 'svg', {
+            'id': this.id,
+            'class': 'trackSvg',
+            'x': 0,
+            'y': 0,
+            'width': this.width,
+            'height': this.height
         });
 
-        if(this.resizable){
+        if (this.resizable) {
             var resizediv = $('<div id="' + this.id + '-resizediv" class="ocb-track-resize"></div>')[0];
 
             $(resizediv).mousedown(function (event) {
@@ -9435,40 +9443,39 @@ Track.prototype = {
                 });
             });
             $('html').mouseup(function (event) {
-                $('html').removeClass("unselectable");
+                $('html').removeClass('unselectable');
                 $('html').off('mousemove');
             });
 
 
             $(resizediv).mouseenter(function (event) {
-                $(this).css({"cursor": "ns-resize"});
-                $(this).css({"opacity": 1});
+                $(this).css({'cursor': 'ns-resize'});
+                $(this).css({'opacity': 1});
             });
             $(resizediv).mouseleave(function (event) {
-                $(this).css({"cursor": "default"});
-                $(this).css({"opacity": 0.3});
+                $(this).css({'cursor': 'default'});
+                $(this).css({'opacity': 0.3});
             });
 
             $(div).append(resizediv);
         }
 
-        var titleGroup = SVG.addChild(main, "g", {
+        this.svgGroup = SVG.addChild(main, "g", {
             "class": "trackTitle"
             //visibility:this.titleVisibility
         });
 
-
         var text = this.title;
         var textWidth = 15 + text.length * 6;
-        var titlebar = SVG.addChild(titleGroup, "rect", {
-            "x": 0,
-            "y": 0,
-            "width": this.width,
-            "height": this.height,
-            "opacity": "0.6",
-            "fill": "transparent"
+        var titlebar = SVG.addChild(this.svgGroup, 'rect', {
+            'x': 0,
+            'y': 0,
+            'width': this.width,
+            'height': this.height,
+            'opacity': '0.6',
+            'fill': 'transparent'
         });
-//        var titleText = SVG.addChild(titleGroup, "text", {
+//        var titleText = SVG.addChild(this.svgGroup, "text", {
 //            "x": 4,
 //            "y": 14,
 //            "opacity": "0.4",
@@ -9476,41 +9483,40 @@ Track.prototype = {
 //        });
 //        titleText.textContent = text;
 
-        this.svgCanvasFeatures = SVG.addChild(titleGroup, "svg", {
-            "class": "features",
-            "x": -this.pixelPosition,
-            "width": this.svgCanvasWidth,
-            "height": this.height
+        this.svgCanvasFeatures = SVG.addChild(this.svgGroup, 'svg', {
+            'class': 'features',
+            'x': -this.pixelPosition,
+            'width': this.svgCanvasWidth,
+            'height': this.height
         });
-
 
 
         this.fnTitleMouseEnter = function () {
-            titlebar.setAttribute("opacity", "0.1");
-            titlebar.setAttribute("fill", "greenyellow");
-//            titleText.setAttribute("opacity", "1.0");
+            titlebar.setAttribute('opacity', '0.1');
+            titlebar.setAttribute('fill', 'greenyellow');
+//            titleText.setAttribute('opacity', '1.0');
         };
         this.fnTitleMouseLeave = function () {
-            titlebar.setAttribute("opacity", "0.6");
-            titlebar.setAttribute("fill", "transparent");
-//            titleText.setAttribute("opacity", "0.4");
+            titlebar.setAttribute('opacity', '0.6');
+            titlebar.setAttribute('fill', 'transparent');
+//            titleText.setAttribute('opacity', '0.4');
         };
 
-        $(titleGroup).off("mouseenter");
-        $(titleGroup).off("mouseleave");
-        $(titleGroup).mouseenter(this.fnTitleMouseEnter);
-        $(titleGroup).mouseleave(this.fnTitleMouseLeave);
+        $(this.svgGroup).off('mouseenter');
+        $(this.svgGroup).off('mouseleave');
+        $(this.svgGroup).mouseenter(this.fnTitleMouseEnter);
+        $(this.svgGroup).mouseleave(this.fnTitleMouseLeave);
 
 
-        this.invalidZoomText = SVG.addChild(titleGroup, "text", {
-            "x": 154,
-            "y": 18,
-            "opacity": "0.6",
-            "fill": "black",
-            "visibility": "hidden",
-            "class":this.fontClass
+        this.invalidZoomText = SVG.addChild(this.svgGroup, 'text', {
+            'x': 154,
+            'y': 18,
+            'opacity': '0.6',
+            'fill': 'black',
+            'visibility': 'hidden',
+            'class': this.fontClass
         });
-        this.invalidZoomText.textContent = "This level of zoom isn't appropiate for this track";
+        this.invalidZoomText.textContent = "Zoom in to view the sequence";
 
 
         var loadingImg = '<?xml version="1.0" encoding="utf-8"?>' +
@@ -9546,14 +9552,62 @@ Track.prototype = {
         this.titlediv = titlediv;
 
         this.main = main;
-        this.titleGroup = titleGroup;
         this.titlebar = titlebar;
 //        this.titleText = titleText;
 
 
+        if (this.histogramRenderer) {
+            this._drawHistogramLegend();
+        }
+
         this.rendered = true;
         this.status = "ready";
 
+    },
+    _drawHistogramLegend: function () {
+        var histogramHeight = this.histogramRenderer.histogramHeight;
+        var multiplier = this.histogramRenderer.multiplier;
+
+        this.histogramGroup = SVG.addChild(this.svgGroup, 'g', {
+            'class': 'histogramGroup',
+            'visibility': 'hidden'
+        });
+        var text = SVG.addChild(this.histogramGroup, "text", {
+            "x": 21,
+            "y": histogramHeight + 4,
+            "font-size": 12,
+            "opacity": "0.9",
+            "fill": "orangered",
+            'class': this.fontClass
+        });
+        text.textContent = "0-";
+        var text = SVG.addChild(this.histogramGroup, "text", {
+            "x": 14,
+            "y": histogramHeight + 4 - (Math.log(10) * multiplier),
+            "font-size": 12,
+            "opacity": "0.9",
+            "fill": "orangered",
+            'class': this.fontClass
+        });
+        text.textContent = "10-";
+        var text = SVG.addChild(this.histogramGroup, "text", {
+            "x": 7,
+            "y": histogramHeight + 4 - (Math.log(100) * multiplier),
+            "font-size": 12,
+            "opacity": "0.9",
+            "fill": "orangered",
+            'class': this.fontClass
+        });
+        text.textContent = "100-";
+        var text = SVG.addChild(this.histogramGroup, "text", {
+            "x": 0,
+            "y": histogramHeight + 4 - (Math.log(1000) * multiplier),
+            "font-size": 12,
+            "opacity": "0.9",
+            "fill": "orangered",
+            'class': this.fontClass
+        });
+        text.textContent = "1000-";
     },
 
 //    showInfoWidget: function (args) {
@@ -9808,8 +9862,7 @@ FeatureTrack.prototype.render = function(targetId){
             width : _this.width,
             zoom : _this.zoom,
             labelZoom : _this.labelZoom,
-            pixelPosition : _this.pixelPosition,
-            frontSvg:_this.titlebar
+            pixelPosition : _this.pixelPosition
 
         });
         _this.updateHeight();
@@ -9990,8 +10043,7 @@ GeneTrack.prototype.render = function (targetId) {
             width: _this.width,
             zoom: _this.zoom,
             labelZoom: _this.labelZoom,
-            pixelPosition: _this.pixelPosition,
-            frontSvg:_this.titlebar
+            pixelPosition: _this.pixelPosition
 
         });
         _this.updateHeight();
@@ -11242,123 +11294,89 @@ GeneRenderer.prototype.render = function (features, args) {
 };
 HistogramRenderer.prototype = new Renderer({});
 
-function HistogramRenderer(args){
-    Renderer.call(this,args);
+function HistogramRenderer(args) {
+    Renderer.call(this, args);
     // Using Underscore 'extend' function to extend and add Backbone Events
     _.extend(this, Backbone.Events);
 
     //set default args
+    this.histogramHeight = 75;
+    this.multiplier = 7;
+
     //set instantiation args
     _.extend(this, args);
 
 };
 
 
-HistogramRenderer.prototype.render = function(features, args) {
-    var middle = args.width/2;
-    var multiplier = 5;
-    var histogramHeight = 75;
+HistogramRenderer.prototype.render = function (features, args) {
+
+    var middle = args.width / 2;
     var points = '';
 
-    if(features.length>0) {//Force first point at histogramHeight
+    if (features.length > 0) {//Force first point at this.histogramHeight
         var firstFeature = features[0];
-        var width = (firstFeature.end-firstFeature.start)* args.pixelBase;
-        var x = args.pixelPosition+middle-((args.position-parseInt(firstFeature.start))*args.pixelBase);
-        points = (x+(width/2))+','+histogramHeight+' ';
+        var width = (firstFeature.end - firstFeature.start) * args.pixelBase;
+        var x = args.pixelPosition + middle - ((args.position - parseInt(firstFeature.start)) * args.pixelBase);
+        points = (x + (width / 2)) + ',' + this.histogramHeight + ' ';
     }
 
     var maxValue = 0;
 
-    for ( var i = 0, len = features.length; i < len; i++) {
+    for (var i = 0, len = features.length; i < len; i++) {
 
         var feature = features[i];
         feature.start = parseInt(feature.start);
         feature.end = parseInt(feature.end);
-        var width = (feature.end-feature.start);
+        var width = (feature.end - feature.start);
         //get type settings object
 
-        try{
+        try {
             var settings = args.featureTypes[feature.featureType];
             var color = settings.histogramColor;
-        }catch(e){
+        } catch (e) {
             var color = 'gray'
         }
 
         width = width * args.pixelBase;
-        var x = args.pixelPosition+middle-((args.position-feature.start)*args.pixelBase);
+        var x = args.pixelPosition + middle - ((args.position - feature.start) * args.pixelBase);
 
-
-        var height = /*histogramHeight * */ features[i].features_count;
-        if(height == null){
-            height = features[i].value;
-            height = histogramHeight * height;
-        }else{
-            height = height*multiplier;
+        if (features[i].features_count == null) {
+//            var height = Math.log(features[i].absolute);
+            if (features[i].absolute != 0) {
+                features[i].features_count = Math.log(features[i].absolute);
+            } else {
+                features[i].features_count = 0;
+            }
         }
 
-        points += (x+(width/2))+","+(histogramHeight - height)+" ";
+//        var height = features[i].features_count;
+//        if (height == null) {
+//            height = features[i].value;
+//            height = this.histogramHeight * height;
+//        } else {
+//        }
+        var height = features[i].features_count * this.multiplier;
+
+
+        points += (x + (width / 2)) + "," + (this.histogramHeight - height) + " ";
 
     }
-    if(features.length>0) {//force last point at histogramHeight
-        var lastFeature = features[features.length-1];
-        var width = (lastFeature.end-lastFeature.start)* args.pixelBase;
-        var x = args.pixelPosition+middle-((args.position-parseInt(lastFeature.start))*args.pixelBase);
-        points += (x+(width/2))+','+histogramHeight+' ';
+    if (features.length > 0) {//force last point at this.histogramHeight
+        var lastFeature = features[features.length - 1];
+        var width = (lastFeature.end - lastFeature.start) * args.pixelBase;
+        var x = args.pixelPosition + middle - ((args.position - parseInt(lastFeature.start)) * args.pixelBase);
+        points += (x + (width / 2)) + ',' + this.histogramHeight + ' ';
 
     }
 
-    var pol = SVG.addChild(args.svgCanvasFeatures,"polyline",{
-        "points":points,
+    var pol = SVG.addChild(args.svgCanvasFeatures, "polyline", {
+        "points": points,
         "stroke": "#000000",
         "stroke-width": 0.2,
         "fill": color,
         "cursor": "pointer"
     });
-
-
-//    if(!this.axis){//Create axis values for histogram
-//        this.axis = true;
-//        var text = SVG.addChild(args.frontSvg,"text",{
-//            "x":10,
-//            "y":histogramHeight+4,
-//            "font-size": 12,
-//            "opacity":"0.9",
-//            "fill":"gray",
-//            "font-family": "Oxygen Mono",
-//            "visibility":"visible"
-//        });
-//        text.textContent = "-0";
-//        var text = SVG.addChild(args.frontSvg,"text",{
-//            "x":10,
-//            "y":histogramHeight+4 - (Math.log(10)*multiplier),
-//            "font-size": 12,
-//            "opacity":"0.9",
-//            "fill":"gray",
-//            "font-family": "Oxygen Mono",
-//            "visibility":"visible"
-//        });
-//        text.textContent = "-10";
-//        var text = SVG.addChild(args.frontSvg,"text",{
-//            "x":10,
-//            "y":histogramHeight+4 - (Math.log(100)*multiplier),
-//            "font-size": 12,
-//            "opacity":"0.9",
-//            "fill":"gray",
-//            "font-family": "Oxygen Mono",
-//            "visibility":"visible"
-//        });
-//        text.textContent = "-100";
-//        var text = SVG.addChild(args.frontSvg,"text",{
-//            "x":10,
-//            "y":histogramHeight+4 - (Math.log(1000)*multiplier),
-//            "font-size": 12,
-//            "opacity":"0.9",
-//            "fill":"gray",
-//            "font-family": "Oxygen Mono",
-//            "visibility":"visible"
-//        });
-//        text.textContent = "-1000";
-//    }
 };
 
 SequenceRenderer.prototype = new Renderer({});
