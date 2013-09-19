@@ -28,7 +28,7 @@ if(
 ){
 
     CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbasebeta2/rest";
-//	CELLBASE_HOST = "http://fsalavert:8080/cellbase/rest";
+	CELLBASE_HOST = "http://fsalavert:8080/cellbase-server-3.0.0/rest";
 	//CELLBASE_HOST = "http://rsanchez:8080/cellbase/rest";
 	//CELLBASE_HOST = "http://imedina:8080/cellbase/rest";
 	//CELLBASE_HOST = "http://ralonso:8080/naranjoma-ws/rest";
@@ -68,7 +68,8 @@ var AVAILABLE_SPECIES = {
                 {"text": "Gorilla gorilla", "assembly": "gorGor3.1", "region":{"chromosome":"1","start":1000000,"end":1000000},  "chromosomes": ["1", "2a", "2b", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22","X", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
 //                {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region":{"chromosome":"13","start":32889611,"end":32973805}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
 //                {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region":{"chromosome":"13","start":32889599,"end":32889739}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
-                {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region":{"chromosome":"20","start":32878277,"end":32878277}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
+//              {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region":{"chromosome":"20","start":32878277,"end":32878277}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
+                {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region":{"chromosome":"1","start":32877109,"end":32882337}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
                 {"text": "Macaca mulatta", "assembly": "MMUL_1.0", "region":{"chromosome":"1","start":1000000,"end":1000000},  "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "X", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
                 {"text": "Mus musculus", "assembly": "GRCm38.p1", "region":{"chromosome":"1","start":18422009,"end":18422009}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
                 {"text": "Oryctolagus cuniculus", "assembly": "oryCun2", "region":{"chromosome":"1","start":1000000,"end":1000000},   "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "X", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},

@@ -1,4 +1,4 @@
-/*! Genome Viewer - v1.0.2 - 2013-09-11
+/*! Genome Viewer - v1.0.2 - 2013-09-19
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 function UserListWidget (args){
@@ -53,6 +53,8 @@ UserListWidget.prototype.render =  function (data){
 };
 
 function GenericFormPanel(analysis) {
+    _.extend(this, Backbone.Events);
+
     this.analysis = analysis;
     this.form = null;
     this.paramsWS = {};
@@ -71,30 +73,47 @@ function GenericFormPanel(analysis) {
         }
         else console.log(response.data);
     });
+
+    //events attachments
+    this.on(this.handlers);
+
 }
 
 GenericFormPanel.prototype.draw = function (args) {
-    if (args != null && args.type == "window") {
-        Ext.create('Ext.ux.Window', {
-            title: args.title || "",
-            resizable: args.resizable || false,
-            width: args.width || 500,
-            height: args.height,
-            overflowY: 'auto',
-            taskbar: args.taskbar,
-            items: this.getForm()
-        }).show();
+    var _this = this;
+    if (this.panel == null) {
+        if (args != null && args.type == "window") {
+            this.panel = Ext.create('Ext.ux.Window', {
+                title: args.title || "",
+                resizable: args.resizable || false,
+                width: args.width || 500,
+                height: args.height,
+                overflowY: 'auto',
+                taskbar: args.taskbar,
+                closable:false,
+                items: this.getForm()
+            }).show();
+        }
+        else {
+            this.panel = Ext.create('Ext.panel.Panel', {
+                id: this.panelId,
+                title: args.title,
+                closable: true,
+                defaults: {margin: 30},
+                autoScroll: true,
+                items: this.getForm(),
+                border:0,
+                listeners:{
+                    beforeclose:function(){
+                        console.log('closing');
+                        args.tabpanel.remove(_this.panel,false);
+                        return false;
+                    }
+                }
+            });
+        }
     }
-    else {
-        return Ext.create('Ext.container.Container', {
-            id: this.panelId,
-            title: args.title,
-            closable: true,
-            defaults: {margin: 30},
-            autoScroll: true,
-            items: this.getForm()
-        });
-    }
+    return this.panel;
 };
 
 GenericFormPanel.prototype.getForm = function () {
@@ -104,9 +123,9 @@ GenericFormPanel.prototype.getForm = function () {
         items.push(this.getRunButton());
 
         this.form = Ext.create('Ext.form.Panel', {
-            border: false,
+            border: 0,
             bodyPadding: '5',
-            width:'95%',
+            width: '95%',
             layout: 'vbox',
             items: items
         });
@@ -122,7 +141,7 @@ GenericFormPanel.prototype.getPanels = function () {
 GenericFormPanel.prototype.getJobPanel = function () {
     var _this = this;
     var jobNameField = Ext.create('Ext.form.field.Text', {
-        id: this.id+"jobname",
+        id: this.id + "jobname",
         name: "jobname",
         fieldLabel: 'Name',
         emptyText: "Job name",
@@ -131,7 +150,7 @@ GenericFormPanel.prototype.getJobPanel = function () {
     });
 
     var jobDescriptionField = Ext.create('Ext.form.field.TextArea', {
-        id: this.id+"jobdescription",
+        id: this.id + "jobdescription",
         name: "jobdescription",
         fieldLabel: 'Description',
         emptyText: "Description",
@@ -146,7 +165,7 @@ GenericFormPanel.prototype.getJobPanel = function () {
 //	});
 //	var jobDestinationBucket = this.createCombobox("jobdestinationbucket", "Destination bucket", bucketList, 0, 100);
     var jobFolder = this.createOpencgaBrowserCmp({
-        id:Utils.genId('jobFolder'),
+        id: Utils.genId('jobFolder'),
         fieldLabel: 'Folder:',
         dataParamName: 'outdir',
         mode: 'folderSelection',
@@ -160,7 +179,7 @@ GenericFormPanel.prototype.getJobPanel = function () {
         border: true,
         bodyPadding: "5",
         margin: "0 0 5 0",
-        width:'99%',
+        width: '99%',
         buttonAlign: 'center',
         items: [jobNameField, jobDescriptionField, jobFolder]
     });
@@ -201,13 +220,14 @@ GenericFormPanel.prototype.run = function () {
     this.setAccountParams();
     (this.paramsWS['outdir'] === '') ? delete this.paramsWS['outdir'] : console.log(this.paramsWS['outdir']);
 
-    if(!this.testing){
+    if (!this.testing) {
         this.opencgaManager.runAnalysis(this.analysis, this.paramsWS);
     }
 
     Ext.example.msg('Job Launched', 'It will be listed soon');
     //debug
     console.log(this.paramsWS);
+    this.trigger('after:run', {sender: this});
 };
 
 
@@ -281,16 +301,19 @@ GenericFormPanel.prototype.createOpencgaBrowserCmp = function (args) {//fieldLab
         text: 'Browse...',
         margin: args.btnMargin || '0 0 0 10',
         handler: function () {
-            _this.opencgaBrowserWidget.allowedTypes = args.allowedTypes;
-            if(args.beforeClick != null){
-                args.beforeClick();
+            if (args.beforeClick != null) {
+                args.beforeClick(args);
             }
             var listenerIdx = _this.opencgaBrowserWidget.onSelect.addEventListener(function (sender, response) {
-                fileSelectedLabel.setText('<span class="emph">' + response.bucketId + '/' + response.id + '</span>', false);
-                hiddenField.setValue(response.bucketId + ':' + response.id.replace(/\//g, ":"));//this is send to the ws
+
+                var label = response.bucketId + '/' + response.id;
+                var value = response.bucketId + ':' + response.id.replace(/\//g, ":");
+                fileSelectedLabel.setText('<span class="emph">' + label + '</span>', false);
+                hiddenField.setValue(value);//this is send to the ws
+
                 _this.opencgaBrowserWidget.onSelect.removeEventListener(listenerIdx);
             });
-            _this.opencgaBrowserWidget.draw(args.mode);
+            _this.opencgaBrowserWidget.draw({mode: args.mode, allowedTypes: args.allowedTypes});
         }
     });
 
@@ -302,7 +325,7 @@ GenericFormPanel.prototype.createOpencgaBrowserCmp = function (args) {//fieldLab
 
     //not shown, just for validation
     var hiddenField = Ext.create('Ext.form.field.Text', {
-        id: args.id+'hidden',
+        id: args.id + 'hidden',
         name: args.dataParamName,
         hidden: true,
         allowBlank: (args.allowBlank || false),
@@ -1062,17 +1085,14 @@ function HeaderWidget(args){
     this.checkTimeInterval = 4000;
     this.version = '';
     this.allowLogin = true;
+    this.width;
+    this.height;
 
     //set instantiation args, must be last
     _.extend(this, args);
 
 	this.adapter = new OpencgaManager();
 	
-	/** Events **/
-	this.onLogin = new Event();
-	this.onLogout = new Event();
-	this.onGetAccountInfo = new Event();
-
 	/** create widgets **/
 	this.loginWidget= new LoginWidget(this.suiteId);
 	this.editUserWidget = new ProfileWidget();
@@ -1082,7 +1102,7 @@ function HeaderWidget(args){
 	/**Atach events i listen**/
 	this.loginWidget.onSessionInitiated.addEventListener(function(){
 		_this.sessionInitiated();
-		_this.onLogin.notify();
+		_this.trigger('login',{sender:this});
 	});
 
 	this.adapter.onLogout.addEventListener(function(sender, data){
@@ -1093,7 +1113,7 @@ function HeaderWidget(args){
 		$.cookie('bioinfo_account', null);
 		$.cookie('bioinfo_account', null, {path: '/'});
 		_this.sessionFinished();
-		_this.onLogout.notify();
+        _this.trigger('logout',{sender:this});
 	});
     this.opencgaBrowserWidget.onNeedRefresh.addEventListener(function(){
         _this.getAccountInfo();
@@ -1101,10 +1121,13 @@ function HeaderWidget(args){
     this.adapter.onGetAccountInfo.addEventListener(function (evt, response){
         if(response.accountId != null){
             _this.setAccountData(response);
-            _this.onGetAccountInfo.notify(response);
+            _this.trigger('account:change',{sender:this,response:response});
             console.log("accountData has been modified since last call");
         }
     });
+
+
+    this.on(this.handlers);
 
     this.rendered = false;
     if (this.autoRender) {
@@ -1190,7 +1213,6 @@ HeaderWidget.prototype = {
     setWidth : function (width){
         this.width=width;
         this.getPanel().setWidth(width);
-        this.getPanel().updateLayout();//sencha 4.1.0 : items are not allocated in the correct position after setWidth
     },
     render : function (targetId){
         var _this=this;
@@ -1366,6 +1388,7 @@ HeaderWidget.prototype = {
                 height : this.height,
                 minHeight: this.height,
                 maxHeigth: this.height,
+                width:this.width,
                 layout:'hbox',
                 items:[{
                     xtype:'container',
@@ -1422,7 +1445,7 @@ function JobListWidget (args){
 											'<tpl if="visites == -2">Darkorange</tpl>'+
 											'">{name}</div>',
 						'<div style="color: #15428B"><i>{date}</i></div>',
-						'<div style="color:steelblue"><i>{toolName}</i></div>',
+						'<div style="color:steelblue"><i>{toolName}</i><i>{execution}</i></div>',
 						'<div style="color:grey"><i>',
 //						'<tpl if="visites == 0">finished and unvisited</tpl>',
 //						'<tpl if="visites &gt; 0">{visites} visites</tpl>',
@@ -2198,7 +2221,7 @@ function OpencgaBrowserWidget(args) {
         Ext.getBody().unmask();
     });
 
-    this.uploadWidget = new UploadWidget({suiteId: args.suiteId, opencgaBrowserWidget: this});
+    this.uploadWidget = new UploadWidget({suiteId: args.suiteId, opencgaBrowserWidget: this,chunkedUpload:true});
 
     this.uploadWidget.adapter.onUploadObjectToBucket.addEventListener(function (sender, res) {
         if (res.status == 'done') {
@@ -2217,7 +2240,7 @@ OpencgaBrowserWidget.prototype = {
     onSelect: new Event(this),
     onNeedRefresh: new Event(this),
     width: 800,
-    height: 375,
+    height: 575,
     rendered: false,
 //    selectedFolderNode:undefined,
 //    selectedFileNode:undefined,//can be set by the tree panel or the grid panel
@@ -2378,12 +2401,18 @@ OpencgaBrowserWidget.prototype = {
     //endclass
 };
 
-OpencgaBrowserWidget.prototype.render = function (mode) {
+OpencgaBrowserWidget.prototype.render = function (args) {
     var _this = this;
+
+    var args = args || {};
+    var mode = args.mode;
+    this.allowedTypes = args.allowedTypes;
+
+
     if (this.panel == null) {
 
         this.folderStore = Ext.create('Ext.data.TreeStore', {
-            id:this.id+'folderStore',
+            id: this.id + 'folderStore',
             fields: ['text', 'oid'],
             root: {
                 expanded: true,
@@ -2400,7 +2429,7 @@ OpencgaBrowserWidget.prototype.render = function (mode) {
             }
         });
         this.allStore = Ext.create('Ext.data.TreeStore', {
-            id:this.id+'allStore',
+            id: this.id + 'allStore',
             fields: ['text', 'oid'],
             root: {
                 expanded: true,
@@ -2416,7 +2445,7 @@ OpencgaBrowserWidget.prototype.render = function (mode) {
         var refreshBucketAction = Ext.create('Ext.Action', {
             icon: Utils.images.refresh,
             text: 'Refresh bucket',
-            handler: function(widget, event) {
+            handler: function (widget, event) {
                 var record = _this.folderTree.getSelectionModel().getSelection()[0];
                 if (record) {
                     if (record.raw.isBucket) {
@@ -2438,7 +2467,7 @@ OpencgaBrowserWidget.prototype.render = function (mode) {
         var renameBucketAction = Ext.create('Ext.Action', {
 //            icon: Utils.images.refresh,
             text: 'Rename bucket',
-            handler: function(widget, event) {
+            handler: function (widget, event) {
                 var record = _this.folderTree.getSelectionModel().getSelection()[0];
                 if (record) {
                     if (record.raw.isBucket) {
@@ -2536,7 +2565,7 @@ OpencgaBrowserWidget.prototype.render = function (mode) {
                             _this.setTrackIndex(id, record.data.index);
                         }
                     },
-                    itemcontextmenu: function(este, record, item, index, e) {
+                    itemcontextmenu: function (este, record, item, index, e) {
                         e.stopEvent();
                         var items = [];
                         console.log(record)
@@ -2579,12 +2608,12 @@ OpencgaBrowserWidget.prototype.render = function (mode) {
                     }
                 },
                 viewready: function (este, eOpts) {//Fires when the grid view is available (use this for selecting a default row).
-                    setTimeout(function(){ // forced to do this because some ExtJS 4.2.0 event problem
+                    setTimeout(function () { // forced to do this because some ExtJS 4.2.0 event problem
                         var node = este.getRootNode().getChildAt(0);
                         if (typeof node != 'undefined') {
                             este.getSelectionModel().select(node);
                         }
-                    },0);
+                    }, 0);
                 },
                 checkchange: function (node, checked) {
                 },
@@ -2631,15 +2660,12 @@ OpencgaBrowserWidget.prototype.render = function (mode) {
         /*END MANAGE PROJECTS*/
 
 
-
-
-
         /*Files grid*/
         var indexAction = Ext.create('Ext.Action', {
-            icon   : Utils.images.info,  // Use a URL in the icon config
+            icon: Utils.images.info,  // Use a URL in the icon config
             text: 'Create index',
 //            disabled: true,
-            handler: function(widget, event) {
+            handler: function (widget, event) {
                 var record = _this.filesGrid.getSelectionModel().getSelection()[0];
                 if (record) {
                     var opencgaManager = new OpencgaManager();
@@ -2692,7 +2718,7 @@ OpencgaBrowserWidget.prototype.render = function (mode) {
 //            icon: Utils.images.info,
             text: 'Show name',
 //            disabled: true,
-            handler: function(widget, event) {
+            handler: function (widget, event) {
                 var rec = _this.filesGrid.getSelectionModel().getSelection()[0];
                 if (rec) {
                     Ext.example.msg('objectId', '' + rec.get('oid'));
@@ -2704,7 +2730,7 @@ OpencgaBrowserWidget.prototype.render = function (mode) {
             icon: Utils.images.del,
             text: 'Delete this file',
 //            disabled: true,
-            handler: function(widget, event) {
+            handler: function (widget, event) {
                 var record = _this.filesGrid.getSelectionModel().getSelection()[0];
                 if (record) {
                     Ext.MessageBox.confirm('Confirm', 'Are you sure you want to delete this file?<p class="emph">' + record.data.fileName + '<p>', function (answer) {
@@ -2735,7 +2761,7 @@ OpencgaBrowserWidget.prototype.render = function (mode) {
             viewConfig: {
                 stripeRows: true,
                 listeners: {
-                    itemcontextmenu: function(este, record, item, index, e) {
+                    itemcontextmenu: function (este, record, item, index, e) {
                         e.stopEvent();
                         var items = [showName];
                         console.log(record)
@@ -2758,9 +2784,17 @@ OpencgaBrowserWidget.prototype.render = function (mode) {
                     selectionchange: function (este, item) {
                         if (item.length > 0) {//se compr
                             _this.selectedFileNode = item[0].raw;
-                            if (mode == "fileSelection" && item[0].raw.fileType == "dir") {
+                            var type = item[0].raw.fileType;
+                            var fileFormat = item[0].raw.fileFormat;
+                            if (mode == "fileSelection" && type == "dir") {
                                 return;
                             }
+                            console.log(_this.allowedTypes)
+                            if (typeof _this.allowedTypes != 'undefined' && _this.allowedTypes.indexOf(fileFormat) == -1) {
+                                console.log('file format NOT allowed -' + fileFormat + '- ')
+                                return;
+                            }
+                            console.log('file format allowed -' + fileFormat + '- ')
                             _this.selectButton.enable();
                             //this.selectedLabel.setText('<p>The selected file <span class="emph">'+item[0].data.fileName.substr(0,40)+'</span><span class="ok"> is allowed</span>.</p>',false);
                             //TODO por defecto cojo el primero pero que pasa si el data contiene varios ficheros??
@@ -2787,7 +2821,7 @@ OpencgaBrowserWidget.prototype.render = function (mode) {
             minWidth: 125,
             minHeight: 250,
             flex: 1,
-            cls: 'panel-border-right',
+            cls: 'ocb-border-right-lightgrey',
             border: false,
             layout: 'accordion',
             items: [this.folderTree, manageProjects /*, panFilter*/]
@@ -2802,8 +2836,15 @@ OpencgaBrowserWidget.prototype.render = function (mode) {
             }
         });
 
-        this.activeUploadsCont = Ext.create('Ext.container.Container', {
+        this.activeUploadsCont = Ext.create('Ext.panel.Panel', {
+            title:'Active uploads',
+            animCollapse:false,
+            hidden:true,
+            bodyPadding:'10 0 10 0',
             autoScroll: true,
+            height: 125,
+            border:0,
+            cls:'ocb-border-top-lightgrey',
             items: []
         });
 
@@ -2868,9 +2909,11 @@ OpencgaBrowserWidget.prototype.render = function (mode) {
             pressed: false,
             toggleHandler: function () {
                 if (this.pressed) {
-                    _this.viewUploads();
+                    _this.activeUploadsCont.show();
+//                    _this.viewUploads();
                 } else {
-                    _this.viewBuckets();
+                    _this.activeUploadsCont.hide();
+//                    _this.viewBuckets();
                 }
             }
         });
@@ -2882,10 +2925,22 @@ OpencgaBrowserWidget.prototype.render = function (mode) {
             closable: false,
             modal: true,
             height: this.height,
+            minHeight: this.height,
             width: this.width,
-            layout: { type: 'hbox', align: 'stretch'},
+            minWidth: this.width,
+            resizable:true,
+            layout: { type: 'vbox', align: 'stretch'},
             tbar: tbarObj,
-            items: [this.panAccordion, this.filesGrid],
+            items: [
+                {
+                    xtype: 'container',
+                    flex: 3,
+                    minWidth: 125,
+                    layout: { type: 'hbox', align: 'stretch'},
+                    items: [this.panAccordion, this.filesGrid]
+                },
+                this.activeUploadsCont
+            ],
             buttonAlign: 'right',
             buttons: [
                 {
@@ -3490,8 +3545,7 @@ ProfileWidget.prototype = {
 
             var labelPass = Ext.create('Ext.toolbar.TextItem', {
                 id : this.id+'labelPass',
-                padding:3,
-                text:'&nbsp'
+                text:'Modify your password or email.'
             });
             var changePasswordForm = Ext.create('Ext.form.Panel', {
                 title:'Change password',
@@ -3563,11 +3617,12 @@ ProfileWidget.prototype = {
                 }
                 ]
             });
-            var profileTabPanel = Ext.create('Ext.tab.Panel', {
+            var profileTabPanel = Ext.create('Ext.panel.Panel', {
                 width: 350,
-                height:175,
+                height:225,
                 border:false,
-                bbar:{items:[labelPass]},
+                tbar:{items:['->',labelPass]},
+                layout:'accordion',
                 items: [changePasswordForm,changeEmailForm],
                 listeners:{
                     tabchange:function(){
@@ -3609,18 +3664,18 @@ ProfileWidget.prototype = {
         if(oldPass != ''){
             if(!patt.test(passwd1) && passwd1.length > 3){
                 if (passwd1 == passwd2){
-                    Ext.getCmp(this.id+'labelPass').setText('<p class="ok">Passwords match</p>', false);
+                    Ext.getCmp(this.id+'labelPass').setText('<span class="ok">Passwords match</span>', false);
                     return true;
                 }else{
-                    Ext.getCmp(this.id+'labelPass').setText('<p class="err">Passwords does not match</p>', false);
+                    Ext.getCmp(this.id+'labelPass').setText('<span class="err">Passwords does not match</span>', false);
                     return false;
                 }
             }else{
-                Ext.getCmp(this.id+'labelPass').setText('<p class="err">Password must be at least 4 characters</p>', false);
+                Ext.getCmp(this.id+'labelPass').setText('<span class="err">Password must be at least 4 characters</span>', false);
                 return false;
             }
         }else{
-            Ext.getCmp(this.id+'labelPass').setText('<p class="err">Old password is empty</p>', false);
+            Ext.getCmp(this.id+'labelPass').setText('<span class="err">Old password is empty</span>', false);
             return false;
         }
 
@@ -4869,11 +4924,11 @@ ResultWidget.prototype.getInfo = function(groupName) {
 function ResultWidget(args) {
     var _this = this;
 
-    if (typeof args != 'undefined') {
-        this.targetId = args.targetId || this.targetId;
-        this.application = args.application || this.application;
-        this.app = args.app || this.app;
-    }
+    //set default args
+    this.extItems = [];
+
+    //set instantiation args, must be last
+    _.extend(this, args);
 
     this.adapter = new OpencgaManager();
 
@@ -4887,6 +4942,9 @@ ResultWidget.prototype = {
     draw: function (sid, record) {
         var _this = this;
         this.job = record.raw;
+
+        this.job['command'] = this.parseCommand(this.job);
+
         this.jobId = this.job.id;
         this.id = this.jobId + this.id;
         this.panelId = "ResultWidget_" + this.jobId;
@@ -4922,42 +4980,15 @@ ResultWidget.prototype = {
         var _this = this;
         console.log(this.application);
 
-//        Ext.create('Ext.button.Button', {
-//            text: 'Delete',
-//            margin: "0 0 25 30",
-//        });
-
-        var getJobInfo = function () {
+        var getJobInfo = function (args) {
+            var args = args || {};
             var itemTpl = new Ext.XTemplate(
                 '<p><span class="ssel border-bot s120">Information </span><span style="color:steelblue"> &nbsp; &nbsp; Job Id: <span><span style="color:slategrey">{id}</span></p><br>',
                 '<p><span class="emph">{name}</span> - <span class="info"> {toolName} </span> - <span style="color:orangered"> {date}</span></p>',
                 '<p class="tip emph">{description}</p>',
-                '<p class="">{[ this.getInfo(values) ]}</p>', {
-                    getInfo: function (item) {
-                        switch (item.toolName) {
-                            case 'pathiways':
-                                var arr = item.commandLine.split(/ --/g);
-                                console.log(arr)
-                                var str = arr[1].replace(/ /g, ': ') + '<br>';
-                                str += arr[2].replace(/ /g, ': ') + '<br>';
-                                str += arr[3].replace(/ /g, ': ').replace('/httpd/bioinfo/opencga/analysis/pathiways/examples/', '').replace('/httpd/bioinfo/opencga/accounts/', '') + '<br>';
-                                str += arr[4].replace(/ /g, ': ') + '<br>';
-                                str += arr[5].replace(/ /g, ': ') + '<br>';
-                                str += arr[6].replace(/ /g, ': ').replace('/httpd/bioinfo/opencga/analysis/pathiways/examples/', '').replace('/httpd/bioinfo/opencga/accounts/', '') + '<br>';
-                                str += arr[7].replace(/ /g, ': ') + '<br>';
-//                                str +=  arr[8].replace(/ /g,': ')+'<br>';
-//                                str +=  arr[9].replace(/ /g,': ')+'<br>';
-                                str += arr[10].replace(/ /g, ': ') + '<br>';
-                                str += arr[12].replace(/ /g, ': ');
-                                str += '<div style="width:400px">' + arr[11].replace(/ /g, ': ').replace(/,/g, ', ') + '</div>';
-                                return str;
-                            default :
-                                return '';
-                        }
-                    }
-                }
+                '<p class="">{command.html}</p>'
             );
-            return Ext.create('Ext.container.Container', {
+            var container = Ext.create('Ext.container.Container', {
                 margin: '15 0 15 15',
                 items: [
                     {
@@ -5000,6 +5031,10 @@ ResultWidget.prototype = {
                     }
                 ]
             });
+            if (typeof args.items != 'undefined') {
+                container.child('container').add(args.items);
+            }
+            return container;
         };
 
         var getResultIndex = function (children) {
@@ -5101,9 +5136,9 @@ ResultWidget.prototype = {
                                     var line = lines[i];
                                     if (line.charAt(0) != '#' && line.trim() != '') {
                                         numLines++;
-                                        if(renderer.header && numLines == 1){
+                                        if (renderer.header && numLines == 1) {
                                             tableHtml += '<tr style="border-collapse: collapse;border:1px solid #ccc;font-weight:bold;">';
-                                        }else{
+                                        } else {
                                             tableHtml += '<tr style="border-collapse: collapse;border:1px solid #ccc;">';
                                         }
                                         var fields = line.split('\t');
@@ -5135,6 +5170,7 @@ ResultWidget.prototype = {
             });
         };
 
+        /* Process recursively the result structure */
         var getDetailsAsDocument = function (item, isRoot) {
             var boxes;
             if (typeof item.children != 'undefined') {
@@ -5208,22 +5244,59 @@ ResultWidget.prototype = {
 
         var detailedResutls = getDetailsAsDocument(resultData[this.job.toolName].layout, true);
         var indexResutl = getResultIndex(resultData[this.job.toolName].layout.children);
-        this.panel.add(getJobInfo());
+        this.panel.add(getJobInfo({items: this.extItems}));
         this.panel.insert(indexResutl);
         this.panel.add(detailedResutls);
 
-    }//end render
+    },//end render
+    parseCommand: function (item) {
+        var commandObject = {};
+        var commandArray = item.commandLine.split(/ -{1,2}/g);
+        var tableHtml = '<table cellspacing="0" style="max-width:400px;border-collapse: collapse;border:1px solid #ccc;"><tbody>';
+        tableHtml += '<tr style="border-collapse: collapse;border:1px solid #ccc;font-weight:bold;">';
+        tableHtml += '<td style="min-width:50px;border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;">Parameter</td>';
+        tableHtml += '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;">Value</td>';
+        tableHtml += '</tr>';
+        for (var i = 1; i < commandArray.length; i++) {
+            //ignore first argument
+            var paramenter = commandArray[i];
+            var paramenterArray = paramenter.split(/ {1}/g);
+            var name = '';
+            var value = '';
+            if (paramenterArray.length < 2) {
+                name = paramenterArray[0];
+                value = '<span color:darkgray;font-weight:bold;>This paramenter is a flag</span>';
+            } else {
+                name = paramenterArray[0];
+                value = paramenterArray[1];
+            }
+            commandObject[name] = value;
+            /* clean values for viz*/
+            value = value.replace('/httpd/bioinfo/opencga/analysis/pathiways/examples/', '');
+            value = value.replace('/httpd/bioinfo/opencga/accounts/', '');
+            value = value.replace(/,/g, ", ");
+
+            tableHtml += '<tr style="border-collapse: collapse;border:1px solid #ccc;">';
+            tableHtml += '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;color:steelblue;font-weight:bold;white-space: nowrap;">' + name + '</td>';
+            tableHtml += '<td style="border-collapse: collapse;border:1px solid #ccc;padding: 5px;background-color: whiteSmoke;">' + value + '</td>';
+            tableHtml += '</tr>';
+        }
+        tableHtml += '</tbody></table>';
+        return {html:tableHtml, data:commandObject};
+    }
 };
 function UploadWidget (args){
 	var _this=this;
 	this.id = Utils.genId("uploadWidget");
 	this.targetId = null;
 	this.suiteId=null;
-	
+	this.chunkedUpload=false;
+
     if(typeof args !== 'undefined'){
         this.targetId = args.targetId || this.targetId;
         this.suiteId = args.suiteId || this.suiteId;
         this.opencgaBrowserWidget = args.opencgaBrowserWidget || this.opencgaBrowserWidget;
+        this.chunkedUpload = args.chunkedUpload || this.chunkedUpload;
     }
 
 	this.adapter = new OpencgaManager();
@@ -5463,12 +5536,14 @@ UploadWidget.prototype.render = function(dataTypes){
 			      			this.editor.show();
 			      			this.uploadField.destroy();
 			      			this.uploadField.setRawValue(null);
+                            this.pan3.setHeight(153);
 			       		}else{
 			       			this.dataFieldLabel.setText('<span class="info">Select a data file</span>',false);
 			       			this.editor.hide();
 							this.uploadBar.show();
 			       			this.editor.setRawValue(null);
 			       			this.createUploadField();
+                            this.pan3.setHeight(82);
 			       		}
 			       		this.validate();
 			       }
@@ -5484,7 +5559,11 @@ UploadWidget.prototype.render = function(dataTypes){
 //				     title:'Uploading file',
 //				     msg: 'Please wait...'
 //				});
-				_this.uploadFile2();
+                 if(_this.chunkedUpload){
+				    _this.uploadFile2();
+                 }else{
+                     _this.uploadFile();
+                 }
 	        }
 		});
 		
@@ -5510,7 +5589,7 @@ UploadWidget.prototype.render = function(dataTypes){
 	        }
 		});
 		
-		this.uploadBar = Ext.create('Ext.toolbar.Toolbar',{cls:"bio-border-false"});
+		this.uploadBar = Ext.create('Ext.toolbar.Toolbar',{cls:"bio-border-false",dock:'top',height:28});
 		this.createUploadField();
 		
 		this.modebar = Ext.create('Ext.toolbar.Toolbar',{
@@ -5526,10 +5605,12 @@ UploadWidget.prototype.render = function(dataTypes){
 		    border:false,
 		    width: pan1Width+pan2Width,
 		    cls:'panel-border-top',
-//		    bodyStyle:{"background-color":"#d3e1f1"}, 
-		    items:[this.uploadBar,this.editor],
-		    bbar:this.modebar
+            height:82,
+//		    bodyStyle:{"background-color":"#d3e1f1"},
+		    items:[this.editor],
+		    dockedItems:[this.modebar,this.uploadBar]
 		});
+        this.pan3 = pan3;
 
 		this.panel = Ext.create('Ext.window.Window', {
 		    title: 'Upload a data file'+' -  <span class="err">ZIP files will be allowed shortly</span>',
@@ -5669,7 +5750,7 @@ UploadWidget.prototype.uploadFile2 = function()  {
     var objectId = this.opencgaLocation.directory+inputFile.name;
     objectId = objectId.replace(new RegExp("/", "gi"),":");
 
-    var fileuploadWorker = new Worker(UPLOAD_WORKER);
+    var fileuploadWorker = new Worker(WORKERS_PATH+'worker-fileupload.js');
     this.opencgaBrowserWidget.addUpload(inputFile, fileuploadWorker);
     fileuploadWorker.postMessage({
         'host':OPENCGA_HOST,

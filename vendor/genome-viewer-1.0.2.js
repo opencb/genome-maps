@@ -1,7 +1,7 @@
-/*! Genome Viewer - v1.0.2 - 2013-09-11
+/*! Genome Viewer - v1.0.2 - 2013-09-19
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
-/*! Genome Viewer - v1.0.2 - 2013-09-11
+/*! Genome Viewer - v1.0.2 - 2013-09-19
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 var Utils = {
@@ -59,9 +59,6 @@ var Utils = {
             region.end = Math.floor(centerPosition + aux);
         }
     },
-    isString: function (s) {
-        return typeof(s) === 'string' || s instanceof String;
-    },
     isFunction: function (s) {
         return typeof(s) === 'function' || s instanceof Function;
     },
@@ -93,6 +90,20 @@ var Utils = {
     endsWith: function (str, test) {
         var regex = new RegExp('^.*\\.(' + test + ')$');
         return regex.test(str);
+    },
+    addQueryParamtersToUrl: function (paramsWS, url) {
+        var chr = "?";
+        if (url.indexOf("?") != -1) {
+            chr = "&";
+        }
+        var query = "";
+        for (var key in paramsWS) {
+            if (paramsWS[key] != null)
+                query += key + "=" + paramsWS[key].toString() + "&";
+        }
+        if (query != "")
+            query = chr + query.substring(0, query.length - 1);
+        return url+query;
     },
     randomColor: function () {
         var color = "";
@@ -148,8 +159,10 @@ Utils.images = {
     warning: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIsSURBVDjLpVNLSJQBEP7+h6uu62vLVAJDW1KQTMrINQ1vPQzq1GOpa9EppGOHLh0kCEKL7JBEhVCHihAsESyJiE4FWShGRmauu7KYiv6Pma+DGoFrBQ7MzGFmPr5vmDFIYj1mr1WYfrHPovA9VVOqbC7e/1rS9ZlrAVDYHig5WB0oPtBI0TNrUiC5yhP9jeF4X8NPcWfopoY48XT39PjjXeF0vWkZqOjd7LJYrmGasHPCCJbHwhS9/F8M4s8baid764Xi0Ilfp5voorpJfn2wwx/r3l77TwZUvR+qajXVn8PnvocYfXYH6k2ioOaCpaIdf11ivDcayyiMVudsOYqFb60gARJYHG9DbqQFmSVNjaO3K2NpAeK90ZCqtgcrjkP9aUCXp0moetDFEeRXnYCKXhm+uTW0CkBFu4JlxzZkFlbASz4CQGQVBFeEwZm8geyiMuRVntzsL3oXV+YMkvjRsydC1U+lhwZsWXgHb+oWVAEzIwvzyVlk5igsi7DymmHlHsFQR50rjl+981Jy1Fw6Gu0ObTtnU+cgs28AKgDiy+Awpj5OACBAhZ/qh2HOo6i+NeA73jUAML4/qWux8mt6NjW1w599CS9xb0mSEqQBEDAtwqALUmBaG5FV3oYPnTHMjAwetlWksyByaukxQg2wQ9FlccaK/OXA3/uAEUDp3rNIDQ1ctSk6kHh1/jRFoaL4M4snEMeD73gQx4M4PsT1IZ5AfYH68tZY7zv/ApRMY9mnuVMvAAAAAElFTkSuQmCC",
     edit: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAB80lEQVR42o2T30tTURzArb8ioiAI6kHoZeF7CGE/IISCUDNCqAeL3rIWPfSwByskYUEJIhSChBhJFAiNqMVYPqRuc4tcW3NLt3C7u3d3d3c/+nS+0GRK0134cC6c8/ncc+7ltgFt6jqgcCg6duGQYq84deoBR6lU0iqVSq1arfI/1Dxut3u0Htke6BC5UChgmuYm+XyeXC5HOp1GIsnQNJHJi3x/7WJh/CSLT9r7Rd4jAVlgWRa2bSOjYBgGmqaRyWQwkq9Y8wyhLb0BI0VuaRrfo671xoDIwmakWCyi6zrr36bILt/HXp1l7cNDioEZqnEvgYmr1paAOgYy1u/l3NrqHNngPWpFL8XodTa+3CD8YoCvz/o078i5o1sC29FT78kG7lCzfJgrl7ESvejLThLPuxk8fbhP3KaBVFCdeX7on9yP9bOHfPAu0bEzmKkg4jQNpEKzhOduqW1/xIoNUEpcQlM7WXl6Cj39Q9Y0D4Q/TRJ662Tx3WOS/guYsV42Fm4THe/G/B2T97Jz4OVwJ+hxImPn8Tj381k91TfShfErIvLuAde1Y9g+N7Z/FL/rBDODR8gmgpTL5To7B3o69zF8pR3Pg7PMT90kn47LJ22kaeCPghapidP4Lxy3bduUiVZktdaQH7AxcFAiUm0Rhzji/gUhbp0s2Zf2xwAAAABJRU5ErkJggg==",
     info: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAJ1SURBVHjafJJdSJNhFMd/z3QzLWdZrnQmSA2DPqRCK4KuhIq66kLoAy/qoqCguqqL6JsgLwoKKhCMSIy6CDKKRFZZYYQRVhJl02nWmG5uc19u7/vuPV0lW7QOnIsHnt+P8z/Pg4gw26aZ0263uzEUCn2IxWJjXq/3JqBETLIZ8gkePLhfKyKy/Z5HHJf7xe0Jic/n65mejizPK0inUiSTKUSE0dHRhxf6JoSDb4Rjr4QDz0REJBgMtmczFrJKKYVSCjCYnPR/W1FuAwQSGjbHXAA0LRXKZnIm0NJpgAKvd/hSOBz2iIj0eiPS2vtDYsmUPH/uPg9YshklIrOyCb+/eUG5ve3au5C99W2AqGbgKivk8R4X1lSkv2pJZaNmmBQVWWeZnAiGoa+3KovdyBjsW2kn/SvK4Jcgtaf7cDqrGkQMUDkBcgXVS2tOHjp8dG2jOXT1yo5lYOpgFTB0wKTAOqdQMlqOoDD7EE8kREwGXr/oWTg4HjxONAklBayuKSUeT/hFTxrwnwlAMa8I1qyrP3H95RiQgUiC/RsWM+wZ6jIME0M38wtSM0mmojM4nc6mzr5xKDQgnWb/pmoedT29EU3pTMUS+QVKKerq6kqnI3EVHwmAplO8qBh7WTFnzpz9bOg6FovlfxGEixfOrfT6YxCOQ1rDUaIAG4EJ38+PAwNb/95Bzj8ITAZwLHbMT0yHw3N33YVwEnQDqss41VzPkaalX6Iz+m6Xy/Xp34JAAICR7187nLWuvbe6h9C0DA2uRTTVV9J++87OlpaWJxUVFf9+xj+1cfOWls6OO93Nq1zblMVm9flG3pcvXNPm90+E/777ewB+UIqdqtYXHAAAAABJRU5ErkJggg==",
-    bucket: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB90BCg4hBcbCoOMAAABsSURBVDjLY2RgYFBjYGCIZCAPLGeBam4g0wAGJgYKARMDA8NZCvSfZYQy6sk0oJEFiUNqODRQLQxGDYCAb2To/YZswEsyDHiJbMAHMgz4gO6F5aTkQpgXYElZkoGBgZeEbL2cgYHhMwMDw3MA93ARk+mSg4gAAAAASUVORK5CYII=",
-    dir: "data:image/png;base64,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",
+//    bucket: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB90BCg4hBcbCoOMAAABsSURBVDjLY2RgYFBjYGCIZCAPLGeBam4g0wAGJgYKARMDA8NZCvSfZYQy6sk0oJEFiUNqODRQLQxGDYCAb2To/YZswEsyDHiJbMAHMgz4gO6F5aTkQpgXYElZkoGBgZeEbL2cgYHhMwMDw3MA93ARk+mSg4gAAAAASUVORK5CYII=",
+    bucket: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QkQDC8RTstxRAAAAGBJREFUOMtjYBgswIWBgeE/idiFgYGBgRFqwH8GBoYGEi1tYGBgYGRBE9QjUvMlGANmgCsDA8NuElzRANXDwAQV2ENGuO1BNoBsMGoAlQ3wJTIdNEDVYgU+ROQBH6rmQgAWgB19xco60wAAAABJRU5ErkJggg==",
+//    dir: "data:image/png;base64,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",
+    dir: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3QkQDBgWQKhE0wAAADRJREFUOMtjYBhowMjAwPCfCDU4AQuUNsQhf54aLmAgxgW9ZOovZqI0EEcNGBYGUJwSKQYAJoEFGqo9ooAAAAAASUVORK5CYII=",
     r: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB90CDRIvNbHTpbwAAADjSURBVDjLpZFBbsIwEEUfVRZYahcVK3qKXoauMFK5C91nkyUB+xC5BqeAA7SKq1B5ugl2EiC04UkjayzN17NnROTRWvvJFbTWL8CBHqbGWOlSlqVkWSbGWAGm3aGHZiMiAByPP6FOd1rP2W7NvhvSCvDe10E+VJPFQpPnm1ZIcsmgPgJVVZGmaejX63y/XL4/AV/JJYPTCeDcN7PZWyuwKAqA8wARqSsGKDVGqXGjV8H07AnRQPq21TK8+YSBAQMN4hb6Df7wB/5eA+4zmEyehxk451itPrhFksSxUeP+lf+z+wXwdayJk/mqtgAAAABJRU5ErkJggg==",
     box: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wMHAwRAVvTmTAAAAK/SURBVDjLpZM9bFxFGEXPNzPvZ+39sb2xHceREjDQBwlDCqqIiiotokAghYKEjvSkQkKJkEiB0lOkoAHaBAokFCQKUATIIOLIMbHWrHfX+7zvvZk3MzQODUgU3PJK5+g2F/5n5N/Kb66/1NNK3hAxr4HcFqVuvfju18V/Cu58sPmMVnJZ4K32Qr+t8za+KnCz4kCUuiGibm5euTv5h+CL958/nxj1XivVF+e6C9TVhPmFdbROgEhwNU1d4m09UaJuInLjhct3DgDUh5ee7j14PLxulLvYP/0seadPkub88Wib0eB3bDkmxgbRoFPpxeCuKvjsyQIzOyqImT7/y8Mh++NveW7jLFmrx6m1NlWxz6PHA7otQ7tloAmYJE9isOeeCJRtIrULLLUTjsqG7+//xs72z7jZgCTNONlVJKEiuobW0jqSaoiet19dFQATJcc2FSFEciNoLYwOHcPDASvdjM5cQntxlbR9gqacoFSK84VsnOrkH11Zdmp0FFXjobSeCFgXSDS0Eo11ge7yGXSaU092UUlCaEpC8FK4tDcu4rzZ2a/S+bWI94HSAgFigDQD24Cvp4gIOp0juBJvC2L07B1Uc/Mtg9k7sHMbywZrA3lLECV4AtaCpAp79CcmzXHlhOBrAJrGyNbOVBY7qTO1C9r5EKyPSttAiJEs01SuQStFkrdp6gKd5AzHjixVxCDxp+1paZRUxoc4Kp36bndYbS53U5WlCq0CMYIPMY7GI0mNpiqmGK0oK4jIveGkPgRqfTBt3A8Pqtvrq52HtglnGh9XIaKUkCQ6nj6RyWBsmdXCtFI/bu2Fq5c+3roGzIAgWokCDNACOhfOLb781Ip+vd+RC2dXWibROkxKvvp1z376yZe7d4HpMdz8/YVjiQYyoA30Ti6la2++0n/n83vTW/e3ix1gcgzXgPchBoC/AFu/UBF5InryAAAAAElFTkSuQmCC",
     bluebox: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9wMHAwTE5pcivoAAALsSURBVDjLXZPPaxxlGMc/77wz+3N2k822tWsTIrQFe/BWEKxKCV5UohdFhJ60p6rgUfpP6C0K4kHx0ENEkV7aElHwUikhFVosRGoTm83+3pnZnXfed2beHtItIQ98+Z6+H57nga8AsNYKDkYcEofcHvKZEEJYcSTszPzqL3fmf3+w/+a51tytby9d6D0N5UecGeBZ8MPv/jh9fy/6dKzMpVPHmvWdbl/XCvKn5Wbl6+ufrNwGssMgYa2VgFj58sZr7VB/LqX3zlKrydJzTTzXxdqcx90hO+0Bk2l8Z74i1z6+cOba5VfOqGeAb3579M/NR53T40xwrDGHFALPEUjn4LoMi0ktwWTKXqCIqAVrbyycvHj2hHYBR+bO8Q/Ov0imEzZ2xrRDRalQwC9LLBalUgaJQy+tU6gvIBJbv3j2RA4IFxDdICFa9ulMCrz/UgOs5kEwpeh57I4Nt/dzsmLOYlEThgFjUePp33IHoD9SJAbuTVyudRweixJvnVtg3/i00wpLPiwQ0hkO6YYKawWj0UjONqAfKHwDkxTqqeW/RHA3hO2+Zqk05e5wTD9KmOqMKDEUqoLNzU0PyF2AQaBoaIhiw0h6TIwgUDCODb5NiWJNlKREyhAozXwOW1tbFSmlcAHbD2KaytCdGgyWglfEs4LeNKeaa4axYRgpwlgTTTXVDDqdTslaewAYh4kNlKUbZsTGonOwCYwm1vq5Ft1AMYgU08SQR5o0gziOcRxHuoCNtdl6uPHX6/Vmi3Yyh9I5IoEgMdkgT9x+qJhEGrdQo77cJMuy+4DJskwLa60DOCtf3HhZpfZKtVx+L3x+sfCv8CFxTINd72HfodQ4aQp5fP24/v/Hd4Nf/5RSJmma6lkXZn1wPvvq5qndsbhS9esf/Zy/UEtzxnURfn8+/fuHV7m353mecV1XSym1lDI72kaxvr5e3N7eruyP0tpG/e3LK/rW2mLNUb7vm3K5nFarVdNqtbJer2dXV1fzJ6cDpboAZRAGAAAAAElFTkSuQmCC",
@@ -367,7 +380,37 @@ var SVG = {
 
 	init : function (parent, attributes){
 		return this.addChild(parent, "svg", attributes);
-	}
+	},
+
+
+
+    //
+    /* Functions to generate arcs with PATH element  */
+    //
+
+    _polarToCartesian : function (centerX, centerY, radius, angleInDegrees) {
+        var angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+
+        return {
+            x: centerX + (radius * Math.cos(angleInRadians)),
+            y: centerY + (radius * Math.sin(angleInRadians))
+        };
+    },
+
+    describeArc : function (x, y, radius, startAngle, endAngle) {
+
+        var start = this._polarToCartesian(x, y, radius, endAngle);
+        var end = this._polarToCartesian(x, y, radius, startAngle);
+
+        var arcSweep = endAngle - startAngle <= 180 ? "0" : "1";
+
+        var d = [
+            "M", start.x, start.y,
+            "A", radius, radius, 0, arcSweep, 0, end.x, end.y
+        ].join(" ");
+
+        return d;
+    }
 };
 
 //createSVG = function(elementName, attributes){
@@ -482,161 +525,82 @@ var SVG = {
 //	
 //};
 
-/*! Genome Viewer - v1.0.2 - 2013-09-11
+/*! Genome Viewer - v1.0.2 - 2013-09-19
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
-function CellBaseManager(species, args) {
-//	console.log(species);
+var CellBaseManager = {
+    get: function (args) {
+        var success = args.success;
+        var error = args.error;
+        var async = args.async || true;
+        delete args.success;
+        delete args.error;
+        delete args.async;
 
-    _.extend(this, Backbone.Events);
-
-    this.version = CELLBASE_VERSION;
-
-    //species can be the species code or an object with text attribute
-    if (typeof species === 'string') {
-        this.species = species;
-    } else if (species != null) {
-        this.species = Utils.getSpeciesCode(species.text);
-    }
-
-    this.category = null;
-    this.subcategory = null;
-
-    // commons query params
-    this.contentformat = "json";
-    this.fileformat = "";
-    this.outputcompress = false;
-    this.dataType = "script";
-
-    this.query = null;
-    this.originalQuery = "";
-    this.resource = "";
-
-    this.params = {};
-
-    this.async = true;
-
-    //set instantiation args, must be last
-
-    _.extend(this, args);
-
-    this.host = CELLBASE_HOST || this.host;
-
-    //Events
-    this.completed = new Event();
-    this.success = new Event();
-    this.batchSuccessed = new Event();
-    this.error = new Event();
-}
-
-CellBaseManager.prototype = {
-    setVersion : function (version) {
-        this.version = version;
-    },
-    setSpecies : function (specie) {
-        this.species = specie;
-    },
-    getVersion : function () {
-        return this.version;
-    },
-    getSpecies : function () {
-        return this.species;
-    },
-    setAsync : function (async) {
-        this.async = async;
-    },
-
-    getQuery: function (paramsWS, url) {
-        var chr = "?";
-        if (url.indexOf("?") != -1) {
-            chr = "&";
-        }
-        var query = "";
-        for (var key in paramsWS) {
-            if (paramsWS[key] != null)
-                query += key + "=" + paramsWS[key].toString() + "&";
-        }
-        if (query != "")
-            query = chr + query.substring(0, query.length - 1);
-        return query;
-    },
-    getUrl: function () {
-        if (this.query != null) {
-            return this.host + "/" + this.version + "/" + this.species + "/" + this.category + "/" + this.subcategory + "/" + this.query + "/" + this.resource;
-        } else {
-            return this.host + "/" + this.version + "/" + this.species + "/" + this.category + "/" + this.subcategory + "/" + this.resource;
-        }
-    },
-    get: function (category, subcategory, query, resource, params) {
-        var _this = this;
-        if (params != null) {
-            this.params = params;
-        }
-        this.category = category;
-        this.subcategory = subcategory;
-        if(_.isArray(query)){
-            query = query.toString();
-        }
-        this.query = query;
-
-        this.resource = resource;
-
-        var url = this.getUrl();
-        this.params["of"] = this.contentformat;
-        url = url + this.getQuery(this.params, url);
+        var url = CellBaseManager.url(args);
         console.log(url);
 
-        if (this.async == true) {
-            $.ajax({
-                type: "GET",
-                url: url,
-                dataType: 'json',//still firefox 20 does not auto serialize JSON, You can force it to always do the parsing by adding dataType: 'json' to your call.
-                async: this.async,
-                success: function (data, textStatus, jqXHR) {
-                    if(data.metadata){
-                        data.metadata.params = _this.params;
-                        data.metadata.resource = _this.resource;
-                        data.metadata.category = _this.category;
-                        data.metadata.subcategory = _this.subcategory;
-                    }
-                    _this.success.notify(data);
-                },
-                complete: function () {
-                    _this.completed.notify();
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log("CellBaseManager: Ajax call returned : " + errorThrown + '\t' + textStatus + '\t' + jqXHR.statusText + " END");
-                    _this.error.notify();
+        var d;
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: 'json',//still firefox 20 does not auto serialize JSON, You can force it to always do the parsing by adding dataType: 'json' to your call.
+            async: async,
+            success: function (data, textStatus, jqXHR) {
+                data.params = args.params;
+                data.resource = args.resource;
+                data.category = args.category;
+                data.subCategory = args.subCategory;
+                if (success) success(data);
+                d = data;
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("CellBaseManager: Ajax call returned : " + errorThrown + '\t' + textStatus + '\t' + jqXHR.statusText + " END");
+                if (error)error(jqXHR, textStatus, errorThrown);
+            }
+        });
+        return d;
+    },
+    url: function (args) {
+        if (!args) args = {};
 
-                }
-            });
-        } else {
-            var response = null;
-            $.ajax({
-                type: "GET",
-                url: url,
-                dataType: 'json',
-                async: this.async,
-                success: function (data, textStatus, jqXHR) {
-                    if(data.metadata){
-                        data.metadata.params = _this.params;
-                        data.metadata.resource = _this.resource;
-                        data.metadata.category = _this.category;
-                        data.metadata.subcategory = _this.subcategory;
-                    }
-                    response = data;
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log("CellBaseManager: Ajax call returned : " + errorThrown + '\t' + textStatus + '\t' + jqXHR.statusText + " END");
-                    _this.error.notify();
-
-                }
-            });
-            return response;
+        if (_.isUndefined(args.host) || _.isNull(args.host)) {
+            delete args.host;
         }
+        if (_.isUndefined(args.version) || _.isNull(args.version)) {
+            delete args.version;
+        }
+
+        var config = {
+            host: CELLBASE_HOST,
+            version: CELLBASE_VERSION,
+            params : {}
+        };
+        var params = {
+            of: 'json'
+        };
+
+        _.extend(config, args);
+        _.extend(config.params, params);
+
+        var query = '';
+        if (typeof config.query != 'undefined' && config.query != null) {
+            if (_.isArray(config.query)) {
+                config.query.toString();
+            }
+            query = '/' + config.query;
+        }
+
+        //species can be the species code(String) or an object with text attribute
+        if (!_.isString(config.species)) {
+            config.species = Utils.getSpeciesCode(config.species.text);
+        }
+
+        var url = config.host + '/' + config.version + '/' + config.species + '/' + config.category + '/' + config.subCategory + query + '/' + config.resource;
+        url = Utils.addQueryParamtersToUrl(config.params, url);
+        return url;
     }
 };
-
 function InfoWidget(targetId, species, args){
 	this.id = "InfoWidget_" + Math.round(Math.random()*10000000);
 	this.targetId = null;
@@ -706,7 +670,7 @@ function InfoWidget(targetId, species, args){
 	
 	this.notFoundPanel = Ext.create('Ext.panel.Panel',{
 		id:this.id+"notFoundPanel",
-		cls:'panel-border-left',
+		cls:'ocb-border-left-lightgrey',
 		border:false,
 		flex:3,
 		bodyPadding:'40',
@@ -829,7 +793,7 @@ InfoWidget.prototype.doGrid = function (columns,fields,modelName,groupField){
 	        store: store,
 	        title : modelName,
 	        border:false,
-	        cls:'panel-border-left',
+	        cls:'ocb-border-left-lightgrey',
 			flex:3,        
 	        features: [groupFeature,filters],
 	        viewConfig: {
@@ -1199,7 +1163,7 @@ GeneInfoWidget.prototype.getGenePanel = function(data){
 		this.genePanel = Ext.create('Ext.panel.Panel',{
 			title:"Gene information",
 	        border:false,
-	        cls:'panel-border-left',
+	        cls:'ocb-border-left-lightgrey',
 			flex:3,
 			bodyPadding:10,
 			data:data,
@@ -1230,7 +1194,7 @@ GeneInfoWidget.prototype.getTranscriptPanel = function(data){
 		this.transcriptGrid = Ext.create('Ext.panel.Panel',{
 			title:"Transcripts ("+i+")",
 			border:false,
-			cls:'panel-border-left',
+			cls:'ocb-border-left-lightgrey',
 			flex:3,    
 			bodyPadding:5,
 			autoScroll:true,
@@ -1425,7 +1389,7 @@ GeneInfoWidget.prototype.get3Dprotein = function(data){
       	this.p3dProtein = Ext.create('Ext.tab.Panel',{
       		title:"3D Protein Viewer",
       		border:false,
-      		cls:'panel-border-left',
+      		cls:'ocb-border-left-lightgrey',
       		flex:3,
 //    		bodyPadding:5,
       		autoScroll:true
@@ -1518,7 +1482,7 @@ GeneInfoWidget.prototype.get3Dprotein = function(data){
 //		var pan = Ext.create('Ext.panel.Panel',{
 //			title:"3D Protein Viewer",
 //	        border:false,
-//	        cls:'panel-border-left',
+//	        cls:'ocb-border-left-lightgrey',
 //			flex:3,
 //			bodyPadding:5,
 //			autoScroll:true,
@@ -1544,11 +1508,16 @@ GeneInfoWidget.prototype.getData = function (){
 	this.panel.disable();
 	this.panel.setLoading("Getting information...");
 //	category, subcategory, query, resource, callbackFunction
-	var cellBaseManager = new CellBaseManager(this.species);
-	cellBaseManager.success.addEventListener(function(sender,data){
-		_this.dataReceived(data[_this.query].result[0]);
-	});
-	cellBaseManager.get("feature","gene", this.query, "info");
+	CellBaseManager.get({
+        species:this.species,
+        category:'feature',
+        subCategory:'gene',
+        query:this.query,
+        resource:"info",
+        success:function(data){
+            _this.dataReceived(data.response[0].result[0]);
+        }
+    });
 };
 GeneInfoWidget.prototype.dataReceived = function (data){
 	this.data=data;
@@ -2019,7 +1988,7 @@ MirnaInfoWidget.prototype.getMirnaPanel = function(data){
 		this.mirnaPanel = Ext.create('Ext.panel.Panel',{
 			title:"miRNA",
 			border:false,
-			cls:'panel-border-left',
+			cls:'ocb-border-left-lightgrey',
 			flex:3,    
 			bodyPadding:5,
 			autoScroll:true,
@@ -2050,7 +2019,7 @@ MirnaInfoWidget.prototype.getTranscriptPanel = function(data){
 		this.transcriptGrid = Ext.create('Ext.panel.Panel',{
 			title:"Transcripts ("+i+")",
 			border:false,
-			cls:'panel-border-left',
+			cls:'ocb-border-left-lightgrey',
 			flex:3,    
 			bodyPadding:5,
 			autoScroll:true,
@@ -2080,7 +2049,7 @@ MirnaInfoWidget.prototype.getGenePanel = function(data){
 		this.genePanel = Ext.create('Ext.panel.Panel',{
 			title:"Genes ("+i+")",
 			border:false,
-			cls:'panel-border-left',
+			cls:'ocb-border-left-lightgrey',
 			flex:3,    
 			bodyPadding:5,
 			autoScroll:true,
@@ -2288,7 +2257,7 @@ SnpInfoWidget.prototype.getInfoPanel = function(data){
 		this.infoPanel = Ext.create('Ext.panel.Panel',{
 			title:"Information",
 	        border:false,
-	        cls:'panel-border-left',
+	        cls:'ocb-border-left-lightgrey',
 			flex:3,    
 			bodyPadding:10,
 			data:data,
@@ -2319,7 +2288,7 @@ SnpInfoWidget.prototype.getSnpTranscriptPanel = function(data){
 		this.snpTranscriptGrid = Ext.create('Ext.panel.Panel',{
 			title:"Transcripts ("+i+")",
 			border:false,
-			cls:'panel-border-left',
+			cls:'ocb-border-left-lightgrey',
 			flex:3,    
 			bodyPadding:5,
 			autoScroll:true,
@@ -2368,7 +2337,7 @@ SnpInfoWidget.prototype.getConsequenceTypePanel = function(data){
 //		this.consequencePanel = Ext.create('Ext.panel.Panel',{
 //			title:"Consequence type ("+i+")",
 //			border:false,
-//			cls:'panel-border-left',
+//			cls:'ocb-border-left-lightgrey',
 //			flex:3,
 //			bodyPadding:5,
 //			autoScroll:true,
@@ -2398,7 +2367,7 @@ SnpInfoWidget.prototype.getPhenotypePanel = function(data){
 		this.phenotypePanel = Ext.create('Ext.panel.Panel',{
 			title:"Phenotype ("+i+")",
 			border:false,
-			cls:'panel-border-left',
+			cls:'ocb-border-left-lightgrey',
 			flex:3,    
 			bodyPadding:5,
 			autoScroll:true,
@@ -2429,7 +2398,7 @@ SnpInfoWidget.prototype.getPopulationPanel = function(data){
 		this.populationPanel = Ext.create('Ext.panel.Panel',{
 			title:"Population ("+i+")",
 			border:false,
-			cls:'panel-border-left',
+			cls:'ocb-border-left-lightgrey',
 			flex:3,    
 			bodyPadding:5,
 			autoScroll:true,
@@ -2447,7 +2416,7 @@ SnpInfoWidget.prototype.getData = function (){
 //	category, subcategory, query, resource, callbackFunction
 	var cellBaseManager = new CellBaseManager(this.species);
 	cellBaseManager.success.addEventListener(function (sender,data){
-        _this.dataReceived(data[_this.query].result[0]);
+        _this.dataReceived(data.response[0].result[0]);
 	});
 	cellBaseManager.get("feature","snp", this.query, "info");
 };
@@ -2539,7 +2508,7 @@ TFInfoWidget.prototype.getProteinPanel = function(data){
 		this.proteinPanel = Ext.create('Ext.panel.Panel',{
 			title:"Protein",
 	        border:false,
-	        cls:'panel-border-left',
+	        cls:'ocb-border-left-lightgrey',
 			flex:3,    
 			bodyPadding:10,
 			data:data[0],
@@ -2571,7 +2540,7 @@ TFInfoWidget.prototype.getTranscriptPanel = function(data){
 		this.transcriptGrid = Ext.create('Ext.panel.Panel',{
 			title:"Transcripts ("+i+")",
 			border:false,
-			cls:'panel-border-left',
+			cls:'ocb-border-left-lightgrey',
 			flex:3,    
 			bodyPadding:5,
 			autoScroll:true,
@@ -2592,7 +2561,7 @@ TFInfoWidget.prototype.getGenePanel = function(data){
 		this.genePanel = Ext.create('Ext.panel.Panel',{
 			title:"Gene information",
 	        border:false,
-	        cls:'panel-border-left',
+	        cls:'ocb-border-left-lightgrey',
 			flex:3,
 			bodyPadding:10,
 			data:data,
@@ -2622,7 +2591,7 @@ TFInfoWidget.prototype.getPWMPanel = function(data){
 		this.pwmPanel = Ext.create('Ext.panel.Panel',{
 			title:"PWM ("+i+")",
 	        border:false,
-	        cls:'panel-border-left',
+	        cls:'ocb-border-left-lightgrey',
 			flex:3,
 			bodyPadding:5,
 			autoScroll:true,
@@ -2750,7 +2719,7 @@ TFInfoWidget.prototype.getProteinXrefPanel = function(data, type){
     	this[type+"panel"] = Ext.create('Ext.panel.Panel',{
 			title:type+" ("+i+")",
 	        border:false,
-	        cls:'panel-border-left',
+	        cls:'ocb-border-left-lightgrey',
 			flex:3,
 			bodyPadding:5,
 			autoScroll:true,
@@ -2870,7 +2839,7 @@ TranscriptInfoWidget.prototype.getInfoPanel = function(data){
 		this.infoPanel = Ext.create('Ext.panel.Panel',{
 			title:"Information",
 			border:false,
-			cls:'panel-border-left',
+			cls:'ocb-border-left-lightgrey',
 			flex:3,    
 			bodyPadding:10,
 			autoScroll:true,
@@ -2902,7 +2871,7 @@ TranscriptInfoWidget.prototype.getExonsGrid = function(data){
 		this.exonsGrid = Ext.create('Ext.panel.Panel',{
 			title:"Exons ("+i+")",
 	        border:false,
-	        cls:'panel-border-left',
+	        cls:'ocb-border-left-lightgrey',
 			flex:3,
 			bodyPadding:5,
 			autoScroll:true,
@@ -2965,7 +2934,7 @@ TranscriptInfoWidget.prototype.getData = function (){
 	
 	var cellBaseManager = new CellBaseManager(this.species);
 	cellBaseManager.success.addEventListener(function(sender,data){
-        _this.dataReceived(data[_this.query].result[0].transcripts);
+        _this.dataReceived(data.response[0].result[0].transcripts);
 	});
 	cellBaseManager.get("feature","transcript", this.query, "info");
 };
@@ -3218,7 +3187,7 @@ VCFVariantInfoWidget.prototype.getInfoPanel = function(data){
 		this.infoPanel = Ext.create('Ext.panel.Panel',{
 			title:"Information",
 	        border:false,
-	        cls:'panel-border-left',
+	        cls:'ocb-border-left-lightgrey',
 			flex:3,    
 			bodyPadding:10,
 			data:data,
@@ -3282,7 +3251,7 @@ VCFVariantInfoWidget.prototype.getEffectPanel = function(data){
 //		this.effectPanel = Ext.create('Ext.panel.Panel',{
 //			title:"Effects ("+i+")",
 //			border:false,
-//			cls:'panel-border-left',
+//			cls:'ocb-border-left-lightgrey',
 //			flex:3,    
 //			bodyPadding:5,
 //			autoScroll:true,
@@ -3301,7 +3270,7 @@ VCFVariantInfoWidget.prototype.getHeaderPanel = function(data){
 		this.headerPanel = Ext.create('Ext.panel.Panel',{
 			title:"Information",
 	        border:false,
-	        cls:'panel-border-left',
+	        cls:'ocb-border-left-lightgrey',
 			flex:3,    
 			bodyPadding:10,
 			html:data
@@ -4081,244 +4050,235 @@ UrlDataSource.prototype.fetch = function(async){
 	}
 };
 
-function CellBaseAdapter(args){
-
+function CellBaseAdapter(args) {
     _.extend(this, Backbone.Events);
 
-    this.host = null;
-	this.gzip = true;
+    this.gzip = true;
 
+    _.extend(this, args);
 
-	this.params={};
-	if (args != null){
-		if(args.host != null){
-			this.host = args.host;
-		}
-		if(args.species != null){
-			this.species = args.species;
-		}
-		if(args.category != null){
-			this.category = args.category;
-		}
-		if(args.subCategory != null){
-			this.subCategory = args.subCategory;
-		}
-		if(args.resource != null){
-			this.resource = args.resource;
-		}
-		if(args.featureCache != null){
-			var argsFeatureCache = args.featureCache;
-		}
-		if(args.params != null){
-			this.params = args.params;
-		}
-		if(args.filters != null){
-			this.filters = args.filters;
-		}
-		if(args.options != null){
-			this.options = args.options;
-		}
-		if(args.featureConfig != null){
-			if(args.featureConfig.filters != null){
-				this.filtersConfig = args.featureConfig.filters;
-			}
-			if(args.featureConfig.options != null){
-				this.optionsConfig = args.featureConfig.options;
-				for(var i = 0; i < this.optionsConfig.length; i++){
-					if(this.optionsConfig[i].checked == true){
-						this.options[this.optionsConfig[i].name] = true;
-						this.params[this.optionsConfig[i].name] = true;
-					}				
-				}
-			}
-		}
-	}
-	this.featureCache =  new FeatureCache(argsFeatureCache);
+    this.params = {};
+    if (args != null) {
+        if (args.species != null) {
+            this.species = args.species;
+        }
+        if (args.category != null) {
+            this.category = args.category;
+        }
+        if (args.subCategory != null) {
+            this.subCategory = args.subCategory;
+        }
+        if (args.resource != null) {
+            this.resource = args.resource;
+        }
+        if (args.featureCache != null) {
+            var argsFeatureCache = args.featureCache;
+        }
+        if (args.params != null) {
+            this.params = args.params;
+        }
+        if (args.filters != null) {
+            this.filters = args.filters;
+        }
+        if (args.options != null) {
+            this.options = args.options;
+        }
+        if (args.featureConfig != null) {
+            if (args.featureConfig.filters != null) {
+                this.filtersConfig = args.featureConfig.filters;
+            }
+            if (args.featureConfig.options != null) {
+                this.optionsConfig = args.featureConfig.options;
+                for (var i = 0; i < this.optionsConfig.length; i++) {
+                    if (this.optionsConfig[i].checked == true) {
+                        this.options[this.optionsConfig[i].name] = true;
+                        this.params[this.optionsConfig[i].name] = true;
+                    }
+                }
+            }
+        }
+    }
+    this.featureCache = new FeatureCache(argsFeatureCache);
 }
 
-CellBaseAdapter.prototype.clearData = function(){
-	this.featureCache.clear();
+CellBaseAdapter.prototype.clearData = function () {
+    this.featureCache.clear();
 };
 
-CellBaseAdapter.prototype.setFilters = function(filters){
-	this.clearData();
-	this.filters = filters;
-	for(filter in filters){
-		var value = filters[filter].toString();
-		delete this.params[filter];
-		if(value != ""){
-			this.params[filter] = value;
-		}
-	}
+CellBaseAdapter.prototype.setFilters = function (filters) {
+    this.clearData();
+    this.filters = filters;
+    for (filter in filters) {
+        var value = filters[filter].toString();
+        delete this.params[filter];
+        if (value != "") {
+            this.params[filter] = value;
+        }
+    }
 };
-CellBaseAdapter.prototype.setOption = function(opt, value){
-	if(opt.fetch){
-		this.clearData();
-	}
-	this.options[opt.name] = value;
-	for(option in this.options){
-		if(this.options[opt.name] != null){
-			this.params[opt.name] = this.options[opt.name];
-		}else{
-			delete this.params[opt.name];
-		}
-	}
+CellBaseAdapter.prototype.setOption = function (opt, value) {
+    if (opt.fetch) {
+        this.clearData();
+    }
+    this.options[opt.name] = value;
+    for (option in this.options) {
+        if (this.options[opt.name] != null) {
+            this.params[opt.name] = this.options[opt.name];
+        } else {
+            delete this.params[opt.name];
+        }
+    }
 };
 
 
-CellBaseAdapter.prototype.getData = function(args){
-	var rnd = String.fromCharCode(65+Math.round(Math.random()*10));
-	var _this = this;
-	//region check
-	this.params["histogram"] = args.histogram;
-	this.params["interval"] = args.interval;
-	this.params["transcript"] = args.transcript;
-	this.params["chromosome"] = args.chromosome;
-	this.params["resource"] = this.resource;
-	
-	if(args.start<1){
-		args.start=1;
-	}
-	if(args.end>300000000){
-		args.end=300000000;
-	}
-	
-	var dataType = "data";
-	if(args.transcript){
-		dataType = "withTranscripts";
-	}
-	if(args.histogram){
-		dataType = "histogram"+args.interval;
-	}
+CellBaseAdapter.prototype.getData = function (args) {
+    var rnd = String.fromCharCode(65 + Math.round(Math.random() * 10));
+    var _this = this;
+    //region check
+    this.params["histogram"] = args.histogram;
+    this.params["interval"] = args.interval;
+    this.params["transcript"] = args.transcript;
+    this.params["chromosome"] = args.chromosome;
+    this.params["resource"] = this.resource;
 
-	this.params["dataType"] = dataType;
-	
-	var firstChunk = this.featureCache._getChunk(args.start);
-	var lastChunk = this.featureCache._getChunk(args.end);
-	var chunks = [];
-	var itemList = [];
-	for(var i=firstChunk; i<=lastChunk; i++){
-		var key = args.chromosome+":"+i;
-		if(this.featureCache.cache[key] == null || this.featureCache.cache[key][dataType] == null) {
-			chunks.push(i);
-		}else{
-			var item = this.featureCache.getFeatureChunk(key);
-			itemList.push(item);
-		}
-	}
-	
-	//CellBase data process
-	var cellBaseManager = new CellBaseManager(this.species,{host: this.host});
-	cellBaseManager.success.addEventListener(function(sender,data){
-		var dataType = "data";
-		if(data.metadata.params.transcript){
-			dataType = "withTranscripts";
-		}
-		if(data.metadata.params.histogram){
-			dataType = "histogram"+data.metadata.params.interval;
-		}
+    if (args.start < 1) {
+        args.start = 1;
+    }
+    if (args.end > 300000000) {
+        args.end = 300000000;
+    }
 
-		//XXX quitar cuando este arreglado el ws
-		if(data.metadata.params.histogram == true){
-			data.result = [data.result];
-		}
+    var dataType = "data";
+    if (args.transcript) {
+        dataType = "withTranscripts";
+    }
+    if (args.histogram) {
+        dataType = "histogram" + args.interval;
+    }
 
-        var featureType = data.metadata.resource;
-		//XXX
-//		var queryList = [];
-//		for(var i = 0; i < data.metadata.queryIds.length; i++) {
-//			var splitDots = data.metadata.queryIds[i].split(":");
-//			var splitDash = splitDots[1].split("-");
-//			queryList.push({chromosome:splitDots[0],start:splitDash[0],end:splitDash[1]});
-//		}
-		
-		for(var i = 0; i < data.metadata.queryIds.length; i++) {
-            var splitDots = data.metadata.queryIds[i].split(":");
+    this.params["dataType"] = dataType;
+
+    var firstChunk = this.featureCache._getChunk(args.start);
+    var lastChunk = this.featureCache._getChunk(args.end);
+    var chunks = [];
+    var itemList = [];
+    for (var i = firstChunk; i <= lastChunk; i++) {
+        var key = args.chromosome + ":" + i;
+        if (this.featureCache.cache[key] == null || this.featureCache.cache[key][dataType] == null) {
+            chunks.push(i);
+        } else {
+            var item = this.featureCache.getFeatureChunk(key);
+            itemList.push(item);
+        }
+    }
+
+    //CellBase data process
+    var cellbaseSuccess = function (data) {
+
+        var dataType = "data";
+        if (data.params.transcript) {
+            dataType = "withTranscripts";
+        }
+        if (data.params.histogram) {
+            dataType = "histogram" + data.params.interval;
+        }
+
+        var featureType = data.resource;
+
+        for (var i = 0; i < data.response.length; i++) {
+            var queryResponse = data.response[i];
+            var splitDots = queryResponse.id.split(":");
             var splitDash = splitDots[1].split("-");
-            var q = {chromosome:splitDots[0],start:splitDash[0],end:splitDash[1]};
+            var qRegion = {chromosome: splitDots[0], start: splitDash[0], end: splitDash[1]};
 
-            var queryId = data.metadata.queryIds[i];
-            var features = data[queryId].result;
+            var queryId = queryResponse.id;
+            var features = queryResponse.result;
 
-//			//Check if is a single object
-//			if(data.result[i].constructor != Array){
-//				data.result[i] = [data.result[i]];
-//			}
-
-			if(data.metadata.params.histogram != true && featureType == "gene" && data.metadata.params.transcript==true){
-				for ( var j = 0, lenj = features.length; j < lenj; j++) {
-					for (var t = 0, lent = features[j].transcripts.length; t < lent; t++){
+            if (data.params.histogram != true && featureType == "gene" && data.params.transcript == true) {
+                for (var j = 0, lenj = features.length; j < lenj; j++) {
+                    for (var t = 0, lent = features[j].transcripts.length; t < lent; t++) {
                         features[j].transcripts[t].featureType = "transcript";
-						//loop over exons
-						for (var e = 0, lene = features[j].transcripts[t].exons.length; e < lene; e++){
+                        //loop over exons
+                        for (var e = 0, lene = features[j].transcripts[t].exons.length; e < lene; e++) {
                             features[j].transcripts[t].exons[e].featureType = "exon";
-						}
-					}
-				}
-			}
+                        }
+                    }
+                }
+            }
 
-            if(featureType == "regulatory"){
-                featureType = data.metadata.params.type;
-                if(featureType == 'TF_binding_site_motif'){
+            if (featureType == "regulatory") {
+                featureType = data.params.type;
+                if (featureType == 'TF_binding_site_motif') {
                     featureType = 'tfbs';
                 }
             }
 
-			console.time(_this.resource+" save "+rnd);
-			_this.featureCache.putFeaturesByRegion(features, q, featureType, dataType);
-			var items = _this.featureCache.getFeatureChunksByRegion(q);
-			console.timeEnd(_this.resource+" save "+rnd);
-			if(items != null){
-				itemList = itemList.concat(items);
-			}
-		}
-		if(itemList.length > 0){
-			_this.trigger('data:ready',{items:itemList, params:_this.params, cached:false, sender:_this});
-		}
-		console.timeEnd(_this.resource+" get and save "+rnd);
-	});
+            console.time(_this.resource + " save " + rnd);
+            _this.featureCache.putFeaturesByRegion(features, qRegion, featureType, dataType);
+            var items = _this.featureCache.getFeatureChunksByRegion(qRegion);
+            console.timeEnd(_this.resource + " save " + rnd);
+            if (items != null) {
+                itemList = itemList.concat(items);
+            }
+        }
+        if (itemList.length > 0) {
+            _this.trigger('data:ready', {items: itemList, params: _this.params, cached: false, sender: _this});
+        }
+        console.timeEnd(_this.resource + " get and save " + rnd);
 
-	var querys = [];
-	var updateStart = true;
-	var updateEnd = true;
-	if(chunks.length > 0){
+
+    };
+
+    var querys = [];
+    var updateStart = true;
+    var updateEnd = true;
+    if (chunks.length > 0) {
 //		console.log(chunks);
-		
-		for ( var i = 0; i < chunks.length; i++) {
-			
-			if(updateStart){
-				var chunkStart = parseInt(chunks[i] * this.featureCache.chunkSize);
-				updateStart = false;
-			}
-			if(updateEnd){
-				var chunkEnd = parseInt((chunks[i] * this.featureCache.chunkSize) + this.featureCache.chunkSize-1);
-				updateEnd = false;
-			}
-			
-			if(chunks[i+1]!=null){
-				if(chunks[i]+1==chunks[i+1]){
-					updateEnd =true;
-				}else{
-					var query = args.chromosome+":"+chunkStart+"-"+chunkEnd;
-					querys.push(query);
-					updateStart = true;
-					updateEnd = true;
-				}
-			}else{
-				var query = args.chromosome+":"+chunkStart+"-"+chunkEnd;
-				querys.push(query);
-				updateStart = true;
-				updateEnd = true;
-			}
-		}
+
+        for (var i = 0; i < chunks.length; i++) {
+
+            if (updateStart) {
+                var chunkStart = parseInt(chunks[i] * this.featureCache.chunkSize);
+                updateStart = false;
+            }
+            if (updateEnd) {
+                var chunkEnd = parseInt((chunks[i] * this.featureCache.chunkSize) + this.featureCache.chunkSize - 1);
+                updateEnd = false;
+            }
+
+            if (chunks[i + 1] != null) {
+                if (chunks[i] + 1 == chunks[i + 1]) {
+                    updateEnd = true;
+                } else {
+                    var query = args.chromosome + ":" + chunkStart + "-" + chunkEnd;
+                    querys.push(query);
+                    updateStart = true;
+                    updateEnd = true;
+                }
+            } else {
+                var query = args.chromosome + ":" + chunkStart + "-" + chunkEnd;
+                querys.push(query);
+                updateStart = true;
+                updateEnd = true;
+            }
+        }
 //		console.log(querys);
-		console.time(_this.resource+" get and save "+rnd);
-		cellBaseManager.get(this.category, this.subCategory, querys, this.resource, this.params);
-	}else{
-		if(itemList.length > 0){
-            _this.trigger('data:ready',{items:itemList, params:this.params, sender:this});
-		}
-	}
+        console.time(_this.resource + " get and save " + rnd);
+        CellBaseManager.get({
+            host: this.host,
+            species: this.species,
+            category: this.category,
+            subCategory: this.subCategory,
+            query: querys,
+            resource: this.resource,
+            params: this.params,
+            success: cellbaseSuccess
+        });
+    } else {
+        if (itemList.length > 0) {
+            _this.trigger('data:ready', {items: itemList, params: this.params, sender: this});
+        }
+    }
 };
 
 function SequenceAdapter(args){
@@ -4401,13 +4361,21 @@ SequenceAdapter.prototype.getData = function(args){
 	var queryString = this._getSequenceQuery(args);
 
 	if(queryString != ""){
-		var cellBaseManager = new CellBaseManager(this.species,{host: this.host});
-//
-		cellBaseManager.success.addEventListener(function(sender,data){
-			_this._processSequenceQuery(data,true);
-		});
-	
-		cellBaseManager.get(this.category, this.subCategory, queryString, this.resource, this.params);
+
+        CellBaseManager.get({
+            host: this.host,
+            species: this.species,
+            category:this.category,
+            subCategory:this.subCategory,
+            query:queryString,
+            resource: this.resource,
+            params: this.params,
+            success:function (event) {
+                _this._processSequenceQuery(event.data,true);
+            }
+        });
+
+
 	}else{
 		if(this.sender != "move"){
 			this.onGetData.notify({
@@ -4476,17 +4444,18 @@ SequenceAdapter.prototype._getSequenceQuery = function(args){
 
 SequenceAdapter.prototype._processSequenceQuery = function(data, throwNotify){
 	var _this = this;
-	var params = data.metadata.params;
+	var params = data.params;
 
-    for(i in data.metadata.queryIds) {
 
-        var splitDots = data.metadata.queryIds[i].split(":");
+    for(var i = 0; i < data.response.length; i++) {
+        var queryResponse = data.response[i];
+        var splitDots = queryResponse.id.split(":");
         var splitDash = splitDots[1].split("-");
         var queryStart = parseInt(splitDash[0]);
         var queryEnd = parseInt(splitDash[1]);
 
-        var queryId = data.metadata.queryIds[i];
-	    var seqResponse = data[queryId].result;
+        var queryId = queryResponse.id;
+	    var seqResponse = queryResponse.result;
 	    var chromosome = seqResponse.chromosome;
 
         if(this.sequence[chromosome] == null){
@@ -4638,9 +4607,20 @@ SequenceAdapter.prototype.getNucleotidByPosition = function(args){
         var chromosome = args.chromosome;
 
         if(queryString != ""){
-            var cellBaseManager = new CellBaseManager(this.species,{host: this.host, async:false});
-            var data = cellBaseManager.get(this.category, this.subCategory, queryString, this.resource, this.params);
+
+
+            var data = CellBaseManager.get({
+                host: this.host,
+                species: this.species,
+                category:this.category,
+                subCategory:this.subCategory,
+                query:queryString,
+                resource: this.resource,
+                params: this.params,
+                async:false
+            });
             _this._processSequenceQuery(data);
+
         }
         if(this.sequence[chromosome] != null){
             var referenceSubStr = this.sequence[chromosome].substr((args.start-this.start[chromosome]),1);
@@ -7320,6 +7300,7 @@ function ChromosomePanel(args) {
     this.species = 'hsapiens';
     this.width = 600;
     this.height = 75;
+    this.collapsed = false;
 
     //set instantiation args, must be last
     _.extend(this, args);
@@ -7331,16 +7312,10 @@ function ChromosomePanel(args) {
     this.lastChromosome = "";
     this.data;
 
+    this.on(this.handlers);
 
-    if('handlers' in this){
-        for(eventName in this.handlers){
-            this.on(eventName,this.handlers[eventName]);
-        }
-    }
-
-    this.contentHidden=false;
-
-    if(this.autoRender){
+    this.rendered = false;
+    if (this.autoRender) {
         this.render();
     }
 };
@@ -7354,25 +7329,25 @@ ChromosomePanel.prototype = {
     },
     showContent: function () {
         $(this.svg).css({display: 'inline'});
-        this.contentHidden=false;
+        this.collapsed = false;
         $(this.collapseDiv).addClass('ocb-icon-collapse');
         $(this.collapseDiv).removeClass('ocb-icon-expand');
     },
     hideContent: function () {
         $(this.svg).css({display: 'none'});
-        this.contentHidden=true;
+        this.collapsed = true;
         $(this.collapseDiv).addClass('ocb-icon-expand');
         $(this.collapseDiv).removeClass('ocb-icon-collapse');
     },
     setVisible: function (bool) {
-        if(bool) {
+        if (bool) {
             $(this.div).css({display: 'block'});
-        }else {
+        } else {
             $(this.div).css({display: 'none'});
         }
     },
     setTitle: function (title) {
-        if('titleDiv' in this){
+        if ('titleDiv' in this) {
             $(this.titleDiv).html(title);
         }
     },
@@ -7380,16 +7355,15 @@ ChromosomePanel.prototype = {
         this.width = width;
         this.svg.setAttribute("width", width);
         this.tracksViewedRegion = this.width / Utils.getPixelBaseByZoom(this.zoom);
-        while (this.svg.firstChild) {
-            this.svg.removeChild(this.svg.firstChild);
-        }
+
+        this.clean();
         this._drawSvg(this.data);
     },
 
-    render : function(targetId){
+    render: function (targetId) {
         var _this = this;
         this.targetId = (targetId) ? targetId : this.targetId;
-        if($('#' + this.targetId).length < 1){
+        if ($('#' + this.targetId).length < 1) {
             console.log('targetId not found in DOM');
             return;
         }
@@ -7400,17 +7374,17 @@ ChromosomePanel.prototype = {
         if ('title' in this && this.title !== '') {
             this.collapseDiv = $('<div class="ocb-icon ocb-icon-collapse" style="margin:0px 0px -2px 10px;display:inline-block; vertical-align:bottom"></div>');
             this.titleDiv = $('<div id="tl-title" class="gv-panel-title unselectable">' + this.title + '</div>')[0];
-            $(this.titleDiv).dblclick(function(){
-                if(_this.contentHidden){
+            $(this.titleDiv).dblclick(function () {
+                if (_this.collapsed) {
                     _this.showContent();
-                }else{
+                } else {
                     _this.hideContent();
                 }
             });
-            $(this.collapseDiv).click(function(){
-                if(_this.contentHidden){
+            $(this.collapseDiv).click(function () {
+                if (_this.collapsed) {
                     _this.showContent();
-                }else{
+                } else {
                     _this.hideContent();
                 }
             });
@@ -7424,97 +7398,81 @@ ChromosomePanel.prototype = {
         });
         $(this.div).addClass('unselectable');
 
-        this.colors = {gneg: "white", stalk: "#666666", gvar: "#CCCCCC", gpos25: "silver", gpos33: "lightgrey", gpos50: "gray", gpos66: "dimgray", gpos75: "darkgray", gpos100: "black", gpos: "gray", acen: "blue", clementina: '#ffc967'};
+        this.colors = {gneg: "#eeeeee", stalk: "#666666", gvar: "#CCCCCC", gpos25: "silver", gpos33: "lightgrey", gpos50: "gray", gpos66: "dimgray", gpos75: "darkgray", gpos100: "black", gpos: "gray", acen: "blue", clementina: '#ffc967'};
         this.rendered = true;
     },
 
-    setSpecies : function(species){
+    setSpecies: function (species) {
         this.species = species;
     },
-
+    clean: function () {
+        $(this.svg).empty();
+    },
     draw: function () {
-        if(!this.rendered){
-            console.info(this.id+' is not rendered yet');
+        if (!this.rendered) {
+            console.info(this.id + ' is not rendered yet');
             return;
         }
         var _this = this;
 
-        while (this.svg.firstChild) {
-            this.svg.removeChild(this.svg.firstChild);
-        }
+        this.clean();
 
-        var sortfunction = function (a, b) {
-            return (a.start - b.start);
-        };
-
-        var cellBaseManager = new CellBaseManager(this.species);
-        cellBaseManager.success.addEventListener(function (sender, data) {
-            _this.data = data.result.result[0].chromosomes;
-            _this.data.cytobands.sort(sortfunction);
-            _this._drawSvg(_this.data);
+        CellBaseManager.get({
+            species: this.species,
+            category: 'genomic',
+            subCategory: 'chromosome',
+            query: this.region.chromosome,
+            resource: 'info',
+            success: function (data) {
+                _this.data = data.response[0].result.chromosomes;
+                _this.data.cytobands.sort(function (a, b) {
+                    return (a.start - b.start);
+                });
+                _this._drawSvg(_this.data);
+            }
         });
-        cellBaseManager.get("genomic", "chromosome", this.region.chromosome, "info");
+
         this.lastChromosome = this.region.chromosome;
+
+
+        if (this.collapsed) {
+            _this.hideContent();
+        }
     },
-
     _drawSvg: function (chromosome) {
+        // This method uses less svg elements
         var _this = this;
-        this.chromosomeLength = chromosome.size;
-        _this.pixelBase = (_this.width - 40) / this.chromosomeLength;
-        var x = 20;
-        var y = 10;
-        var firstCentromere = true;
-
         var offset = 20;
-        var centerPosition = _this.region.center();
-
-
-        /* status string */
-        var status = '';
-
-        var pointerPosition = (centerPosition * _this.pixelBase) + offset;
-
         var group = SVG.addChild(_this.svg, "g", {"cursor": "pointer"});
+        this.chromosomeLength = chromosome.size;
+        this.pixelBase = (this.width - 40) / this.chromosomeLength;
 
-        //draw chromosome cytobands
+        /**/
+        /*Draw Chromosome*/
+        /**/
+        var backrect = SVG.addChild(group, 'rect', {
+            'x': offset,
+            'y': 4,
+            'width': this.width - 40 + 1,
+            'height': 22,
+            'fill': '#555555'
+        });
+
+        var cytobandsByStain = {};
+        var textDrawingOffset = offset;
         for (var i = 0; i < chromosome.cytobands.length; i++) {
             var cytoband = chromosome.cytobands[i];
-            var width = _this.pixelBase * (cytoband.end - cytoband.start);
-            var height = 18;
-            var color = _this.colors[cytoband.stain];
-            if (color == null) color = "purple";
-            var middleX = x + width / 2;
-            var endY = y + height;
+            cytoband.pixelStart = cytoband.start * this.pixelBase;
+            cytoband.pixelEnd = cytoband.end * this.pixelBase;
+            cytoband.pixelSize = cytoband.pixelEnd - cytoband.pixelStart;
 
-            if (cytoband.stain == "acen") {
-                var points = "";
-                var middleY = y + height / 2;
-                var endX = x + width;
-                if (firstCentromere) {
-                    points = x + "," + y + " " + middleX + "," + y + " " + endX + "," + middleY + " " + middleX + "," + endY + " " + x + "," + endY;
-                    firstCentromere = false;
-                } else {
-                    points = x + "," + middleY + " " + middleX + "," + y + " " + endX + "," + y + " " + endX + "," + endY + " " + middleX + "," + endY;
-                }
-                SVG.addChild(group, "polyline", {
-                    "points": points,
-                    "stroke": "black",
-                    "opacity": 0.8,
-                    "fill": color
-                });
-            } else {
-                SVG.addChild(group, "rect", {
-                    "x": x,
-                    "y": y,
-                    "width": width,
-                    "height": height,
-                    "stroke": "black",
-                    "opacity": 0.8,
-                    "fill": color
-                });
+            if (typeof cytobandsByStain[cytoband.stain] == 'undefined') {
+                cytobandsByStain[cytoband.stain] = [];
             }
+            cytobandsByStain[cytoband.stain].push(cytoband);
 
-            var textY = endY + 2;
+            var middleX = textDrawingOffset + (cytoband.pixelSize / 2);
+            var textY = 28;
             var text = SVG.addChild(group, "text", {
                 "x": middleX,
                 "y": textY,
@@ -7523,11 +7481,65 @@ ChromosomePanel.prototype = {
                 "fill": "black"
             });
             text.textContent = cytoband.name;
-
-            x = x + width;
+            textDrawingOffset += cytoband.pixelSize;
         }
 
-        $(this.svg).on('mousedown',function (event) {
+        for (var cytobandStain in cytobandsByStain) {
+            var cytobands_d = '';
+            if (cytobandStain != 'acen') {
+                for (var j = 0; j < cytobandsByStain[cytobandStain].length; j++) {
+                    var cytoband = cytobandsByStain[cytobandStain][j];
+                    cytobands_d += 'M' + (cytoband.pixelStart + offset + 1) + ',15' + ' L' + (cytoband.pixelEnd + offset) + ',15 ';
+                }
+                var path = SVG.addChild(group, 'path', {
+                    "d": cytobands_d,
+                    "stroke": this.colors[cytobandStain],
+//                "stroke": 'red',
+                    "stroke-width": 20,
+                    "fill": 'none'
+                });
+            }
+        }
+        var firstStain = cytobandsByStain['acen'][0];
+        var lastStain = cytobandsByStain['acen'][1];
+        var backrect = SVG.addChild(group, 'rect', {
+            'x': (firstStain.pixelStart + offset + 1),
+            'y': 4,
+            'width': (lastStain.pixelEnd + offset) - (firstStain.pixelStart + offset + 1),
+            'height': 22,
+            'fill': 'white'
+        });
+        var firstStainXStart = (firstStain.pixelStart + offset + 1);
+        var firstStainXEnd = (firstStain.pixelEnd + offset);
+        var lastStainXStart = (lastStain.pixelStart + offset + 1);
+        var lastStainXEnd = (lastStain.pixelEnd + offset);
+        var path = SVG.addChild(group, 'path', {
+            'd': 'M' + firstStainXStart + ',4' + ' L' + (firstStainXEnd - 5) + ',4 ' + ' L' + firstStainXEnd + ',15 ' + ' L ' + (firstStainXEnd - 5) + ',26 ' + ' L ' + firstStainXStart + ',26 z',
+            'fill': this.colors['acen']
+        });
+        var path = SVG.addChild(group, 'path', {
+            'd': 'M' + lastStainXStart + ',15' + ' L' + (lastStainXStart + 5) + ',4 ' + ' L' + lastStainXEnd + ',4 ' + ' L ' + lastStainXEnd + ',26 ' + ' L ' + (lastStainXStart + 5) + ',26 z',
+            'fill': this.colors['acen']
+        });
+
+//        if (cytoband.stain == 'acen') {
+//            if (!firstAcenStainCalculated) {
+//                cytobands_d += 'M' + (cytoband.pixelStart + offset + 1) + ',15' + ' L' + (cytoband.pixelEnd + offset - 5) + ',15 ';
+//                cytobands_d += ' L' + (cytoband.pixelEnd + offset - 5) + ',7.5 ';
+//                firstAcenStainCalculated = true;
+//            } else {
+//                cytobands_d += 'M' + (cytoband.pixelStart + offset + 1 + 5) + ',15' + ' L' + (cytoband.pixelEnd + offset) + ',15 ';
+//            }
+//        } else {
+//        }
+
+        /**/
+        /* Resize elements and events*/
+        /**/
+        var status = '';
+        var centerPosition = _this.region.center();
+        var pointerPosition = (centerPosition * _this.pixelBase) + offset;
+        $(this.svg).on('mousedown', function (event) {
             status = 'setRegion';
         });
 
@@ -7555,7 +7567,7 @@ ChromosomePanel.prototype = {
             'fill': 'navajowhite',
             'cursor': 'move'
         });
-        $(this.positionBox).on('mousedown',function (event) {
+        $(this.positionBox).on('mousedown', function (event) {
             status = 'movePositionBox';
         });
 
@@ -7569,12 +7581,12 @@ ChromosomePanel.prototype = {
             'fill': 'orangered',
             'visibility': 'hidden'
         });
-        $(resizeLeft).on('mousedown',function (event) {
+        $(resizeLeft).on('mousedown', function (event) {
             status = 'resizePositionBoxLeft';
         });
 
         var resizeRight = SVG.addChild(positionGroup, 'rect', {
-            'x': positionBoxWidth-5,
+            'x': positionBoxWidth - 5,
             'y': 2,
             'width': 5,
             'height': _this.height - 3,
@@ -7582,7 +7594,7 @@ ChromosomePanel.prototype = {
             'fill': 'orangered',
             'visibility': 'hidden'
         });
-        $(resizeRight).on('mousedown',function (event) {
+        $(resizeRight).on('mousedown', function (event) {
             status = 'resizePositionBoxRight';
         });
 
@@ -7600,8 +7612,8 @@ ChromosomePanel.prototype = {
         var recalculateResizeControls = function () {
             var postionBoxX = parseInt(_this.positionBox.getAttribute('x'));
             var postionBoxWidth = parseInt(_this.positionBox.getAttribute('width'));
-            resizeLeft.setAttribute('x', postionBoxX-5);
-            resizeRight.setAttribute('x', (postionBoxX+postionBoxWidth));
+            resizeLeft.setAttribute('x', postionBoxX - 5);
+            resizeRight.setAttribute('x', (postionBoxX + postionBoxWidth));
             $(resizeLeft).css({"cursor": "ew-resize"});
             $(resizeRight).css({"cursor": "ew-resize"});
         };
@@ -7616,14 +7628,13 @@ ChromosomePanel.prototype = {
             resizeRight.setAttribute('visibility', 'visible');
         };
 
-        $(positionGroup).mouseenter(function(event){
+        $(positionGroup).mouseenter(function (event) {
             recalculateResizeControls();
             showResizeControls();
         });
-        $(positionGroup).mouseleave(function(event){
+        $(positionGroup).mouseleave(function (event) {
             hideResizeControls();
         });
-
 
 
         /*Remove event listeners*/
@@ -7646,7 +7657,7 @@ ChromosomePanel.prototype = {
             downX = (event.pageX - $(_this.svg).offset().left);
             selBox.setAttribute("x", downX);
             lastX = _this.positionBox.getAttribute("x");
-            if(status == ''){
+            if (status == '') {
                 status = 'setRegion'
             }
             hideResizeControls();
@@ -7655,27 +7666,27 @@ ChromosomePanel.prototype = {
                 hideResizeControls();
                 switch (status) {
                     case 'resizePositionBoxLeft' :
-                        var inc = moveX-downX;
+                        var inc = moveX - downX;
                         var newWidth = parseInt(_this.positionBox.getAttribute("width")) - inc;
-                        if(newWidth > 0){
-                            _this.positionBox.setAttribute("x", parseInt(_this.positionBox.getAttribute("x"))+inc);
-                            _this.positionBox.setAttribute("width",newWidth);
+                        if (newWidth > 0) {
+                            _this.positionBox.setAttribute("x", parseInt(_this.positionBox.getAttribute("x")) + inc);
+                            _this.positionBox.setAttribute("width", newWidth);
                         }
                         downX = moveX;
                         break;
                     case 'resizePositionBoxRight' :
-                        var inc = moveX-downX;
+                        var inc = moveX - downX;
                         var newWidth = parseInt(_this.positionBox.getAttribute("width")) + inc;
-                        if(newWidth > 0){
-                            _this.positionBox.setAttribute("width",newWidth);
+                        if (newWidth > 0) {
+                            _this.positionBox.setAttribute("width", newWidth);
                         }
                         downX = moveX;
                         break;
                     case 'movePositionBox' :
-                        var inc = moveX-downX;
+                        var inc = moveX - downX;
 //                        var w = _this.positionBox.getAttribute("width");
 //                        _this.positionBox.setAttribute("x", moveX - (w / 2));
-                        _this.positionBox.setAttribute("x", parseInt(_this.positionBox.getAttribute("x"))+inc);
+                        _this.positionBox.setAttribute("x", parseInt(_this.positionBox.getAttribute("x")) + inc);
                         downX = moveX;
                         break;
                     case 'setRegion':
@@ -7702,19 +7713,19 @@ ChromosomePanel.prototype = {
                     case 'resizePositionBoxRight' :
                     case 'movePositionBox' :
                         if (moveX != null) {
-                        var w = parseInt(_this.positionBox.getAttribute("width"));
-                        var x = parseInt(_this.positionBox.getAttribute("x"));
-                        var pixS = x;
-                        var pixE = x+w;
-                        var bioS = (pixS - offset) / _this.pixelBase;
-                        var bioE = (pixE - offset) / _this.pixelBase;
-                        _this.region.start = Math.round(bioS);
-                        _this.region.end = Math.round(bioE);
-                        recalculateResizeControls();
-                        showResizeControls();
-                        _this.trigger('region:change', {region: _this.region, sender: _this});
-                        recalculateResizeControls();
-                        showResizeControls();
+                            var w = parseInt(_this.positionBox.getAttribute("width"));
+                            var x = parseInt(_this.positionBox.getAttribute("x"));
+                            var pixS = x;
+                            var pixE = x + w;
+                            var bioS = (pixS - offset) / _this.pixelBase;
+                            var bioE = (pixE - offset) / _this.pixelBase;
+                            _this.region.start = Math.round(bioS);
+                            _this.region.end = Math.round(bioE);
+                            recalculateResizeControls();
+                            showResizeControls();
+                            _this.trigger('region:change', {region: _this.region, sender: _this});
+                            recalculateResizeControls();
+                            showResizeControls();
                         }
                         break;
                     case 'setRegion' :
@@ -7764,27 +7775,14 @@ ChromosomePanel.prototype = {
             movingPositionBox = false;
             selectingRegion = false;
         });
-
-
-
-
     },
-
     setRegion: function (region) {//item.chromosome, item.region
         this.region.load(region);
         var needDraw = false;
-//        if (item.species != null) {
-//            this.species = item.species;
-//            needDraw = true;
-//        }
-//        if(this.region.chromosome == region.chromosome) {
-//            return;
-//        }
 
         if (this.lastChromosome != this.region.chromosome) {
             needDraw = true;
         }
-
 
         //recalculate positionBox
         var genomicLength = this.region.length();
@@ -7797,19 +7795,6 @@ ChromosomePanel.prototype = {
             this.draw();
         }
     }
-
-
-
-//ChromosomeWidget.prototype.setZoom = function(zoom){
-    //this.zoom=zoom;
-    //this.tracksViewedRegion = this.width/Utils.getPixelBaseByZoom(this.zoom);
-    //var width = this.tracksViewedRegion*this.pixelBase;
-    //this.positionBox.setAttribute("width",width);
-//
-    //var centerPosition = Utils.centerPosition(this.region);
-    //var pointerPosition = centerPosition*this.pixelBase+20;
-    //this.positionBox.setAttribute("x",pointerPosition-(width/2));
-//};
 }
 function KaryotypePanel(args) {
 
@@ -7822,10 +7807,10 @@ function KaryotypePanel(args) {
     this.species;
     this.width = 600;
     this.height = 75;
-    this.titleCollapse = false,
+    this.collapsed = false,
 
-    //set instantiation args, must be last
-    _.extend(this, args);
+        //set instantiation args, must be last
+        _.extend(this, args);
 
     //set own region object
     this.region = new Region(this.region);
@@ -7837,16 +7822,12 @@ function KaryotypePanel(args) {
     this.chromosomeList;
     this.data2;
 
-    if('handlers' in this){
-        for(eventName in this.handlers){
-            this.on(eventName,this.handlers[eventName]);
-        }
-    }
 
-    this.contentHidden=false;
+    this.on(this.handlers);
 
-    this.rendered=false;
-    if(this.autoRender){
+
+    this.rendered = false;
+    if (this.autoRender) {
         this.render();
     }
 };
@@ -7860,41 +7841,41 @@ KaryotypePanel.prototype = {
     },
     showContent: function () {
         $(this.svg).css({display: 'inline'});
-        this.contentHidden=false;
+        this.collapsed = false;
         $(this.collapseDiv).addClass('ocb-icon-collapse');
         $(this.collapseDiv).removeClass('ocb-icon-expand');
     },
     hideContent: function () {
         $(this.svg).css({display: 'none'});
-        this.contentHidden=true;
+        this.collapsed = true;
         $(this.collapseDiv).addClass('ocb-icon-expand');
         $(this.collapseDiv).removeClass('ocb-icon-collapse');
     },
     setVisible: function (bool) {
-        if(bool) {
+        if (bool) {
             $(this.div).css({display: 'block'});
-        }else {
+        } else {
             $(this.div).css({display: 'none'});
         }
     },
     setTitle: function (title) {
-        if('titleDiv' in this){
+        if ('titleDiv' in this) {
             $(this.titleDiv).html(title);
         }
     },
-    setWidth: function(width){
-        this.width=width;
-        this.svg.setAttribute("width",width);
-        while (this.svg.firstChild) {
-            this.svg.removeChild(this.svg.firstChild);
-        }
-        this._drawSvg(this.chromosomeList,this.data2);
+    setWidth: function (width) {
+        this.width = width;
+        this.svg.setAttribute("width", width);
+
+
+        this.clean();
+        this._drawSvg(this.chromosomeList, this.data2);
     },
 
-    render : function(targetId){
+    render: function (targetId) {
         var _this = this;
         this.targetId = (targetId) ? targetId : this.targetId;
-        if($('#' + this.targetId).length < 1){
+        if ($('#' + this.targetId).length < 1) {
             console.log('targetId not found in DOM');
             return;
         }
@@ -7905,17 +7886,17 @@ KaryotypePanel.prototype = {
         if ('title' in this && this.title !== '') {
             this.collapseDiv = $('<div class="ocb-icon ocb-icon-collapse" style="margin:0px 0px -2px 10px;display:inline-block; vertical-align:bottom"></div>');
             this.titleDiv = $('<div id="tl-title" class="gv-panel-title unselectable">' + this.title + '</div>')[0];
-            $(this.titleDiv).dblclick(function(){
-                if(_this.contentHidden){
+            $(this.titleDiv).dblclick(function () {
+                if (_this.collapsed) {
                     _this.showContent();
-                }else{
+                } else {
                     _this.hideContent();
                 }
             });
-            $(this.collapseDiv).click(function(){
-                if(_this.contentHidden){
+            $(this.collapseDiv).click(function () {
+                if (_this.collapsed) {
                     _this.showContent();
-                }else{
+                } else {
                     _this.hideContent();
                 }
             });
@@ -7923,35 +7904,35 @@ KaryotypePanel.prototype = {
             $(this.div).append(this.titleDiv);
         }
 
-        this.svg = SVG.init(this.div,{
-            "width":this.width,
-            "height":this.height
+        this.svg = SVG.init(this.div, {
+            "width": this.width,
+            "height": this.height
         });
-        this.markGroup = SVG.addChild(this.svg,"g",{"cursor":"pointer"});
+        this.markGroup = SVG.addChild(this.svg, "g", {"cursor": "pointer"});
         $(this.div).addClass('unselectable');
 
-        this.colors = {gneg:"white", stalk:"#666666", gvar:"#CCCCCC", gpos25:"silver", gpos33:"lightgrey", gpos50:"gray", gpos66:"dimgray", gpos75:"darkgray", gpos100:"black", gpos:"gray", acen:"blue"};
+        this.colors = {gneg: "white", stalk: "#666666", gvar: "#CCCCCC", gpos25: "silver", gpos33: "lightgrey", gpos50: "gray", gpos66: "dimgray", gpos75: "darkgray", gpos100: "black", gpos: "gray", acen: "blue"};
 
         this.rendered = true;
     },
 
-    setSpecies : function(species){
+    setSpecies: function (species) {
         this.lastSpecies = this.species;
         this.species = species;
     },
-
-    draw: function(){
-        if(!this.rendered){
-            console.info(this.id+' is not rendered yet');
+    clean: function () {
+        $(this.svg).empty();
+    },
+    draw: function () {
+        if (!this.rendered) {
+            console.info(this.id + ' is not rendered yet');
             return;
         }
         var _this = this;
 
-        while (this.svg.firstChild) {
-            this.svg.removeChild(this.svg.firstChild);
-        }
+        this.clean();
 
-        var sortfunction = function(a, b) {
+        var sortfunction = function (a, b) {
             var IsNumber = true;
             for (var i = 0; i < a.name.length && IsNumber == true; i++) {
                 if (isNaN(a.name[i])) {
@@ -7962,32 +7943,36 @@ KaryotypePanel.prototype = {
             return (a.name - b.name);
         };
 
-        var cellBaseManager = new CellBaseManager(this.species);
-        cellBaseManager.success.addEventListener(function(sender,data){
-            _this.chromosomeList = data.result.result[0].chromosomes;
-            _this.chromosomeList.sort(sortfunction);
-            _this._drawSvg(_this.chromosomeList);
+        CellBaseManager.get({
+            species: this.species,
+            category: 'genomic',
+            subCategory: 'chromosome',
+            resource: 'all',
+            success: function (data) {
+                _this.chromosomeList = data.response.result.chromosomes;
+                _this.chromosomeList.sort(sortfunction);
+                _this._drawSvg(_this.chromosomeList);
+            }
         });
-        cellBaseManager.get('genomic', 'chromosome', null , 'all');
 
 
-        if(this.titleCollapse){
+        if (this.collapsed) {
             _this.hideContent();
         }
     },
 
-    _drawSvg: function(chromosomeList){
+    _drawSvg: function (chromosomeList) {
         var _this = this;
 
         var x = 20;
-        var xOffset = _this.width/chromosomeList.length;
+        var xOffset = _this.width / chromosomeList.length;
         var yMargin = 2;
 
         ///////////
         var biggerChr = 0;
-        for(var i=0, len=chromosomeList.length; i<len; i++){
+        for (var i = 0, len = chromosomeList.length; i < len; i++) {
             var size = chromosomeList[i].size;
-            if(size > biggerChr){
+            if (size > biggerChr) {
                 biggerChr = size;
             }
         }
@@ -7995,7 +7980,7 @@ KaryotypePanel.prototype = {
         _this.chrOffsetY = {};
         _this.chrOffsetX = {};
 
-        for(var i=0, len=chromosomeList.length; i<len; i++){ //loop over chromosomes
+        for (var i = 0, len = chromosomeList.length; i < len; i++) { //loop over chromosomes
             var chromosome = chromosomeList[i];
 //		var chr = chromosome.name;
             var chrSize = chromosome.size * _this.pixelBase;
@@ -8006,8 +7991,8 @@ KaryotypePanel.prototype = {
             var centerPosition = _this.region.center();
             var pointerPosition = (centerPosition * _this.pixelBase);
 
-            var group = SVG.addChild(_this.svg,"g",{"cursor":"pointer","chr":chromosome.name});
-            $(group).click(function(event){
+            var group = SVG.addChild(_this.svg, "g", {"cursor": "pointer", "chr": chromosome.name});
+            $(group).click(function (event) {
                 var chrClicked = this.getAttribute("chr");
 //			for ( var k=0, len=chromosomeList.length; k<len; k++) {
 //			var offsetX = (event.pageX - $(_this.svg).offset().left);
@@ -8017,12 +8002,12 @@ KaryotypePanel.prototype = {
                 var offsetY = (event.pageY - $(_this.svg).offset().top);
 //			var offsetY = event.originalEvent.layerY - 3;
 
-                _this.positionBox.setAttribute("x1",_this.chrOffsetX[chrClicked]-10);
-                _this.positionBox.setAttribute("x2",_this.chrOffsetX[chrClicked]+23);
-                _this.positionBox.setAttribute("y1",offsetY);
-                _this.positionBox.setAttribute("y2",offsetY);
+                _this.positionBox.setAttribute("x1", _this.chrOffsetX[chrClicked] - 10);
+                _this.positionBox.setAttribute("x2", _this.chrOffsetX[chrClicked] + 23);
+                _this.positionBox.setAttribute("y1", offsetY);
+                _this.positionBox.setAttribute("y2", offsetY);
 
-                var clickPosition = parseInt((offsetY - _this.chrOffsetY[chrClicked])/_this.pixelBase);
+                var clickPosition = parseInt((offsetY - _this.chrOffsetY[chrClicked]) / _this.pixelBase);
                 _this.region.chromosome = chrClicked;
                 _this.region.start = clickPosition;
                 _this.region.end = clickPosition;
@@ -8030,73 +8015,73 @@ KaryotypePanel.prototype = {
                 _this.trigger('region:change', {region: _this.region, sender: _this});
             });
 
-            for ( var j=0, lenJ=chromosome.cytobands.length; j<lenJ; j++){ //loop over chromosome objects
+            for (var j = 0, lenJ = chromosome.cytobands.length; j < lenJ; j++) { //loop over chromosome objects
                 var cytoband = chromosome.cytobands[j];
                 var height = _this.pixelBase * (cytoband.end - cytoband.start);
                 var width = 13;
 
                 var color = _this.colors[cytoband.stain];
-                if(color == null) color = "purple";
+                if (color == null) color = "purple";
 
-                if(cytoband.stain == "acen"){
+                if (cytoband.stain == "acen") {
                     var points = "";
-                    var middleX = x+width/2;
-                    var middleY = y+height/2;
-                    var endX = x+width;
-                    var endY = y+height;
-                    if(firstCentromere){
-                        points = x+","+y+" "+endX+","+y+" "+endX+","+middleY+" "+middleX+","+endY+" "+x+","+middleY;
+                    var middleX = x + width / 2;
+                    var middleY = y + height / 2;
+                    var endX = x + width;
+                    var endY = y + height;
+                    if (firstCentromere) {
+                        points = x + "," + y + " " + endX + "," + y + " " + endX + "," + middleY + " " + middleX + "," + endY + " " + x + "," + middleY;
                         firstCentromere = false;
-                    }else{
-                        points = x+","+endY+" "+x+","+middleY+" "+middleX+","+y+" "+endX+","+middleY+" "+endX+","+endY;
+                    } else {
+                        points = x + "," + endY + " " + x + "," + middleY + " " + middleX + "," + y + " " + endX + "," + middleY + " " + endX + "," + endY;
                     }
-                    SVG.addChild(group,"polyline",{
-                        "points":points,
-                        "stroke":"black",
-                        "opacity":0.8,
-                        "fill":color
+                    SVG.addChild(group, "polyline", {
+                        "points": points,
+                        "stroke": "black",
+                        "opacity": 0.8,
+                        "fill": color
                     });
-                }else{
-                    SVG.addChild(group,"rect",{
-                        "x":x,
-                        "y":y,
-                        "width":width,
-                        "height":height,
-                        "stroke":"grey",
-                        "opacity":0.8,
-                        "fill":color
+                } else {
+                    SVG.addChild(group, "rect", {
+                        "x": x,
+                        "y": y,
+                        "width": width,
+                        "height": height,
+                        "stroke": "grey",
+                        "opacity": 0.8,
+                        "fill": color
                     });
                 }
 
                 y += height;
             }
-            var text = SVG.addChild(_this.svg,"text",{
-                "x":x+1,
-                "y":_this.height,
-                "font-size":9,
-                "fill":"black"
+            var text = SVG.addChild(_this.svg, "text", {
+                "x": x + 1,
+                "y": _this.height,
+                "font-size": 9,
+                "fill": "black"
             });
             text.textContent = chromosome.name;
 
             _this.chrOffsetX[chromosome.name] = x;
             x += xOffset;
         }
-        _this.positionBox = SVG.addChild(_this.svg,"line",{
-            "x1":_this.chrOffsetX[_this.region.chromosome]-10,
-            "y1":pointerPosition + _this.chrOffsetY[_this.region.chromosome],
-            "x2":_this.chrOffsetX[_this.region.chromosome]+23,
-            "y2":pointerPosition + _this.chrOffsetY[_this.region.chromosome],
-            "stroke":"orangered",
-            "stroke-width":2,
-            "opacity":0.5
+        _this.positionBox = SVG.addChild(_this.svg, "line", {
+            "x1": _this.chrOffsetX[_this.region.chromosome] - 10,
+            "y1": pointerPosition + _this.chrOffsetY[_this.region.chromosome],
+            "x2": _this.chrOffsetX[_this.region.chromosome] + 23,
+            "y2": pointerPosition + _this.chrOffsetY[_this.region.chromosome],
+            "stroke": "orangered",
+            "stroke-width": 2,
+            "opacity": 0.5
         });
 
-        _this.rendered=true;
+        _this.rendered = true;
         _this.afterRender.notify();
     },
 
 
-    setRegion: function(region){//item.chromosome, item.position, item.species
+    setRegion: function (region) {//item.chromosome, item.position, item.species
         this.region.load(region);
         var needDraw = false;
 //        if(item.species!=null){
@@ -8117,8 +8102,8 @@ KaryotypePanel.prototype = {
         //recalculate positionBox
         var centerPosition = this.region.center();
         var pointerPosition = centerPosition * this.pixelBase + this.chrOffsetY[this.region.chromosome];
-        this.positionBox.setAttribute("x1", this.chrOffsetX[this.region.chromosome]-10);
-        this.positionBox.setAttribute("x2", this.chrOffsetX[this.region.chromosome]+23);
+        this.positionBox.setAttribute("x1", this.chrOffsetX[this.region.chromosome] - 10);
+        this.positionBox.setAttribute("x2", this.chrOffsetX[this.region.chromosome] + 23);
         this.positionBox.setAttribute("y1", pointerPosition);
         this.positionBox.setAttribute("y2", pointerPosition);
 
@@ -8129,58 +8114,55 @@ KaryotypePanel.prototype = {
 //                this.positionBox.setAttribute("y2", pointerPosition);
 //            }
 //        }
-        if(needDraw){
+        if (needDraw) {
             this.draw();
         }
     },
 
 
-    updatePositionBox: function(){
-        this.positionBox.setAttribute("x1",this.chrOffsetX[this.region.chromosome]-10);
-        this.positionBox.setAttribute("x2",this.chrOffsetX[this.region.chromosome]+23);
+    updatePositionBox: function () {
+        this.positionBox.setAttribute("x1", this.chrOffsetX[this.region.chromosome] - 10);
+        this.positionBox.setAttribute("x2", this.chrOffsetX[this.region.chromosome] + 23);
 
         var centerPosition = Utils.centerPosition(this.region);
         var pointerPosition = centerPosition * this.pixelBase + this.chrOffsetY[this.region.chromosome];
-        this.positionBox.setAttribute("y1",pointerPosition);
-        this.positionBox.setAttribute("y2",pointerPosition);
+        this.positionBox.setAttribute("y1", pointerPosition);
+        this.positionBox.setAttribute("y2", pointerPosition);
     },
 
-    addMark: function(item){//item.chromosome, item.position
+    addMark: function (item) {//item.chromosome, item.position
         var _this = this;
 
-        var mark = function (){
-            if(_this.region.chromosome!=null && _this.region.start!=null){
-                if(_this.chrOffsetX[_this.region.chromosome]!= null){
-                    var x1 = _this.chrOffsetX[_this.region.chromosome]-10;
+        var mark = function () {
+            if (_this.region.chromosome != null && _this.region.start != null) {
+                if (_this.chrOffsetX[_this.region.chromosome] != null) {
+                    var x1 = _this.chrOffsetX[_this.region.chromosome] - 10;
                     var x2 = _this.chrOffsetX[_this.region.chromosome];
                     var y1 = (_this.region.start * _this.pixelBase + _this.chrOffsetY[_this.region.chromosome]) - 4;
                     var y2 = _this.region.start * _this.pixelBase + _this.chrOffsetY[_this.region.chromosome];
                     var y3 = (_this.region.start * _this.pixelBase + _this.chrOffsetY[_this.region.chromosome]) + 4;
-                    var points = x1+","+y1+" "+x2+","+y2+" "+x1+","+y3+" "+x1+","+y1;
-                    SVG.addChild(_this.markGroup,"polyline",{
-                        "points":points,
-                        "stroke":"black",
-                        "opacity":0.8,
-                        "fill":"#33FF33"
+                    var points = x1 + "," + y1 + " " + x2 + "," + y2 + " " + x1 + "," + y3 + " " + x1 + "," + y1;
+                    SVG.addChild(_this.markGroup, "polyline", {
+                        "points": points,
+                        "stroke": "black",
+                        "opacity": 0.8,
+                        "fill": "#33FF33"
                     });
                 }
             }
         };
 
-        if(this.rendered){
+        if (this.rendered) {
             mark();
-        }else{
-            this.afterRender.addEventListener(function(sender,data){
+        } else {
+            this.afterRender.addEventListener(function (sender, data) {
                 mark();
             });
         }
     },
 
-    unmark: function(){
-//	$(this.markGroup).empty();
-        while (this.markGroup.firstChild) {
-            this.markGroup.removeChild(this.markGroup.firstChild);
-        }
+    unmark: function () {
+        $(this.markGroup).empty();
     }
 }
 
@@ -8344,7 +8326,7 @@ TrackListPanel.prototype = {
         $(this.centerLine).css({
             'z-index': 2,
             'position': 'absolute',
-            'left': mid,
+            'left': mid-1,
             'top': 0,
             'width': this.pixelBase,
 //            'height': '100%',
@@ -8429,7 +8411,7 @@ TrackListPanel.prototype = {
             var offsetX = (event.clientX - $(_this.tlTracksDiv).offset().left);
             var cX = offsetX - mouseLineOffset;
             var rcX = (cX / _this.pixelBase) | 0;
-            var pos = (rcX * _this.pixelBase) + mid % _this.pixelBase;
+            var pos = (rcX * _this.pixelBase) + (mid % _this.pixelBase) - 1;
             $(_this.mouseLine).css({'left': pos});
 //
             var posOffset = (mid / _this.pixelBase) | 0;
@@ -8622,7 +8604,7 @@ TrackListPanel.prototype = {
         var mid = this.width / 2;
         this._setPixelBaseAndZoom();
 
-        $(this.centerLine).css({'left': mid, 'width': this.pixelBase});
+        $(this.centerLine).css({'left': mid -1 , 'width': this.pixelBase});
         $(this.mouseLine).css({'width': this.pixelBase});
 
         this.svgTop.setAttribute('width', this.width);
@@ -11921,7 +11903,7 @@ GenomeViewer.prototype = {
         this._setWidth(width);
 
         if (this.border) {
-            var border = (Utils.isString(this.border)) ? this.border : '1px solid lightgray';
+            var border = (_.isString(this.border)) ? this.border : '1px solid lightgray';
             $(this.div).css({border: border});
         }
 
@@ -12226,7 +12208,7 @@ GenomeViewer.prototype = {
             height: 125,
             species: this.species,
             title: 'Karyotype',
-            titleCollapse: true,
+            collapsed: true,
             region: this.region,
             autoRender: true,
             handlers: {
@@ -12267,6 +12249,7 @@ GenomeViewer.prototype = {
             height: 65,
             species: this.species,
             title: 'Chromosome',
+            collapsed: true,
             region: this.region,
             handlers: {
                 'region:change': function (event) {

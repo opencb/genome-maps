@@ -74,23 +74,23 @@ GmNavigationBar.prototype = {
                 {
                     id: this.id + 'speciesButton',
                     tooltip: 'Species menu',
-                    text: this.species.text+' '+this.species.assembly,
+                    text: this.species.text + ' ' + this.species.assembly,
                     menu: {
                         id: this.id + 'speciesMenu'
                     }
                 },
                 {
-                  xtype:'tbtext',
-                  text:'<span style="color:#708090;">Chr</span>'
+                    xtype: 'tbtext',
+                    text: '<span style="color:#708090;">Chr</span>'
                 },
                 {
                     id: this.id + 'chromosomesButton',
                     tooltip: 'Chromosomes menu',
 //                    iconCls: 'ocb-icon-chromosome',
                     text: this.region.chromosome,
-                    margin:'0 15 0 0',
+                    margin: '0 15 0 0',
                     menu: {
-                        plain:true,
+                        plain: true,
                         id: this.id + 'chromosomesMenu'
                     }
                 },
@@ -206,7 +206,7 @@ GmNavigationBar.prototype = {
                 {
                     tooltip: 'Move further right',
                     iconCls: 'ocb-icon-arrow-e-bold',
-                    margin:'0 15 0 0',
+                    margin: '0 15 0 0',
                     handler: function () {
                         _this._handleMoveRegion(-10);
                     }
@@ -245,7 +245,7 @@ GmNavigationBar.prototype = {
                 {
                     tooltip: 'Configure',
                     text: '<span class="emph"> Configure</span>',
-                    margin:'0 0 0 15',
+                    margin: '0 0 0 15',
                     enableToggle: true,
                     iconCls: 'ocb-icon-gear',
                     pressed: true,
@@ -265,7 +265,7 @@ GmNavigationBar.prototype = {
 
         this.rendered = true;
     },
-    setConfigurationMenu:function(panel){
+    setConfigurationMenu: function (panel) {
         Ext.getCmp(this.id + 'configurationMenu').add(panel);
     },
 
@@ -308,25 +308,25 @@ GmNavigationBar.prototype = {
 
         var chromosomeData = [];
         for (var i = 0; i < list.length; i++) {
-            chromosomeData.push({'name':list[i]});
+            chromosomeData.push({'name': list[i]});
         }
         var chrStore = Ext.create('Ext.data.Store', {
-            id:this.id+"chrStore",
+            id: this.id + "chrStore",
             fields: ["name"],
-            autoLoad:false,
-            data:chromosomeData
+            autoLoad: false,
+            data: chromosomeData
         });
         /*Chromolendar*/
         var chrView = Ext.create('Ext.view.View', {
-            id:this.id+"chrView",
-            width:125,
-            style:'background-color:#fff',
-            store : chrStore,
+            id: this.id + "chrView",
+            width: 125,
+            style: 'background-color:#fff',
+            store: chrStore,
             selModel: {
                 mode: 'SINGLE',
                 listeners: {
-                    selectionchange:function(este,selNodes){
-                        if(selNodes.length>0){
+                    selectionchange: function (este, selNodes) {
+                        if (selNodes.length > 0) {
                             var chr = selNodes[0].data.name;
                             console.log(chr);
                             button.setText(chr);
@@ -375,7 +375,7 @@ GmNavigationBar.prototype = {
 
         var createEntry = function (species) {
             return Ext.create('Ext.menu.Item', {
-                text: species.text+' '+species.assembly,
+                text: species.text + ' ' + species.assembly,
                 handler: function () {
                     _this.species = species;
                     button.setText(this.text);
@@ -390,7 +390,7 @@ GmNavigationBar.prototype = {
                 var species = items[i];
                 var entry = createEntry(species);
                 entries.push(entry);
-                if(_this.popularSpecies && _this.popularSpecies.indexOf(species.text) != -1){
+                if (_this.popularSpecies && _this.popularSpecies.indexOf(species.text) != -1) {
                     popularEntries.push(entry);
                 }
             }
@@ -409,8 +409,10 @@ GmNavigationBar.prototype = {
             var phylo = this.availableSpecies.items[i];
             items.push(createSubMenu(phylo));
         }
-        if(this.popularSpecies){
-            popularEntries.sort(function(a, b) {return a.text.localeCompare(b.text);});
+        if (this.popularSpecies) {
+            popularEntries.sort(function (a, b) {
+                return a.text.localeCompare(b.text);
+            });
             menu.add(popularEntries);
             menu.add('-');
         }
@@ -473,16 +475,22 @@ GmNavigationBar.prototype = {
                 // meanwhile the location of feature is set
                 console.log(this.species);
                 var _this = this;
-                var cellBaseManager = new CellBaseManager(this.species);
-                cellBaseManager.success.addEventListener(function (evt, data) {
-                    var feat = data[featureName].result[0];
-                    var regionStr = feat.chromosome+":"+feat.start+"-"+feat.end;
-                    var region = new Region();
-                    region.parse(regionStr);
-                    _this.region = region;
-                    _this.trigger('region:change', {region: _this.region, sender: _this});
+
+                CellBaseManager.get({
+                    species: this.species,
+                    category: 'feature',
+                    subCategory: 'gene',
+                    query: featureName,
+                    resource: 'info',
+                    success: function (data) {
+                        var feat = data.response[0].result[0];
+                        var regionStr = feat.chromosome + ":" + feat.start + "-" + feat.end;
+                        var region = new Region();
+                        region.parse(regionStr);
+                        _this.region = region;
+                        _this.trigger('region:change', {region: _this.region, sender: _this});
+                    }
                 });
-                cellBaseManager.get('feature', 'gene', featureName, 'info', 'of=json');
             }
         }
     },
@@ -570,9 +578,11 @@ GmNavigationBar.prototype = {
         var _this = this;
 
         var searchResults = Ext.create('Ext.data.Store', {
-            fields: ["xrefId", "displayId", "description"]
+            fields: ["xrefId", "displayId", "description"],
+            autoLoad: false
         });
 
+        console.log(searchResults)
         var searchCombo = Ext.create('Ext.form.field.ComboBox', {
             id: this.id + '-quick-search',
             displayField: 'displayId',
@@ -585,8 +595,7 @@ GmNavigationBar.prototype = {
             store: searchResults,
             queryMode: 'local',
             typeAhead: true,
-
-            minChars:3,
+            minChars: 3,
             autoSelect: false,
             forceSelection: true,
             queryDelay: 500,
@@ -598,16 +607,18 @@ GmNavigationBar.prototype = {
                         min = 10;
                     }
                     if (value && value.length > min) {
-                        $.ajax({
-//                        url:new CellBaseManager().host+"/latest/"+_this.species+"/feature/id/"+this.getValue()+"/starts_with?of=json",
-                            url: "http://ws.bioinfo.cipf.es/cellbase/rest/latest/hsa/feature/id/" + this.getValue() + "/starts_with?of=json",
-                            success: function (data, textStatus, jqXHR) {
-                                var d = JSON.parse(data);
-                                searchResults.loadData(d[0]);
+                        CellBaseManager.get({
+                            host:'http://ws.bioinfo.cipf.es/cellbase/rest',
+                            version:'latest',
+                            species: _this.species,
+                            category: 'feature',
+                            subCategory: 'id',
+                            query: this.getValue(),
+                            resource: 'starts_with',
+                            success: function (data) {
+                                console.log(data)
+                                searchResults.loadData(data[0]);
                                 console.log(searchResults)
-                            },
-                            error: function (jqXHR, textStatus, errorThrown) {
-                                console.log(textStatus);
                             }
                         });
                     }

@@ -72,7 +72,7 @@ GenomeMaps.prototype = {
         this.width = ($(this.div).width());
 
         if (this.border) {
-            var border = (Utils.isString(this.border)) ? this.border : '1px solid lightgray';
+            var border = (_.isString(this.border)) ? this.border : '1px solid lightgray';
             $(this.div).css({border: border});
         }
 
@@ -189,7 +189,7 @@ GenomeMaps.prototype = {
 
 
         //TEST SCROLL BAR
-        var centerHeight = $(window).height() - ($(this.navigationBar.div).height() + $(this.statusBar.div).height() + this.headerWidget.height)-7;
+        var centerHeight = $(window).height() - ($(this.navigationBar.div).height() + $(this.statusBar.div).height() + this.headerWidget.height) - 7;
         $(this.genomeViewer.centerPanelDiv).css({
 //            height: centerHeight,
 //            'overflow-y': 'scroll',
@@ -258,21 +258,22 @@ GenomeMaps.prototype = {
             description: this.description,
             version: this.version,
             suiteId: this.suiteId,
-            accountData: this.accountData
-        });
-        /**Atach events i listen**/
-        headerWidget.onLogin.addEventListener(function (sender) {
-            Ext.example.msg('Welcome', 'You logged in');
-            _this.sessionInitiated();
-        });
+            accountData: this.accountData,
+            handlers: {
+                'login': function (event) {
+                    Ext.example.msg('Welcome', 'You logged in');
+                    _this.sessionInitiated();
+                },
+                'logout': function (event) {
+                    Ext.example.msg('Good bye', 'You logged out');
+                    _this.sessionFinished();
 
-        headerWidget.onLogout.addEventListener(function (sender) {
-            Ext.example.msg('Good bye', 'You logged out');
-            _this.sessionFinished();
-        });
+                },
+                'account:change': function (event) {
+                    _this.setAccountData(event.response);
 
-        headerWidget.onGetAccountInfo.addEventListener(function (evt, response) {
-            _this.setAccountData(response);
+                }
+            }
         });
         headerWidget.draw();
 
@@ -382,7 +383,7 @@ GenomeMaps.prototype = {
                     event.region = _this.genomeViewer.defaultRegion;
                     _this.genomeViewer.trigger('region:change', event);
                 },
-                'autoHeight-button:click':function(event){
+                'autoHeight-button:click': function (event) {
                     _this.genomeViewer.enableAutoHeight();
                 }
             }
@@ -447,7 +448,7 @@ GenomeMaps.prototype = {
         this.width = width;
         this.genomeViewer.setWidth(width);
         this.headerWidget.setWidth(width);
-        $('#status').css({'width':width});
+        $('#status').css({'width': width});
     }
 }
 
@@ -478,13 +479,20 @@ GenomeMaps.prototype.setSize = function (width, height) {
 
 GenomeMaps.prototype.getRegionByFeature = function (name, feature) {
     var speciesCode = Utils.getSpeciesCode(this.species.text);
-    var url = CELLBASE_HOST + "/latest/" + speciesCode + "/feature/" + feature + "/" + name + "/info?of=json";
+    var url = CellBaseManager.url({
+        species: speciesCode,
+        category: 'feature',
+        subCategory: feature,
+        query: name.toUpperCase(),
+        resource: 'info'
+    });
     var f;
     $.ajax({
         url: url,
         async: false,
+        dataType: 'json',
         success: function (data) {
-            f = JSON.parse(data)[0][0];
+            f = data.response[0].result[0];
         }
     });
     if (f != null) {
@@ -811,32 +819,34 @@ GenomeMaps.prototype.getSidePanelItems = function () {
                         }
                     }
                 }
-            },
-            {
-                xtype: "tabpanel",
-                id: this.id + "activeTracksSettings",
-                plain: true,
-                border: false,
-                margin: "5 0 0 0",
-                autoScroll: true,
-                flex: 2,
-                items: [
-                    {
-                        id: this.id + "trackOptions",
-                        itemId: this.id + "trackOptions",
-                        title: "Options",
-                        bodyPadding: 10,
-                        border: false
-                    },
-                    {
-                        id: this.id + "trackFiltering",
-                        itemId: this.id + "trackFiltering",
-                        title: "Filtering",
-                        layout: {type: 'vbox', align: 'stretch'},
-                        border: false
-                    }
-                ]
             }
+
+            /*TRACK CONFIG DISABLED FOR NOW*/
+//            {
+//                xtype: "tabpanel",
+//                id: this.id + "activeTracksSettings",
+//                plain: true,
+//                border: false,
+//                margin: "5 0 0 0",
+//                autoScroll: true,
+//                flex: 2,
+//                items: [
+//                    {
+//                        id: this.id + "trackOptions",
+//                        itemId: this.id + "trackOptions",
+//                        title: "Options",
+//                        bodyPadding: 10,
+//                        border: false
+//                    },
+//                    {
+//                        id: this.id + "trackFiltering",
+//                        itemId: this.id + "trackFiltering",
+//                        title: "Filtering",
+//                        layout: {type: 'vbox', align: 'stretch'},
+//                        border: false
+//                    }
+//                ]
+//            }
         ]
     };
 
@@ -921,150 +931,6 @@ GenomeMaps.prototype.getSidePanelItems = function () {
                     var boxValue = Ext.getCmp(_this.id + "searchPanelCombo").getValue().toLowerCase();
 
 
-                    var cellBaseManager = new CellBaseManager(_this.species);
-                    cellBaseManager.success.addEventListener(function (evt, data) {
-                        var notFound = "", boxes = [];
-                        var featureType = boxValue.replace("info", "gene");
-                        var id = FEATURE_TYPES[featureType].infoWidgetId;
-                        var collapsed = data.metadata.queryIds.length > 3;
-                        for (var i = 0; i < data.metadata.queryIds.length; i++) {
-                            var queryId = data.metadata.queryIds[i];
-                            var queryResult = data[queryId];
-                            if (queryResult.numResults > 0) {
-                                switch (featureType) {
-                                    case 'mutation':
-                                    case 'snp':
-                                        var items = [];
-                                        var featList = queryResult.result;
-                                        var width = (featList.length > 1) ? 229 : 235;
-                                        var st = Ext.create('Ext.data.Store', {
-                                            fields: [id, 'chromosome', 'start', 'end'], data: featList,
-                                            proxy: {type: 'memory'}, pageSize: 5
-                                        });
-                                        items.push({xtype: 'grid', store: st, hideHeaders: true, width: width, height: 165, loadMask: true, margin: '2 0 0 0',
-                                            title: '<span class="info">' + queryId + '</span> <span style="font-family: Oxygen;color:slategray">' + featList.length + '</span>', collapsible: true, collapsed: collapsed, titleCollapse: true,
-                                            columns: [
-                                                {text: 'id', dataIndex: id, width: 210}
-                                            ],
-                                            plugins: 'bufferedrenderer', loadMask: true,
-                                            //                                    dockedItems: [{items:{xtype:'field'}}],
-                                            listeners: {
-                                                itemclick: function (este, record, item, index, e, eOpts) {
-                                                    debugger
-                                                    _this.genomeViewer.setRegion(record.raw);
-                                                }
-                                            }
-                                        });
-                                        if (items.length < 2) {
-                                            boxes.push(items[0]);
-                                        } else {
-                                            boxes.push({xtype: 'panel', title: '<span class="info">' + queryId + '</span> - <span style="font-family: Oxygen;color:slategray">' + items.length + ' genes</span>', bodyPadding: "0 2 2 2",
-                                                collapsible: true, collapsed: false, titleCollapse: true, width: 235, items: items});
-                                        }
-                                        break;
-                                    case 'transcript':
-                                        collapsed = false;
-                                        var items = [];
-                                        var tpl = new Ext.XTemplate('<span>{' + id + '}</span>');
-                                        var geneList = queryResult.result;
-                                        for (var j = 0, lenj = geneList.length; j < lenj; j++) {
-                                            var transcripts = geneList[j].transcripts;
-                                            items2 = [];
-                                            for (var k = 0, lenk = transcripts.length; k < lenk; k++) {
-                                                var transcript = transcripts[k];
-                                                items2.push({xtype: 'box', padding: "1 5 1 10", border: 1, tpl: tpl,
-                                                    data: transcript, datos: transcript,
-                                                    listeners: {afterrender: function (este) {
-                                                        this.getEl().addClsOnOver("encima2");
-                                                        this.getEl().addCls("whiteborder");
-                                                        this.getEl().on("click", function () {
-                                                            _this.genomeViewer.setRegion(este.datos);
-                                                        });
-                                                    }}
-                                                });
-                                            }
-                                            items.push({xtype: 'panel', border: 0, title: ("Gene " + (j + 1)), items: items2});
-                                        }
-                                        if (items.length < 2) {
-                                            items = items[0].items
-                                        }
-                                        boxes.push({xtype: 'panel', title: '<span class="info">' + queryId + '</span>', margin: "2 0 0 0",
-                                            collapsible: true, collapsed: false, titleCollapse: true, width: 235, items: items});
-
-                                        break;
-                                    case 'exon':
-                                        collapsed = false;
-                                        var items = [];
-                                        var geneList = queryResult.result;
-                                        for (var j = 0, lenj = geneList.length; j < lenj; j++) {
-                                            var transcripts = geneList[j].transcripts;
-                                            items2 = [];
-                                            var featList = [];
-                                            for (var k = 0, lenk = transcripts.length; k < lenk; k++) {
-                                                var transcript = transcripts[k];
-                                                featList = featList.concat(transcripts[k].exons);
-                                            }
-                                            var width = (featList.length > 1) ? 220 : 220;
-                                            var st = Ext.create('Ext.data.Store', {
-                                                fields: [id, 'chromosome', 'start', 'end'], data: featList,
-                                                proxy: {type: 'memory'}, pageSize: 5
-                                            });
-                                            items.push({xtype: 'grid', store: st, hideHeaders: true, width: width, height: 165, loadMask: true, margin: '2 0 0 0',
-                                                title: '<span class="info">' + queryId + '</span> <span style="font-family: Oxygen;color:slategray">' + featList.length + '</span>', collapsible: true, collapsed: collapsed, titleCollapse: true,
-                                                columns: [
-                                                    {text: 'id', dataIndex: id, width: 195}
-                                                ],
-                                                plugins: 'bufferedrenderer', loadMask: true,
-                                                //                                    dockedItems: [{items:{xtype:'field'}}],
-                                                listeners: {
-                                                    itemclick: function (este, record, item, index, e, eOpts) {
-                                                        _this.genomeViewer.setRegion(record.raw);
-                                                    }
-                                                }
-                                            });
-                                        }
-                                        if (items.length < 2) {
-                                            boxes.push(items[0])
-                                        }else{
-                                            boxes.push({xtype: 'panel', title: '<span class="info">' + queryId + '</span>', margin: "2 0 0 0",
-                                            collapsible: true, collapsed: false, titleCollapse: true, width: 220, items: items});
-
-                                        }
-
-                                        break;
-                                    default:
-                                        collapsed = false;
-                                        var items = [];
-                                        var tpl = new Ext.XTemplate('<span>{' + id + '}</span>');
-                                        for (var j = 0, lenj = queryResult.result.length; j < lenj; j++) {
-                                            items.push({xtype: 'box', padding: "1 5 1 10", border: 1, tpl: tpl,
-                                                data: queryResult.result[j], datos: queryResult.result[j],
-                                                listeners: {afterrender: function (este) {
-                                                    this.getEl().addClsOnOver("encima2");
-                                                    this.getEl().addCls("whiteborder");
-                                                    this.getEl().on("click", function () {
-                                                        _this.genomeViewer.setRegion(este.datos);
-                                                    });
-                                                }}
-                                            });
-                                        }
-                                        boxes.push({xtype: 'panel', title: '<span class="info">' + queryId + '</span>', margin: "2 0 0 0",
-                                            collapsible: true, collapsed: false, titleCollapse: true, width: 235, items: items});
-
-                                        break;
-
-                                }
-                            } else {
-                                notFound += '&nbsp; &nbsp;' + queryId + '<br>';
-                            }
-                        }
-                        if (notFound != "") {
-                            notFound = '<span class="err">Features not found:</span>' + notFound;
-                        }
-                        boxes.push({xtype: 'box', padding: "15 5 2 3", border: 1, html: notFound});
-                        resultPan.add(boxes);
-                        resultPan.setLoading(false);
-                    });
                     var params = null;
                     switch (boxValue) {
                         case 'snp':
@@ -1074,10 +940,164 @@ GenomeMaps.prototype.getSidePanelItems = function () {
                             params = {exclude: 'transcripts.exons,transcripts.xrefs,transcripts.tfbs'};
                             break;
                         case 'exon':
-                            params = {exclude: 'transcripts.xrefs,transcripts.tfbs'};
+                            params = {include: 'transcripts.exons'};
                             break;
                     }
-                    cellBaseManager.get("feature", "gene", features, boxValue, params);//gene must search in later versions
+                    CellBaseManager.get({
+                        species: _this.species,
+                        category: 'feature',
+                        subCategory: 'gene',
+                        query: features,
+                        resource: boxValue,
+                        params: params,
+                        success: function (data) {
+
+                            var notFound = "", boxes = [];
+                            var featureType = boxValue.replace("info", "gene");
+                            var id = FEATURE_TYPES[featureType].infoWidgetId;
+
+                            var collapsed = data.response.length > 3;
+                            for (var i = 0; i < data.response.length; i++) {
+                                var queryId = data.response[i].id;
+                                var queryResult = data.response[i];
+                                if (queryResult.numResults > 0) {
+                                    switch (featureType) {
+                                        case 'mutation':
+                                        case 'snp':
+                                            var items = [];
+                                            var featList = queryResult.result;
+                                            var width = (featList.length > 1) ? 229 : 235;
+                                            var st = Ext.create('Ext.data.Store', {
+                                                fields: [id, 'chromosome', 'start', 'end'], data: featList,
+                                                proxy: {type: 'memory'}, pageSize: 5
+                                            });
+                                            items.push({xtype: 'grid', store: st, hideHeaders: true, width: width, height: 165, loadMask: true, margin: '2 0 0 0',
+                                                title: '<span class="info">' + queryId + '</span> <span style="font-family: Oxygen;color:slategray">' + featList.length + '</span>', collapsible: true, collapsed: collapsed, titleCollapse: true,
+                                                columns: [
+                                                    {text: 'id', dataIndex: id, width: 210}
+                                                ],
+                                                plugins: 'bufferedrenderer', loadMask: true,
+                                                //                                    dockedItems: [{items:{xtype:'field'}}],
+                                                listeners: {
+                                                    itemclick: function (este, record, item, index, e, eOpts) {
+                                                        debugger
+                                                        _this.genomeViewer.setRegion(record.raw);
+                                                    }
+                                                }
+                                            });
+                                            if (items.length < 2) {
+                                                boxes.push(items[0]);
+                                            } else {
+                                                boxes.push({xtype: 'panel', title: '<span class="info">' + queryId + '</span> - <span style="font-family: Oxygen;color:slategray">' + items.length + ' genes</span>', bodyPadding: "0 2 2 2",
+                                                    collapsible: true, collapsed: false, titleCollapse: true, width: 235, items: items});
+                                            }
+                                            break;
+                                        case 'transcript':
+                                            collapsed = false;
+                                            var items = [];
+                                            var tpl = new Ext.XTemplate('<span>{' + id + '}</span>');
+                                            var geneList = queryResult.result;
+                                            for (var j = 0, lenj = geneList.length; j < lenj; j++) {
+                                                var transcripts = geneList[j].transcripts;
+                                                items2 = [];
+                                                for (var k = 0, lenk = transcripts.length; k < lenk; k++) {
+                                                    var transcript = transcripts[k];
+                                                    items2.push({xtype: 'box', padding: "1 5 1 10", border: 1, tpl: tpl,
+                                                        data: transcript, datos: transcript,
+                                                        listeners: {afterrender: function (este) {
+                                                            this.getEl().addClsOnOver("encima2");
+                                                            this.getEl().addCls("whiteborder");
+                                                            this.getEl().on("click", function () {
+                                                                _this.genomeViewer.setRegion(este.datos);
+                                                            });
+                                                        }}
+                                                    });
+                                                }
+                                                items.push({xtype: 'panel', border: 0, title: ("Gene " + (j + 1)), items: items2});
+                                            }
+                                            if (items.length < 2) {
+                                                items = items[0].items
+                                            }
+                                            boxes.push({xtype: 'panel', title: '<span class="info">' + queryId + '</span>', margin: "2 0 0 0",
+                                                collapsible: true, collapsed: false, titleCollapse: true, width: 235, items: items});
+
+                                            break;
+                                        case 'exon':
+                                            collapsed = false;
+                                            var items = [];
+                                            var geneList = queryResult.result;
+                                            for (var j = 0, lenj = geneList.length; j < lenj; j++) {
+                                                var transcripts = geneList[j].transcripts;
+                                                items2 = [];
+                                                var featList = [];
+                                                for (var k = 0, lenk = transcripts.length; k < lenk; k++) {
+                                                    var transcript = transcripts[k];
+                                                    featList = featList.concat(transcripts[k].exons);
+                                                }
+                                                var width = (featList.length > 1) ? 220 : 220;
+                                                var st = Ext.create('Ext.data.Store', {
+                                                    fields: [id, 'chromosome', 'start', 'end'], data: featList,
+                                                    proxy: {type: 'memory'}, pageSize: 5
+                                                });
+                                                items.push({xtype: 'grid', store: st, hideHeaders: true, width: width, height: 165, loadMask: true, margin: '2 0 0 0',
+                                                    title: '<span class="info">' + queryId + '</span> <span style="font-family: Oxygen;color:slategray">' + featList.length + '</span>', collapsible: true, collapsed: collapsed, titleCollapse: true,
+                                                    columns: [
+                                                        {text: 'id', dataIndex: id, width: 195}
+                                                    ],
+                                                    plugins: 'bufferedrenderer', loadMask: true,
+                                                    //                                    dockedItems: [{items:{xtype:'field'}}],
+                                                    listeners: {
+                                                        itemclick: function (este, record, item, index, e, eOpts) {
+                                                            _this.genomeViewer.setRegion(record.raw);
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                            if (items.length < 2) {
+                                                boxes.push(items[0])
+                                            } else {
+                                                boxes.push({xtype: 'panel', title: '<span class="info">' + queryId + '</span>', margin: "2 0 0 0",
+                                                    collapsible: true, collapsed: false, titleCollapse: true, width: 220, items: items});
+
+                                            }
+
+                                            break;
+                                        default:
+                                            collapsed = false;
+                                            var items = [];
+                                            var tpl = new Ext.XTemplate('<span>{' + id + '}</span>');
+                                            for (var j = 0, lenj = queryResult.result.length; j < lenj; j++) {
+                                                items.push({xtype: 'box', padding: "1 5 1 10", border: 1, tpl: tpl,
+                                                    data: queryResult.result[j], datos: queryResult.result[j],
+                                                    listeners: {afterrender: function (este) {
+                                                        this.getEl().addClsOnOver("encima2");
+                                                        this.getEl().addCls("whiteborder");
+                                                        this.getEl().on("click", function () {
+                                                            _this.genomeViewer.setRegion(este.datos);
+                                                        });
+                                                    }}
+                                                });
+                                            }
+                                            boxes.push({xtype: 'panel', title: '<span class="info">' + queryId + '</span>', margin: "2 0 0 0",
+                                                collapsible: true, collapsed: false, titleCollapse: true, width: 235, items: items});
+
+                                            break;
+
+                                    }
+                                } else {
+                                    notFound += '&nbsp; &nbsp;' + queryId + '<br>';
+                                }
+                            }
+                            if (notFound != "") {
+                                notFound = '<span class="err">Features not found:</span>' + notFound;
+                            }
+                            boxes.push({xtype: 'box', padding: "15 5 2 3", border: 1, html: notFound});
+                            resultPan.add(boxes);
+                            resultPan.setLoading(false);
+
+
+                        }
+                    });
                 }
             },
             {
@@ -1593,11 +1613,12 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                         return ('name' in f) ? f.name : f.id;
                     },
                     tooltipTitle: function (f) {
-                        var name = (f.name != null) ? f.name : f.id;
+                        var name = ('name' in f) ? f.name : f.id;
                         return f.featureType.toUpperCase() + ' - <span class="ok">' + name + '</span>';
                     },
                     tooltipText: function (f) {
-                        return 'alleles:&nbsp;<span class="ssel">' + f.alleleString + '</span><br>' +
+                        return 'matrix:&nbsp;<span class="ssel">' + f.matrix + '</span><br>' +
+                            'score:&nbsp;<span class="ssel">' + f.score + '</span><br>' +
                             FEATURE_TYPES.getTipCommons(f) +
                             'source:&nbsp;<span class="ssel">' + f.source + '</span><br>';
 
@@ -1847,7 +1868,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
             renderer.on({
                 'feature:click': function (event) {
 
-                   var vcfInfo =  new VCFVariantInfoWidget(null, _this.genomeViewer.species,{adapter:adapter}).draw(event);
+                    var vcfInfo = new VCFVariantInfoWidget(null, _this.genomeViewer.species, {adapter: adapter}).draw(event);
                 }
             });
 
@@ -1892,10 +1913,10 @@ GenomeMaps.prototype.addFileTrack = function (text, updateActiveTracksPanel) {
     }
     if (fileWidget != null) {
         fileWidget.draw();
-        _this.headerWidget.onLogin.addEventListener(function (sender) {
+        _this.headerWidget.on('login', function (sender) {
             fileWidget.sessionInitiated();
         });
-        _this.headerWidget.onLogout.addEventListener(function (sender) {
+        _this.headerWidget.on('logout', function (sender) {
             fileWidget.sessionFinished();
         });
         fileWidget.onOk.addEventListener(function (sender, event) {
