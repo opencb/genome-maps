@@ -1,4 +1,4 @@
-/*! Genome Viewer - v1.0.2 - 2013-09-19
+/*! Genome Viewer - v1.0.2 - 2013-09-20
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 function UserListWidget (args){
@@ -534,6 +534,10 @@ OpencgaManager.prototype = {
             if(data.indexOf("ERROR") == -1){
                 _this.onGetAccountInfo.notify(JSON.parse(data));
             }else{
+                $.cookie('bioinfo_sid', null);
+                $.cookie('bioinfo_sid', null, {path: '/'});
+                $.cookie('bioinfo_account',null);
+                $.cookie('bioinfo_account', null, {path: '/'});
                 console.log(data);
             }
         }
@@ -1087,6 +1091,7 @@ function HeaderWidget(args){
     this.allowLogin = true;
     this.width;
     this.height;
+    this.chunkedUpload = false;
 
     //set instantiation args, must be last
     _.extend(this, args);
@@ -1095,9 +1100,8 @@ function HeaderWidget(args){
 	
 	/** create widgets **/
 	this.loginWidget= new LoginWidget(this.suiteId);
-	this.editUserWidget = new ProfileWidget();
-	this.uploadWidget = new UploadWidget({suiteId:this.suiteId});//used now from opencga-browser
-	this.opencgaBrowserWidget = new OpencgaBrowserWidget({suiteId:this.suiteId});
+	this.profileWidget = new ProfileWidget();
+	this.opencgaBrowserWidget = new OpencgaBrowserWidget({suiteId:this.suiteId,chunkedUpload:this.chunkedUpload});
 	
 	/**Atach events i listen**/
 	this.loginWidget.onSessionInitiated.addEventListener(function(){
@@ -1189,6 +1193,9 @@ HeaderWidget.prototype = {
         /**CLEAR OPENCGA**/
         clearInterval(this.accountInfoInterval);
         delete this.accountInfoInterval;
+
+        this.profileWidget.hide();
+        this.opencgaBrowserWidget.hide();
     },
     setDescription : function (text){
         $("#"+this.id+'description').html(text);
@@ -1369,7 +1376,7 @@ HeaderWidget.prototype = {
                     id: this.id+'btnEdit',
                     text: '<span class="emph">profile</span>',
                     handler: function (){
-                        _this.editUserWidget.draw();
+                        _this.profileWidget.draw();
                     }
                 },{
                     id :this.id+'btnLogout',
@@ -2203,11 +2210,13 @@ LoginWidget.prototype.checkAccountId = function (a,b,c){
 
 function OpencgaBrowserWidget(args) {
     var _this = this;
+        this.chunkedUpload=false;
     if (typeof args != 'undefined') {
         this.targetId = args.targetId || this.targetId;
         this.title = args.title || this.title;
         this.width = args.width || this.width;
         this.height = args.height || this.height;
+        this.chunkedUpload = args.chunkedUpload || this.chunkedUpload;
     }
 
     this.adapter = new OpencgaManager();
@@ -2221,7 +2230,7 @@ function OpencgaBrowserWidget(args) {
         Ext.getBody().unmask();
     });
 
-    this.uploadWidget = new UploadWidget({suiteId: args.suiteId, opencgaBrowserWidget: this,chunkedUpload:true});
+    this.uploadWidget = new UploadWidget({suiteId: args.suiteId, opencgaBrowserWidget: this,chunkedUpload:this.chunkedUpload});
 
     this.uploadWidget.adapter.onUploadObjectToBucket.addEventListener(function (sender, res) {
         if (res.status == 'done') {
@@ -2246,6 +2255,9 @@ OpencgaBrowserWidget.prototype = {
 //    selectedFileNode:undefined,//can be set by the tree panel or the grid panel
 
     /* Methods */
+    hide:function(){
+        this.panel.hide();
+    },
     draw: function (mode) {
         //Ext.getBody().mask("Loading...");
         //this.adapter.getData(sessionID, -1);
@@ -2902,21 +2914,23 @@ OpencgaBrowserWidget.prototype.render = function (args) {
                 break;
         }
 
-        tbarObj.items.push({
-            id: this.id + 'activeUploadsButton',
-            text: 'Active uploads',
-            enableToggle: true,
-            pressed: false,
-            toggleHandler: function () {
-                if (this.pressed) {
-                    _this.activeUploadsCont.show();
-//                    _this.viewUploads();
-                } else {
-                    _this.activeUploadsCont.hide();
-//                    _this.viewBuckets();
+        if(this.chunkedUpload == true){
+            tbarObj.items.push({
+                id: this.id + 'activeUploadsButton',
+                text: 'Active uploads',
+                enableToggle: true,
+                pressed: false,
+                toggleHandler: function () {
+                    if (this.pressed) {
+                        _this.activeUploadsCont.show();
+    //                    _this.viewUploads();
+                    } else {
+                        _this.activeUploadsCont.hide();
+    //                    _this.viewBuckets();
+                    }
                 }
-            }
-        });
+            });
+        }
         this.panel = Ext.create('Ext.window.Window', {
             title: 'Upload & Manage',
             resizable: false,
@@ -3530,6 +3544,9 @@ ProfileWidget.prototype = {
     },
     draw : function (){
         this.render();
+    },
+    hide:function(){
+        this.panel.hide();
     },
     clean : function (){
         if (this.panel != null){
@@ -5212,6 +5229,12 @@ ResultWidget.prototype = {
                         ]
                     });
                 } else {
+
+                    if(_.isUndefined(item.title)){
+
+                    debugger
+                    }
+
                     return Ext.create('Ext.container.Container', {
                         id: _this.jobId + item.title.replace(/ /g, ''),
                         title: item.title,
@@ -5298,7 +5321,6 @@ function UploadWidget (args){
         this.opencgaBrowserWidget = args.opencgaBrowserWidget || this.opencgaBrowserWidget;
         this.chunkedUpload = args.chunkedUpload || this.chunkedUpload;
     }
-
 	this.adapter = new OpencgaManager();
 	this.adapter.onUploadObjectToBucket.addEventListener(function(sender,res){
 		if(res.status == 'done'){

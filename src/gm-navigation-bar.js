@@ -482,6 +482,9 @@ GmNavigationBar.prototype = {
                     subCategory: 'gene',
                     query: featureName,
                     resource: 'info',
+                    params:{
+                        include:'chromosome,start,end'
+                    },
                     success: function (data) {
                         var feat = data.response[0].result[0];
                         var regionStr = feat.chromosome + ":" + feat.start + "-" + feat.end;
@@ -610,15 +613,13 @@ GmNavigationBar.prototype = {
                         CellBaseManager.get({
                             host:'http://ws.bioinfo.cipf.es/cellbase/rest',
                             version:'latest',
-                            species: _this.species,
+                            species: Utils.getSpeciesCode(_this.species.text).substring(0,3),
                             category: 'feature',
                             subCategory: 'id',
                             query: this.getValue(),
                             resource: 'starts_with',
                             success: function (data) {
-                                console.log(data)
                                 searchResults.loadData(data[0]);
-                                console.log(searchResults)
                             }
                         });
                     }

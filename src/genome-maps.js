@@ -259,6 +259,7 @@ GenomeMaps.prototype = {
             version: this.version,
             suiteId: this.suiteId,
             accountData: this.accountData,
+            chunkedUpload:true,
             handlers: {
                 'login': function (event) {
                     Ext.example.msg('Welcome', 'You logged in');
@@ -312,6 +313,44 @@ GenomeMaps.prototype = {
             }
         });
         genomeViewer.draw();
+
+
+        var renderer = new FeatureRenderer('gene');
+        renderer.on({
+            'feature:click': function (event) {
+                console.log(event)
+                new GeneInfoWidget(null, _this.species).draw(event);
+            }
+        });
+        var gene = new FeatureTrack({
+            targetId: null,
+            id: 2,
+            title: 'Gene',
+            histogramZoom: 10,
+            labelZoom: 20,
+            height: 100,
+            visibleRange: {start: 0, end: 100},
+            titleVisibility: 'hidden',
+            featureTypes: FEATURE_TYPES,
+
+            renderer: renderer,
+
+            dataAdapter: new CellBaseAdapter({
+                category: "genomic",
+                subCategory: "region",
+                resource: "gene",
+                params:{
+                    exclude:'transcripts'
+                },
+                species: genomeViewer.species,
+                featureCache: {
+                    gzip: true,
+                    chunkSize: 50000
+                }
+            })
+        });
+        genomeViewer.addOverviewTrack(gene);
+
 
         return genomeViewer;
     },
@@ -479,23 +518,19 @@ GenomeMaps.prototype.setSize = function (width, height) {
 
 GenomeMaps.prototype.getRegionByFeature = function (name, feature) {
     var speciesCode = Utils.getSpeciesCode(this.species.text);
-    var url = CellBaseManager.url({
+    var data = CellBaseManager.get({
         species: speciesCode,
         category: 'feature',
         subCategory: feature,
-        query: name.toUpperCase(),
-        resource: 'info'
+        query: name,
+        resource: 'info',
+        params:{
+          include:'chromosome,start,end'
+        },
+        async: false
     });
-    var f;
-    $.ajax({
-        url: url,
-        async: false,
-        dataType: 'json',
-        success: function (data) {
-            f = data.response[0].result[0];
-        }
-    });
-    if (f != null) {
+    var f = data.response[0].result[0];
+    if (!_.isNull(f)) {
         return {chromosome: f.chromosome, start: f.start, end: f.end}
     }
     return {};
@@ -930,9 +965,12 @@ GenomeMaps.prototype.getSidePanelItems = function () {
                     var features = Ext.getCmp(_this.id + "searchTextArea").getValue().trim().toUpperCase().split("\n");
                     var boxValue = Ext.getCmp(_this.id + "searchPanelCombo").getValue().toLowerCase();
 
-
-                    var params = null;
+                    var params;
                     switch (boxValue) {
+                        case 'info':
+                            //genes
+                            params = {exclude: 'transcripts'};
+                            break;
                         case 'snp':
                             params = {exclude: 'transcriptVariations,xrefs,samples'};
                             break;
@@ -1094,8 +1132,6 @@ GenomeMaps.prototype.getSidePanelItems = function () {
                             boxes.push({xtype: 'box', padding: "15 5 2 3", border: 1, html: notFound});
                             resultPan.add(boxes);
                             resultPan.setLoading(false);
-
-
                         }
                     });
                 }

@@ -1,7 +1,7 @@
-/*! Genome Viewer - v1.0.2 - 2013-09-19
+/*! Genome Viewer - v1.0.2 - 2013-09-21
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
-/*! Genome Viewer - v1.0.2 - 2013-09-19
+/*! Genome Viewer - v1.0.2 - 2013-09-21
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 var Utils = {
@@ -125,7 +125,15 @@ var Utils = {
     },
     getSpeciesCode: function (speciesName) {
         var pair = speciesName.split(" ");
-        return (pair[0].charAt(0) + pair[1]).toLowerCase();
+        var code;
+        if(pair.length < 3){
+            code =  (pair[0].charAt(0) + pair[1]).toLowerCase();
+        }else{
+            code = (pair[0].charAt(0) + pair[1] + pair[pair.length-1].replace(/[/_().\-]/g,'')).toLowerCase();
+
+        }
+        return code;
+
     },
     test: function () {
         return this;
@@ -525,19 +533,17 @@ var SVG = {
 //	
 //};
 
-/*! Genome Viewer - v1.0.2 - 2013-09-19
+/*! Genome Viewer - v1.0.2 - 2013-09-21
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 var CellBaseManager = {
     get: function (args) {
         var success = args.success;
         var error = args.error;
-        var async = args.async || true;
-        delete args.success;
-        delete args.error;
-        delete args.async;
+        var async = (_.isUndefined(args.async) || _.isNull(args.async) ) ? true : args.async;
+        var urlConfig = _.omit(args, ['success', 'error', 'async']);
 
-        var url = CellBaseManager.url(args);
+        var url = CellBaseManager.url(urlConfig);
         console.log(url);
 
         var d;
@@ -551,18 +557,19 @@ var CellBaseManager = {
                 data.resource = args.resource;
                 data.category = args.category;
                 data.subCategory = args.subCategory;
-                if (success) success(data);
+                if (_.isFunction(success)) success(data);
                 d = data;
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log("CellBaseManager: Ajax call returned : " + errorThrown + '\t' + textStatus + '\t' + jqXHR.statusText + " END");
-                if (error)error(jqXHR, textStatus, errorThrown);
+                if (_.isFunction(error)) error(jqXHR, textStatus, errorThrown);
             }
         });
         return d;
     },
     url: function (args) {
-        if (!args) args = {};
+        if (!_.isObject(args)) args = {};
+        if (!_.isObject(args.params)) args.params = {};
 
         if (_.isUndefined(args.host) || _.isNull(args.host)) {
             delete args.host;
@@ -573,8 +580,7 @@ var CellBaseManager = {
 
         var config = {
             host: CELLBASE_HOST,
-            version: CELLBASE_VERSION,
-            params : {}
+            version: CELLBASE_VERSION
         };
         var params = {
             of: 'json'
@@ -584,9 +590,9 @@ var CellBaseManager = {
         _.extend(config.params, params);
 
         var query = '';
-        if (typeof config.query != 'undefined' && config.query != null) {
+        if (!_.isUndefined(config.query) && !_.isNull(config.query)) {
             if (_.isArray(config.query)) {
-                config.query.toString();
+                config.query = config.query.toString();
             }
             query = '/' + config.query;
         }
@@ -2413,12 +2419,18 @@ SnpInfoWidget.prototype.getData = function (){
 	var _this = this;
 	this.panel.disable();
 	this.panel.setLoading("Getting information...");
-//	category, subcategory, query, resource, callbackFunction
-	var cellBaseManager = new CellBaseManager(this.species);
-	cellBaseManager.success.addEventListener(function (sender,data){
-        _this.dataReceived(data.response[0].result[0]);
-	});
-	cellBaseManager.get("feature","snp", this.query, "info");
+
+    CellBaseManager.get({
+        species:this.species,
+        category:'feature',
+        subCategory:'snp',
+        query:this.query,
+        resource:"info",
+        success:function(data){
+            _this.dataReceived(data.response[0].result[0]);
+        }
+    });
+
 };
 SnpInfoWidget.prototype.dataReceived = function (data){
 //	var mappedSnps = data[0];
@@ -2931,12 +2943,18 @@ TranscriptInfoWidget.prototype.getData = function (){
 	this.panel.disable();
 	this.panel.setLoading("Getting information...");
 //	category, subcategory, query, resource, callbackFunction
-	
-	var cellBaseManager = new CellBaseManager(this.species);
-	cellBaseManager.success.addEventListener(function(sender,data){
-        _this.dataReceived(data.response[0].result[0].transcripts);
-	});
-	cellBaseManager.get("feature","transcript", this.query, "info");
+
+    CellBaseManager.get({
+        species:this.species,
+        category:'feature',
+        subCategory:'transcript',
+        query:this.query,
+        resource:"info",
+        success:function(data){
+            _this.dataReceived(data.response[0].result[0].transcripts);
+        }
+    });
+
 };
 TranscriptInfoWidget.prototype.dataReceived = function (data){
 	this.data=data;
@@ -3308,16 +3326,20 @@ VCFVariantInfoWidget.prototype.getData = function (){
 	var _this = this;
 	this.panel.disable();
 	this.panel.setLoading("Getting information...");
-//	category, subcategory, query, resource, callbackFunction
-	var cellBaseManager = new CellBaseManager(this.species);
-    cellBaseManager.host = 'http://ws-beta.bioinfo.cipf.es/cellbase/rest';
-    cellBaseManager.species = cellBaseManager.species.substr(0,3);
-    cellBaseManager.version = 'v2';
-	cellBaseManager.success.addEventListener(function(sender,data){
-		_this.dataReceived(data);
-	});
+
 	var query = this.feature.chromosome+":"+this.feature.start+":"+this.feature.reference+":"+this.feature.alternate;
-	cellBaseManager.get("genomic","variant", query, "consequence_type");
+    CellBaseManager.get({
+        host : 'http://ws-beta.bioinfo.cipf.es/cellbase/rest',
+        version : 'v2',
+        species:Utils.getSpeciesCode(this.species.text).substring(0,3),
+        category:'genomic',
+        subCategory:'variant',
+        query:query,
+        resource:'consequence_type',
+        success:function(data){
+            _this.dataReceived(data);
+        }
+    });
 };
 
 VCFVariantInfoWidget.prototype.dataReceived = function (data){
@@ -3333,7 +3355,7 @@ VCFVariantInfoWidget.prototype.dataReceived = function (data){
 
 GV_CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
 
-CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbasebeta2/rest";
+CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbase-server-3.0.0/rest";
 CELLBASE_VERSION = "v3";
 
 FEATURE_CONFIG = {
@@ -4370,8 +4392,8 @@ SequenceAdapter.prototype.getData = function(args){
             query:queryString,
             resource: this.resource,
             params: this.params,
-            success:function (event) {
-                _this._processSequenceQuery(event.data,true);
+            success:function (data) {
+                _this._processSequenceQuery(data,true);
             }
         });
 
@@ -4607,7 +4629,6 @@ SequenceAdapter.prototype.getNucleotidByPosition = function(args){
         var chromosome = args.chromosome;
 
         if(queryString != ""){
-
 
             var data = CellBaseManager.get({
                 host: this.host,
@@ -5588,6 +5609,7 @@ function FeatureCache(args) {
 	
 	//XXX
 	this.gzip = false;
+
 };
 
 FeatureCache.prototype._getChunk = function(position){
@@ -5641,27 +5663,33 @@ FeatureCache.prototype.getFeatureChunksByRegion = function(region){
 FeatureCache.prototype.putFeaturesByRegion = function(featureDataList, region, featureType, dataType){
 	var key, firstRegionChunk, lastRegionChunk, firstChunk, lastChunk, feature, gzipFeature;
 
-	
+
 	//initialize region
 	firstRegionChunk = this._getChunk(region.start);
 	lastRegionChunk = this._getChunk(region.end);
+
 	for(var i=firstRegionChunk; i<=lastRegionChunk; i++){
 		key = region.chromosome+":"+i;
 		if(this.cache[key]==null){
 			this.cache[key] = {};
 			this.cache[key].key = key;
 		}
+//        else{
+//            // TODO
+//            console.log(region.chromosome+region.start+region.end+'-'+featureType+'-'+dataType);
+////            return;
+//        }
 		if(this.cache[key][dataType]==null){
 			this.cache[key][dataType] = [];
 		}
 	}
-	
-	//Check if is a single object
-	if(featureDataList.constructor != Array){
-		featureDataList = [featureDataList];
-	}
-	
-	//loop over features and set on corresponding chunks
+
+    //Check if is a single object
+    if(featureDataList.constructor != Array){
+        featureDataList = [featureDataList];
+    }
+
+    //loop over features and set on corresponding chunks
 	for(var index = 0, len = featureDataList.length; index<len; index++) {
 		feature = featureDataList[index];
 		feature.featureType = featureType;
@@ -5681,6 +5709,7 @@ FeatureCache.prototype.putFeaturesByRegion = function(featureDataList, region, f
 			}
 		}
 	}
+        console.log(this.cache[region.chromosome+":"+firstRegionChunk][dataType].length)
 };
 
 
@@ -8213,7 +8242,7 @@ function TrackListPanel(args) {//parent is a DOM div element
     this.on(this.handlers);
 
     this.rendered = false;
-    if(this.autoRender){
+    if (this.autoRender) {
         this.render();
     }
 
@@ -8221,9 +8250,9 @@ function TrackListPanel(args) {//parent is a DOM div element
 
 TrackListPanel.prototype = {
 
-    render:function(targetId){
+    render: function (targetId) {
         this.targetId = (targetId) ? targetId : this.targetId;
-        if($('#' + this.targetId).length < 1){
+        if ($('#' + this.targetId).length < 1) {
             console.log('targetId not found in DOM');
             return;
         }
@@ -8241,7 +8270,7 @@ TrackListPanel.prototype = {
         var tlHeaderDiv = $('<div id="tl-header"></div>')[0];
 
         var panelDiv = $('<div id="tl-panel"></div>')[0];
-        $(panelDiv).css({position: 'relative', width:'100%'});
+        $(panelDiv).css({position: 'relative', width: '100%'});
 
 
         this.tlTracksDiv = $('<div id="tl-tracks"></div>')[0];
@@ -8303,11 +8332,11 @@ TrackListPanel.prototype = {
             'opacity': '0.5',
             'fill': 'black'
         });
-        this.windowSize = 'Window size: ' + this.region.length() + ' nts';
+        this.windowSize = 'Window size: ' + Utils.formatNumber(this.region.length()) + ' nts';
         this.viewNtsTextBack = SVG.addChild(this.svgTop, 'rect', {
             'x': mid - 40,
             'y': 0,
-            'width': this.windowSize.length * 7,
+            'width': 0,
             'height': 13,
             'fill': 'white'
         });
@@ -8317,6 +8346,7 @@ TrackListPanel.prototype = {
             'fill': 'black',
             'class': this.fontClass
         });
+        this.viewNtsTextBack.setAttribute('width', $(this.viewNtsText).width() + 15);
         this.viewNtsText.textContent = this.windowSize;
         this._setTextPosition();
 
@@ -8326,7 +8356,7 @@ TrackListPanel.prototype = {
         $(this.centerLine).css({
             'z-index': 2,
             'position': 'absolute',
-            'left': mid-1,
+            'left': mid - 1,
             'top': 0,
             'width': this.pixelBase,
 //            'height': '100%',
@@ -8369,13 +8399,13 @@ TrackListPanel.prototype = {
             'background-color': 'honeydew'
         });
 
-        if(this.showRegionOverviewBox){
+        if (this.showRegionOverviewBox) {
             var regionOverviewBoxLeft = $('<div id="' + this.id + 'regionOverviewBoxLeft"></div>')[0];
             var regionOverviewBoxRight = $('<div id="' + this.id + 'regionOverviewBoxRight"></div>')[0];
             $(panelDiv).append(regionOverviewBoxLeft);
             $(panelDiv).append(regionOverviewBoxRight);
-            var regionOverviewBoxWidth = this.region.length()*this.pixelBase;
-            var regionOverviewDarkBoxWidth = (this.width - regionOverviewBoxWidth)/ 2
+            var regionOverviewBoxWidth = this.region.length() * this.pixelBase;
+            var regionOverviewDarkBoxWidth = (this.width - regionOverviewBoxWidth) / 2
 //            debugger
             $(regionOverviewBoxLeft).css({
                 'z-index': 0,
@@ -8416,7 +8446,7 @@ TrackListPanel.prototype = {
 //
             var posOffset = (mid / _this.pixelBase) | 0;
             _this.mousePosition = centerPosition + rcX - posOffset;
-            _this.trigger('mousePosition:change',{mousePos: _this.mousePosition, baseHtml: _this.getMousePosition(_this.mousePosition)});
+            _this.trigger('mousePosition:change', {mousePos: _this.mousePosition, baseHtml: _this.getMousePosition(_this.mousePosition)});
         });
 
 
@@ -8495,8 +8525,8 @@ TrackListPanel.prototype = {
                         _this.trigger('region:change', {region: _this.region, sender: _this});
                         _this.onRegionSelect.notify();
                         moveX = null;
-                    } else if(downX != null && moveX == null){
-                        var mouseRegion = new Region({chromosome:_this.region.chromosome,start:_this.mousePosition, end:_this.mousePosition})
+                    } else if (downX != null && moveX == null) {
+                        var mouseRegion = new Region({chromosome: _this.region.chromosome, start: _this.mousePosition, end: _this.mousePosition})
                         _this.trigger('region:change', {region: mouseRegion, sender: _this});
                     }
                     break;
@@ -8577,14 +8607,14 @@ TrackListPanel.prototype = {
         $(this.div).css({display: 'none'});
     },
     setVisible: function (bool) {
-        if(bool) {
+        if (bool) {
             $(this.div).css({display: 'block'});
-        }else {
+        } else {
             $(this.div).css({display: 'none'});
         }
     },
     setTitle: function (title) {
-        if('titleDiv' in this){
+        if ('titleDiv' in this) {
             $(this.titleDiv).html(title);
         }
     },
@@ -8604,7 +8634,7 @@ TrackListPanel.prototype = {
         var mid = this.width / 2;
         this._setPixelBaseAndZoom();
 
-        $(this.centerLine).css({'left': mid -1 , 'width': this.pixelBase});
+        $(this.centerLine).css({'left': mid - 1, 'width': this.pixelBase});
         $(this.mouseLine).css({'width': this.pixelBase});
 
         this.svgTop.setAttribute('width', this.width);
@@ -8624,7 +8654,7 @@ TrackListPanel.prototype = {
 //        this.zoom = zoom;
     },
 
-    highlight : function(event){
+    highlight: function (event) {
         this.trigger('trackFeature:highlight', event)
     },
 
@@ -8636,12 +8666,15 @@ TrackListPanel.prototype = {
         this.trigger('trackRegion:move', event);
     },
 
-    setSpecies : function(species){
+    setSpecies: function (species) {
         this.species = species;
         this.trigger('trackSpecies:change', {species: species, sender: this})
     },
 
     setRegion: function (region) {//item.chromosome, item.position, item.species
+        if(this.trackSvgList.length == 3){
+            console.log('******--------------/////////////fdsafdsafdsafdsasdf'+this.trackSvgList.length);
+        }
         var _this = this;
         this.region.load(region);
         this.visualRegion.load(region);
@@ -8652,7 +8685,7 @@ TrackListPanel.prototype = {
         $(this.centerLine).css({'width': this.pixelBase});
         $(this.mouseLine).css({'width': this.pixelBase});
 
-        this.viewNtsText.textContent = "Window size: " + this.region.length() + " nts";
+        this.viewNtsText.textContent = "Window size: " + Utils.formatNumber(this.region.length()) + " nts";
         this.windowSize = this.viewNtsText.textContent;
         this._setTextPosition();
         this.onWindowSize.notify({windowSize: this.viewNtsText.textContent});
@@ -8684,7 +8717,7 @@ TrackListPanel.prototype = {
         };
         var checkStatus = function () {
             if (checkAllTrackStatus('ready')) {
-                _this.trigger('tracks:ready',{sender:_this});
+                _this.trigger('tracks:ready', {sender: _this});
             } else {
                 setTimeout(checkStatus, 100);
             }
@@ -8697,13 +8730,13 @@ TrackListPanel.prototype = {
         //this.minRegionRect.setAttribute("x",(this.width/2)-(this.minRectWidth/2)+6);
     },
 
-    draw: function(){
-        this.trigger('track:draw',{sender:this});
+    draw: function () {
+        this.trigger('track:draw', {sender: this});
     },
 
     addTrack: function (track) {
-        if(!this.rendered){
-            console.info(this.id+' is not rendered yet');
+        if (!this.rendered) {
+            console.info(this.id + ' is not rendered yet');
             return;
         }
         var _this = this;
@@ -8717,7 +8750,7 @@ TrackListPanel.prototype = {
 
         // Track must be initialized after we have created
         // de DIV element in order to create the elements in the DOM
-        if(!track.rendered){
+        if (!track.rendered) {
             track.render(this.tlTracksDiv);
         }
 
@@ -8726,7 +8759,7 @@ TrackListPanel.prototype = {
 
 
         //trackEvents
-        track.set('track:draw',function (event) {
+        track.set('track:draw', function (event) {
             track.draw();
         });
 
@@ -8760,7 +8793,6 @@ TrackListPanel.prototype = {
         });
 
 
-
         track.set('trackFeature:highlight', function (event) {
 
 
@@ -8772,7 +8804,7 @@ TrackListPanel.prototype = {
                     var group = $(track.svgdiv).find('g[' + queryStr + ']')
                     $(group).each(function () {
                         var animation = $(this).find('animate');
-                        if(animation.length == 0) {
+                        if (animation.length == 0) {
                             animation = SVG.addChild(this, 'animate', {
                                 'attributeName': 'opacity',
                                 'attributeType': 'XML',
@@ -8783,7 +8815,7 @@ TrackListPanel.prototype = {
                                 'dur': '0.5s',
                                 'repeatCount': '5'
                             });
-                        }else {
+                        } else {
                             animation = animation[0];
                         }
                         var y = $(group).find('rect').attr("y");
@@ -8797,8 +8829,8 @@ TrackListPanel.prototype = {
         this.on('track:draw', track.get('track:draw'));
         this.on('trackSpecies:change', track.get('trackSpecies:change'));
         this.on('trackRegion:change', track.get('trackRegion:change'));
-        this.on('trackRegion:move',track.get('trackRegion:move'));
-        this.on('trackWidth:change',track.get('trackWidth:change'));
+        this.on('trackRegion:move', track.get('trackRegion:move'));
+        this.on('trackWidth:change', track.get('trackWidth:change'));
         this.on('trackFeature:highlight', track.get('trackFeature:highlight'));
     },
 
@@ -8816,8 +8848,8 @@ TrackListPanel.prototype = {
         this.off('track:draw', track.get('track:draw'));
         this.off('trackSpecies:change', track.get('trackSpecies:change'));
         this.off('trackRegion:change', track.get('trackRegion:change'));
-        this.off('trackRegion:move',track.get('trackRegion:move'));
-        this.off('trackWidth:change',track.set('trackWidth:change'));
+        this.off('trackRegion:move', track.get('trackRegion:move'));
+        this.off('trackWidth:change', track.set('trackWidth:change'));
         this.off('trackFeature:highlight', track.get('trackFeature:highlight'));
 
 
@@ -8839,7 +8871,7 @@ TrackListPanel.prototype = {
 //        this._showTrack(track.id);
     },
 
-    enableAutoHeight: function(){
+    enableAutoHeight: function () {
         for (var i = 0; i < this.trackSvgList.length; i++) {
             var track = this.trackSvgList[i];
             track.enableAutoHeight();
@@ -8938,7 +8970,7 @@ TrackListPanel.prototype = {
         var i = this.swapHash[trackId].index;
         var track = this.trackSvgList[i];
 
-        $(track.div).css({display:'hidden'});
+        $(track.div).css({display: 'hidden'});
 
 //        this.setHeight(this.height - track.getHeight());
 
@@ -8950,7 +8982,7 @@ TrackListPanel.prototype = {
         var i = this.swapHash[trackId].index;
         var track = this.trackSvgList[i];
 
-        $(track.div).css({display:'auto'});
+        $(track.div).css({display: 'auto'});
 
 //        this.svg.appendChild(track.main);
 
@@ -8982,8 +9014,9 @@ TrackListPanel.prototype = {
         this.firstPositionText.textContent = Utils.formatNumber(this.visualRegion.start);
         this.lastPositionText.textContent = Utils.formatNumber(this.visualRegion.end);
 
-        this.viewNtsText.textContent = "Window size: " + this.visualRegion.length() + " nts";
-        this.viewNtsTextBack.setAttribute("width", this.viewNtsText.textContent.length * 7);
+        this.viewNtsText.textContent = "Window size: " + Utils.formatNumber(this.visualRegion.length()) + " nts";
+//        this.viewNtsTextBack.setAttribute("width", this.viewNtsText.textContent.length * 7);
+        this.viewNtsTextBack.setAttribute('width', $(this.viewNtsText).width() + 15);
         this.windowSize = this.viewNtsText.textContent;
     },
 
@@ -9310,17 +9343,20 @@ Track.prototype = {
         this.main.setAttribute("width", width);
     },
     updateHeight: function () {
-        if (!this.histogram) {
-            var height = Object.keys(this.renderedArea).length * 20;//this must be passed by config, 20 for test
-        } else {
-            var height = this.height;
-        }
-        this.main.setAttribute('height', height);
-        this.svgCanvasFeatures.setAttribute('height', height);
-        this.titlebar.setAttribute('height', height);
+        if (this.resizable) {
+            if (!this.histogram) {
+                var height = Object.keys(this.renderedArea).length * 20;//this must be passed by config, 20 for test
+            } else {
+                var height = this.height;
+            }
+            this.main.setAttribute('height', height);
+            this.svgCanvasFeatures.setAttribute('height', height);
+            this.titlebar.setAttribute('height', height);
 
-        if (this.autoHeight) {
-            $(this.svgdiv).css({'height': height + 10});
+
+            if (this.autoHeight) {
+                $(this.svgdiv).css({'height': height + 10});
+            }
         }
     },
     enableAutoHeight: function () {
@@ -10040,7 +10076,9 @@ GeneTrack.prototype.render = function (targetId) {
 GeneTrack.prototype.updateTranscriptParams = function () {
     if (this.transcriptZoom <= this.zoom) {
         this.transcript = true;
+        delete this.dataAdapter.params['exclude'];
     } else {
+        this.dataAdapter.params['exclude'] = 'transcripts';
         this.transcript = false;
     }
 };
@@ -12320,44 +12358,6 @@ GenomeViewer.prototype = {
             trackListPanel.setSpecies(event.species);
         });
 
-
-        var renderer = new FeatureRenderer('gene');
-        renderer.on({
-            'feature:click': function (event) {
-                console.log(event)
-                new GeneInfoWidget(null, _this.species).draw(event);
-            }
-        });
-        var gene = new FeatureTrack({
-            targetId: null,
-            id: 2,
-            title: 'Gene',
-            histogramZoom: 10,
-            labelZoom: 20,
-            height: 100,
-            visibleRange: {start: 0, end: 100},
-            titleVisibility: 'hidden',
-            featureTypes: FEATURE_TYPES,
-
-            renderer: renderer,
-
-            dataAdapter: new CellBaseAdapter({
-                category: "genomic",
-                subCategory: "region",
-                resource: "gene",
-                params:{
-                    exclude:'transcripts'
-                },
-                species: this.species,
-                featureCache: {
-                    gzip: true,
-                    chunkSize: 50000
-                }
-            })
-        });
-        trackListPanel.addTrack(gene);
-
-
         return  trackListPanel;
     },
 
@@ -12461,6 +12461,10 @@ GenomeViewer.prototype = {
     }
 };
 
+
+GenomeViewer.prototype.addOverviewTrack = function (trackData, args) {
+    this.regionOverviewPanel.addTrack(trackData, args);
+};
 
 GenomeViewer.prototype.addTrack = function (trackData, args) {
     this.trackListPanel.addTrack(trackData, args);
