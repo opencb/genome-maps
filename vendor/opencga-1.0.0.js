@@ -1,4 +1,4 @@
-/*! Genome Viewer - v1.0.2 - 2013-09-21
+/*! Genome Viewer - v1.0.2 - 2013-09-23
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 function UserListWidget (args){

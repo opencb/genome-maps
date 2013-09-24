@@ -1,7 +1,7 @@
-/*! Genome Viewer - v1.0.2 - 2013-09-21
+/*! Genome Viewer - v1.0.2 - 2013-09-23
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
-/*! Genome Viewer - v1.0.2 - 2013-09-21
+/*! Genome Viewer - v1.0.2 - 2013-09-23
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 var Utils = {
@@ -533,7 +533,7 @@ var SVG = {
 //	
 //};
 
-/*! Genome Viewer - v1.0.2 - 2013-09-21
+/*! Genome Viewer - v1.0.2 - 2013-09-23
 * http://https://github.com/opencb-bigdata-viz/js-common-libs/
 * Copyright (c) 2013  Licensed GPLv2 */
 var CellBaseManager = {
@@ -5709,7 +5709,7 @@ FeatureCache.prototype.putFeaturesByRegion = function(featureDataList, region, f
 			}
 		}
 	}
-        console.log(this.cache[region.chromosome+":"+firstRegionChunk][dataType].length)
+//        console.log(this.cache[region.chromosome+":"+firstRegionChunk][dataType].length)
 };
 
 
@@ -6304,7 +6304,8 @@ NavigationBar.prototype = {
                 '<a id="moveFurtherRightButton">&nbsp;</a>' +
                 '</div>' +
                 '<label class="ocb-text" style="margin-left:10px" for="searchField">Search</label><input id="searchField" class="ocb-input-text" placeholder="gene, snp..." size="8" type="text">' +
-                '<a id="fullScreenButton" style="margin-left:10px" >&nbsp;</a>' +
+//                '<a id="fullScreenButton" style="margin-left:10px" >&nbsp;</a>' +
+                '<a id="autoheightButton" style="margin-left:10px" >&nbsp;</a>' +
                 '';
 
 
@@ -6473,6 +6474,13 @@ NavigationBar.prototype = {
         $(this.fullScreenButton).click(function (e) {
             _this.trigger('fullscreen:click', {clickEvent: e, sender: {}})
         });
+
+        this.autoheightButton = $(this.div).find('#autoheightButton').button({icons: {primary: 'ocb-icon-track-autoheight'}, text: false});
+
+        $(this.autoheightButton).click(function (e) {
+            _this.trigger('autoHeight-button:click', {clickEvent: e,sender: _this});
+        });
+
 
 //        this.searchButton = $(this.div).find('#searchButton');
         this.searchField = $(this.div).find('#searchField');
@@ -8294,7 +8302,7 @@ TrackListPanel.prototype = {
         this.positionText = SVG.addChild(this.svgTop, 'text', {
             'x': mid - 30,
             'y': 24,
-            'fill': 'green',
+            'fill': 'steelblue',
             'class': this.fontClass
         });
         this.nucleotidText = SVG.addChild(this.svgTop, 'text', {
@@ -8305,48 +8313,48 @@ TrackListPanel.prototype = {
         this.firstPositionText = SVG.addChild(this.svgTop, 'text', {
             'x': 0,
             'y': 24,
-            'fill': 'green',
+            'fill': 'steelblue',
             'class': this.fontClass
         });
         this.lastPositionText = SVG.addChild(this.svgTop, 'text', {
             'x': this.width - 70,
             'y': 24,
-            'fill': 'green',
+            'fill': 'steelblue',
             'class': this.fontClass
         });
-        this.viewNtsArrow = SVG.addChild(this.svgTop, 'rect', {
-            'x': 2,
-            'y': 6,
-            'width': this.width - 4,
-            'height': 2,
-            'opacity': '0.5',
-            'fill': 'black'
-        });
-        this.viewNtsArrowLeft = SVG.addChild(this.svgTop, 'polyline', {
-            'points': '0,1 2,1 2,13 0,13',
-            'opacity': '0.5',
-            'fill': 'black'
-        });
-        this.viewNtsArrowRight = SVG.addChild(this.svgTop, 'polyline', {
-            'points': this.width + ',1 ' + (this.width - 2) + ',1 ' + (this.width - 2) + ',13 ' + this.width + ',13',
-            'opacity': '0.5',
-            'fill': 'black'
-        });
+//        this.viewNtsArrow = SVG.addChild(this.svgTop, 'rect', {
+//            'x': 2,
+//            'y': 6,
+//            'width': this.width - 4,
+//            'height': 2,
+//            'opacity': '0.5',
+//            'fill': 'black'
+//        });
+//        this.viewNtsArrowLeft = SVG.addChild(this.svgTop, 'polyline', {
+//            'points': '0,1 2,1 2,13 0,13',
+//            'opacity': '0.5',
+//            'fill': 'black'
+//        });
+//        this.viewNtsArrowRight = SVG.addChild(this.svgTop, 'polyline', {
+//            'points': this.width + ',1 ' + (this.width - 2) + ',1 ' + (this.width - 2) + ',13 ' + this.width + ',13',
+//            'opacity': '0.5',
+//            'fill': 'black'
+//        });
         this.windowSize = 'Window size: ' + Utils.formatNumber(this.region.length()) + ' nts';
-        this.viewNtsTextBack = SVG.addChild(this.svgTop, 'rect', {
-            'x': mid - 40,
-            'y': 0,
-            'width': 0,
-            'height': 13,
-            'fill': 'white'
-        });
+//        this.viewNtsTextBack = SVG.addChild(this.svgTop, 'rect', {
+//            'x': mid - 40,
+//            'y': 0,
+//            'width': 0,
+//            'height': 13,
+//            'fill': 'white'
+//        });
         this.viewNtsText = SVG.addChild(this.svgTop, 'text', {
-            'x': mid - 30,
+            'x': mid - (this.windowSize.length*7/2),
             'y': 11,
             'fill': 'black',
             'class': this.fontClass
         });
-        this.viewNtsTextBack.setAttribute('width', $(this.viewNtsText).width() + 15);
+//        this.viewNtsTextBack.setAttribute('width', $(this.viewNtsText).width() + 15);
         this.viewNtsText.textContent = this.windowSize;
         this._setTextPosition();
 
@@ -8641,10 +8649,10 @@ TrackListPanel.prototype = {
         this.positionText.setAttribute("x", mid - 30);
         this.nucleotidText.setAttribute("x", mid + 35);
         this.lastPositionText.setAttribute("x", this.width - 70);
-        this.viewNtsArrow.setAttribute("width", this.width - 4);
-        this.viewNtsArrowRight.setAttribute("points", this.width + ",1 " + (this.width - 2) + ",1 " + (this.width - 2) + ",13 " + this.width + ",13");
-        this.viewNtsText.setAttribute("x", mid - 30);
-        this.viewNtsTextBack.setAttribute("x", mid - 40);
+//        this.viewNtsArrow.setAttribute("width", this.width - 4);
+//        this.viewNtsArrowRight.setAttribute("points", this.width + ",1 " + (this.width - 2) + ",1 " + (this.width - 2) + ",13 " + this.width + ",13");
+        this.viewNtsText.setAttribute("x", mid - (this.windowSize.length*7/2));
+//        this.viewNtsTextBack.setAttribute("x", mid - 40);
         this.trigger('trackWidth:change', {width: this.width, sender: this})
 
         this._setTextPosition();
@@ -8672,9 +8680,6 @@ TrackListPanel.prototype = {
     },
 
     setRegion: function (region) {//item.chromosome, item.position, item.species
-        if(this.trackSvgList.length == 3){
-            console.log('******--------------/////////////fdsafdsafdsafdsasdf'+this.trackSvgList.length);
-        }
         var _this = this;
         this.region.load(region);
         this.visualRegion.load(region);
@@ -9016,7 +9021,7 @@ TrackListPanel.prototype = {
 
         this.viewNtsText.textContent = "Window size: " + Utils.formatNumber(this.visualRegion.length()) + " nts";
 //        this.viewNtsTextBack.setAttribute("width", this.viewNtsText.textContent.length * 7);
-        this.viewNtsTextBack.setAttribute('width', $(this.viewNtsText).width() + 15);
+//        this.viewNtsTextBack.setAttribute('width', $(this.viewNtsText).width() + 15);
         this.windowSize = this.viewNtsText.textContent;
     },
 
@@ -9346,6 +9351,21 @@ Track.prototype = {
         if (this.resizable) {
             if (!this.histogram) {
                 var height = Object.keys(this.renderedArea).length * 20;//this must be passed by config, 20 for test
+                /**/
+                var x = this.renderer.getFeatureX(this.region, {width: this.width, pixelPosition: this.pixelPosition, pixelBase: this.pixelBase, position: this.region.center()});
+                var width = this.region.length() * this.pixelBase;
+                var countTrees = 0;
+                for (var i in this.renderedArea) {
+                    var foundArea = this.renderedArea[i].add({start: x, end: x + width });
+                    countTrees++;
+                    if (foundArea && i != "0") {
+                        break;
+                    }
+                }
+                var divHeight = countTrees * 18;
+                /**/
+
+
             } else {
                 var height = this.height;
             }
@@ -9355,7 +9375,7 @@ Track.prototype = {
 
 
             if (this.autoHeight) {
-                $(this.svgdiv).css({'height': height + 10});
+                $(this.svgdiv).css({'height': divHeight + 10});
             }
         }
     },
@@ -9916,7 +9936,7 @@ FeatureTrack.prototype.draw = function(){
     }else{
         this.invalidZoomText.setAttribute("visibility", "visible");
     }
-
+    _this.updateHeight();
 };
 
 
@@ -10112,7 +10132,7 @@ GeneTrack.prototype.draw = function () {
     } else {
         this.invalidZoomText.setAttribute("visibility", "visible");
     }
-
+    _this.updateHeight();
 };
 
 
@@ -10167,7 +10187,6 @@ GeneTrack.prototype.move = function (disp) {
             this.svgCanvasRightLimit = parseInt(this.svgCanvasRightLimit + this.svgCanvasOffset);
         }
     }
-
 };
 
 GeneTrack.prototype._getFeaturesByChunks = function (response, filters) {
@@ -11033,7 +11052,7 @@ function GeneRenderer(args) {
     this.on(this.handlers);
 };
 
-GeneRenderer.prototype.setFeatureConfig = function(type){
+GeneRenderer.prototype.setFeatureConfig = function (type) {
     _.extend(this, this.getDefaultConfig(type));
 };
 
@@ -11083,7 +11102,7 @@ GeneRenderer.prototype.render = function (features, args) {
 
             //check if gene transcripts can be painted
             var checkRowY = rowY;
-            if (feature.transcripts != null) {
+            if (!_.isEmpty(feature.transcripts)) {
                 for (var i = 0, leni = feature.transcripts.length + 1; i < leni; i++) {
                     if (!(checkRowY in args.renderedArea)) {
                         args.renderedArea[checkRowY] = new FeatureBinarySearchTree();
@@ -11118,7 +11137,7 @@ GeneRenderer.prototype.render = function (features, args) {
                     'y': textY,
                     'fill': 'black',
                     'cursor': 'pointer',
-                    'class':_this.fontClass
+                    'class': _this.fontClass
                 });
                 text.textContent = label;
 
@@ -11126,7 +11145,7 @@ GeneRenderer.prototype.render = function (features, args) {
                     content: {text: tooltipText, title: tooltipTitle},
 //                    position: {target: "mouse", adjust: {x: 15, y: 0}, viewport: $(window), effect: false},
                     position: {target: "mouse", adjust: {x: 25, y: 15}},
-                    style: { width: true, classes: _this.toolTipfontClass+' ui-tooltip ui-tooltip-shadow'}
+                    style: { width: true, classes: _this.toolTipfontClass + ' ui-tooltip ui-tooltip-shadow'}
                 });
 
                 $([rect, text]).click(function (event) {
@@ -11137,7 +11156,7 @@ GeneRenderer.prototype.render = function (features, args) {
                 //paint transcripts
                 var checkRowY = rowY + rowHeight;
                 var checkTextY = textY + rowHeight;
-                if (feature.transcripts != null) {
+                if (!_.isEmpty(feature.transcripts)) {
                     for (var i = 0, leni = feature.transcripts.length; i < leni; i++) { /*Loop over transcripts*/
                         if (!(checkRowY in args.renderedArea)) {
                             args.renderedArea[checkRowY] = new FeatureBinarySearchTree();
@@ -11183,7 +11202,7 @@ GeneRenderer.prototype.render = function (features, args) {
                             'opacity': null,
                             'fill': 'black',
                             'cursor': 'pointer',
-                            'class':_this.fontClass
+                            'class': _this.fontClass
                         });
                         text.textContent = label;
 
@@ -11192,7 +11211,7 @@ GeneRenderer.prototype.render = function (features, args) {
                             content: {text: tooltipText, title: tooltipTitle},
 //                            position: {target: 'mouse', adjust: {x: 15, y: 0}, viewport: $(window), effect: false},
                             position: {target: "mouse", adjust: {x: 25, y: 15}},
-                            style: { width: true, classes: _this.toolTipfontClass+' ui-tooltip ui-tooltip-shadow'}
+                            style: { width: true, classes: _this.toolTipfontClass + ' ui-tooltip ui-tooltip-shadow'}
                         });
                         $(transcriptGroup).click(function (event) {
                             var query = this.getAttribute("widgetId");
@@ -11215,7 +11234,7 @@ GeneRenderer.prototype.render = function (features, args) {
                             var label = _.isFunction(_this.label) ? _this.label(exon) : _this.label;
                             var height = _.isFunction(_this.height) ? _this.height(exon) : _this.height;
                             var tooltipTitle = _.isFunction(_this.tooltipTitle) ? _this.tooltipTitle(exon) : _this.tooltipTitle;
-                            var tooltipText = _.isFunction(_this.tooltipText) ? _this.tooltipText(exon,transcript) : _this.tooltipText;
+                            var tooltipText = _.isFunction(_this.tooltipText) ? _this.tooltipText(exon, transcript) : _this.tooltipText;
                             var infoWidgetId = _.isFunction(_this.infoWidgetId) ? _this.infoWidgetId(exon) : _this.infoWidgetId;
 
                             var exonGroup = SVG.addChild(args.svgCanvasFeatures, "g");
@@ -11224,7 +11243,7 @@ GeneRenderer.prototype.render = function (features, args) {
                                 content: {text: tooltipText, title: tooltipTitle},
 //                                position: {target: 'mouse', adjust: {x: 15, y: 0}, viewport: $(window), effect: false},
                                 position: {target: "mouse", adjust: {x: 25, y: 15}},
-                                style: { width: true, classes: _this.toolTipfontClass+' ui-tooltip ui-tooltip-shadow'}
+                                style: { width: true, classes: _this.toolTipfontClass + ' ui-tooltip ui-tooltip-shadow'}
                             });
 
                             var eRect = SVG.addChild(exonGroup, "rect", {//paint exons in white without coding region
