@@ -139,7 +139,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-curl');
     grunt.loadNpmTasks('grunt-hub');
 
+    grunt.registerTask('log-deploy', 'Deploy path info', function (version) {
+        grunt.log.writeln("DEPLOY COMMAND: scp -r build/{version} cafetero@mem16:/httpd/bioinfo/www-apps/genome-maps/");
+    });
+
     // Default task.
-    grunt.registerTask('default', ['clean', 'concat', 'uglify', 'hub:all', 'copy', 'htmlbuild', 'rename:html']);
+    grunt.registerTask('default', ['clean', 'concat', 'uglify', 'hub:all', 'copy', 'htmlbuild', 'rename:html', 'log-deploy']);
 
 };
