@@ -35,6 +35,7 @@ if (
     //CELLBASE_HOST = "http://ralonso:8080/naranjoma-ws/rest";
 
     OPENCGA_HOST = "http://ws-beta.bioinfo.cipf.es/opencgabeta/rest";
+	OPENCGA_HOST = "http://ws-beta.bioinfo.cipf.es/opencga-server-0.2.0/rest";
 //	OPENCGA_HOST = "http://rsanchez:8080/dqs/rest";
 //	OPENCGA_HOST = "http://imedina:8080/dqs/rest";
 }

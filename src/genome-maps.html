@@ -10,7 +10,7 @@
     <!-- build:style vendor -->
     <link type="text/css" rel="stylesheet" href="../lib/jsorolla/vendor/ChemDoodleWeb.css"/>
     <link type="text/css" rel="stylesheet" href="../lib/jsorolla/vendor/jquery.qtip.min.css"/>
-    <link href="../lib/jsorolla/vendor/jquery-ui-1.10.3.custom/css/smoothgray/jquery-ui-1.10.3.custom.min.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="../lib/jsorolla/vendor/jquery-ui-1.10.3.custom/css/smoothgray/jquery-ui-1.10.3.custom.min.css" rel="stylesheet">
     <!-- /build -->
 
     <!-- CSS from Styles -->
@@ -25,7 +25,7 @@
 
     <!-- Workers directory -->
     <script type="text/javascript">
-        WORKERS_PATH = "vendor/";
+        WORKERS_PATH = "./";
     </script>
 
     <!-- JS from vendors -->
@@ -50,16 +50,95 @@
     <!--<script type="text/javascript" src="../vendor/opencga-1.0.0.js"></script>-->
 
 
-
-
-    <script type="text/javascript">
-        WORKERS_PATH = "../vendor/";
-    </script>
     <!-- /build -->
 
 
+    <!-- Genome Maps config -->
+    <!-- build:script gvconfig -->
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/gv-config.js"></script>
+    <!-- /build -->
+    <script type="text/javascript" src="gm-config.js"></script>
+
+    <!-- JS from Genome Viewer -->
+    <!-- build:script gv -->
+
+    <!-- utils -->
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/utils/svg.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/utils/utils.js"></script>
+
+    <!-- ui-widgets -->
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/ui-widgets/ux-window.js"></script>
+
+    <!-- Genome-viewer -->
+
+    <!-- cellbase ui-widgets -->
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/cellbase/ui-widgets/info-widget.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/cellbase/ui-widgets/gene-info-widget.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/cellbase/ui-widgets/protein-info-widget.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/cellbase/ui-widgets/snp-info-widget.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/cellbase/ui-widgets/transcript-info-widget.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/cellbase/ui-widgets/vcf-variant-info-widget.js"></script>
+
+    <!-- cellbase ws-manager -->
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/cellbase/cellbase-manager.js"></script>
+
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/data-adapter/cellbase-adapter.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/data-adapter/sequence-adapter.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/data-adapter/opencga-adapter.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/data-adapter/bam-adapter.js"></script>
+
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/region.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/feature-binary-search-tree.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/cache/feature-cache.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/cache/bam-cache.js"></script>
+
+
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/navigation-bar.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/chromosome-panel.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/karyotype-panel.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/tracks/tracklist-panel.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/status-bar.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/widget/legend-panel.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/widget/legend-widget.js"></script>
+
+
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/tracks/track.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/tracks/feature-track.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/tracks/sequence-track.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/tracks/gene-track.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/tracks/bam-track.js"></script>
+
+
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/renderers/renderer.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/renderers/feature-renderer.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/renderers/sequence-renderer.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/renderers/histogram-renderer.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/renderers/gene-renderer.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/renderers/bam-renderer.js"></script>
+
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/genome-viewer.js"></script>
+
+
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/opencga/opencga-manager.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/opencga/generic-form-panel.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/opencga/ui-widgets/user-list-widget.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/opencga/ui-widgets/check-browser.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/opencga/ui-widgets/header-widget.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/opencga/ui-widgets/job-list-widget.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/opencga/ui-widgets/login-widget.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/opencga/ui-widgets/opencga-browser-widget.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/opencga/ui-widgets/paged-view-list-widget.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/opencga/ui-widgets/profile-widget.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/opencga/ui-widgets/result2-widget.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/opencga/ui-widgets/result-table.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/lib/opencga/ui-widgets/upload-widget.js"></script>
+
+    <script type="text/javascript">
+        WORKERS_PATH = "../lib/jsorolla/src/lib/opencga/";
+    </script>
+    <!-- /build -->
+
     <!-- JS from GenomeMaps -->
-    <script type="text/javascript" src="./gm-config.js"></script>
     <!-- build:script js -->
     <script type="text/javascript" src="./gm-plugins-config.js"></script>
     <script type="text/javascript" src="./gm-navigation-bar.js"></script>
@@ -98,7 +177,7 @@
             left:4px;
             right:4px;
             bottom: 0px;
-            height: 28px;
+            height: 26px;
             border:1px solid lightgrey;
             z-index:50;
         }

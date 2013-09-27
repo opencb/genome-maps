@@ -6,17 +6,17 @@ module.exports = function (grunt) {
         // Metadata.
         meta: {
             version: '3.1.2',
-            commons: {
-                dir: '../js-common-libs/',
+            jsorolla: {
+                dir: '/lib/jsorolla/',
                 //genome viewer contains cellbse and utils
                 'genomeviewer': {
                     version: '1.0.2',
-                    dir: '<%= meta.commons.dir %>build/genome-viewer/<%= meta.commons.genomeviewer.version %>/'
+                    dir: '<%= meta.jsorolla.dir %>build/genome-viewer/<%= meta.jsorolla.genomeviewer.version %>/'
                 },
                 //opencga does not contains utils
                 opencga: {
                     version: '1.0.0',
-                    dir: '<%= meta.commons.dir %>build/opencga/<%= meta.commons.opencga.version %>/'
+                    dir: '<%= meta.jsorolla.dir %>build/opencga/<%= meta.jsorolla.opencga.version %>/'
                 }
             }
         },
@@ -51,63 +51,14 @@ module.exports = function (grunt) {
                 dest: 'build/<%= meta.version %>/genome-maps-<%= meta.version %>.min.js'
             }
         },
-        jshint: {
-            options: {
-                curly: true,
-                eqeqeq: true,
-                immed: true,
-                latedef: true,
-                newcap: true,
-                noarg: true,
-                sub: true,
-                undef: true,
-                unused: true,
-                boss: true,
-                eqnull: true,
-                browser: true,
-                globals: {
-                    jQuery: true
-                }
-            },
-            gruntfile: {
-                src: 'Gruntfile.js'
-            },
-            lib_test: {
-                src: ['lib/**/*.js', 'test/**/*.js']
-            }
-        },
-        qunit: {
-            files: ['test/**/*.html']
-        },
-
         copy: {
             build: {
                 files: [
-                    {   expand: true, cwd: './', src: ['vendor/**'], dest: 'build/<%= meta.version %>/' },
-                    {   expand: true, cwd: './', src: ['styles/**'], dest: 'build/<%= meta.version %>/' }, // includes files in path and its subdirs
-                    {   expand: true, cwd: './src', src: ['gm-config.js'], dest: 'build/<%= meta.version %>/' }
-                ]
-            },
-            genomeviewer: {
-                files: [
-                    {   expand: true, cwd: '<%= meta.commons.genomeviewer.dir %>', src: ['genome-viewer*.js'], dest: 'vendor' }
-                ]
-            },
-            opencga: {
-                files: [
-                    {   expand: true, cwd: '<%= meta.commons.opencga.dir %>', src: ['opencga*.js', 'worker*'], dest: 'vendor' }
-                ]
-            },
-            styles: {
-                files: [
-                    {   expand: true, cwd: '<%= meta.commons.dir %>styles/', src: ['**'], dest: 'styles' },
-                    {   expand: true, cwd: '<%= meta.commons.dir %>vendor/', src: ['jquery-ui-*custom/**'], dest: 'vendor' }
-                ]
-            },
-            map: {
-                files: [
-                    {   expand: true, cwd: '<%= meta.commons.dir %>vendor/', src: ['jquery.min.map'], dest: 'vendor' },
-                    {   expand: true, cwd: '<%= meta.commons.dir %>vendor/', src: ['backbone-min.map'], dest: 'vendor' }
+                    {   expand: true, cwd: './src', src: ['gm-config.js'], dest: 'build/<%= meta.version %>/' },
+                    {   expand: true, cwd: './<%= meta.jsorolla.dir %>', src: ['vendor/**'], dest: 'build/<%= meta.version %>/' },
+                    {   expand: true, cwd: './<%= meta.jsorolla.dir %>', src: ['styles/**'], dest: 'build/<%= meta.version %>/' }, // includes files in path and its subdirs
+                    {   expand: true, cwd: './<%= meta.jsorolla.genomeviewer.dir %>', src: ['genome-viewer*.js', 'gv-config.js'], dest: 'build/<%= meta.version %>/' },
+                    {   expand: true, cwd: './<%= meta.jsorolla.opencga.dir %>', src: ['opencga*.js', 'worker*'], dest: 'build/<%= meta.version %>/' }
                 ]
             }
         },
@@ -137,10 +88,15 @@ module.exports = function (grunt) {
                             'build/<%= meta.version %>/vendor/jquery.sha1*.js',
                             'build/<%= meta.version %>/vendor/jquery.qtip*.js',
                             'build/<%= meta.version %>/vendor/rawdeflate*.js',
-                            'build/<%= meta.version %>/vendor/jquery-ui-1.10.3*/js/jquery-ui*min.js',
+                            'build/<%= meta.version %>/vendor/jquery-ui-1.10.3*/js/jquery-ui*min.js'
 
-                            'build/<%= meta.version %>/vendor/genome-viewer*.min.js',
-                            'build/<%= meta.version %>/vendor/opencga*.min.js'
+                        ],
+                        gv: [
+                            'build/<%= meta.version %>/opencga*.min.js',
+                            'build/<%= meta.version %>/genome-viewer*.min.js'
+                        ],
+                        gvconfig: [
+                            'build/<%= meta.version %>/gv-config.js'
                         ]
                     },
                     styles: {
@@ -164,13 +120,10 @@ module.exports = function (grunt) {
                 ]
             }
         },
-        watch: {
-            commons: {
-                files: ['<%= meta.commons.genomeviewer.dir %>**','<%= meta.commons.opencga.dir %>**'],
-                tasks: ['commons'],
-                options: {
-                    spawn: false
-                }
+        hub: {
+            all: {
+                src: ['lib/jsorolla/Gruntfile.js'],
+                tasks: ['opencga', 'gv']
             }
         }
     });
@@ -178,20 +131,15 @@ module.exports = function (grunt) {
     // These plugins provide necessary tasks.
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-//    grunt.loadNpmTasks('grunt-contrib-qunit');
-//    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-rename');
     grunt.loadNpmTasks('grunt-html-build');
     grunt.loadNpmTasks('grunt-curl');
+    grunt.loadNpmTasks('grunt-hub');
 
     // Default task.
-    grunt.registerTask('default', ['clean', 'concat', 'uglify', 'copy', 'htmlbuild', 'rename:html']);
-    grunt.registerTask('vendor', ['curl-dir']);
-
-    // dependencies from js-common-libs
-    grunt.registerTask('commons', ['copy:genomeviewer', 'copy:opencga', 'copy:styles']);
+    grunt.registerTask('default', ['clean', 'concat', 'uglify', 'hub:all', 'copy', 'htmlbuild', 'rename:html']);
 
 };

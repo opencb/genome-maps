@@ -209,11 +209,14 @@ GenomeMaps.prototype = {
 
 
         /*Load example account info*/
-        var opencgaManager = new OpencgaManager();
-        opencgaManager.onGetAccountInfo.addEventListener(function (evt, response) {
-            _this._loadOpencgaTracks(response, 'example');
+        OpencgaManager.getAccountInfo({
+            accountId:'example',
+            sessionId:'example',
+            lastActivity:'example',
+            success:function(data){
+                _this._loadOpencgaTracks(data, 'example');
+            }
         });
-        opencgaManager.getAccountInfo('example', 'example', 'example');
         /**/
 
         /*****************************************/
@@ -259,7 +262,7 @@ GenomeMaps.prototype = {
             version: this.version,
             suiteId: this.suiteId,
             accountData: this.accountData,
-            chunkedUpload:true,
+            chunkedUpload:false,
             handlers: {
                 'login': function (event) {
                     Ext.example.msg('Welcome', 'You logged in');
@@ -530,7 +533,7 @@ GenomeMaps.prototype.getRegionByFeature = function (name, feature) {
         async: false
     });
     var f = data.response[0].result[0];
-    if (!_.isNull(f)) {
+    if (_.isObject(f)) {
         return {chromosome: f.chromosome, start: f.start, end: f.end}
     }
     return {};
