@@ -98,7 +98,7 @@ GmNavigationBar.prototype = {
                     tooltip: 'Show karyotype',
                     iconCls: 'ocb-icon-karyotype',
                     enableToggle: true,
-                    pressed: true,
+                    pressed: false,
                     toggleHandler: function () {
                         _this.trigger('karyotype-button:change', {selected: this.pressed, sender: _this});
                     }
@@ -107,7 +107,7 @@ GmNavigationBar.prototype = {
                     tooltip: 'Show chromosome',
                     iconCls: 'ocb-icon-chromosome',
                     enableToggle: true,
-                    pressed: true,
+                    pressed: false,
                     toggleHandler: function () {
                         _this.trigger('chromosome-button:change', {selected: this.pressed, sender: _this});
                     }

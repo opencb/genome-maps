@@ -317,7 +317,6 @@ GenomeMaps.prototype = {
         });
         genomeViewer.draw();
 
-
         var renderer = new FeatureRenderer('gene');
         renderer.on({
             'feature:click': function (event) {
@@ -353,6 +352,10 @@ GenomeMaps.prototype = {
             })
         });
         genomeViewer.addOverviewTrack(gene);
+
+
+        genomeViewer.chromosomePanel.hide();
+        genomeViewer.karyotypePanel.hide();
 
 
         return genomeViewer;
