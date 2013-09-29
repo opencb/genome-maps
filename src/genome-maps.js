@@ -1400,7 +1400,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 title: 'Gene',
                 histogramZoom: 15,
                 transcriptZoom: 50,
-                height: 160,
+                height: 100,
                 visibleRange: {start: 0, end: 100},
                 featureTypes: FEATURE_TYPES,
 
