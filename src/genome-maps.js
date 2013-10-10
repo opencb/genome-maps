@@ -209,14 +209,14 @@ GenomeMaps.prototype = {
 
 
         /*Load example account info*/
-        OpencgaManager.getAccountInfo({
-            accountId:'example',
-            sessionId:'example',
-            lastActivity:'example',
-            success:function(data){
-                _this._loadOpencgaTracks(data, 'example');
-            }
-        });
+//        OpencgaManager.getAccountInfo({
+//            accountId:'example',
+//            sessionId:'example',
+//            lastActivity:'example',
+//            success:function(data){
+//                _this._loadOpencgaTracks(data, 'example');
+//            }
+//        });
         /**/
 
         /*****************************************/
@@ -1613,32 +1613,33 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
             });
             break;
         case "miRNA targets":
-            var miRNATrack = new TrackData(id, {
-                adapter: new CellBaseAdapter({
-                    category: "genomic",
-                    subCategory: "region",
-                    resource: 'regulatory',
-                    params: {
-                        type: 'mirna_target'
-                    },
-                    species: this.genomeViewer.species,
-                    featureCache: {
-                        gzip: true,
-                        chunkSize: 10000
-                    }
-                })
-            });
-            this.genomeViewer.addTrack(miRNATrack, {
-                id: id,
-                type: trackType,
-                title: trackTitle,
-                featuresRender: "MultiFeatureRender",
-                histogramZoom: 0,
-                height: 150,
-                visibleRange: {start: 0, end: 100},
-                featureTypes: FEATURE_TYPES
-            });
-            break;
+        console.log("TODO :  miRNA targets ")
+//            var miRNATrack = new TrackData(id, {
+//                adapter: new CellBaseAdapter({
+//                    category: "genomic",
+//                    subCategory: "region",
+//                    resource: 'regulatory',
+//                    params: {
+//                        type: 'mirna_target'
+//                    },
+//                    species: this.genomeViewer.species,
+//                    featureCache: {
+//                        gzip: true,
+//                        chunkSize: 10000
+//                    }
+//                })
+//            });
+//            this.genomeViewer.addTrack(miRNATrack, {
+//                id: id,
+//                type: trackType,
+//                title: trackTitle,
+//                featuresRender: "MultiFeatureRender",
+//                histogramZoom: 0,
+//                height: 150,
+//                visibleRange: {start: 0, end: 100},
+//                featureTypes: FEATURE_TYPES
+//            });
+//            break;
         case "TFBS":
 
             var tfbsTrack = new FeatureTrack({
@@ -1906,7 +1907,14 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 options: {},
                 featureConfig: FEATURE_CONFIG.vcf
             });
-            var renderer = new FeatureRenderer('vcf');
+//            var renderer = new FeatureRenderer('vcf');
+//            renderer.on({
+//                'feature:click': function (event) {
+//
+//                    var vcfInfo = new VCFVariantInfoWidget(null, _this.genomeViewer.species, {adapter: adapter}).draw(event);
+//                }
+//            });
+            var renderer = new VcfMultisampleRenderer('vcf');
             renderer.on({
                 'feature:click': function (event) {
 
@@ -1920,7 +1928,9 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 title: trackTitle,
                 histogramZoom: 60,
                 height: 150,
+                autoHeight:false,
                 visibleRange: {start: 0, end: 100},
+                labelZoom: 100,
                 renderer: renderer,
                 dataAdapter: adapter
             });
@@ -2004,8 +2014,63 @@ GenomeMaps.prototype.addFileTrack = function (text, updateActiveTracksPanel) {
 
 GenomeMaps.prototype.addDASTrack = function (sourceName, sourceUrl) {
     var id = this.genTrackId();
-    var dasTrack = new TrackData("das", {
-        adapter: new DasAdapter({
+//    var dasTrack = new TrackData("das", {
+//        adapter: new DasAdapter({
+//            url: sourceUrl,
+//            species: this.genomeViewer.species,
+//            featureCache: {
+//                gzip: false,
+//                chunkSize: 10000
+//            }
+//        })
+//    });
+//    this.genomeViewer.addTrack(dasTrack, {
+//        id: id,
+//        title: sourceName,
+//        type: "das",
+//        featuresRender: "MultiFeatureRender",
+//        height: 150,
+//        visibleRange: {start: 50, end: 100},
+//        settings: {
+//            height: 10
+//        }
+//    });
+//    return id;
+
+
+
+    var dasTrack = new FeatureTrack({
+        targetId: null,
+        id: id,
+        title: sourceName,
+        histogramZoom: 0,
+        labelZoom: 80,
+        height: 120,
+        visibleRange: {start: 0, end: 100},
+        renderer: new FeatureRenderer({
+            label: function (f) {
+                return f.chromosome + ":" + f.start + "-" + f.end;
+            },
+            tooltipTitle: function (f) {
+                return 'tooltipTitle';
+            },
+            tooltipText: function (f) {
+                return 'tooltipText';
+            },
+            color: 'lightblue',
+            infoWidgetId: "id",
+            height: 8,
+            histogramColor: "orange",
+            handlers: {
+                'feature:mouseover': function (e) {
+                    console.log(e)
+                },
+                'feature:click': function (event) {
+                    console.log(e)
+                }
+            }
+        }),
+        dataAdapter: new DasAdapter({
             url: sourceUrl,
             species: this.genomeViewer.species,
             featureCache: {
@@ -2014,18 +2079,9 @@ GenomeMaps.prototype.addDASTrack = function (sourceName, sourceUrl) {
             }
         })
     });
-    this.genomeViewer.addTrack(dasTrack, {
-        id: id,
-        title: sourceName,
-        type: "das",
-        featuresRender: "MultiFeatureRender",
-        height: 150,
-        visibleRange: {start: 50, end: 100},
-        settings: {
-            height: 10
-        }
-    });
-    return id;
+
+    this.genomeViewer.addTrack(dasTrack);
+
 };
 
 
