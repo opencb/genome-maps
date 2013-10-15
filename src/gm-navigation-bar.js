@@ -482,8 +482,8 @@ GmNavigationBar.prototype = {
                     subCategory: 'gene',
                     query: featureName,
                     resource: 'info',
-                    params:{
-                        include:'chromosome,start,end'
+                    params: {
+                        include: 'chromosome,start,end'
                     },
                     success: function (data) {
                         var feat = data.response[0].result[0];
@@ -582,21 +582,23 @@ GmNavigationBar.prototype = {
 
         var searchResults = Ext.create('Ext.data.Store', {
             fields: ["xrefId", "displayId", "description"],
-            autoLoad: false
+            data: [
+                {"xrefId": "AL", "displayId": "Alabama", "description": "Alabama"}
+            ]
         });
 
         console.log(searchResults)
-        var searchCombo = Ext.create('Ext.form.field.ComboBox', {
+        var searchCombo = Ext.create('Ext.form.ComboBox', {
             id: this.id + '-quick-search',
+            fieldLabel: 'Search:',
+            store: searchResults,
+            queryMode: 'local',
             displayField: 'displayId',
             valueField: 'displayId',
             emptyText: 'gene, snp, ...',
             hideTrigger: true,
-            fieldLabel: 'Search:',
             labelWidth: 40,
             width: 150,
-            store: searchResults,
-            queryMode: 'local',
             typeAhead: true,
             minChars: 3,
             autoSelect: false,
@@ -611,9 +613,9 @@ GmNavigationBar.prototype = {
                     }
                     if (value && value.length > min) {
                         CellBaseManager.get({
-                            host:'http://ws.bioinfo.cipf.es/cellbase/rest',
-                            version:'latest',
-                            species: Utils.getSpeciesCode(_this.species.text).substring(0,3),
+                            host: 'http://ws.bioinfo.cipf.es/cellbase/rest',
+                            version: 'latest',
+                            species: Utils.getSpeciesCode(_this.species.text).substring(0, 3),
                             category: 'feature',
                             subCategory: 'id',
                             query: this.getValue(),
@@ -632,12 +634,7 @@ GmNavigationBar.prototype = {
 //					_this._handleGmNavigationBar('GoToGene');
 //				}
 //			}
-            },
-            tpl: Ext.create('Ext.XTemplate',
-                '<tpl for=".">',
-                '<div class="x-boundlist-item">{displayId} ({displayId})</div>',
-                '</tpl>'
-            )
+            }
         });
         return searchCombo;
     },

@@ -88,6 +88,7 @@ module.exports = function (grunt) {
                             'build/<%= meta.version %>/vendor/jquery.sha1*.js',
                             'build/<%= meta.version %>/vendor/jquery.qtip*.js',
                             'build/<%= meta.version %>/vendor/rawdeflate*.js',
+                            'build/<%= meta.version %>/vendor/xml2json.js',
                             'build/<%= meta.version %>/vendor/jquery-ui-1.10.3*/js/jquery-ui*min.js'
 
                         ],

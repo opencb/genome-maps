@@ -262,7 +262,7 @@ GenomeMaps.prototype = {
             version: this.version,
             suiteId: this.suiteId,
             accountData: this.accountData,
-            chunkedUpload:false,
+            chunkedUpload: false,
             handlers: {
                 'login': function (event) {
                     Ext.example.msg('Welcome', 'You logged in');
@@ -341,8 +341,8 @@ GenomeMaps.prototype = {
                 category: "genomic",
                 subCategory: "region",
                 resource: "gene",
-                params:{
-                    exclude:'transcripts'
+                params: {
+                    exclude: 'transcripts'
                 },
                 species: genomeViewer.species,
                 featureCache: {
@@ -530,8 +530,8 @@ GenomeMaps.prototype.getRegionByFeature = function (name, feature) {
         subCategory: feature,
         query: name,
         resource: 'info',
-        params:{
-          include:'chromosome,start,end'
+        params: {
+            include: 'chromosome,start,end'
         },
         async: false
     });
@@ -1373,10 +1373,14 @@ GenomeMaps.prototype._createTracksTreePanel = function (args) {
                             });
                         }
                         if (idText == "das") {
-                            var urlWidget = new UrlWidget({title: 'Add a DAS track'});
-                            urlWidget.onAdd.addEventListener(function (sender, event) {
-                                var id = _this.addDASTrack(event.name, event.url);
-                                updateActiveTracksPanel('das', event.name + "-" + id, id, true);
+                            var urlWidget = new UrlWidget({
+                                title: 'Add a DAS track',
+                                handlers: {
+                                    'addButton:click': function (event) {
+                                        var id = _this.addDASTrack(event.name, event.url);
+                                        updateActiveTracksPanel('das', event.name + "-" + id, id, true);
+                                    }
+                                }
                             });
                             urlWidget.draw();
                         }
@@ -1613,7 +1617,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
             });
             break;
         case "miRNA targets":
-        console.log("TODO :  miRNA targets ")
+            console.log("TODO :  miRNA targets ")
 //            var miRNATrack = new TrackData(id, {
 //                adapter: new CellBaseAdapter({
 //                    category: "genomic",
@@ -1928,7 +1932,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 title: trackTitle,
                 histogramZoom: 60,
                 height: 150,
-                autoHeight:false,
+                autoHeight: false,
                 visibleRange: {start: 0, end: 100},
                 labelZoom: 100,
                 renderer: renderer,
@@ -2038,38 +2042,15 @@ GenomeMaps.prototype.addDASTrack = function (sourceName, sourceUrl) {
 //    return id;
 
 
-
     var dasTrack = new FeatureTrack({
         targetId: null,
         id: id,
         title: sourceName,
         histogramZoom: 0,
         labelZoom: 80,
-        height: 120,
-        visibleRange: {start: 0, end: 100},
-        renderer: new FeatureRenderer({
-            label: function (f) {
-                return f.chromosome + ":" + f.start + "-" + f.end;
-            },
-            tooltipTitle: function (f) {
-                return 'tooltipTitle';
-            },
-            tooltipText: function (f) {
-                return 'tooltipText';
-            },
-            color: 'lightblue',
-            infoWidgetId: "id",
-            height: 8,
-            histogramColor: "orange",
-            handlers: {
-                'feature:mouseover': function (e) {
-                    console.log(e)
-                },
-                'feature:click': function (event) {
-                    console.log(e)
-                }
-            }
-        }),
+        height: 150,
+        visibleRange: {start: 50, end: 100},
+        renderer: new FeatureRenderer('das'),
         dataAdapter: new DasAdapter({
             url: sourceUrl,
             species: this.genomeViewer.species,
