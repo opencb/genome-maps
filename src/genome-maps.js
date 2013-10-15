@@ -1975,7 +1975,7 @@ GenomeMaps.prototype.addFileTrack = function (text, updateActiveTracksPanel) {
         _this.headerWidget.on('logout', function (sender) {
             fileWidget.sessionFinished();
         });
-        fileWidget.onOk.addEventListener(function (sender, event) {
+        fileWidget.on('okButton:click',function (event) {
             var id = _this.genTrackId();
             var type = text;
 
@@ -1988,7 +1988,7 @@ GenomeMaps.prototype.addFileTrack = function (text, updateActiveTracksPanel) {
                 height: 150,
                 visibleRange: {start: 0, end: 100},
                 featureTypes: FEATURE_TYPES,
-                renderer: new FeatureRenderer(FEATURE_TYPES.vcf),
+                renderer: new FeatureRenderer(text.toLowerCase()),
                 dataAdapter: event.adapter
             });
 
