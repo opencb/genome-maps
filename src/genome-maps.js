@@ -209,14 +209,14 @@ GenomeMaps.prototype = {
 
 
         /*Load example account info*/
-//        OpencgaManager.getAccountInfo({
-//            accountId:'example',
-//            sessionId:'example',
-//            lastActivity:'example',
-//            success:function(data){
-//                _this._loadOpencgaTracks(data, 'example');
-//            }
-//        });
+        OpencgaManager.getAccountInfo({
+            accountId:'example',
+            sessionId:'example',
+            lastActivity:'example',
+            success:function(data){
+                _this._loadOpencgaTracks(data, 'example');
+            }
+        });
         /**/
 
         /*****************************************/

@@ -587,7 +587,7 @@ GmNavigationBar.prototype = {
             ]
         });
 
-        console.log(searchResults)
+//        console.log(searchResults)
         var searchCombo = Ext.create('Ext.form.ComboBox', {
             id: this.id + '-quick-search',
             fieldLabel: 'Search:',
