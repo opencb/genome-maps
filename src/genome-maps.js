@@ -429,7 +429,8 @@ GenomeMaps.prototype = {
                     _this.genomeViewer.trigger('region:change', event);
                 },
                 'autoHeight-button:click': function (event) {
-                    _this.genomeViewer.enableAutoHeight();
+//                    _this.genomeViewer.enableAutoHeight();
+                    _this.genomeViewer.updateHeight();
                 }
             }
         });

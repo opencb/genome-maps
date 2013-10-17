@@ -583,7 +583,6 @@ GmNavigationBar.prototype = {
         var searchResults = Ext.create('Ext.data.Store', {
             fields: ["xrefId", "displayId", "description"],
             data: [
-                {"xrefId": "AL", "displayId": "Alabama", "description": "Alabama"}
             ]
         });
 
