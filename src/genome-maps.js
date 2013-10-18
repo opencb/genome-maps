@@ -345,8 +345,7 @@ GenomeMaps.prototype = {
                     exclude: 'transcripts'
                 },
                 species: genomeViewer.species,
-                featureCache: {
-                    gzip: true,
+                cacheConfig: {
                     chunkSize: 50000
                 }
             })
