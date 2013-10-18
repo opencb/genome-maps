@@ -236,14 +236,14 @@ var TRACKS = {"group1": [
     {"category": "Core",
         "tracks": [
 //					          {"id":"Cytoband", "disabled":false, "checked":true},
-            {"id": "Sequence", "disabled": false, "checked": true},
-            {"id": "Gene/Transcript", "disabled": false, "checked": true},
+            {"id": "Sequence", "disabled": false, "checked": false},
+            {"id": "Gene/Transcript", "disabled": false, "checked": false},
             {"id": "CpG islands", "disabled": true, "checked": false}
         ]
     },
     {"category": "Variation",
         "tracks": [
-            {"id": "SNP", "disabled": false, "checked": true},
+            {"id": "SNP", "disabled": false, "checked": false},
             {"id": "Mutation", "disabled": true, "checked": false},
             {"id": "Structural variation (<20Kb)", "disabled": true, "checked": false},
             {"id": "Structural variation (>20Kb)", "disabled": true, "checked": false}
