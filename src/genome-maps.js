@@ -327,7 +327,7 @@ GenomeMaps.prototype = {
         var gene = new FeatureTrack({
             targetId: null,
             id: 2,
-            title: 'Gene',
+//            title: 'Gene',
             histogramZoom: 10,
             labelZoom: 20,
             height: 100,
@@ -1418,8 +1418,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                     subCategory: "region",
                     resource: "gene",
                     species: this.genomeViewer.species,
-                    featureCache: {
-                        gzip: true,
+                    cacheConfig: {
                         chunkSize: 50000
                     },
                     filters: {},
@@ -1465,8 +1464,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                     subCategory: "region",
                     resource: "cpg_island",
                     species: this.genomeViewer.species,
-                    featureCache: {
-                        gzip: true,
+                    cacheConfig: {
                         chunkSize: 50000
                     }
                 })
@@ -1498,7 +1496,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                     },
                     tooltipTitle: function (f) {
                         var name = (f.name != null) ? f.name : f.id;
-                        return f.featureType.toUpperCase() + ' - <span class="ok">' + name + '</span>';
+                        return 'SNP' + ' - <span class="ok">' + name + '</span>';
                     },
                     tooltipText: function (f) {
                         return 'alleles:&nbsp;<span class="ssel">' + f.alleleString + '</span><br>' +
@@ -1528,8 +1526,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                         exclude: 'transcriptVariations,xrefs,samples'
                     },
                     species: this.genomeViewer.species,
-                    featureCache: {
-                        gzip: true,
+                    cacheConfig: {
                         chunkSize: 10000
                     },
                     filters: {},
@@ -1549,8 +1546,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                     subCategory: "region",
                     resource: "mutation",
                     species: this.genomeViewer.species,
-                    featureCache: {
-                        gzip: true,
+                    cacheConfig: {
                         chunkSize: 10000
                     }
                 })
@@ -1574,8 +1570,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                     resource: "structural_variation",
                     species: this.genomeViewer.species,
                     params: {min_length: 1, max_length: 20000},
-                    featureCache: {
-                        gzip: true,
+                    cacheConfig: {
                         chunkSize: 50000
                     }
                 })
@@ -1599,8 +1594,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                     resource: "structural_variation",
                     species: this.genomeViewer.species,
                     params: {min_length: 20000, max_length: 300000000},
-                    featureCache: {
-                        gzip: true,
+                    cacheConfig: {
                         chunkSize: 5000000
                     }
                 })
@@ -1627,10 +1621,9 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
 //                        type: 'mirna_target'
 //                    },
 //                    species: this.genomeViewer.species,
-//                    featureCache: {
-//                        gzip: true,
-//                        chunkSize: 10000
-//                    }
+//            cacheConfig: {
+//                chunkSize: 10000
+//            }
 //                })
 //            });
 //            this.genomeViewer.addTrack(miRNATrack, {
@@ -1691,9 +1684,8 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                     params: {
                     },
                     species: this.genomeViewer.species,
-                    featureCache: {
-                        gzip: true,
-                        chunkSize: 10000
+                    cacheConfig: {
+                        chunkSize: 50000
                     }
                 })
             });
@@ -1779,9 +1771,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                     resource: "conserved_region",
                     params: {
                     },
-                    species: this.genomeViewer.species,
-                    featureCache: {
-                        gzip: true,
+                    cacheConfig: {
                         chunkSize: 10000
                     }
                 })
@@ -1850,14 +1840,13 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
 
                 renderer: new BamRenderer('bam'),
 
-                dataAdapter: new BamAdapter({
+                dataAdapter: new OpencgaAdapter({
                     category: "bam",
                     host: host,
                     resource: object,
                     species: this.genomeViewer.species,
-                    featureCache: {
-                        gzip: true,
-                        chunkSize: 5000
+                    cacheConfig: {
+                        chunkSize: 50000
                     },
                     filters: {},
                     options: {},
@@ -1903,8 +1892,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 host: host,
                 resource: object,
                 species: this.genomeViewer.species,
-                featureCache: {
-                    gzip: true,
+                cacheConfig: {
                     chunkSize: 5000
                 },
                 filters: {},
@@ -1921,7 +1909,6 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
             var renderer = new VcfMultisampleRenderer('vcf');
             renderer.on({
                 'feature:click': function (event) {
-
                     var vcfInfo = new VCFVariantInfoWidget(null, _this.genomeViewer.species, {adapter: adapter}).draw(event);
                 }
             });

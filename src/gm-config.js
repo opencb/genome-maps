@@ -11,10 +11,9 @@
  * WUM_HOST = "http://ws.bioinfo.cipf.es/wum/rest";
  *
  **/
-CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
 CELLBASE_VERSION = "v3";
-//OPENCGA_HOST = "http://ws.bioinfo.cipf.es/opencga/rest";
-OPENCGA_HOST = "http://ws-beta.bioinfo.cipf.es/opencga/rest";
+CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
+OPENCGA_HOST = "http://ws.bioinfo.cipf.es/opencga/rest";
 OPENCGA_LOCALHOST = "http://localhost:61976/opencga/rest";
 
 /** Devel only: custom URL check **/
@@ -27,21 +26,14 @@ if (
         window.location.protocol === "file:"
     ) {
 
-    CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbasebeta2/rest";
-    CELLBASE_HOST = "http://fsalavert:8080/cellbase-server-3.0.0/rest";
-    CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbase-server-3.0.0/rest";
+    CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbase/rest";
     //CELLBASE_HOST = "http://rsanchez:8080/cellbase/rest";
     //CELLBASE_HOST = "http://imedina:8080/cellbase/rest";
-    //CELLBASE_HOST = "http://ralonso:8080/naranjoma-ws/rest";
 
-    OPENCGA_HOST = "http://ws-beta.bioinfo.cipf.es/opencgabeta/rest";
-	OPENCGA_HOST = "http://ws-beta.bioinfo.cipf.es/opencga-server-0.2.0/rest";
-//	OPENCGA_HOST = "http://rsanchez:8080/dqs/rest";
-//	OPENCGA_HOST = "http://imedina:8080/dqs/rest";
+    OPENCGA_HOST = "http://ws-beta.bioinfo.cipf.es/opencga-server-beta/rest";
+//    OPENCGA_HOST = "http://fsalavert:8080/opencga/rest";
 }
 
-//CELLBASE_HOST = "http://citrusgenn.bioinfo.cipf.es/cellbasecitrus/rest";
-//OPENCGA_HOST = "http://citrusgenn.bioinfo.cipf.es/opencgacitrus/rest";
 
 /*Panel settings*/
 CONFPANELHIDDEN = false;
@@ -68,8 +60,8 @@ var AVAILABLE_SPECIES = {
                 {"text": "Gallus gallus", "assembly": "Galgal4", "region": {"chromosome": "1", "start": 1000000, "end": 1000000}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "32", "W", "Z", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
                 {"text": "Gorilla gorilla", "assembly": "gorGor3.1", "region": {"chromosome": "1", "start": 1000000, "end": 1000000}, "chromosomes": ["1", "2a", "2b", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
                 {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "13", "start": 32889611, "end": 32973805}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
-//                {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "13", "start": 32889599, "end": 32889739}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
 //                {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "20", "start": 32878277, "end": 32878277}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
+//                {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "13", "start": 32889599, "end": 32889739}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
 //                {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "1", "start": 32877109, "end": 32882337}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
                 {"text": "Macaca mulatta", "assembly": "MMUL_1.0", "region": {"chromosome": "1", "start": 1000000, "end": 1000000}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "X", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
                 {"text": "Mus musculus", "assembly": "GRCm38.p1", "region": {"chromosome": "1", "start": 18422009, "end": 18422009}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
@@ -123,56 +115,6 @@ var AVAILABLE_SPECIES = {
         }
     ]
 };
-
-
-//var AVAILABLE_SPECIESOLD = [
-//                        {	"name":"Homo sapiens 37.p7", "species":"hsa", "icon":"",
-//							"region":{"chromosome":"13","start":32889599,"end":32889739}
-//						},
-//                        {	"name":"Mus musculus m37", "species":"mmu", "icon":"",
-//							"region":{"chromosome":"1","start":18422009,"end":18422009}
-//						},
-//                        {	"name":"Rattus norvegicus 3.4", "species":"rno", "icon":"",
-//							"region":{"chromosome":"1","start":1570040,"end":1570040}
-//						},
-//                        {	"name":"Danio rerio v9", "species":"dre", "icon":"",
-//							"region":{"chromosome":"1","start":1570040,"end":1570040}
-//						},
-//                        {	"name":"Caenorhabditis elegans WS230", "species":"cel", "icon":"",
-//							"region":{"chromosome":"X","start":817895,"end":817895}
-//						},
-//                        {	"name":"Drosophila melanogaster 5.39", "species":"dme", "icon":"",
-//							"region":{"chromosome":"2L","start":158597,"end":158597}
-//						},
-//                        {	"name":"Saccharomyces cerevisiae 4", "species":"sce", "icon":"",
-//							"region":{"chromosome":"I","start":111532,"end":111532}
-//						},
-//                        {	"name":"Canis familiaris 2.0", "species":"cfa", "icon":"",
-//							"region":{"chromosome":"1","start":109898268,"end":109898268}
-//						},
-//                        //{	"name":"Sus scrofa 9", "species":"ssc", "icon":"",
-//							//"region":{"chromosome":"1","start":135353160,"end":135353160}
-//						//},
-//                        {	"name":"Sus scrofa 10.2", "species":"ssc", "icon":"",
-//							"region":{"chromosome":"1","start":135353160,"end":135353160}
-//						},
-//                        {	"name":"Anopheles gambiae 3", "species":"aga", "icon":"",
-//							"region":{"chromosome":"2L","start":12123831,"end":12123831}
-//                        },
-//                        {	"name":"Plasmodium falciparum 3D7", "species":"pfa", "icon":"",
-//							"region":{"chromosome":"01","start":238905,"end":238905}
-//						}
-//                        //{	"name":"Aspergillus fumigatus 68.2", "species":"afu", "icon":"",
-//							//"region":{"chromosome":"I","start":2905,"end":2905}
-//                        //},
-//                        //{	"name":"Fusarium oxysporum 68.2", "species":"fox", "icon":"",
-//                            //"region":{"chromosome":"1","start":2905,"end":2905}
-//						//}
-//                        ,
-//                        {	"name":"Citrus Clementina 1.0", "species":"ccl", "icon":"",
-//                            "region":{"chromosome":"scaffold_1","start":233423,"end":236969}
-//                        }
-//                        ];
 
 /** Reference to a species from the list to be shown at start **/
 var DEFAULT_SPECIES = AVAILABLE_SPECIES.items[0].items[8];
@@ -236,14 +178,14 @@ var TRACKS = {"group1": [
     {"category": "Core",
         "tracks": [
 //					          {"id":"Cytoband", "disabled":false, "checked":true},
-            {"id": "Sequence", "disabled": false, "checked": false},
-            {"id": "Gene/Transcript", "disabled": false, "checked": false},
+            {"id": "Sequence", "disabled": false, "checked": true},
+            {"id": "Gene/Transcript", "disabled": false, "checked": true},
             {"id": "CpG islands", "disabled": true, "checked": false}
         ]
     },
     {"category": "Variation",
         "tracks": [
-            {"id": "SNP", "disabled": false, "checked": false},
+            {"id": "SNP", "disabled": false, "checked": true},
             {"id": "Mutation", "disabled": true, "checked": false},
             {"id": "Structural variation (<20Kb)", "disabled": true, "checked": false},
             {"id": "Structural variation (>20Kb)", "disabled": true, "checked": false}
