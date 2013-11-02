@@ -1836,7 +1836,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 title: trackTitle,
                 histogramZoom: 0,
                 height: 200,
-                visibleRange: {start: 0, end: 100},
+                visibleRange: {start: 60, end: 100},
 
                 renderer: new BamRenderer('bam'),
 
@@ -1920,7 +1920,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 histogramZoom: 0,
                 height: 150,
                 autoHeight: false,
-                visibleRange: {start: 0, end: 100},
+                visibleRange: {start: 60, end: 100},
                 labelZoom: 100,
                 renderer: renderer,
                 dataAdapter: adapter
