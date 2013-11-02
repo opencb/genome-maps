@@ -260,6 +260,10 @@ GmNavigationBar.prototype = {
             ]
         });
         this._addRegionHistoryMenuItem(this.region);
+        this._addRegionHistoryMenuItem(new Region("20:32878277-32878277"));
+        this._addRegionHistoryMenuItem(new Region("19:300018-300018"));
+        this._addRegionHistoryMenuItem(new Region("7:127471196-127471196"));
+        this._addRegionHistoryMenuItem(new Region("20:14370-14370"));
         this._setSpeciesMenu();
         this._setChromosomeMenu();
 
@@ -276,6 +280,7 @@ GmNavigationBar.prototype = {
             handler: function () {
                 console.log(this.text);
                 _this.region.parse(this.text);
+                Ext.getCmp(_this.id + 'regionField').setValue(_this.region.toString());
                 _this._recalculateZoom();
                 _this.trigger('region:change', {region: _this.region, sender: _this});
             }

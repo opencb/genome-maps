@@ -1834,7 +1834,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 targetId: null,
                 id: id,
                 title: trackTitle,
-                histogramZoom: 60,
+                histogramZoom: 0,
                 height: 200,
                 visibleRange: {start: 0, end: 100},
 
@@ -1917,7 +1917,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 targetId: null,
                 id: id,
                 title: trackTitle,
-                histogramZoom: 60,
+                histogramZoom: 0,
                 height: 150,
                 autoHeight: false,
                 visibleRange: {start: 0, end: 100},
