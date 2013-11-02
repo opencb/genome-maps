@@ -5,7 +5,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         // Metadata.
         meta: {
-            version: '3.1.3',
+            version: '3.1.4',
             jsorolla: {
                 dir: '/lib/jsorolla/',
                 //genome viewer contains cellbse and utils
