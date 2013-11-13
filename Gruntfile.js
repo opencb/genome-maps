@@ -77,9 +77,11 @@ module.exports = function (grunt) {
                     scripts: {
                         'js': 'build/<%= meta.version %>/genome-maps-<%= meta.version %>.min.js',
                         'vendor': [
-                            'build/<%= meta.version %>/vendor/jquery.min.js',
                             'build/<%= meta.version %>/vendor/underscore*.js',
                             'build/<%= meta.version %>/vendor/backbone*.js',
+                            'build/<%= meta.version %>/vendor/jquery.min.js',
+                            'build/<%= meta.version %>/vendor/bootstrap-*-dist/js/bootstrap.min.js',
+                            'build/<%= meta.version %>/vendor/typeahead.min.js',
                             'build/<%= meta.version %>/vendor/jquery.mousewheel*.js',
                             'build/<%= meta.version %>/vendor/gl-matrix-min*.js',
                             'build/<%= meta.version %>/vendor/ChemDoodleWeb*.js',
@@ -89,7 +91,7 @@ module.exports = function (grunt) {
                             'build/<%= meta.version %>/vendor/jquery.qtip*.js',
                             'build/<%= meta.version %>/vendor/rawdeflate*.js',
                             'build/<%= meta.version %>/vendor/xml2json.js',
-                            'build/<%= meta.version %>/vendor/jquery-ui-1.10.3*/js/jquery-ui*min.js'
+//                            'build/<%= meta.version %>/vendor/jquery-ui-1.10.3*/js/jquery-ui*min.js'
 
                         ],
                         gv: [
@@ -103,9 +105,11 @@ module.exports = function (grunt) {
                     styles: {
                         'css': ['<%= stylesPath %>/css/style.css'],
                         'vendor': [
-                            'build/<%= meta.version %>/vendor/ChemDoodleWeb*.css',
                             'build/<%= meta.version %>/vendor/jquery.qtip*.css',
-                            'build/<%= meta.version %>/vendor/jquery-ui-1.10.3*/css/**/jquery-ui*min.css'
+                            'build/<%= meta.version %>/vendor/ChemDoodleWeb*.css',
+                            'build/<%= meta.version %>/vendor/bootstrap-*-dist/css/bootstrap.min.css',
+                            'build/<%= meta.version %>/vendor/typeahead.js-bootstrap.css'
+//                            'build/<%= meta.version %>/vendor/jquery-ui-1.10.3*/css/**/jquery-ui*min.css'
                         ]
                     }
                 }
