@@ -4,14 +4,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Genome Maps</title>
 
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="http://cdn.sencha.io/ext/gpl/4.2.1/resources/css/ext-all-gray.css">
 
     <!-- CSS from vendors -->
     <!-- build:style vendor -->
     <link type="text/css" rel="stylesheet" href="../lib/jsorolla/vendor/ChemDoodleWeb.css"/>
     <link type="text/css" rel="stylesheet" href="../lib/jsorolla/vendor/jquery.qtip.min.css"/>
-    <link type="text/css" rel="stylesheet" href="../lib/jsorolla/vendor/jquery-ui-1.10.3.custom/css/smoothgray/jquery-ui-1.10.3.custom.min.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="../lib/jsorolla/vendor/bootstrap-3.0.2-dist/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="../lib/jsorolla/vendor/typeahead.js-bootstrap.css">
+    <!--<link type="text/css" rel="stylesheet" href="../lib/jsorolla/vendor/jquery-ui-1.10.3.custom/css/smoothgray/jquery-ui-1.10.3.custom.min.css" rel="stylesheet">-->
     <!-- /build -->
 
     <!-- CSS from Styles -->
@@ -38,6 +39,9 @@
     <script type="text/javascript" src="../lib/jsorolla/vendor/xml2json.js"></script>
     <script type="text/javascript" src="../lib/jsorolla/vendor/jquery.min.js"></script>
 
+    <!-- These dependencies must go AFTER jquery -->
+    <script type="text/javascript" src="../lib/jsorolla/vendor/bootstrap-3.0.2-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/vendor/typeahead.min.js"></script>
     <script type="text/javascript" src="../lib/jsorolla/vendor/jquery.qtip.min.js"></script>
     <script type="text/javascript" src="../lib/jsorolla/vendor/jquery.cookie.js"></script>
     <script type="text/javascript" src="../lib/jsorolla/vendor/jquery.sha1.js"></script>
@@ -45,8 +49,7 @@
     <script type="text/javascript" src="../lib/jsorolla/vendor/jquery.mousewheel.min.js"></script>
     <script type="text/javascript" src="../lib/jsorolla/vendor/gl-matrix-min.js"></script>
     <script type="text/javascript" src="../lib/jsorolla/vendor/ChemDoodleWeb.js"></script>
-    <script type="text/javascript" src="../lib/jsorolla/vendor/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <!--<script type="text/javascript" src="../lib/jsorolla/vendor/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js"></script>-->
 
 
     <!--<script type="text/javascript" src="../vendor/genome-viewer-1.0.2.js"></script>-->
@@ -133,6 +136,7 @@
     <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/renderers/renderer.js"></script>
     <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/renderers/feature-renderer.js"></script>
     <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/renderers/sequence-renderer.js"></script>
+    <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/renderers/feature-cluster-renderer.js"></script>
     <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/renderers/histogram-renderer.js"></script>
     <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/renderers/gene-renderer.js"></script>
     <script type="text/javascript" src="../lib/jsorolla/src/genome-viewer/renderers/bam-renderer.js"></script>
