@@ -30,7 +30,7 @@ function GenomeMaps(args) {
     this.suiteId = 9;
     this.title = 'Genome Maps';
     this.description = "Genomic data visualization";
-    this.version = " RC1 - 3.1.4";
+    this.version = " RC1 - 3.1.5";
     this.border = true;
     this.trackIdCounter = 1;
     this.resizable = true;
