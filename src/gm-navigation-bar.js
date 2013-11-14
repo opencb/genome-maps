@@ -325,7 +325,6 @@ GmNavigationBar.prototype = {
         var chrView = Ext.create('Ext.view.View', {
             id: this.id + "chrView",
             width: 125,
-            style: 'background-color:#fff',
             store: chrStore,
             selModel: {
                 mode: 'SINGLE',
