@@ -38,6 +38,9 @@ function GenomeMaps(args) {
     this.width;
     this.height;
 
+
+    this.checkAccountFileIndexes = true;
+
     //set instantiation args, must be last
     _.extend(this, args);
 
@@ -1282,10 +1285,12 @@ GenomeMaps.prototype._createTracksTreePanel = function (args) {
                             this.icon = null;
                             this.tooltip = null;
                         }
-                        if ((record.raw.fileFormat === 'bam' || record.raw.fileFormat === 'vcf') && record.raw.status !== 'ready') {
-                            this.icon = null;
-                            this.tooltip = null;
-                            record.raw.disabled = true;
+                        if(this.checkAccountFileIndexes){
+                            if ((record.raw.fileFormat === 'bam' || record.raw.fileFormat === 'vcf') && record.raw.status !== 'ready') {
+                                this.icon = null;
+                                this.tooltip = null;
+                                record.raw.disabled = true;
+                            }
                         }
                     } else {
                         if (record.data.id == "cellbase") {
