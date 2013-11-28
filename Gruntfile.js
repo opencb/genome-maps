@@ -10,7 +10,7 @@ module.exports = function (grunt) {
                 dir: '/lib/jsorolla/',
                 //genome viewer contains cellbse and utils
                 'genomeviewer': {
-                    version: '1.0.2',
+                    version: '1.0.3',
                     dir: '<%= meta.jsorolla.dir %>build/genome-viewer/<%= meta.jsorolla.genomeviewer.version %>/'
                 },
                 //opencga does not contains utils
