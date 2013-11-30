@@ -30,7 +30,7 @@ function GenomeMaps(args) {
     this.suiteId = 9;
     this.title = 'Genome Maps';
     this.description = "Genomic data visualization";
-    this.version = " RC1 - 3.1.5";
+    this.version = " RC1 - 3.1.6";
     this.border = true;
     this.trackIdCounter = 1;
     this.resizable = true;
@@ -337,7 +337,6 @@ GenomeMaps.prototype = {
             minHistogramRegionSize: 20000000,
             maxLabelRegionSize: 10000000,
             height: 100,
-            featureTypes: FEATURE_TYPES,
 
             renderer: renderer,
 
@@ -365,6 +364,60 @@ GenomeMaps.prototype = {
     },
     _createNavigationBar: function (targetId) {
         var _this = this;
+
+        var quickSearchResultFn = function (query) {
+            var results = [];
+            var speciesCode = Utils.getSpeciesCode(this.species.text).substr(0, 3);
+
+            CellBaseManager.get({
+                host: 'http://ws.bioinfo.cipf.es/cellbase/rest',
+                species: speciesCode,
+                version: 'latest',
+                category: 'feature',
+                subCategory: 'id',
+                query: query,
+                resource: 'starts_with',
+                params: {
+                    of: 'json'
+                },
+                async: false,
+                success: function (data, textStatus, jqXHR) {
+                    for (var i in data[0]) {
+                        results.push(data[0][i].displayId);
+                    }
+                }
+            });
+            return results;
+        };
+
+        var goFeature = function (featureName) {
+            if (featureName != null) {
+                if (featureName.slice(0, "rs".length) == "rs" || featureName.slice(0, "AFFY_".length) == "AFFY_" || featureName.slice(0, "SNP_".length) == "SNP_" || featureName.slice(0, "VAR_".length) == "VAR_" || featureName.slice(0, "CRTAP_".length) == "CRTAP_" || featureName.slice(0, "FKBP10_".length) == "FKBP10_" || featureName.slice(0, "LEPRE1_".length) == "LEPRE1_" || featureName.slice(0, "PPIB_".length) == "PPIB_") {
+                    this.openSNPListWidget(featureName);
+                } else {
+                    console.log(featureName);
+                    CellBaseManager.get({
+                        species: _this.species,
+                        category: 'feature',
+                        subCategory: 'gene',
+                        query: featureName,
+                        resource: 'info',
+                        params: {
+                            include: 'chromosome,start,end'
+                        },
+                        success: function (data) {
+                            var feat = data.response[0].result[0];
+                            var regionStr = feat.chromosome + ":" + feat.start + "-" + feat.end;
+                            var region = new Region();
+                            region.parse(regionStr);
+                            _this.region = region;
+                            _this.trigger('region:change', {region: _this.region, sender: _this});
+                        }
+                    });
+                }
+            }
+        };
+
         var navigationBar = new GmNavigationBar({
             targetId: targetId,
             availableSpecies: this.genomeViewer.availableSpecies,
@@ -374,11 +427,15 @@ GenomeMaps.prototype = {
             width: this.genomeViewer.width,
             svgCanvasWidthOffset: this.genomeViewer.trackPanelScrollWidth + this.genomeViewer.sidePanelWidth,
             zoom: this.genomeViewer.zoom,
+            quickSearchResultFn: quickSearchResultFn,
             autoRender: true,
             handlers: {
                 'region:change': function (event) {
-                    Utils.setMinRegion(event.region, _this.genomeViewer.getSVGCanvasWidth())
+                    _this.genomeViewer.setMinRegion(event.region, _this.genomeViewer.getSVGCanvasWidth())
                     _this.genomeViewer.trigger('region:change', event);
+                },
+                'zoom:change': function (event) {
+                    _this.genomeViewer.trigger('zoom:change', event);
                 },
                 'configuration-button:change': function (event) {
                     if (event.selected) {
@@ -434,6 +491,13 @@ GenomeMaps.prototype = {
                 'autoHeight-button:click': function (event) {
 //                    _this.genomeViewer.enableAutoHeight();
                     _this.genomeViewer.updateHeight();
+                },
+                'quickSearch:select': function (event) {
+                    goFeature(event.item);
+                    _this.genomeViewer.trigger('quickSearch:select', event);
+                },
+                'quickSearch:go': function (event) {
+                    goFeature(event.item);
                 }
             }
         });
@@ -442,6 +506,16 @@ GenomeMaps.prototype = {
             if (event.sender != navigationBar) {
                 navigationBar.setRegion(event.region);
             }
+            _this.genomeViewer.zoom = _this.genomeViewer._calculateZoomByRegion(event.region);
+            navigationBar.setZoom(_this.genomeViewer.zoom);
+        });
+        this.genomeViewer.on('zoom:change', function (event) {
+            _this.genomeViewer.region.load(_this.genomeViewer._calculateRegionByZoom(event.zoom));
+            if (event.sender != navigationBar) {
+                navigationBar.setZoom(event.zoom);
+                navigationBar.setRegion(event.region);
+            }
+            _this.genomeViewer.setRegion(_this.region);
         });
         this.genomeViewer.on('region:move', function (event) {
             if (event.sender != navigationBar) {
@@ -1297,7 +1371,7 @@ GenomeMaps.prototype._createTracksTreePanel = function (args) {
                             record.raw.disabled = false;
                         }
                     } else {
-                        if (record.data.id == "cellbase") {
+                        if (record.data.id == "cellbase") {24997
                             this.icon = Utils.images.edit;
                         } else if (record.data.id == "das") {
                             this.icon = Utils.images.add;
@@ -1415,7 +1489,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 id: id,
                 title: 'Sequence',
                 height: 25,
-                visibleRange: 200,
+                visibleRegionSize: 200,
 
                 renderer: new SequenceRenderer(),
 
@@ -1753,9 +1827,8 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 targetId: null,
                 id: id,
                 title: trackTitle,
-                histogramZoom: 0,
                 height: 200,
-                visibleRange: {start: 60, end: 100},
+                visibleRegionSize: 1000000,
 
                 renderer: new BamRenderer('bam'),
 
@@ -1766,10 +1839,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                     species: this.genomeViewer.species,
                     cacheConfig: {
                         chunkSize: 5000
-                    },
-                    filters: {},
-                    options: {},
-                    featureConfig: FEATURE_CONFIG.gene
+                    }
                 })
             });
             this.genomeViewer.addTrack(bamTrack);
@@ -1785,10 +1855,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 species: this.genomeViewer.species,
                 cacheConfig: {
                     chunkSize: 5000
-                },
-                filters: {},
-                options: {},
-                featureConfig: FEATURE_CONFIG.vcf
+                }
             });
 //            var renderer = new FeatureRenderer('vcf');
 //            renderer.on({
