@@ -323,7 +323,7 @@ GenomeMaps.prototype = {
         });
         genomeViewer.draw();
 
-        var renderer = new FeatureRenderer('gene');
+        var renderer = new FeatureRenderer(FEATURE_TYPES.gene);
         renderer.on({
             'feature:click': function (event) {
                 console.log(event)
@@ -1520,7 +1520,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                     resource: "gene",
                     species: this.genomeViewer.species,
                     params: {
-                        exclude: 'transcripts.xrefs,transcripts.exons.sequence'
+                        exclude: 'transcripts.tfbs,transcripts.xrefs,transcripts.exons.sequence'
                     },
                     cacheConfig: {
                         chunkSize: 100000
@@ -1562,11 +1562,12 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 targetId: null,
                 id: id,
                 title: 'SNP',
+                featureType:'SNP',
                 minHistogramRegionSize: 12000,
                 maxLabelRegionSize: 3000,
                 height: 120,
 
-                renderer: new FeatureRenderer('snp'),
+                renderer: new FeatureRenderer(FEATURE_TYPES.snp),
 
                 dataAdapter: new CellBaseAdapter({
                     category: "genomic",
@@ -1830,7 +1831,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
                 height: 200,
                 visibleRegionSize: 1000000,
 
-                renderer: new BamRenderer('bam'),
+                renderer: new BamRenderer(FEATURE_TYPES.bam),
 
                 dataAdapter: new OpencgaAdapter({
                     category: "bam",
@@ -1864,7 +1865,7 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
 //                    var vcfInfo = new VCFVariantInfoWidget(null, _this.genomeViewer.species, {adapter: adapter}).draw(event);
 //                }
 //            });
-            var renderer = new VcfMultisampleRenderer('vcf');
+            var renderer = new VcfMultisampleRenderer(FEATURE_TYPES.vcf);
             renderer.on({
                 'feature:click': function (event) {
                     var vcfInfo = new VCFVariantInfoWidget(null, _this.genomeViewer.species, {adapter: adapter}).draw(event);
