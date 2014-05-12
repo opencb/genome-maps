@@ -12,7 +12,8 @@
  *
  **/
 CELLBASE_VERSION = "v3";
-CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
+//CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
+CELLBASE_HOST = "http://www.ebi.ac.uk/cellbase/webservices/rest";
 OPENCGA_HOST = "http://ws.bioinfo.cipf.es/opencga/rest";
 OPENCGA_LOCALHOST = "http://localhost:61976/opencga/rest";
 
@@ -26,11 +27,11 @@ if (
         window.location.protocol === "file:"
     ) {
 
-    CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbase/rest";
+//    CELLBASE_HOST = "http://ws-beta.bioinfo.cipf.es/cellbase/rest";
     //CELLBASE_HOST = "http://rsanchez:8080/cellbase/rest";
     //CELLBASE_HOST = "http://imedina:8080/cellbase/rest";
 
-    OPENCGA_HOST = "http://ws-beta.bioinfo.cipf.es/opencga-server-beta/rest";
+    OPENCGA_HOST = "http://ws-beta.bioinfo.cipf.es/opencga-staging/rest";
 //    OPENCGA_HOST = "http://fsalavert:8080/opencga/rest";
 }
 
@@ -65,7 +66,7 @@ var AVAILABLE_SPECIES = {
 //                {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "13", "start": 32889599, "end": 32889739}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
 //                {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "1", "start": 32877109, "end": 32882337}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
 //                {"text": "Macaca mulatta", "assembly": "MMUL_1.0", "region": {"chromosome": "1", "start": 1000000, "end": 1000000}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "X", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
-//                {"text": "Mus musculus", "assembly": "GRCm38.p1", "region": {"chromosome": "1", "start": 18422009, "end": 18422009}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
+                {"text": "Mus musculus", "assembly": "GRCm38.p1", "region": {"chromosome": "1", "start": 18422009, "end": 18422009}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
 //                {"text": "Oryctolagus cuniculus", "assembly": "oryCun2", "region": {"chromosome": "1", "start": 1000000, "end": 1000000}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "X", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
 //                {"text": "Pan troglodytes", "assembly": "CHIMP2.1.4", "region": {"chromosome": "1", "start": 1000000, "end": 1000000}, "chromosomes": ["1", "2A", "2B", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},
 //                {"text": "Pongo abelii", "assembly": "PPYG2", "region": {"chromosome": "1", "start": 1000000, "end": 1000000}, "chromosomes": ["1", "2a", "2b", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Un", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-71/"},

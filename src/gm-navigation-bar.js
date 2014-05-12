@@ -230,7 +230,7 @@ GmNavigationBar.prototype = {
                     tooltip: 'Tracks height will be calculated automatically',
                     iconCls: 'ocb-icon-track-autoheight',
                     handler: function () {
-                        _this.trigger('autoHeight-button:click', {sender: _this});
+                        _this.trigger('autoHeight-buttonchromosomesButton:click', {sender: _this});
                     }
                 },
                 '->',

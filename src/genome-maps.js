@@ -30,7 +30,7 @@ function GenomeMaps(args) {
     this.suiteId = 9;
     this.title = 'Genome Maps';
     this.description = "Genomic data visualization";
-    this.version = " RC1 - 3.1.6";
+    this.version = "3.1.7";
     this.border = true;
     this.trackIdCounter = 1;
     this.resizable = true;
@@ -1371,7 +1371,8 @@ GenomeMaps.prototype._createTracksTreePanel = function (args) {
                             record.raw.disabled = false;
                         }
                     } else {
-                        if (record.data.id == "cellbase") {24997
+                        if (record.data.id == "cellbase") {
+                            24997
                             this.icon = Utils.images.edit;
                         } else if (record.data.id == "das") {
                             this.icon = Utils.images.add;
@@ -1558,16 +1559,21 @@ GenomeMaps.prototype.addTrack = function (trackType, trackTitle, object, host) {
 //            });
 //            break;
         case "SNP":
+            var renderer = new FeatureRenderer(FEATURE_TYPES.snp);
+            renderer.on('feature:click', function (e) {
+                new SnpInfoWidget(null, _this.genomeViewer.species).draw(e);
+
+            });
             this.snp = new FeatureTrack({
                 targetId: null,
                 id: id,
                 title: 'SNP',
-                featureType:'SNP',
+                featureType: 'SNP',
                 minHistogramRegionSize: 12000,
                 maxLabelRegionSize: 3000,
                 height: 120,
 
-                renderer: new FeatureRenderer(FEATURE_TYPES.snp),
+                renderer: renderer,
 
                 dataAdapter: new CellBaseAdapter({
                     category: "genomic",
