@@ -233,6 +233,14 @@ GmNavigationBar.prototype = {
                         _this.trigger('autoHeight-buttonchromosomesButton:click', {sender: _this});
                     }
                 },
+                /*{
+                    tooltip: 'Tracks will be compacted automatically',
+                    iconCls: 'ocb-icon-compressed',
+                    handler: function () {
+                        $(".ocb-compactable").toggle();
+                        //_this.trigger('autoHeight-button:click', {sender: _this});
+                    }
+                },*/
                 '->',
                 this._createSearchComboBox(),
                 {
