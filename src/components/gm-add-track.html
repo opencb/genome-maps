@@ -1,0 +1,101 @@
+<polymer-element name="gm-add-track" attributes="collapsible collapsed selectedSpecies">
+    <template>
+        <link rel="stylesheet" href="gm-panel.css">
+        <style>
+            :host {
+                display: block;
+                position: relative;
+                box-sizing: border-box;
+
+                color: #444;
+                font-size: 14px;
+            }
+
+            .container {
+                padding: 10px 15px;
+            }
+
+            ul, ul ul {
+                box-sizing: border-box;
+                list-style: none;
+                text-decoration: none;
+                line-height: 22px;
+                margin: 0px;
+                padding: 0px;
+            }
+
+            li {
+                padding: 0 20px;
+            }
+
+            li:hover {
+                background-color: #435F7A;
+                color: #FFFFFF;
+            }
+
+            ul:before {
+                font-family: 'FontAwesome';
+                content: "\f1b3";
+                margin-right: 5px;
+                color: #435F7A;
+            }
+
+            li:before {
+                font-family: 'FontAwesome';
+                content: "\f1b2";
+                margin-right: 5px;
+                /*color: #435F7A;*/
+            }
+
+        </style>
+        <div class="panel">
+            <div class="header"
+                 on-click="{{titleClick}}"
+                 data-collapsible="{{collapsible}}"
+                 data-collapsed="{{collapsed}}">
+                Add tracks
+            </div>
+            <div class="container">
+                <ul>
+                    Core
+                    <li on-click="{{handleClickTrack}}">Sequence</li>
+                    <li on-click="{{handleClickTrack}}">Gene/Transcript</li>
+                    <li on-click="{{handleClickTrack}}">CpG islands</li>
+                </ul>
+                <ul>
+                    Variation
+                    <li on-click="{{handleClickTrack}}">SNP</li>
+                    <li on-click="{{handleClickTrack}}">EBI EVA 1.0 SNVs</li>
+                    <li on-click="{{handleClickTrack}}">Mutation</li>
+                    <li on-click="{{handleClickTrack}}">Structural variation (<20Kb)</li>
+                    <li on-click="{{handleClickTrack}}">Structural variation (>20Kb)</li>
+                </ul>
+                <ul>
+                    Regulatory
+                    <li on-click="{{handleClickTrack}}">TFBS</li>
+                    <li on-click="{{handleClickTrack}}">miRNA targets</li>
+                    <li on-click="{{handleClickTrack}}">Histone</li>
+                    <li on-click="{{handleClickTrack}}">Polymerase</li>
+                    <li on-click="{{handleClickTrack}}">Open Chromatin</li>
+                    <li on-click="{{handleClickTrack}}">Conserved regions</li>
+                </ul>
+            </div>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            created: function () {
+
+            },
+            // properties and methods here
+            collapsed: false,
+            collapsible: true,
+            titleClick: function (e) {
+                this.collapsed = !this.collapsed;
+            },
+            handleClickTrack: function (e) {
+                console.log(e.currentTarget.innerText);
+            }
+        });
+    </script>
+</polymer-element>

@@ -12,6 +12,9 @@ module.exports = function (grunt) {
         concat: {
             dist: {
                 src: [
+                    'src/eva-adapter.js',
+                    'src/eva-manager.js',
+                    'src/gm-plugins-config.js',
                     'src/gm-plugins-config.js',
                     'src/gm-navigation-bar.js',
                     'src/gm-status-bar.js',
@@ -33,10 +36,32 @@ module.exports = function (grunt) {
         copy: {
             build: {
                 files: [
-                    {   expand: true, cwd: './src', src: ['gm-config.js'], dest: '<%= def.build %>/' },
-                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/**'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/platform.js'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/platform.js.map'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/underscore-min.js'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/backbone-min.js'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/backbone-min.map'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/font-awesome/**'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/jquery.min.js'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/jquery.qtip.min.css'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/jquery.qtip.min.js'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/jquery.mousewheel.min.js'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/gl-matrix-min.js'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/ChemDoodleWeb.css'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/ChemDoodleWeb.js'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/jquery.cookie.js'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/purl.min.js'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/jquery.sha1.js'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/ext-5/**'], dest: '<%= def.build %>/'  },
+                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/cryptojs/**'], dest: '<%= def.build %>/'  },
+
+
                     {   expand: true, cwd: './<%= def.jsorolla %>', src: ['styles/**'], dest: '<%= def.build %>/'  },
                     {   expand: true, cwd: './<%= def.jsorolla %>/src/lib', src: ['worker*'], dest: '<%= def.build %>/' },
+
+                    {   expand: true, cwd: './src', src: ['gm-config.js'], dest: '<%= def.build %>/' },
+                    {   expand: true, cwd: './src', src: ['components/**'], dest: '<%= def.build %>/' },
+
                     {   expand: true, cwd: './<%= def.jsorolla %>/build/<%= jsopkg.version %>/genome-viewer/', src: ['genome-viewer*.js', 'gv-config.js'], dest: '<%= def.build %>/' }
                 ]
             }
@@ -44,62 +69,14 @@ module.exports = function (grunt) {
         clean: {
             dist: ['<%= def.build %>/']
         },
-        htmlbuild: {
-            build: {
-                src: 'src/<%= def.name %>.html',
-                dest: '<%= def.build %>/',
-                options: {
-                    beautify: true,
-                    styles: {
-                        'vendor': [
-                            '<%= def.build %>/vendor/jquery.qtip*.css',
-                            '<%= def.build %>/vendor/ChemDoodleWeb*.css',
-                            '<%= def.build %>/vendor/bootstrap-*-dist/css/bootstrap.min.css',
-                            '<%= def.build %>/vendor/typeahead.js-bootstrap.css',
-                            '<%= def.build %>/vendor/jquery.simplecolorpicker.css'
-                        ],
-                        'css': ['<%= def.build %>/styles/css/style.css']
-                    },
-                    scripts: {
-                        vendor: [
-                            '<%= def.build %>/vendor/underscore*.js',
-                            '<%= def.build %>/vendor/backbone*.js',
-                            '<%= def.build %>/vendor/jquery.min.js',
-                            '<%= def.build %>/vendor/bootstrap-*-dist/js/bootstrap.min.js',
-                            '<%= def.build %>/vendor/typeahead.min.js',
-                            '<%= def.build %>/vendor/jquery.mousewheel*.js',
-                            '<%= def.build %>/vendor/gl-matrix-min*.js',
-                            '<%= def.build %>/vendor/ChemDoodleWeb*.js',
-                            '<%= def.build %>/vendor/jquery.cookie*.js',
-                            '<%= def.build %>/vendor/purl*.js',
-                            '<%= def.build %>/vendor/jquery.sha1*.js',
-                            '<%= def.build %>/vendor/jquery.qtip*.js',
-                            '<%= def.build %>/vendor/rawdeflate*.js',
-                            '<%= def.build %>/vendor/xml2json.js',
-                        ],
-                        config: [
-                            '<%= def.build %>/gv-config.js'
-                        ],
-                        lib: [
-                            '<%= def.build %>/genome-viewer.min.js'
-                        ],
-                        js: '<%= def.build %>/<%= def.name %>.min.js'
-                    }
-
-                }
-            }
-        },
-        'curl-dir': {
-
-        },
-        rename: {
+        processhtml: {
+            options: {
+                strip: true
+            },
             dist: {
-                files: [
-                    {
-                        src: ['<%= def.build %>/<%= def.name %>.html'],
-                        dest: '<%= def.build %>/index.html'
-                    }
-                ]
+                files: {
+                    '<%= def.build %>/index.html': ['src/<%= def.name %>.html']
+                }
             }
         },
         hub: {
@@ -116,9 +93,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-rename');
-    grunt.loadNpmTasks('grunt-html-build');
-    grunt.loadNpmTasks('grunt-curl');
+    grunt.loadNpmTasks('grunt-processhtml');
     grunt.loadNpmTasks('grunt-hub');
 
     grunt.registerTask('log-deploy', 'Deploy path info', function (version) {
@@ -126,6 +101,6 @@ module.exports = function (grunt) {
     });
 
     // Default task.
-    grunt.registerTask('default', ['hub','clean', 'concat', 'uglify', 'copy', 'htmlbuild', 'rename', 'log-deploy']);
+    grunt.registerTask('default', ['hub','clean', 'concat', 'uglify', 'copy', 'processhtml', 'log-deploy']);
 
 };

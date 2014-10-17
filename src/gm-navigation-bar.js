@@ -66,7 +66,7 @@ GmNavigationBar.prototype = {
         var toolbar = Ext.create('Ext.toolbar.Toolbar', {
             id: this.id + "navToolbar",
             renderTo: $(this.div).attr('id'),
-            cls: 'gm-navigation-bar',
+            cls: 'ocb-gm-navigation-bar',
             region: "north",
             width: '100%',
             border: false,
@@ -234,13 +234,13 @@ GmNavigationBar.prototype = {
                     }
                 },
                 /*{
-                    tooltip: 'Tracks will be compacted automatically',
-                    iconCls: 'ocb-icon-compressed',
-                    handler: function () {
-                        $(".ocb-compactable").toggle();
-                        //_this.trigger('autoHeight-button:click', {sender: _this});
-                    }
-                },*/
+                 tooltip: 'Tracks will be compacted automatically',
+                 iconCls: 'ocb-icon-compressed',
+                 handler: function () {
+                 $(".ocb-compactable").toggle();
+                 //_this.trigger('autoHeight-button:click', {sender: _this});
+                 }
+                 },*/
                 '->',
                 this._createSearchComboBox(),
                 {
@@ -430,11 +430,11 @@ GmNavigationBar.prototype = {
                     opacity: 0
                 }
             }).animate({
-                    duration: 700,
-                    to: {
-                        opacity: 1
-                    }
-                });
+                duration: 700,
+                to: {
+                    opacity: 1
+                }
+            });
         } else {
             this.region.load(reg);
             Ext.getCmp(this.id + 'chromosomesButton').setText(this.region.chromosome);

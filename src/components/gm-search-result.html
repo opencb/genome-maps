@@ -1,0 +1,120 @@
+<link rel="import" href="../../bower_components/core-list/core-list.html">
+<polymer-element name="gm-search-result" attributes="collapsible collapsed query selectedSpecies response">
+    <template>
+        <link rel="stylesheet" href="../../lib/jsorolla/src/lib/components/jso-style.css">
+        <style>
+            :host {
+                position: relative;
+                margin-top: 5px;
+            }
+
+            #main {
+                border: 1px solid #d4d4d4;
+                position: relative;
+                box-sizing: border-box;
+                /*box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.2);*/
+            }
+
+            #header, #container {
+                position: relative;
+                font-size: 13px;
+            }
+
+            #header {
+                /*background-image: linear-gradient(to bottom, #ffffff, #f2f2f2);*/
+                /*background-image: -webkit-linear-gradient(top, #ffffff, #f2f2f2);*/
+                /*background-repeat: repeat-x;*/
+                line-height: 24px;
+                color: #333;
+                padding: 0 5px;
+                border-bottom: 1px solid #d4d4d4;
+            }
+
+            #header[data-collapsible=true][data-collapsed=true]:after {
+                font-family: FontAwesome;
+                content: "\f103";
+                position: absolute;
+                right: 10px;
+            }
+
+            #header[data-collapsible=true][data-collapsed=false]:after {
+                font-family: FontAwesome;
+                content: "\f102";
+                position: absolute;
+                right: 10px;
+            }
+
+            #header[data-collapsible=true][data-collapsed=true] + div {
+                display: none;
+            }
+
+            core-list {
+                height: 100px;
+            }
+
+            .query {
+                color: #435f7a;
+            }
+
+            .num {
+                color: #888;
+            }
+        </style>
+        <div id="main">
+            <div id="header" class="noselect" on-dblclick="{{titleDblClick}}"
+                 data-collapsible="{{collapsible}}"
+                 data-collapsed="{{collapsed}}"><span class="query">{{response.id}}</span> <span class="num">({{response.numResults}})</span>
+                <!--<span on-click="{{handlePrev}}">Prev</span>-->
+                <!--<span on-click="{{handleNext}}">Next</span>-->
+            </div>
+            <div id="container">
+                <core-list id="list" data="{{response.result}}" height="20">
+                    <template>
+                        <gm-search-feature feature="{{model}}" on-click="{{handleResultClick}}"></gm-search-feature>
+                    </template>
+                </core-list>
+            </div>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            created: function () {
+                this.response;
+            },
+            collapsed: false,
+            collapsible: true,
+            titleDblClick: function (e) {
+                this.collapsed = !this.collapsed;
+            },
+            handleResultClick: function (e) {
+                this.fire('feature', e.target.feature);
+            }
+        });
+    </script>
+</polymer-element>
+<polymer-element name="gm-search-feature" attributes="feature">
+    <template>
+        <style>
+            :host {
+                display: block;
+                box-sizing: border-box;
+                padding: 2px 5px;
+                height: 20px;
+                overflow: hidden;
+            }
+
+            :host(:hover) {
+                background-color: #f5f5f5;
+            }
+
+        </style>
+        {{feature.id}} - {{feature.name}}
+    </template>
+    <script>
+        Polymer({
+            created: function () {
+                this.feature;
+            }
+        });
+    </script>
+</polymer-element>
