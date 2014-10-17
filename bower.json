@@ -1,0 +1,26 @@
+{
+  "name": "genome-maps",
+  "version": "3.1.8",
+  "homepage": "https://github.com/opencb/genome-maps",
+  "authors": [
+    "frasator <frasator@gmail.com>"
+  ],
+  "license": "GPLv2",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.4.2",
+    "cookies-js": "~0.4.0",
+    "crypto-js-evanvosberg": "~3.1.2",
+    "highcharts-release": "~4.0.4",
+    "polymer-fontawesome": "~1.0.0-beta.2",
+    "fontawesome": "~4.2.0",
+    "core-list": "Polymer/core-list#~0.4.2"
+  }
+}

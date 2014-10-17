@@ -1,0 +1,124 @@
+<template>
+    <div class="unselectable">
+        <div id="version" class="ocb-ctrl-text" style="float:right;margin-left:10px;color:#435f7a;"></div>
+
+
+        <div class="ocb-dropdown" style="float:right;margin-left:10px;">
+            <div tabindex="-1" id="geneLegendButton" class="ocb-ctrl"> Gene legend <i class="fa fa-caret-up"></i></div>
+            <ul id="geneLegend" data-upward>
+            </ul>
+        </div>
+
+
+        <div class="ocb-dropdown" style="float:right;margin-left:10px;">
+            <div tabindex="-1" id="snpLegendButton" class="ocb-ctrl"> SNP legend <i class="fa fa-caret-up"></i></div>
+            <ul id="snpLegend" data-upward>
+            </ul>
+        </div>
+
+
+        <div id="mouseposition" class="ocb-ctrl-text" style="float:right;margin-left:10px;"></div>
+    </div>
+</template>
+
+<script>
+    (function () {
+
+        // This document reference
+        var thisDoc = document._currentScript.ownerDocument;
+
+        var GmStatusBar = document.registerElement('gm-status-bar', {
+            prototype: Object.create(HTMLElement.prototype, {
+                /*
+                 * Lifecycle callback methods
+                 */
+                createdCallback: {
+                    value: function () {
+                        var me = this;
+
+                        this.region = new Region();
+                        this.version = '';
+
+                        //Create a copy of the template node.
+                        var template = document.importNode(thisDoc.querySelector('template').content, true);
+                        this.appendChild(template);
+
+                        //Work with the copy of the template and create the els object. The keys are the ids of the elements;
+                        this.els = {};
+                        var els = this.querySelectorAll('[id]');
+                        for (var i = 0; i < els.length; i++) {
+                            var el = els[i];
+                            var id = el.getAttribute('id');
+                            this.els[id] = el;
+                        }
+
+                        this._setLegend(GENE_BIOTYPE_COLORS, this.els.geneLegend);
+                        this._setLegend(SNP_BIOTYPE_COLORS, this.els.snpLegend);
+                    }
+                },
+                attachedCallback: {
+                    value: function () {
+                    }
+                },
+                detachedCallback: {
+                    value: function () {
+                    }
+                },
+                attributeChangedCallback: {
+                    value: function (attr, oldVal, newVal) {
+                        switch (attr) {
+                            case 'version':
+                                this._setVersion(newVal);
+                                break;
+                        }
+                    }
+                },
+
+                setRegion: {
+                    value: function (region) {
+                        this.region.load(region);
+                        var text = Utils.formatNumber(region.center());
+                        $('#' + this.id + 'mousePositionEl').html(text);
+                    }
+                },
+                setMousePosition: {
+                    value: function (e) {
+                        var text = e.baseHtml + ' ' + this.region.chromosome + ':' + Utils.formatNumber(e.mousePos);
+                        this.els.mouseposition.innerHTML = text;
+                    }
+                },
+                _setVersion: {
+                    value: function (versionStr) {
+                        this.els.version.innerHTML = ' Genome Maps ' + versionStr;
+                    }
+                },
+                _setLegend: {
+                    value: function (biotypeColors, menu) {
+                        for (biotype in biotypeColors) {
+                            var color = biotypeColors[biotype];
+                            var li = document.createElement('li');
+                            li.setAttribute('data-text', 'true');
+
+                            var colorEl = document.createElement('div');
+                            colorEl.style.display = 'inline-block';
+                            colorEl.style.height = '12px';
+                            colorEl.style.width = '12px';
+                            colorEl.style.marginRight = '4px';
+                            colorEl.style.backgroundColor = color;
+
+                            var biotypeEl = document.createElement('span');
+                            biotypeEl.textContent = biotype;
+
+                            li.appendChild(colorEl);
+                            li.appendChild(biotypeEl);
+                            menu.appendChild(li);
+                        }
+                    }
+                }
+            })
+        });
+
+
+    }());
+</script>
+

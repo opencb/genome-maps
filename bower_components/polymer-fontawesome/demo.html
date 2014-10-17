@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+	<title>Polymer-FontAwesome Demo</title>
+	
+	<script src="../platform/platform.js"></script>
+	<link rel="import" href="polymer-fontawesome.html">
+
+</head>
+<body unresolved>
+
+	<p>An example of using <code>&lt;font-awesome&gt;</code>:</p>
+
+  	<font-awesome icon="home"></font-awesome>
+	<font-awesome icon="spinner" animation="spin"></font-awesome>
+	<font-awesome icon="cog" animation="spin" size="5x"></font-awesome>
+	<font-awesome icon="home" rotate="90"></font-awesome>
+	<font-awesome icon="home" flip="horizontal"></font-awesome>
+	
+	<font-awesome-stack>
+		<font-awesome icon="square" stack="2x"></font-awesome>
+		<font-awesome icon="home" inverse="true" stack="1x"></font-awesome>
+	</font-awesome-stack>
+	
+	<font-awesome-stack size="2x">
+		<font-awesome icon="square" stack="2x"></font-awesome>
+		<font-awesome icon="home" inverse="true" stack="1x"></font-awesome>
+	</font-awesome-stack>
+		
+	<font-awesome-ul>
+		<font-awesome-li icon="home">Item 1</font-awesome-li>
+		<font-awesome-li icon="check">Item 2</font-awesome-li>
+		<font-awesome-li icon="check-square">Item 3</font-awesome-li>
+	</font-awesome-ul>
+
+</body>
+</html>

@@ -1,0 +1,160 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="stylesheet" href="../fontawesome/css/font-awesome.min.css">
+
+<!--
+Provides a Polymer approach to Font Awesome.
+
+##### Example
+
+    <font-awesome icon="home"></font-awesome>
+
+@element font-awesome
+@blurb Provides a Polymer approach to Font Awesome
+@group Font Awesome
+@status alpha
+@homepage https://github.com/rtbenfield
+-->
+<!--
+@attribute icon
+@type icon name
+The icon to use. See <a href="http://fontawesome.io/icons/">Font Awesome</a>. Exclude "fa-" before icon name.
+-->
+<!-- 
+@attribute size
+@type lg, 2x, 3x, 4x, 5x
+@default null
+The size of the stacked icon
+-->
+<!-- 
+@attribute animation
+@type spin
+@default null
+The animation to use. Currently limited to spin.
+-->
+<!-- 
+@attribute rotate
+@type 90, 180, 270
+@default null
+The amount of rotation to apply to the icon.
+-->
+<!-- 
+@attribute flip
+@type horizontal, vertical
+@default null
+The flip to apply to the icon.
+-->
+<!-- 
+@attribute stack
+@type 1x, 2x
+@default null
+The stack size to apply. Used when contained within <font-awesome-stack>.
+-->
+<!-- 
+@attribute inverse
+@type boolean
+@default false
+Whether to inverse the icon color.
+-->
+<!-- 
+@attribute pull-left
+@type boolean
+@default false
+Whether to pull the icon to the left of text
+-->
+<!-- 
+@attribute border
+@type boolean
+Whether to apply a border to the icon
+@default false
+-->
+<polymer-element name="font-awesome" attributes="icon animation size rotate flip inverse stack pull-left border" noscript>
+	<template>
+		<link href="../fontawesome/css/font-awesome.min.css" rel="stylesheet">
+		<span class="fa fa-{{icon}} {{animation ? 'fa-' + animation : ''}} {{size ? 'fa-' + size : ''}} {{rotate ? 'fa-rotate-' + rotate : ''}} {{flip ? 'fa-flip-' + flip : ''}} {{inverse ? 'fa-inverse' : ''}} {{stack ? 'fa-stack-' + stack : ''}} {{pull-left ? 'pull-left' : ''}} {{border ? 'fa-border' : ''}}"></span>
+	</template>
+</polymer-element>
+
+<!--
+Provides a Polymer approach to Font Awesome.
+
+##### Example
+
+    <font-awesome-stack>
+    	<font-awesome icon="square" stack="2x"></font-awesome>
+    	<font-awesome icon="home" inverse="true" stack="1x"></font-awesome>
+    </font-awesome-stack>
+
+@element font-awesome-stack
+@blurb Provides a Polymer approach to Font Awesome
+@group Font Awesome
+@status alpha
+@homepage https://github.com/rtbenfield
+-->
+<!-- 
+@attribute size
+@type lg, 2x, 3x, 4x, 5x
+@default null
+The size of the stacked icon
+-->
+<polymer-element name="font-awesome-stack" attributes="size" noscript>
+	<template>
+		<link href="../fontawesome/css/font-awesome.min.css" rel="stylesheet">
+		<span class="fa-stack {{size ? 'fa-' + size : ''}}">
+			<content></content>
+		</span>
+	</template>
+</polymer-element>
+
+<!--
+Provides a Polymer approach to Font Awesome.
+
+##### Example
+	
+	<font-awesome-ul>
+		<font-awesome-li icon="home">Item 1</font-awesome-li>
+		<font-awesome-li icon="check">Item 2</font-awesome-li>
+		<font-awesome-li icon="check-square">Item 3</font-awesome-li>
+	</font-awesome-ul>
+
+@element font-awesome-ul
+@blurb Provides a Polymer approach to Font Awesome
+@group Font Awesome
+@status alpha
+@homepage https://github.com/rtbenfield
+-->
+<polymer-element name="font-awesome-ul" noscript>
+	<template>
+		<link href="../fontawesome/css/font-awesome.min.css" rel="stylesheet">
+		<ul class="fa-ul">
+			<content></content>
+		</ul>
+	</template>
+</polymer-element>
+
+<!--
+Provides a Polymer approach to Font Awesome.
+
+##### Example
+	
+	<font-awesome-ul>
+		<font-awesome-li icon="home">Item 1</font-awesome-li>
+		<font-awesome-li icon="check">Item 2</font-awesome-li>
+		<font-awesome-li icon="check-square">Item 3</font-awesome-li>
+	</font-awesome-ul>
+
+@element font-awesome-li
+@extends font-awesome
+@blurb Provides a Polymer approach to Font Awesome
+@group Font Awesome
+@status alpha
+@homepage https://github.com/rtbenfield
+-->
+<polymer-element name="font-awesome-li" extends="font-awesome" noscript>
+	<template>
+		<link href="../fontawesome/css/font-awesome.min.css" rel="stylesheet">
+		<li>
+			<shadow></shadow>
+			<content></content>
+		</li>
+	</template>
+</polymer-element>
