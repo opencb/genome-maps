@@ -76,7 +76,7 @@
 
     <div id="home" hide="{{selectedOption != 'home'}}">
         <div id="genomeViewer">
-            <div id="sidePanel" class="side-panel">
+            <div id="sidePanel" class="side-panel side-panel-shown">
                 <gm-track-menu id="trackMenu" on-swap="{{handleSwapTrackMenu}}" genomeViewer="{{genomeViewer}}"></gm-track-menu>
                 <gm-search id="search" selectedSpecies="{{selectedSpecies}}" collapsed="true"
                            on-feature="{{handleResultClick}}"></gm-search>
