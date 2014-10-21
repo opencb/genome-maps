@@ -1,4 +1,4 @@
-<polymer-element name="gm-track-menu-item" constructor="GmTrackMenuItem" attributes="track">
+<polymer-element name="gm-track-menu-item" constructor="GmTrackMenuItem" attributes="track genomeViewer">
     <template>
         <style>
             :host {
@@ -16,8 +16,8 @@
             /*}*/
 
             #visible {
-                display: block;
-                float: left;
+                /*display: block;*/
+                /*float: left;*/
                 box-sizing: border-box;
                 width: 20px;
                 line-height: 21px;
@@ -38,8 +38,8 @@
             }
 
             #title {
-                display: block;
-                float: left;
+                /*display: block;*/
+                /*float: left;*/
                 box-sizing: border-box;
                 line-height: 21px;
                 /*padding: 0px 5px;*/
@@ -47,11 +47,15 @@
                 color: #333;
                 /*background-color: #f2f2f2;*/
                 font-size: inherit;
+
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             #remove {
-                float: right;
-                display: inline-block;
+                /*float: right;*/
+                /*display: inline-block;*/
                 box-sizing: border-box;
                 padding: 0px 3px;
                 margin: 0px 2px;
@@ -82,10 +86,10 @@
             }
 
         </style>
-        <div id="main" draggable="true" on-mouseenter="{{handleMouseEnter}}" on-mouseleave="{{handleMouseLeave}}">
+        <div horizontal layout id="main" draggable="true" on-mouseenter="{{handleMouseEnter}}" on-mouseleave="{{handleMouseLeave}}">
             <div id="visible" data-visible="{{track.visible}}" on-click="{{handleVisible}}">&nbsp;</div>
-            <div id="title">{{track.title}}</div>
-            <div id="remove"></div>
+            <div flex id="title">{{track.title}}</div>
+            <div id="remove" on-click="{{handleRemoveTrack}}"></div>
         </div>
     </template>
     <script>
@@ -101,6 +105,9 @@
             },
             handleMouseLeave: function () {
                 this.track.fnTitleMouseLeave();
+            },
+            handleRemoveTrack: function (e) {
+                this.genomeViewer.removeTrack(this.track);
             }
         });
     </script>

@@ -1,0 +1,226 @@
+<polymer-element name="gm-import-data" attributes="collapsible collapsed selectedSpecies userData genomeViewer">
+    <template>
+        <link rel="stylesheet" href="gm-panel.css">
+        <style>
+            :host {
+                display: block;
+                position: relative;
+                box-sizing: border-box;
+
+                color: #444;
+                font-size: 14px;
+
+            }
+
+            .container {
+                /*padding: 10px 15px;*/
+                max-height: 200px;
+            }
+
+            jso-opencga-project-tree, jso-opencga-study-card, gm-import-data-file {
+                box-sizing: border-box;
+                padding: 5px 5px;
+                margin: 2px;
+            }
+
+            jso-opencga-project-tree:hover, jso-opencga-study-card:hover, gm-import-data-file:hover {
+                background-color: #D1D9E3;
+            }
+
+            jso-opencga-project-tree[data-selected=true], jso-opencga-study-card[data-selected=true] {
+                background-color: #D1D9E3;
+            }
+
+            jso-opencga-study-card {
+                padding: 5px 5px 5px 35px;
+            }
+
+            gm-import-data-file {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding: 5px 5px 5px 50px;
+            }
+
+            div[data-selected=false] {
+                display: none !important;
+            }
+
+
+        </style>
+        <div class="panel">
+            <div class="header"
+                 on-click="{{titleClick}}"
+                 data-collapsible="{{collapsible}}"
+                 data-collapsed="{{collapsed}}">
+                Import data
+            </div>
+            <div class="container">
+                <template repeat="{{project in userData.projects}}">
+                    <jso-opencga-project-tree
+                            project="{{project}}"
+                            data-selected="{{selectedProject == project}}"
+                            on-click="{{handleProjectClick}}">
+                    </jso-opencga-project-tree>
+                    <div data-selected="{{selectedProject == project}}">
+                        <template repeat="{{study in project.studies}}">
+                            <jso-opencga-study-card
+                                    study="{{study}}"
+                                    data-selected="{{selectedStudy == study}}"
+                                    on-click="{{handleStudyClick}}">
+                            </jso-opencga-study-card>
+                            <div>
+                                <template repeat="{{file in files}}">
+                                    <template if="{{file.type == 'file'}}">
+                                        <gm-import-data-file file="{{file}}"
+                                                             on-click="{{handleFileClick}}"
+                                                             on-dblclick="{{handleFileDblClick}}">
+                                        </gm-import-data-file>
+                                    </template>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            created: function () {
+                this.userData;
+                this.selectedProject;
+                this.selectedStudy;
+
+                this.files;
+
+                console.log(this.userData)
+            },
+            ready: function () {
+            },
+            selectedProjectChanged: function (oldValue, newValue) {
+                this.files = null;
+                this.selectedStudy = null;
+            },
+            selectedStudyChanged: function (oldValue, newValue) {
+            },
+            // properties and methods here
+            collapsed: false,
+            collapsible: true,
+            titleClick: function (e) {
+                this.collapsed = !this.collapsed;
+            },
+            handleFileClick: function (e) {
+                OpencgaManager.files.index({
+                    id: e.target.file.id,
+                    query: {
+                        sid: Cookies('bioinfo_sid')
+                    },
+                    request: {
+                        success: function (response) {
+                            console.log(response)
+                            console.log(response.response[0].errorMsg)
+                        },
+                        error: function () {
+                            console.log('Server error, try again later.');
+                        }
+                    }
+                });
+            },
+            handleFileDblClick: function (e) {
+                var file = e.target.file;
+
+                var alignment = new AlignmentTrack({
+                    title: file.name,
+                    featureType: 'Alignments',
+                    minHistogramRegionSize: 10000,
+                    maxLabelRegionSize: 3000,
+                    height: 100,
+
+                    renderer: new AlignmentRenderer(FEATURE_TYPES.bam),
+
+                    dataAdapter: new OpencgaAdapter({
+                        resource: "alignment",  // TODO needed?
+                        subResource: "file",
+                        categories:[file.id],
+                        sid: Cookies('bioinfo_sid'),
+                        cacheConfig: {
+                            defaultChunkSize: 1000,
+                            cacheId: "opencga:alignment"
+                        }
+                    })
+
+                });
+                this.genomeViewer.addTrack(alignment);
+            },
+            getStudyFiles: function () {
+                var me = this;
+//                http://cafetal:8080/opencga/rest/files/jcoll@p1:s1:/list?sid=d2B1PmsE4aUQSKZnnMkr
+
+                if (this.selectedStudy) {
+//                    var user = Cookies('bioinfo_user');
+//                    var pID = this.selectedProject.alias;
+//                    var sID = this.selectedStudy.alias;
+//                    var idString = user + '@' + pID + ':' + sID + ':';
+                    OpencgaManager.files.list({
+                        id: this.selectedStudy.id,
+                        query: {
+                            sid: Cookies('bioinfo_sid')
+                        },
+                        request: {
+                            success: function (response) {
+                                me.files = response.response[0].result;
+                            },
+                            error: function () {
+                                console.log('Server error, try again later.');
+                            }
+                        }
+                    });
+                }
+            },
+            handleStudyClick: function (e) {
+                if (this.selectedStudy === e.target.study) {
+                    this.selectedStudy = null;
+                } else {
+                    this.selectedStudy = e.target.study;
+                    this.getStudyFiles();
+                }
+
+            },
+            handleProjectClick: function (e) {
+                if (this.selectedProject === e.target.project) {
+                    this.selectedProject = null;
+                } else {
+                    this.selectedProject = e.target.project;
+                }
+            }
+        });
+    </script>
+</polymer-element>
+
+<polymer-element name="gm-import-data-file" attributes="file">
+    <template>
+        <style>
+            :host {
+                display: block;
+                position: relative;
+                box-sizing: border-box;
+            }
+        </style>
+        <template repeat="{{index in file.indices}}">
+            <template if="{{index.state == 'pending'}}">
+                <font-awesome icon="spinner" animation="spin"></font-awesome> &nbsp;
+            </template>
+        </template>
+
+        <font-awesome icon="file-o"></font-awesome>
+        &nbsp; {{file.name}}
+    </template>
+    <script>
+        Polymer({
+            created: function () {
+                this.file;
+            }
+        });
+    </script>
+</polymer-element>

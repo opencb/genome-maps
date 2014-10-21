@@ -200,7 +200,7 @@ var TRACKS = {"group1": [
     {"category": "Variation",
         "tracks": [
             {"id": "SNP", "disabled": false, "checked": true},
-            {"id": "EBI EVA 1.0 SNVs", "disabled": false, "checked": true},
+            {"id": "EBI EVA 1.0 SNVs", "disabled": false, "checked": false},
             {"id": "Mutation", "disabled": false, "checked": true},
             {"id": "Structural variation (<20Kb)", "disabled": true, "checked": false},
             {"id": "Structural variation (>20Kb)", "disabled": true, "checked": false}

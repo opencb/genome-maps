@@ -1,7 +1,7 @@
 <link rel="import" href="gm-track-menu-item.html">
 
 <polymer-element name="gm-track-menu" constructor="GmTrackMenu"
-                 attributes="tracks collapsible collapsed">
+                 attributes="tracks collapsible collapsed genomeViewer">
     <template>
         <link rel="stylesheet" href="gm-panel.css">
         <style>
@@ -10,10 +10,10 @@
                 position: relative;
                 box-sizing: border-box;
             }
+
             .container {
                 padding: 5px;
             }
-
         </style>
         <div class="panel">
             <div class="header"
@@ -33,6 +33,8 @@
                                 on-dragleave="{{handleDragLeave}}"
                                 on-drop="{{handleDrop}}"
                                 on-dragend="{{handleDragEnd}}"
+
+                                genomeViewer="{{genomeViewer}}"
                                 >
                         </gm-track-menu-item>
                     </template>
@@ -45,6 +47,7 @@
             collapsed: false,
             collapsible: true,
             created: function () {
+                this.genomeViewer;
                 this.tracks = [
                 ];
             },

@@ -1,10 +1,11 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/polymer-fontawesome/polymer-fontawesome.html">
-<link rel="import" href="../lib/jsorolla/src/lib/components/jso-header.html">
+<link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-header.html">
 <link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-project-browser.html">
 <link rel="import" href="components/gm-track-menu.html">
 <link rel="import" href="components/gm-search.html">
 <link rel="import" href="components/gm-add-track.html">
+<link rel="import" href="components/gm-import-data.html">
 
 <polymer-element name="genome-maps-element">
 <template>
@@ -28,7 +29,6 @@
             font-size: 13px;
         }
 
-
         #home {
             position: relative;
             box-sizing: border-box;
@@ -39,7 +39,7 @@
             visibility: hidden;
             opacity: 0;
             position: absolute;
-            z-index: 50000;
+            z-index: 200000;
             top: 33px;
             right: 0px;
             width: 350px;
@@ -60,28 +60,35 @@
             display: none !important;
         }
 
-        [hide=false] {
-            display: initial !important;
+        jso-project-browser {
+            position: absolute;
+            top: 60px; /* header height */
+            bottom: 0;
+            left: 0;
+            right: 0;
         }
 
 
     </style>
-    <jso-header selectedOption="{{selectedOption}}" userData="{{userData}}">
-        <span>Genome Maps</span>
+    <jso-header selectedOption="{{selectedOption}}" userData="{{userData}}" title="Genome Maps">
+
     </jso-header>
 
     <div id="home" hide="{{selectedOption != 'home'}}">
         <div id="genomeViewer">
             <div id="sidePanel" class="side-panel">
-                <gm-track-menu id="trackMenu" on-swap="{{handleSwapTrackMenu}}"></gm-track-menu>
-                <gm-search id="search" selectedSpecies="{{selectedSpecies}}"
+                <gm-track-menu id="trackMenu" on-swap="{{handleSwapTrackMenu}}" genomeViewer="{{genomeViewer}}"></gm-track-menu>
+                <gm-search id="search" selectedSpecies="{{selectedSpecies}}" collapsed="true"
                            on-feature="{{handleResultClick}}"></gm-search>
-                <gm-add-track id="addTrack" selectedSpecies="{{selectedSpecies}}"></gm-add-track>
+                <gm-add-track id="addTrack" selectedSpecies="{{selectedSpecies}}" collapsed="true"></gm-add-track>
+                <gm-import-data id="importData" userData="{{userData}}" genomeViewer="{{genomeViewer}}"
+                                selectedSpecies="{{selectedSpecies}}"></gm-import-data>
             </div>
         </div>
     </div>
 
-    <jso-project-browser userData="{{userData}}" hide="{{selectedOption != 'projects' }}"></jso-project-browser>
+    <jso-project-browser userData="{{userData}}" selectedProject="{{selectedProject}}" selectedStudy="{{selectedStudy}}"
+                         hide="{{selectedOption != 'projects' }}"></jso-project-browser>
 
 </template>
 <script>
@@ -91,9 +98,13 @@ Polymer({
         this.userData;
         this.genomeViewer;
 
+        this.selectedProject;
+        this.selectedStudy;
+
         this.selectedSpecies = DEFAULT_SPECIES;
         this.region = new Region();
         this.region.load(this.selectedSpecies.region);
+        this.region.load("20:59993");
     },
     ready: function () {
         this.createGenomeViewer();
@@ -104,7 +115,7 @@ Polymer({
     handleAppMenu: function (e) {
         this.$.sidePanel.classList.toggle('side-panel-shown');
     },
-    handleSwapTrackMenu:function(e){
+    handleSwapTrackMenu: function (e) {
         this.genomeViewer.trackListPanel.swapTracks(e.detail.t1, e.detail.t2);
     },
     handleResultClick: function (e) {
