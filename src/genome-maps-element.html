@@ -15,8 +15,6 @@
         :host {
             display: block;
             position: relative;
-            height: 100%;
-            background-color: #314559;
 
             -webkit-touch-callout: none;
             -webkit-user-select: none;
@@ -31,15 +29,15 @@
 
         #home {
             position: relative;
-            box-sizing: border-box;
             background-color: #FFFFFF;
         }
 
         div.side-panel {
+            box-sizing: border-box;
             visibility: hidden;
             opacity: 0;
             position: absolute;
-            z-index: 200000;
+            z-index: 50000;
             top: 33px;
             right: 0px;
             width: 350px;
@@ -61,11 +59,7 @@
         }
 
         jso-project-browser {
-            position: absolute;
-            top: 60px; /* header height */
-            bottom: 0;
-            left: 0;
-            right: 0;
+            height: calc(100vh - 60px);
         }
 
 

@@ -62,7 +62,7 @@
                 this.dragSrcEl = e.target;
 
                 e.dataTransfer.effectAllowed = 'move';
-//                e.dataTransfer.setData('text/html', this.dragSrcEl.innerHTML);
+                e.dataTransfer.setData('text/html', this.dragSrcEl.innerHTML);
             },
             handleDragOver: function (e) {
                 if (e.preventDefault) {
@@ -109,14 +109,14 @@
                 return false;
             },
 
-//            handleDragEnd: function (e) {
-//
-//                // this/e.target is the source node.
-//                [].forEach.call(this.shadowRoot.querySelectorAll('gm-track-menu-item'), function (el) {
-//                    el.style.backgroundColor = "inherit";
-//                    el.style.opacity = "inherit";
-//                });
-//            }
+            handleDragEnd: function (e) {
+                // this/e.target is the source node.
+                var els = this.shadowRoot.querySelectorAll('gm-track-menu-item');
+                for (var i = 0; i < els.length; i++) {
+                    var el = els[i];
+                    el.style.opacity = "";
+                }
+            }
         });
     </script>
 </polymer-element>
