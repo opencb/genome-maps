@@ -104,7 +104,6 @@ Polymer({
         this.createGenomeViewer();
         this._loadInitialTracksConfig();
         this.genomeViewer.draw();
-
     },
     handleAppMenu: function (e) {
         this.$.sidePanel.classList.toggle('side-panel-shown');
@@ -218,7 +217,7 @@ Polymer({
 //        title: 'Gene overview',
             minHistogramRegionSize: 20000000,
             maxLabelRegionSize: 10000000,
-            height: 100,
+            height: 50,
 
             renderer: renderer,
 

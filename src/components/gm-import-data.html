@@ -130,11 +130,13 @@
             handleFileDblClick: function (e) {
                 var file = e.target.file;
 
+
                 var alignment = new AlignmentTrack({
                     title: file.name,
                     featureType: 'Alignments',
                     minHistogramRegionSize: 10000,
                     maxLabelRegionSize: 3000,
+                    samples: [file.id],
                     height: 100,
 
                     renderer: new AlignmentRenderer(FEATURE_TYPES.bam),
@@ -142,7 +144,6 @@
                     dataAdapter: new OpencgaAdapter({
                         resource: "alignment",  // TODO needed?
                         subResource: "file",
-                        categories:[file.id],
                         sid: Cookies('bioinfo_sid'),
                         cacheConfig: {
                             defaultChunkSize: 1000,
@@ -209,7 +210,8 @@
         </style>
         <template repeat="{{index in file.indices}}">
             <template if="{{index.state == 'pending'}}">
-                <font-awesome icon="spinner" animation="spin"></font-awesome> &nbsp;
+                <font-awesome icon="spinner" animation="spin"></font-awesome>
+                &nbsp;
             </template>
         </template>
 
