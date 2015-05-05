@@ -312,9 +312,8 @@ GenomeMaps.prototype = {
     _createGenomeViewer: function (target) {
         var _this = this;
 
-
         var genomeViewer = new GenomeViewer({
-            cellBaseHost: 'https://www.ebi.ac.uk/cellbase/webservices/rest',
+            cellBaseHost: CELLBASE_HOST,
             cellBaseVersion: 'v3',
             target: target,
             width: $('#application').width(),

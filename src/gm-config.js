@@ -13,7 +13,7 @@
  **/
 CELLBASE_VERSION = "v3";
 //CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
-CELLBASE_HOST = "http://www.ebi.ac.uk/cellbase/webservices/rest";
+CELLBASE_HOST = "http://bioinfo.hpc.cam.ac.uk/cellbase/webservices/rest";
 OPENCGA_HOST = "http://ws.bioinfo.cipf.es/opencga/rest";
 OPENCGA_LOCALHOST = "http://localhost:61976/opencga/rest";
 
@@ -34,7 +34,7 @@ if (
     OPENCGA_HOST = "http://ws-beta.bioinfo.cipf.es/opencga-staging/rest";
 //    OPENCGA_HOST = "http://fsalavert:8080/opencga/rest";
 //    OPENCGA_HOST = "http://aaleman:8080/opencga-server-0.3.2/rest";
-    OPENCGA_HOST = "http://test.babelomics.org/opencga/rest";
+//    OPENCGA_HOST = "http://test.babelomics.org/opencga/rest";
 }
 
 
