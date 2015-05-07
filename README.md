@@ -8,7 +8,7 @@ Note: This repository is a major refactoring of https://github.com/opencb-bigdat
 ### Documentation
 You can find Genome Maps documentation and tutorials at: https://github.com/opencb/genome-maps/wiki.
 
-### Issues Tracking
+### Issue Tracking
 You can report bugs or request new features at [GitHub issue tracking](https://github.com/opencb/genome-maps/issues).
 
 ### Release Notes and Roadmap
