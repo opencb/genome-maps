@@ -15,12 +15,18 @@
     "tests"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#~0.4.2",
-    "cookies-js": "~0.4.0",
-    "crypto-js-evanvosberg": "~3.1.2",
+    "fontawesome": "*",
+    "cookies-js": "~1.1.0",
+    "crypto-js-evanvosberg": "3.1.4",
     "highcharts-release": "~4.0.4",
-    "polymer-fontawesome": "~1.0.0-beta.2",
-    "fontawesome": "~4.2.0",
-    "core-list": "Polymer/core-list#~0.4.2"
+    "underscore": "~1.7.0",
+    "jquery": "~2.1.3",
+    "backbone": "~1.1.2",
+    "qtip2": "~2.2.1",
+    "bowser": "~0.7.2",
+    "webcomponentsjs": "~0.6.1",
+    "purl": "~2.3.1",
+    "jquery-mousewheel": "~3.1.12",
+    "gl-matrix": "~2.2.1"
   }
 }
