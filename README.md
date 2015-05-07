@@ -64,7 +64,7 @@ We use npm, bower and grunt to build Genome Maps to do so you can execute the fo
 You can copy the content of the _build_ folder into any directory such as _/opt/cellbase_.
 
 ### Testing
-You can run the unit tests using Maven or your favorite IDE. Just notice that some tests may require of certain database back-ends such as MongoDB and may fail if they are not available.
+You can copy build content to a web server such as Apache HTTP Server and open your favourite internet browser to open Genome Maps. 
 
 
 # Supporters
