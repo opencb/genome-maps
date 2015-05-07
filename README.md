@@ -6,7 +6,7 @@ A new web-based HTML5 genome browser. Genome Maps can also browse BAM and VCFs f
 
 ## Compiling CSS and JavaScript
 
-BierApp uses [Grunt](http://gruntjs.com/) task runner to build the code and run tests and other convenient tasks. 
+GenomeMaps uses [Grunt](http://gruntjs.com/) task runner to build the code and run tests and other convenient tasks. 
 To use it, install the required dependencies as directed and then run some Grunt commands. Grunt runs on top of Node.js, it must be installed first.
 
 ### Install Node
@@ -27,4 +27,4 @@ When completed, you'll be able to run the various Grunt commands provided from t
 ### Available Grunt commands
 
 #### Build - `grunt`
-Run `grunt` to build BierApp, compiled files will be located in the `/build` dir.
+Run `grunt` to build GenomeMaps, compiled files will be located in the `/build` dir.
