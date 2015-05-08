@@ -29,9 +29,25 @@ Genome Maps is an open-source and collaborative project. We appreciate any help 
 
 
 # How to build 
-Genome Maps is developed in HTML5, therefore it is mainly developed in JavaScript and makes a heavy usage of HTML and CSS. It uses [Bower](http://bower.io/) as package manager and [Grunt](http://gruntjs.com/) as building tools. Genome Maps requires of [OpenCB JSorolla](https://github.com/opencb/jsorolla) to be built, this is a JavaScript library developed for several OpenCB web-based projects, this can be found as Git submodule in Genome Maps.
+Genome Maps is developed in HTML5, therefore it is mainly developed in JavaScript and makes a heavy usage of HTML and CSS. It uses [Bower](http://bower.io/) and [Grunt](http://gruntjs.com/) as building tools. Genome Maps also requires of [OpenCB JSorolla](https://github.com/opencb/jsorolla) to be built, this is a JavaScript library developed for several OpenCB web-based projects, this can be found as Git submodule in Genome Maps.
 
 Stable releases are merged and tagged at **_master_** branch, you are encourage to use latest stable release for production. Current active development is carried out at **_develop_** branch, only building is guaranteed and bugs are expected, use this branch for development or for testing new functionalities. The only dependency of Genome Maps from OpenCB is JSorolla. Genome Maps **_master_** branch depends on stable branches in JSorolla, while **_develop_** branch of Genome Maps depends on JSorolla **_develop_**.
+
+### Prerequisites
+The following technologies are needed to build Genome Maps: [Node.js](https://nodejs.org/), [npm](https://www.npmjs.com/), [Bower](http://bower.io/) and [Grunt](http://gruntjs.com/).
+
+##### Installing Node.js and npm
+To install [Node.js](https://nodejs.org/) you can visit [this link](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager).
+
+[npm](https://www.npmjs.com/) stands for _node packaged modules_ and it is the dependency manager of [Node.js](https://nodejs.org/).
+
+##### Install Bower and Grunt
+After installing Node.js and npm, we can install [Bower](http://bower.io/) and [Grunt](http://gruntjs.com/) by executing the following commands with root permission:
+
+```bash
+sudo npm install -g bower
+sudo npm install -g grunt-cli
+```
 
 ### Cloning
 Genome Maps is an open-source and free project, you can download **_develop_** branch by executing:
@@ -57,36 +73,18 @@ Latest stable release at **_master_** branch can be downloaded executing:
 
 
 ### Build
-We use npm, bower and grunt to build Genome Maps.
-
-#### Install Node.js and npm
-To install node click [here.](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager)
-
-**What is `npm`?** npm stands for [node packaged modules](http://npmjs.org/) is the node dependency manager.
-
 After install Node.js and npm we have to install npm packages:
 ```bash
 npm install
 ```
 Npm will look at [package.json](package.json) and automatically install the necessary local dependencies listed there.
 
-#### Install Bower [More info](http://bower.io/)
-After install Node.js and npm, we can install bower executing the following command from genome-maps root folder:
-```bash
-sudo npm install -g bower
-```
 To install all bower packages run:
 ```bash
 bower install
 ```
 
-#### Install Grunt [More info](http://gruntjs.com/getting-started)
-To install Grunt just execute the folloing command:
-```bash
-npm install -g grunt-cli
-```
-
-#### Update jsorolla dependencies:
+First Update jsorolla dependencies:
 ```bash
 cd lib/jsorolla
 npm install
