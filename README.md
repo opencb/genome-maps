@@ -77,21 +77,21 @@ After this, in both cases, you **must** execute the following command to fetch t
 
 
 ### Build
-After install _Node.js_ and _npm_ we have to install npm packages for Genome Maps, from the the root folder execute:
+After install _Node.js_ and _npm_ we have to install _npm_ packages for Genome Maps, from the the root folder execute:
 
 ```bash
 npm install
 ```
+This will make _npm_ to look at file [package.json](package.json) and install locally all the dependencies listed there.
 
-This will make _npm_ to look at file [package.json](package.json) and automatically install locally all the dependencies listed there.
-
-To install all _Bower_ dependency packages execute from the root folder:
+To install all _Bower_ dependencies for Genome Maps execute from the root folder:
 
 ```bash
 bower install
 ```
+This will make _Bower_ to look at file [bower.json](bower.json) and install locally all the dependencies.
 
-First Update jsorolla dependencies:
+First, you must update JSorolla dependencies:
 ```bash
 cd lib/jsorolla
 npm install
@@ -99,7 +99,6 @@ bower install
 ```
 
 Finally, to build Genome Maps execute:
-
 ```bash
 grunt
 ```
