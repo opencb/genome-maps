@@ -60,7 +60,7 @@ Genome Maps is an open-source and free project, you can download **_develop_** b
     Receiving objects: 100% (2274/2274), 12.01 MiB | 678.00 KiB/s, done.
     Resolving deltas: 100% (952/952), done.
 
-Latest stable release at **_master_** branch can be downloaded executing:
+To fetch the latest stable release at **_master_** branch can be downloaded executing:
 
     imedina@ivory:~$ git clone -b master https://github.com/opencb/genome-maps.git
     Cloning into 'genome-maps'...
@@ -70,6 +70,10 @@ Latest stable release at **_master_** branch can be downloaded executing:
     remote: Total 2274 (delta 5), reused 0 (delta 0), pack-reused 2256
     Receiving objects: 100% (2274/2274), 12.01 MiB | 507.00 KiB/s, done.
     Resolving deltas: 100% (952/952), done.
+
+After this, in both cases, you **must** execute the following command to fetch the JSorolla submodule:
+
+    git submodule update --init
 
 
 ### Build
