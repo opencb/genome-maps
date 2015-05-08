@@ -42,7 +42,7 @@ To install [Node.js](https://nodejs.org/) you can visit [this link](https://gith
 [npm](https://www.npmjs.com/) stands for _node packaged modules_ and it is the dependency manager of [Node.js](https://nodejs.org/).
 
 ##### Install Bower and Grunt
-After installing Node.js and npm, we can install [Bower](http://bower.io/) and [Grunt](http://gruntjs.com/) by executing the following commands with root permission:
+After installing _Node.js_ and _npm_, we can install [Bower](http://bower.io/) and [Grunt](http://gruntjs.com/) by executing the following commands with root permission:
 
 ```bash
 sudo npm install -g bower
@@ -77,13 +77,16 @@ After this, in both cases, you **must** execute the following command to fetch t
 
 
 ### Build
-After install Node.js and npm we have to install npm packages:
+After install _Node.js_ and _npm_ we have to install npm packages for Genome Maps, from the the root folder execute:
+
 ```bash
 npm install
 ```
-Npm will look at [package.json](package.json) and automatically install the necessary local dependencies listed there.
 
-To install all bower packages run:
+This will make _npm_ to look at file [package.json](package.json) and automatically install locally all the dependencies listed there.
+
+To install all _Bower_ dependency packages execute from the root folder:
+
 ```bash
 bower install
 ```
@@ -95,13 +98,13 @@ npm install
 bower install
 ```
 
-Finally to build genome-maps run:
+Finally, to build Genome Maps execute:
+
 ```bash
 grunt
 ```
 
-When completed, compiled files will be located in the `/build` dir.
-
+When completed, all compiled files will be located under the `build` folder.
 
 
 ### Testing
