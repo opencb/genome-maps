@@ -103,7 +103,7 @@ GenomeMaps.prototype = {
                     chromosome: _this.genomeViewer.chromosome,
                     position: _this.genomeViewer.position}
             };
-            $.cookie("gm_settings", JSON.stringify(value), {expires: 365});
+            Cookies("gm_settings", JSON.stringify(value), {expires: 365});
         });
 
         this._config();
@@ -213,7 +213,7 @@ GenomeMaps.prototype = {
         this.headerWidget.setDescription(text);
 
         //check login
-        if ($.cookie('bioinfo_sid') != null) {
+        if (Cookies('bioinfo_sid') != null) {
             this.sessionInitiated();
         } else {
             this.sessionFinished();
@@ -222,14 +222,14 @@ GenomeMaps.prototype = {
 
         if (this.checkExampleAccount) {
             /*Load example account info*/
-            OpencgaManager.getAccountInfo({
-                accountId: 'example',
-                sessionId: 'example',
-                lastActivity: 'example',
-                success: function (data) {
-                    _this._loadOpencgaTracks(data, 'example');
-                }
-            });
+            //OpencgaManager.getAccountInfo({
+            //    accountId: 'example',
+            //    sessionId: 'example',
+            //    lastActivity: 'example',
+            //    success: function (data) {
+            //        _this._loadOpencgaTracks(data, 'example');
+            //    }
+            //});
         }
         /**/
 
@@ -1022,16 +1022,16 @@ GenomeMaps.prototype.getSidePanelItems = function () {
                         }
                     },
                     itemmouseenter: function (este, record) {
-                        var track = _this.getTrackById(record.data.trackId);
-                        if (track != null) {
-                            track.fnTitleMouseEnter();
-                        }
+                        //var track = _this.getTrackById(record.data.trackId);
+                        //if (track != null) {
+                        //    track.fnTitleMouseEnter();
+                        //}
                     },
                     itemmouseleave: function (este, record) {
-                        var track = _this.getTrackById(record.data.trackId);
-                        if (track != null) {
-                            track.fnTitleMouseLeave();
-                        }
+                        //var track = _this.getTrackById(record.data.trackId);
+                        //if (track != null) {
+                        //    track.fnTitleMouseLeave();
+                        //}
                     }
                 }
             }
@@ -1374,7 +1374,7 @@ GenomeMaps.prototype.getSidePanelItems = function () {
         ]
     });
 
-    return [activeTracksPanel, curatedTree, importTree, exampleTree, /*pluginsTree,*/searchSidePanel];
+    return [activeTracksPanel, curatedTree, importTree, /*exampleTree*/, /*pluginsTree,*/searchSidePanel];
 
     //,{
     //title:"Settings",
@@ -1490,8 +1490,8 @@ GenomeMaps.prototype._createTracksTreePanel = function (args) {
                     }
                 },
                 handler: function (grid, rowIndex, colIndex, actionItem, event, record, row) {
-                    var updateActiveTracksPanel = function (trackType, trackTitle, trackId, showActive) {
-                        var newNode = _this.activeSt.getRootNode().appendChild({text: trackTitle, trackId: trackId, trackType: trackType, leaf: true, checked: true, iconCls: "icon-blue-box"});
+                    var updateActiveTracksPanel = function (trackType, trackTitle, track, showActive) {
+                        var newNode = _this.activeSt.getRootNode().appendChild({text: trackTitle, trackId: track.id, trackType: trackType, leaf: true, checked: true, iconCls: "icon-blue-box"});
                         Utils.msg("Track " + trackType, "actived");
                         //var node = activeSt.getRootNode().findChild("trackId",trackId);
                         //Ext.getCmp(_this.id+"activeTracksTree").getSelectionModel().select(newNode);
@@ -1506,16 +1506,16 @@ GenomeMaps.prototype._createTracksTreePanel = function (args) {
                         if (record.isAncestor(store.getRootNode().findChild("id", "cellbase"))) {
                             if (!record.data.disabled) {
                                 var type = text;
-                                var id = _this.addTrack(type, text);
+                                var track = _this.addTrack(type, text);
                                 var title = type;
-                                updateActiveTracksPanel(type, title, id, true);
+                                updateActiveTracksPanel(type, title, track, true);
                             }
                         }
                         if (record.isAncestor(store.getRootNode().findChild("id", "das"))) {
                             var type = 'das';
-                            var id = _this.addDASTrack(text, record.data.url);
+                            var track = _this.addDASTrack(text, record.data.url);
                             var title = text;
-                            updateActiveTracksPanel(type, title, id, true);
+                            updateActiveTracksPanel(type, title, track, true);
                         }
                         if (record.isAncestor(store.getRootNode().findChild("id", "load"))) {
                             _this.addFileTrack(text, updateActiveTracksPanel);
@@ -1524,19 +1524,19 @@ GenomeMaps.prototype._createTracksTreePanel = function (args) {
                             if (!record.data.disabled) {
                                 var type = record.data.fileFormat;
 
-                                var id = _this.addTrack(type, text, record.data);
+                                var track = _this.addTrack(type, text, record.data);
                                 if (id != null) {
                                     var title = text;
-                                    updateActiveTracksPanel(type, title, id, true);
+                                    updateActiveTracksPanel(type, title, track, true);
                                 }
                             }
                         }
                         if (record.isAncestor(store.getRootNode().findChild("id", "localopencga"))) {
                             var type = record.data.oid.split('.').pop();
-                            var id = _this.addTrack(type, text, record.data.oid, OPENCGA_LOCALHOST);
-                            if (id != null) {
+                            var track = _this.addTrack(type, text, record.data.oid, OPENCGA_LOCALHOST);
+                            if (track != null) {
                                 var title = text;
-                                updateActiveTracksPanel(type, title, id, true);
+                                updateActiveTracksPanel(type, title, track, true);
                             }
                         }
                     } else {
@@ -1565,8 +1565,8 @@ GenomeMaps.prototype._createTracksTreePanel = function (args) {
                                 title: 'Add a DAS track',
                                 handlers: {
                                     'addButton:click': function (event) {
-                                        var id = _this.addDASTrack(event.name, event.url);
-                                        updateActiveTracksPanel('das', event.name + "-" + id, id, true);
+                                        var track = _this.addDASTrack(event.name, event.url);
+                                        updateActiveTracksPanel('das', event.name + "-" + track.id, track, true);
                                     }
                                 }
                             });
@@ -2184,7 +2184,7 @@ GenomeMaps.prototype.addFileTrack = function (text, updateActiveTracksPanel) {
 //            });
 
             var title = event.fileName + '-' + id;
-            updateActiveTracksPanel(type, title, id, true);
+            updateActiveTracksPanel(type, title, fileTrack, true);
         });
     }
 };

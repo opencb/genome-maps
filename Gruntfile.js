@@ -6,6 +6,7 @@ module.exports = function (grunt) {
         def: {
             name: 'genome-maps',
             build: 'build/<%= pkg.version %>',
+            bowerComponents: 'bower_components',
             jsorolla: 'lib/jsorolla'
         },
 
@@ -36,25 +37,12 @@ module.exports = function (grunt) {
         copy: {
             build: {
                 files: [
-                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/platform.js'], dest: '<%= def.build %>/'  },
-                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/platform.js.map'], dest: '<%= def.build %>/'  },
-                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/underscore-min.js'], dest: '<%= def.build %>/'  },
-                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/backbone-min.js'], dest: '<%= def.build %>/'  },
-                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/backbone-min.map'], dest: '<%= def.build %>/'  },
-                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/font-awesome/**'], dest: '<%= def.build %>/'  },
-                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/jquery.min.js'], dest: '<%= def.build %>/'  },
-                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/jquery.qtip.min.css'], dest: '<%= def.build %>/'  },
-                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/jquery.qtip.min.js'], dest: '<%= def.build %>/'  },
-                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/jquery.mousewheel.min.js'], dest: '<%= def.build %>/'  },
-                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/gl-matrix-min.js'], dest: '<%= def.build %>/'  },
+                    {   expand: true, src: ['bower_components/**'], dest: '<%= def.build %>/'  },
+
                     {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/ChemDoodleWeb.css'], dest: '<%= def.build %>/'  },
                     {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/ChemDoodleWeb.js'], dest: '<%= def.build %>/'  },
-                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/jquery.cookie.js'], dest: '<%= def.build %>/'  },
-                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/purl.min.js'], dest: '<%= def.build %>/'  },
-                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/jquery.sha1.js'], dest: '<%= def.build %>/'  },
                     {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/ext-5/**'], dest: '<%= def.build %>/'  },
-                    {   expand: true, cwd: './<%= def.jsorolla %>', src: ['vendor/cryptojs/**'], dest: '<%= def.build %>/'  },
-
+                    //
 
                     {   expand: true, cwd: './<%= def.jsorolla %>', src: ['styles/**'], dest: '<%= def.build %>/'  },
                     {   expand: true, cwd: './<%= def.jsorolla %>/src/lib', src: ['worker*'], dest: '<%= def.build %>/' },
