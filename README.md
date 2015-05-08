@@ -64,7 +64,7 @@ To install node click [here.](https://github.com/joyent/node/wiki/Installing-Nod
 
 **What is `npm`?** npm stands for [node packaged modules](http://npmjs.org/) is the node dependency manager.
 
-To install all npm packages run:
+After install Node.js and npm we have to install npm packages:
 ```bash
 npm install
 ```
