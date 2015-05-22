@@ -1,95 +1,72 @@
 <link rel="import" href="gm-track-menu-item.html">
 
-<polymer-element name="gm-track-menu" constructor="GmTrackMenu"
-                 attributes="tracks collapsible collapsed genomeViewer">
+<dom-module id="gm-track-menu">
+    <style>
+        :host {
+            position: relative;
+            display: block;
+            box-sizing: border-box;
+            padding: 5px;
+        }
+    </style>
     <template>
-        <link rel="stylesheet" href="gm-panel.css">
-        <style>
-            :host {
-                display: block;
-                position: relative;
-                box-sizing: border-box;
-            }
-
-            .container {
-                padding: 5px;
-            }
-        </style>
-        <div class="panel">
-            <div class="header"
-                 on-click="{{titleClick}}"
-                 data-collapsible="{{collapsible}}"
-                 data-collapsed="{{collapsed}}">
-                Active tracks
-            </div>
-            <div class="container">
-                <div id="tracks">
-                    <template repeat="{{track in tracks}}">
-                        <gm-track-menu-item
-                                track="{{track}}"
-                                on-dragstart="{{handleDragStart}}"
-                                on-dragenter="{{handleDragEnter}}"
-                                on-dragover="{{handleDragOver}}"
-                                on-dragleave="{{handleDragLeave}}"
-                                on-drop="{{handleDrop}}"
-                                on-dragend="{{handleDragEnd}}"
-
-                                genomeViewer="{{genomeViewer}}"
-                                >
-                        </gm-track-menu-item>
-                    </template>
-                </div>
-            </div>
-        </div>
+        <template is="dom-repeat" items="{{tracks}}" as="track">
+            <gm-track-menu-item track="{{track}}"
+                                on-dragstart="handleDragStart"
+                                on-dragenter="handleDragEnter"
+                                on-dragover="handleDragOver"
+                                on-dragleave="handleDragLeave"
+                                on-drop="handleDrop"
+                                on-dragend="handleDragEnd"
+                    >
+            </gm-track-menu-item>
+        </template>
     </template>
-    <script>
-        Polymer({
-            collapsed: false,
-            collapsible: true,
-            created: function () {
-                this.genomeViewer;
-                this.tracks = [
-                ];
-            },
-            // properties and methods here
-            dragSrcEl: null,
-            titleClick: function (e) {
-                this.collapsed = !this.collapsed;
-            },
-            /*DRAG EVENTS*/
-            handleDragStart: function (e) {
-                e.target.style.opacity = '0.4';  // this / e.target is the source node.
-                this.dragSrcEl = e.target;
 
-                e.dataTransfer.effectAllowed = 'move';
-                e.dataTransfer.setData('text/html', this.dragSrcEl.innerHTML);
-            },
-            handleDragOver: function (e) {
-                if (e.preventDefault) {
-                    e.preventDefault(); // Necessary. Allows us to drop.
-                }
-                e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
-                return false;
-            },
-            handleDragEnter: function (e) {
-                // this / e.target is the current hover target.
-                e.target.style.opacity = "0.4";
-            },
-            handleDragLeave: function (e) {
-                if (e.target !== this.dragSrcEl) {
-                    e.target.style.opacity = "inherit";
-                }
-//                e.target.classList.remove('over');  // this / e.target is previous target element.
-            },
-            handleDrop: function (e) {
-                // this / e.target is current target element.
+</dom-module>
 
-                if (e.stopPropagation) {
-                    e.stopPropagation(); // stops the browser from redirecting.
-                }
+<script>
+    Polymer({
+        is: 'gm-track-menu',
+        properties: {
+            tracks: {
+                type: Array
+            }
+        },
+        dragSrcEl: null,
+        /*DRAG EVENTS*/
+        handleDragStart: function (e) {
+            // e.currentTarget is gm-track-menu-item node
+            e.dataTransfer.effectAllowed = 'move';
+            e.currentTarget.style.opacity = '0.4';
+            this.dragSrcEl = e.currentTarget;
+        },
+        handleDragOver: function (e) {
+            if (e.preventDefault) {
+                e.preventDefault(); // Necessary. Allows us to drop.
+            }
+            e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+            return false;
+        },
+        handleDragEnter: function (e) {
+            // this / e.target is the current hover target.
+            e.currentTarget.style.opacity = "0.4";
+        },
+        handleDragLeave: function (e) {
+            // this / e.target is previous target element.
+            if (e.currentTarget !== this.dragSrcEl) {
+                e.currentTarget.style.opacity = "inherit";
+            }
+        },
+        handleDrop: function (e) {
+            // this / e.target is current target element.
 
-                // Don't do anything if dropping the same column we're dragging.
-                if (this.dragSrcEl != e.target) {
+            if (e.stopPropagation) {
+                e.stopPropagation(); // stops the browser from redirecting.
+            }
+
+            // Don't do anything if dropping the same column we're dragging.
+            if (this.dragSrcEl != e.currentTarget) {
 //                    var dragIndex = [].indexOf.call(this.$.tracks.children, this.dragSrcEl);
 //                    var targetIndex = [].indexOf.call(this.$.tracks.children, e.target);
 //                    console.log(dragIndex)
@@ -101,22 +78,21 @@
 //                    this.$.tracks.insertBefore(this.dragSrcEl, elementAfterSecondNode);
 //                    this.$.tracks.insertBefore(e.target, elementAfterFirstNode);
 
-                    this.fire('swap', {t1: this.dragSrcEl.track, t2: e.target.track});
-                }
-                this.dragSrcEl.style.opacity = "inherit";
-                e.target.style.opacity = "inherit";
-
-                return false;
-            },
-
-            handleDragEnd: function (e) {
-                // this/e.target is the source node.
-                var els = this.shadowRoot.querySelectorAll('gm-track-menu-item');
-                for (var i = 0; i < els.length; i++) {
-                    var el = els[i];
-                    el.style.opacity = "";
-                }
+                this.fire('swap', {t1: this.dragSrcEl.track, t2: e.currentTarget.track});
             }
-        });
-    </script>
-</polymer-element>
+            this.dragSrcEl.style.opacity = "inherit";
+            e.currentTarget.style.opacity = "inherit";
+
+            return false;
+        },
+
+        handleDragEnd: function (e) {
+            // this/e.target is the source node.
+            var els = this.querySelectorAll('gm-track-menu-item');
+            for (var i = 0; i < els.length; i++) {
+                var el = els[i];
+                el.style.opacity = "";
+            }
+        }
+    });
+</script>

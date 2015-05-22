@@ -17,7 +17,6 @@ module.exports = function (grunt) {
                     'src/eva-manager.js',
                     'src/gm-plugins-config.js',
                     'src/gm-plugins-config.js',
-                    'src/gm-navigation-bar.js',
                     'src/gm-status-bar.js',
                     'src/genome-maps.js'
                 ],
@@ -47,8 +46,8 @@ module.exports = function (grunt) {
                     {   expand: true, cwd: './<%= def.jsorolla %>', src: ['styles/**'], dest: '<%= def.build %>/'  },
                     {   expand: true, cwd: './<%= def.jsorolla %>/src/lib', src: ['worker*'], dest: '<%= def.build %>/' },
 
-                    {   expand: true, cwd: './src', src: ['gm-config.js'], dest: '<%= def.build %>/' },
-                    {   expand: true, cwd: './src', src: ['components/**'], dest: '<%= def.build %>/' },
+                    {   expand: true, cwd: './src', src: ['config.js'], dest: '<%= def.build %>/' },
+                    {   expand: true, cwd: './src', src: ['components/gm-status-bar.html'], dest: '<%= def.build %>/' },
 
                     {   expand: true, cwd: './<%= def.jsorolla %>/build/<%= jsopkg.version %>/genome-viewer/', src: ['genome-viewer*.js', 'gv-config.js'], dest: '<%= def.build %>/' }
                 ]

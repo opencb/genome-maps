@@ -1,185 +1,395 @@
+<script src="../lib/jsorolla/src/lib/utils.js"></script>
+<script src="../lib/jsorolla/src/lib/opencga-manager.js"></script>
+<script src="../lib/jsorolla/src/lib/cellbase-manager.js"></script>
+<script src="eva-adapter.js"></script>
+<script src="eva-manager.js"></script>
+
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/polymer-fontawesome/polymer-fontawesome.html">
+<link rel="import" href="../lib/jsorolla/src/lib/components/jso-panel.html">
+<link rel="import" href="../lib/jsorolla/src/lib/components/jso-modal.html">
+
 <link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-header.html">
-<link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-project-browser.html">
+<link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-footer.html">
+<link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-help-menu.html">
+
+<link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-upload-variant-file.html">
+<link rel="import" href="../lib/jsorolla/src/lib/components/opencga/files/jso-opencga-browser.html">
+
+<link rel="import" href="../lib/jsorolla/src/lib/components/jso-genome-viewer-element.html">
+
 <link rel="import" href="components/gm-track-menu.html">
 <link rel="import" href="components/gm-search.html">
 <link rel="import" href="components/gm-add-track.html">
-<link rel="import" href="components/gm-import-data.html">
+<!--<link rel="import" href="components/gm-import-data.html">-->
 
-<polymer-element name="genome-maps-element">
-<template>
-    <link rel="stylesheet" href="../lib/jsorolla/styles/css/style.css">
-    <link rel="stylesheet" href="../bower_components/fontawesome/css/font-awesome.min.css">
+<dom-module id="genome-maps-element">
     <style>
         :host {
             display: block;
             position: relative;
-
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
             cursor: default;
-
             font-size: 13px;
+            background-color: inherit;
         }
 
-        #home {
-            position: relative;
-            background-color: #FFFFFF;
+        .menu > div {
+            margin-left: 10px;
+            cursor: pointer;
+            text-align: center;
+            padding: 0 5px;
         }
 
-        div.side-panel {
-            box-sizing: border-box;
-            visibility: hidden;
-            opacity: 0;
+        #content {
+            background-color: inherit;
+        }
+
+        #browserpanel {
             position: absolute;
-            z-index: 50000;
-            top: 33px;
-            right: 0px;
-            width: 350px;
-            margin: 0;
-            padding: 0;
-            background: white;
-            /*border: 1px solid #c6d0da;*/
-            /*border-right-width: 0px;*/
-            transition: all 0.2s;
+            top: 60px;
+            left: 0;
+            width: 800px;
+            box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.30);
         }
 
-        div.side-panel-shown {
-            visibility: visible !important;
-            opacity: 1 !important;
+        #browser {
+            width: 800px;
+            height: 400px;
         }
 
-        [hide=true] {
-            display: none !important;
-        }
-
-        jso-project-browser {
+        jso-genome-viewer-element {
             height: calc(100vh - 60px);
+            box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.2);
         }
 
+        #configure {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            width: 300px;
+            box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.30);
+        }
+
+        #upload {
+            width: 600px;
+        }
+
+        jso-opencga-upload-file {
+            box-sizing: border-box;
+            padding: 20px 30px;
+        }
 
     </style>
-    <jso-header selectedOption="{{selectedOption}}" userData="{{userData}}" title="Genome Maps">
+    <template>
+        <jso-header id="jsoHeader"
+                    selected-option="{{selectedOption}}"
+                    user-data="{{userData}}"
+                    on-login="handleLogin"
+                    on-logout="handleLogout"
+                    show-menu-on-login>
+             <span class="icon">
+                    <!--<img src="" style="height: 50px;margin: 5px 0px 0 0;">-->
+            </span>
+            <span class="title">Genome Maps</span>
+            <span id="description" class="description"></span>
 
-    </jso-header>
-
-    <div id="home" hide="{{selectedOption != 'home'}}">
-        <div id="genomeViewer">
-            <div id="sidePanel" class="side-panel side-panel-shown">
-                <gm-track-menu id="trackMenu" on-swap="{{handleSwapTrackMenu}}" genomeViewer="{{genomeViewer}}"></gm-track-menu>
-                <gm-search id="search" selectedSpecies="{{selectedSpecies}}" collapsed="true"
-                           on-feature="{{handleResultClick}}"></gm-search>
-                <gm-add-track id="addTrack" selectedSpecies="{{selectedSpecies}}" collapsed="true"></gm-add-track>
-                <gm-import-data id="importData" userData="{{userData}}" genomeViewer="{{genomeViewer}}"
-                                selectedSpecies="{{selectedSpecies}}"></gm-import-data>
+            <div class="menu horizontal layout">
+                <div class="hover" on-click="handleToggleUpload">
+                    Upload
+                </div>
+                <div class="hover" on-click="handleToggleBrowser">
+                    Browse
+                </div>
+                <div class="hover" on-click="handleToggleConfigure">
+                    Configure
+                </div>
             </div>
+
+            <jso-help-menu class="helpmenu" selectedOption="{{selectedOption}}">
+                <a href="https://github.com/opencb/genome-maps/wiki" target="_blank">
+                    <i class="fa fa-book"></i>
+                    &nbsp; Documentation
+                </a>
+                <a href="https://github.com/opencb/genome-maps/" target="_blank">
+                    <i class="fa fa-github"></i>
+                    &nbsp; Source code
+                </a>
+            </jso-help-menu>
+        </jso-header>
+
+
+        <div id="content">
+            <jso-genome-viewer-element id="gv" menu-option="home"></jso-genome-viewer-element>
+
+
+            <!--<jso-upload-variant-file-->
+            <!--id="upload"-->
+            <!--hidden$="{{uploadHidden}}"-->
+            <!--on-close="handleCloseUpload"-->
+            <!--projects="{{projects}}"></jso-upload-variant-file>-->
+
+
+            <div id="configure" hidden$="{{configureHidden}}">
+
+                <jso-panel collapsible>
+                    <div class="header">
+                        Active tracks
+                    </div>
+                    <div class="container flex">
+                        <gm-track-menu
+                                id="trackMenu"
+                                on-swap="handleSwapTrackMenu"
+                                on-removetrack="handleRemoveTrack"></gm-track-menu>
+                    </div>
+                </jso-panel>
+
+
+                <jso-panel collapsible>
+                    <div class="header">
+                        Add tracks
+                    </div>
+                    <div class="container flex">
+                        <gm-add-track
+                                id="addTrack"
+                                on-addtrack="handleAddTrack"
+                                selectedSpecies="{{selectedSpecies}}"
+                                collapsed="true"></gm-add-track>
+                    </div>
+                </jso-panel>
+
+
+                <jso-panel collapsible>
+                    <div class="header">
+                        Advanced search
+                    </div>
+
+                    <div class="container flex">
+                        <gm-search
+                                id="search"
+                                selected-species="{{selectedSpecies}}"
+                                collapsed="true"
+                                on-feature="handleResultClick"></gm-search>
+                    </div>
+                </jso-panel>
+            </div>
+
+            <jso-panel collapsible movable id="browserpanel" hidden$="{{browserHidden}}">
+                <div class="header">
+                    Browse
+                </div>
+                <div class="container flex">
+                    <jso-opencga-browser
+                            id="browser"
+                            on-fileselect="handleFileSelect"
+                            bioformats="{{bioformats}}"
+                            projects="{{projects}}"></jso-opencga-browser>
+                </div>
+            </jso-panel>
+
+
+
+            <jso-panel modal closable hidden id="upload">
+                <div class="header">
+                    <i class="fa fa-cloud-upload"></i> &nbsp; Upload file
+                </div>
+                <div class="container" id="uploadFile">
+                    <jso-opencga-upload-file
+                            projects="{{projects}}"
+                            ></jso-opencga-upload-file>
+                </div>
+            </jso-panel>
+
         </div>
-    </div>
+        <!--<div id="sidePanel" class="side-panel side-panel-shown">-->
+        <!--<gm-import-data id="importData" userData="{{userData}}" genomeViewer="{{genomeViewer}}"-->
+        <!--selectedSpecies="{{selectedSpecies}}"></gm-import-data>-->
+        <!--</div>-->
 
-    <jso-project-browser userData="{{userData}}" selectedProject="{{selectedProject}}" selectedStudy="{{selectedStudy}}"
-                         hide="{{selectedOption != 'projects' }}"></jso-project-browser>
-
-</template>
+    </template>
+</dom-module>
 <script>
-Polymer({
-    created: function () {
-        this.selectedOption = 'home';
-        this.userData;
-        this.genomeViewer;
+    Polymer({
+        is: "genome-maps-element",
+        properties: {
+            selectedOption: {
+                type: String,
+                value: "home",
+                notify: true,
+                reflectToAttribute: true,
+                observer: 'selectedOptionChanged'
+            },
+            selectedSpecies: {
+                type: Object
+            },
+            userData: {
+                type: Object,
+                notify: true,
+                observer: 'userDataChanged'
+            },
+            projects: {
+                type: Array,
+                notify: true
+            },
+            browserHidden: {
+                type: Boolean,
+                value: false,
+                reflectToAttribute: true
+            },
+            configureHidden: {
+                type: Boolean,
+                value: false,
+                reflectToAttribute: true
+            },
+            bioformats: {
+                type: Array,
+                notify: true,
+                value: ['ALIGNMENT', 'VARIANT']
+            }
+        },
 
-        this.selectedProject;
-        this.selectedStudy;
-
-        this.selectedSpecies = DEFAULT_SPECIES;
-        this.region = new Region();
-        this.region.load(this.selectedSpecies.region);
-        this.region.load("20:59993");
-    },
-    ready: function () {
-        this.createGenomeViewer();
-        this._loadInitialTracksConfig();
-        this.genomeViewer.draw();
-    },
-    handleAppMenu: function (e) {
-        this.$.sidePanel.classList.toggle('side-panel-shown');
-    },
-    handleSwapTrackMenu: function (e) {
-        this.genomeViewer.trackListPanel.swapTracks(e.detail.t1, e.detail.t2);
-    },
-    handleResultClick: function (e) {
-        this.genomeViewer.setRegion(new Region(e.detail));
-    },
-    createGenomeViewer: function () {
-        var me = this;
-        this.genomeViewer = new GenomeViewer({
-            cellBaseHost: 'https://www.ebi.ac.uk/cellbase/webservices/rest',
-            cellBaseVersion: 'v3',
-            target: this.$.genomeViewer,
-            width: this.getBoundingClientRect().width,
-            region: this.region,
-            version: this.version,
-            availableSpecies: AVAILABLE_SPECIES,
-            species: this.selectedSpecies,
-            sidePanel: false,
-//            resizable: true,
-            resizable: false,
-//        quickSearchResultFn:quickSearchResultFn,
-//        quickSearchDisplayKey:,
-            karyotypePanelConfig: {
-                hidden: true,
-                collapsed: false,
-                collapsible: true
-            },
-            chromosomePanelConfig: {
-                hidden: false,
-                collapsed: false,
-                collapsible: true
-            },
-            regionPanelConfig: {
-                hidden: false,
-                collapsed: false,
-                collapsible: true
-            },
-            drawStatusBar: true,
-//            drawNavigationBar: false,
-            navigationBarConfig: {
-                componentsConfig: {
-                    menuButton: true,
-//                    leftSideButton:true,
-//                restoreDefaultRegionButton:false,
-//                regionHistoryButton:false,
-//                speciesButton:false,
-//                chromosomesButton:false,
-//                karyotypeButton:false,
-//                chromosomeButton:false,
-//                regionButton:false,
-//                zoomControl:false,
-//                windowSizeControl:false,
-//                positionControl:false,
-//                moveControl:false,
-//                autoheightButton:false,
-//                compactButton:false,
-//                searchControl:false,
-                }
-            },
-            handlers: {
-                'region:change': function (e) {
-                    console.log(e)
-                },
-                'species:change': function (event) {
-//            _this._setTracks();
-//            _this.setTracksMenu();
-                    _this.species = event.species;
-                    var text = _this.species.text + ' <span style="color: #8396b2">' + _this.species.assembly + '</span>';
-                    _this.headerWidget.setDescription(text);
-//                    _this._refreshInitialTracksConfig();
+        selectedOptionChanged: function (neo, old) {
+            var menuItems = Polymer.dom(this.root).querySelectorAll('[menu-option]');
+            for (var i = 0; i < menuItems.length; i++) {
+                var item = menuItems[i];
+                var currentItemValue = item.getAttribute("menu-option");
+                if (neo == currentItemValue) {
+                    item.removeAttribute("hidden");
+                } else {
+                    item.setAttribute('hidden', '');
                 }
             }
+        },
+        handleMenu: function (e) {
+            var option = e.currentTarget.dataset['option'];
+            this.setMenu(option);
+        },
+        setMenu: function (option) {
+            if (option) {
+                this.selectedOption = option;
+            }
+        },
+        handleToggleBrowser: function (e) {
+            this.browserHidden = !this.browserHidden;
+        },
+        handleCloseBrowser: function (e) {
+            this.browserHidden = true;
+        },
+        handleCloseUpload: function (e) {
+            this.uploadHidden = true;
+        },
+        handleToggleUpload: function (e) {
+            if (this.$.upload.hasAttribute('hidden')) {
+                this.$.upload.removeAttribute('hidden');
+            } else {
+                this.$.upload.setAttribute('hidden', '');
+            }
+        },
+        handleToggleConfigure: function (e) {
+            this.configureHidden = !this.configureHidden;
+        },
+        handleRemoveTrack: function (e) {
+            this.genomeViewer.removeTrack(e.detail);
+        },
+        handleFileSelect: function (e) {
+            console.log("file");
+            console.log(e.detail);
+            var file = e.detail;
+            if (file.index && file.index.status == 'READY') {
+                var track = this.addTrack(file.bioformat, file.name, file);
+            }
+        },
+        _updateTrackMenu: function () {
+            var tracks = [];
+            for (var i = 0; i < this.genomeViewer.trackListPanel.tracks.length; i++) {
+                var t = this.genomeViewer.trackListPanel.tracks[i];
+                tracks.push(t);
+            }
+            this.$.trackMenu.set('tracks', tracks);
+        },
+        ready: function () {
+            var me = this;
+
+            this.region = new Region();
+
+            var url = $.url();
+            var url_cbhost = url.param('CELLBASE_HOST');
+            if (url_cbhost != null) {
+                CELLBASE_HOST = url_cbhost;
+            }
+
+            this.speciesObj = DEFAULT_SPECIES;
+            var urlSpecies = url.param('species');
+            if (typeof urlSpecies !== 'undefined' && urlSpecies != '') {
+                this.speciesObj = Utils.getSpeciesFromAvailable(AVAILABLE_SPECIES, urlSpecies) || speciesObj;
+            }
+            this.species = this.speciesObj;
+            this.region.load(this.speciesObj.region);
+
+            this.selectedSpecies = this.species;
+            //console.log(speciesObj);
+
+            var regionStr = url.param('region');
+            if (regionStr != null) {
+                this.region.parse(regionStr);
+            }
+
+            var urlZoom = parseInt(url.param('zoom'));
+            if (isNaN(urlZoom) || urlZoom > 100 || urlZoom < 0) {
+                urlZoom = null;
+            }
+
+            var urlGene = url.param('gene');
+            if (urlGene != null && urlGene != "") {
+                this.region.load(this.getRegionByFeature(urlGene, "gene"));
+            }
+            var urlSnp = url.param('snp');
+            if (urlSnp != null && urlSnp != "") {
+                this.region.load(this.getRegionByFeature(urlSnp, "snp"));
+            }
+
+            var gvConfig = {
+                cellBaseHost: CELLBASE_HOST,
+                cellBaseVersion: 'v3',
+                width: window.innerWidth,
+                region: this.region,
+                version: this.version,
+                availableSpecies: AVAILABLE_SPECIES,
+                species: this.speciesObj,
+                sidePanel: false,
+                resizable: false,
+//        quickSearchResultFn:quickSearchResultFn,
+//        quickSearchDisplayKey:,
+                karyotypePanelConfig: {
+                    hidden: true,
+                    collapsed: false,
+                    collapsible: true
+                },
+                chromosomePanelConfig: {
+                    hidden: false,
+                    collapsed: false,
+                    collapsible: true
+                },
+                regionPanelConfig: {
+                    hidden: false,
+                    collapsed: false,
+                    collapsible: true
+                },
+                drawStatusBar: false,
+//            drawNavigationBar: false,
+                handlers: {
+                    'region:change': function (e) {
+                        console.log(e)
+                    },
+                    'species:change': function (event) {
+//            me._setTracks();
+//            me.setTracksMenu();
+                        var text = me.species.text + ' <span style="color: #8396b2">' + me.species.assembly + '</span>';
+                        me.$.description.innerHTML = text;
+                        me.set('selectedSpecies', event.species);
+//                    me._refreshInitialTracksConfig();
+                    }
+                }
+
+
 //        chromosomeList:[]
 //            trackListTitle: ''
 //            drawNavigationBar = true;
@@ -187,143 +397,181 @@ Polymer({
 //            drawChromosomePanel: false,
 //            drawOverviewTrackListPanel: false
 
-        });
+            };
 
-        this.genomeViewer.navigationBar.on('menuButton:click', function (e) {
-            me.handleAppMenu();
-//                if (me.genomeViewer.sidePanel.isVisible()) {
-//                    me.genomeViewer.hide();
-//                } else {
-//                    me.genomeViewer.show();
-//                }
-        });
+            this.async(function () {
 
-//        var genomeViewer = new GenomeViewer({
-//            height: this.height - this.headerWidget.height,
-//            width: this.width-18,
-//            }
-//        });
+                this.$.gv.createGenomeViewer(gvConfig);
+                this.genomeViewer = this.$.gv.genomeViewer;
+                this.genomeViewer.draw();
 
-
-        var renderer = new FeatureRenderer(FEATURE_TYPES.gene);
-        renderer.on({
-            'feature:click': function (event) {
-                // feature click event example
-                console.log(event)
-                new GeneInfoWidget(null, _this.species).draw(event);
-            }
-        });
-        var gene = new FeatureTrack({
-//        title: 'Gene overview',
-            minHistogramRegionSize: 20000000,
-            maxLabelRegionSize: 10000000,
-            height: 50,
-
-            renderer: renderer,
-
-            dataAdapter: new CellBaseAdapter({
-                category: "genomic",
-                subCategory: "region",
-                resource: "gene",
-                params: {
-                    exclude: 'transcripts,chunkIds'
-                },
-                species: this.genomeViewer.species,
-                cacheConfig: {
-                    chunkSize: 100000
-                }
-            })
-        });
-        this.genomeViewer.addOverviewTrack(gene);
-
-        return this.genomeViewer;
-    },
-    _loadInitialTracksConfig: function () {
-        //Load initial TRACKS config
-        var categories = TRACKS[SPECIES_TRACKS_GROUP[Utils.getSpeciesCode(this.genomeViewer.species.text)]];
-        for (var i = 0, leni = categories.length; i < leni; i++) {
-            var category = categories[i];
-            var tracks = category.tracks;
-            for (var j = 0, lenj = tracks.length; j < lenj; j++) {
-                var track = tracks[j];
-                var trackType = track.id;
-                var checked = track.checked;
-                var disabled = track.disabled;
-
-                if (checked) {
-                    var track = this.addTrack(trackType, trackType);
-                }
-            }
-        }
-        this.$.trackMenu.tracks = this.genomeViewer.trackListPanel.tracks;
-    },
-    addTrack: function (trackType, trackTitle, object, host) {
-        var _this = this;
-        var track;
-        switch (trackType) {
-            case "Sequence":
-                track = new SequenceTrack({
-                    title: 'Sequence',
-                    height: 25,
-                    visibleRegionSize: 200,
-
-                    renderer: new SequenceRenderer(),
-
-                    dataAdapter: new SequenceAdapter({
-                        category: "genomic",
-                        subCategory: "region",
-                        resource: "sequence",
-                        species: this.genomeViewer.species
-                    })
+                this.genomeViewer.trackListPanel.on('tracks:refresh', function (e) {
+                    me._updateTrackMenu();
                 });
-                this.genomeViewer.addTrack(track);
-                break;
 
-            case "Gene/Transcript":
-                track = new GeneTrack({
-                    title: 'Gene',
-                    minHistogramRegionSize: 20000000,
-                    maxLabelRegionSize: 10000000,
-                    minTranscriptRegionSize: 200000,
-                    height: 100,
+                //TODO only test; uncomment on production
+                this._loadInitialTracksConfig();
 
-                    renderer: new GeneRenderer({
-                        handlers: {
-                            'feature:click': function (e) {
-                                switch (e.featureType) {
-                                    case "gene":
-                                        new GeneInfoWidget(null, _this.genomeViewer.species).draw(e);
-                                        break;
-                                    case "transcript":
-                                        new TranscriptInfoWidget(null, _this.genomeViewer.species).draw(e);
-                                        break;
-                                    default:
-                                        break;
+            }, 100);
+
+        },
+
+
+        handleLogin: function () {
+//            this.browserHidden = false;
+            this.selectedOption = "home";
+        },
+        handleLogout: function () {
+            this.browserHidden = true;
+        },
+        userDataChanged: function (neo, old) {
+            var me = this;
+            if (this.userData) {
+                var projectIds = [];
+                for (var i = 0; i < this.userData.projects.length; i++) {
+                    var p = this.userData.projects[i];
+                    projectIds.push(p.id);
+                }
+                var projects = [];
+                OpencgaManager.projects.studies({
+                    id: projectIds.join(','),
+                    query: {
+                        sid: Cookies("bioinfo_sid")
+                    },
+                    request: {
+                        success: function (response) {
+                            if (response.response[0].errorMsg === '' || response.response[0].errorMsg == null) {
+                                for (var i = 0; i < response.response.length; i++) {
+                                    var r = response.response[i];
+                                    me.userData.projects[i].studies = r.result;
+                                    projects.push(me.userData.projects[i]);
+                                }
+                                /* update projects property*/
+                                me.projects = projects;
+                            } else {
+                                console.log(response.error);
+                                console.log(response.response[0].errorMsg);
+                            }
+                            me.loading = false;
+                        },
+                        error: function () {
+                            console.log('Server error, try again later.');
+                            me.loading = false;
+                        }
+                    }
+                });
+            } else {
+                console.log("no user data")
+                this.browserHidden = true;
+            }
+        },
+
+
+        handleAppMenu: function (e) {
+            this.$.sidePanel.classList.toggle('side-panel-shown');
+        },
+        handleSwapTrackMenu: function (e) {
+            this.genomeViewer.trackListPanel.swapTracks(e.detail.t1, e.detail.t2);
+        },
+        handleResultClick: function (e) {
+            this.genomeViewer.setRegion(new Region(e.detail));
+        },
+        _loadInitialTracksConfig: function () {
+            //Load initial TRACKS config
+            var categories = TRACKS[SPECIES_TRACKS_GROUP[Utils.getSpeciesCode(this.genomeViewer.species.text)]];
+            for (var i = 0, leni = categories.length; i < leni; i++) {
+                var category = categories[i];
+                var tracks = category.tracks;
+                for (var j = 0, lenj = tracks.length; j < lenj; j++) {
+                    var track = tracks[j];
+                    var trackType = track.id;
+                    var checked = track.checked;
+                    var disabled = track.disabled;
+
+                    if (checked) {
+                        var track = this.addTrack(trackType, trackType);
+                    }
+                }
+            }
+//            //update tracks
+//            var tracks = [];
+//            for (var i = 0; i < this.genomeViewer.trackListPanel.tracks.length; i++) {
+//                var track = this.genomeViewer.trackListPanel.tracks[i];
+//                tracks.push(track);
+//            }
+            this.$.trackMenu.tracks = this.genomeViewer.trackListPanel.tracks;
+        },
+        handleAddTrack: function (e) {
+            this.addTrack(e.detail);
+            this._updateTrackMenu();
+        },
+        addTrack: function (trackType, trackTitle, object, host) {
+            var me = this;
+            var track;
+            switch (trackType) {
+                case "Sequence":
+                    track = new SequenceTrack({
+                        title: 'Sequence',
+                        height: 25,
+                        visibleRegionSize: 200,
+
+                        renderer: new SequenceRenderer(),
+
+                        dataAdapter: new SequenceAdapter({
+                            category: "genomic",
+                            subCategory: "region",
+                            resource: "sequence",
+                            species: this.genomeViewer.species
+                        })
+                    });
+                    this.genomeViewer.addTrack(track);
+                    break;
+
+                case "Gene/Transcript":
+                    track = new GeneTrack({
+                        title: 'Gene',
+                        minHistogramRegionSize: 20000000,
+                        maxLabelRegionSize: 10000000,
+                        minTranscriptRegionSize: 200000,
+                        height: 100,
+
+                        renderer: new GeneRenderer({
+                            handlers: {
+                                'feature:click': function (e) {
+                                    switch (e.featureType) {
+                                        case "gene":
+                                            new GeneInfoWidget(null, me.genomeViewer.species).draw(e);
+                                            break;
+                                        case "transcript":
+                                            new TranscriptInfoWidget(null, me.genomeViewer.species).draw(e);
+                                            break;
+                                        default:
+                                            break;
+                                    }
                                 }
                             }
-                        }
-                    }),
+                        }),
 
-                    dataAdapter: new CellBaseAdapter({
-                        category: "genomic",
-                        subCategory: "region",
-                        resource: "gene",
-                        species: this.genomeViewer.species,
-                        params: {
-                            exclude: 'transcripts.tfbs,transcripts.xrefs,transcripts.exons.sequence'
-                        },
-                        cacheConfig: {
-                            chunkSize: 100000,
-                            cacheId: "cellbase:gene"
-                        }
-                    })
-                });
-                this.genomeViewer.addTrack(track);
-                break;
-            case "Cytoband":
+                        dataAdapter: new CellBaseAdapter({
+                            category: "genomic",
+                            subCategory: "region",
+                            resource: "gene",
+                            species: this.genomeViewer.species,
+                            params: {
+                                exclude: 'transcripts.tfbs,transcripts.xrefs,transcripts.exons.sequence'
+                            },
+                            cacheConfig: {
+                                chunkSize: 100000,
+                                cacheId: "cellbase:gene"
+                            }
+                        })
+                    });
+                    this.genomeViewer.addTrack(track);
+                    break;
+                case "Cytoband":
 
-                break;
-            case "CpG islands":
+                    break;
+                case "CpG islands":
 //            var cpgTrack = new TrackData(id, {
 //                adapter: new CellBaseAdapter({
 //                    category: "genomic",
@@ -346,41 +594,41 @@ Polymer({
 //                featureTypes: FEATURE_TYPES
 //            });
 //            break;
-            case "SNP":
-                var renderer = new FeatureRenderer(FEATURE_TYPES.snp);
-                renderer.on('feature:click', function (e) {
-                    new SnpInfoWidget(null, _this.genomeViewer.species).draw(e);
+                case "SNP":
+                    var renderer = new FeatureRenderer(FEATURE_TYPES.snp);
+                    renderer.on('feature:click', function (e) {
+                        new SnpInfoWidget(null, me.genomeViewer.species).draw(e);
 
-                });
-                track = new FeatureTrack({
-                    title: 'SNP',
-                    featureType: 'SNP',
-                    minHistogramRegionSize: 12000,
-                    maxLabelRegionSize: 3000,
-                    height: 120,
+                    });
+                    track = new FeatureTrack({
+                        title: 'SNP',
+                        featureType: 'SNP',
+                        minHistogramRegionSize: 12000,
+                        maxLabelRegionSize: 3000,
+                        height: 120,
 
-                    renderer: renderer,
+                        renderer: renderer,
 
-                    dataAdapter: new CellBaseAdapter({
-                        category: "genomic",
-                        subCategory: "region",
-                        resource: "snp",
-                        params: {
-                            exclude: 'transcriptVariations,xrefs,samples'
-                        },
-                        species: this.genomeViewer.species,
-                        cacheConfig: {
-                            chunkSize: 10000,
-                            cacheId: "cellbase:snp"
-                        }
-                    })
-                });
+                        dataAdapter: new CellBaseAdapter({
+                            category: "genomic",
+                            subCategory: "region",
+                            resource: "snp",
+                            params: {
+                                exclude: 'transcriptVariations,xrefs,samples'
+                            },
+                            species: this.genomeViewer.species,
+                            cacheConfig: {
+                                chunkSize: 10000,
+                                cacheId: "cellbase:snp"
+                            }
+                        })
+                    });
 
-                this.genomeViewer.addTrack(track);
+                    this.genomeViewer.addTrack(track);
 
 
-                break;
-            case "Mutation":
+                    break;
+                case "Mutation":
 //            var mutationTrack = new TrackData(id, {
 //                adapter: new CellBaseAdapter({
 //                    category: "genomic",
@@ -404,115 +652,115 @@ Polymer({
 //            });
 
 
-                var renderer = new FeatureRenderer(FEATURE_TYPES.mutation);
-                renderer.on('feature:click', function (e) {
-                    console.log(e);
-                });
-                track = new FeatureTrack({
-                    title: 'Mutation',
-                    featureType: 'mutation',
-                    minHistogramRegionSize: 12000,
-                    maxLabelRegionSize: 3000,
-                    visibleRegionSize: 9000,
-                    height: 120,
+                    var renderer = new FeatureRenderer(FEATURE_TYPES.mutation);
+                    renderer.on('feature:click', function (e) {
+                        console.log(e);
+                    });
+                    track = new FeatureTrack({
+                        title: 'Mutation',
+                        featureType: 'mutation',
+                        minHistogramRegionSize: 12000,
+                        maxLabelRegionSize: 3000,
+                        visibleRegionSize: 9000,
+                        height: 120,
 
-                    renderer: renderer,
+                        renderer: renderer,
 
-                    dataAdapter: new CellBaseAdapter({
-                        category: "genomic",
-                        subCategory: "region",
-                        resource: "mutation",
-                        params: {
-                            exclude: 'chunkIds'
-                        },
-                        species: this.genomeViewer.species,
-                        cacheConfig: {
-                            chunkSize: 10000,
-                            cacheId: "cellbase:mutation"
-                        }
+                        dataAdapter: new CellBaseAdapter({
+                            category: "genomic",
+                            subCategory: "region",
+                            resource: "mutation",
+                            params: {
+                                exclude: 'chunkIds'
+                            },
+                            species: this.genomeViewer.species,
+                            cacheConfig: {
+                                chunkSize: 10000,
+                                cacheId: "cellbase:mutation"
+                            }
+                        })
+                    });
+
+                    this.genomeViewer.addTrack(track);
+
+                    break;
+
+                case "EBI EVA 1.0 SNVs":
+                    track = new FeatureTrack({
+                        title: 'EVA 1.0 SNVs',
+                        featureType: 'eva',
+                        minHistogramRegionSize: 10000,
+                        maxLabelRegionSize: 3000,
+                        height: 100,
+
+                        renderer: new FeatureRenderer({
+                            label: function (f) {
+                                var title = f.id;
+                                if (title == '') {
+                                    title = f.chromosome + ":" + f.start + "-" + f.end;
+                                }
+                                return title;
+                            },
+                            tooltipTitle: function (f) {
+                                var title = f.id;
+                                if (title == '') {
+                                    title = f.chromosome + ":" + f.start + "-" + f.end;
+                                }
+                                return f.type + ' - <span style="color:#399697">' + title + '</span>';
+                            },
+                            tooltipText: function (f) {
+                                var str = [
+                                    'Location: ' + '<span style="color:#156765">' + f.chromosome + ":" + f.start + "-" + f.end + '</span>',
+                                    'Alt. allele: ' + '<span style="color:#156765">' + f.allele + '</span>',
+                                    'Variant class: ' + '<span style="color:#156765">' + f.type + '</span>'
+                                ];
+                                var hgvs = [];
+                                for (var key in f.hgvs) {
+                                    hgvs.push('<span style="margin-left: 10px">' + Utils.camelCase(key) + '</span>' + ': <span style="color:#156765">' + f.hgvs[key] + '</span>');
+                                }
+                                if (hgvs.length > 0) {
+                                    str.push('HGVS' + '<br><span>' + hgvs.join('<br>') + '</span>');
+                                }
+                                var files = [];
+                                for (var key in f.files) {
+                                    files.push('<span style="margin-left: 10px">' + f.files[key].fileId + '</span>' + ' (<span style="color:#156765">' + f.files[key].studyId + '</span>)');
+                                }
+                                if (files.length > 0) {
+                                    str.push('Files (study)' + '<br><span>' + files.join('<br>') + '</span>');
+                                }
+                                return str.join('<br>');
+                            },
+                            color: function (f) {
+                                return "#399697";
+                            },
+                            infoWidgetId: "id",
+                            height: 10,
+                            histogramColor: "#399697",
+                            handlers: {
+                                'feature:mouseover': function (e) {
+                                    // e.feature
+                                    console.log(e);
+                                }
+                            }
+                        }),
+                        dataAdapter: new EvaAdapter({
+                            host: 'http://wwwdev.ebi.ac.uk/eva/webservices/rest',
+                            version: 'v1',
+                            category: "segments",
+                            resource: "variants",
+                            params: {
+                                exclude: 'sourceEntries',
+                                species: Utils.getSpeciesCode(this.genomeViewer.species.text) + '_' + this.genomeViewer.species.assembly.split('.')[0].toLowerCase()
+                            },
+                            cacheConfig: {
+                                chunkSize: 10000,
+                                cacheId: "cellbase:evasnv"
+                            }
+                        })
                     })
-                });
-
-                this.genomeViewer.addTrack(track);
-
-                break;
-
-            case "EBI EVA 1.0 SNVs":
-                track = new FeatureTrack({
-                    title: 'EVA 1.0 SNVs',
-                    minHistogramRegionSize: 10000,
-                    visibleRegionSize: 9000,
-                    maxLabelRegionSize: 3000,
-                    height: 100,
-
-                    renderer: new FeatureRenderer({
-                        label: function (f) {
-                            var title = f.id;
-                            if (title == '') {
-                                title = f.chromosome + ":" + f.start + "-" + f.end;
-                            }
-                            return title;
-                        },
-                        tooltipTitle: function (f) {
-                            var title = f.id;
-                            if (title == '') {
-                                title = f.chromosome + ":" + f.start + "-" + f.end;
-                            }
-                            return f.type + ' - <span style="color:#399697">' + title + '</span>';
-                        },
-                        tooltipText: function (f) {
-                            var str = [
-                                        'Location: ' + '<span style="color:#156765">' + f.chromosome + ":" + f.start + "-" + f.end + '</span>',
-                                        'Alt. allele: ' + '<span style="color:#156765">' + f.allele + '</span>',
-                                        'Variant class: ' + '<span style="color:#156765">' + f.type + '</span>'
-                            ];
-                            var hgvs = [];
-                            for (var key in f.hgvs) {
-                                hgvs.push('<span style="margin-left: 10px">' + Utils.camelCase(key) + '</span>' + ': <span style="color:#156765">' + f.hgvs[key] + '</span>');
-                            }
-                            if (hgvs.length > 0) {
-                                str.push('HGVS' + '<br><span>' + hgvs.join('<br>') + '</span>');
-                            }
-                            var files = [];
-                            for (var key in f.files) {
-                                files.push('<span style="margin-left: 10px">' + f.files[key].fileId + '</span>' + ' (<span style="color:#156765">' + f.files[key].studyId + '</span>)');
-                            }
-                            if (files.length > 0) {
-                                str.push('Files (study)' + '<br><span>' + files.join('<br>') + '</span>');
-                            }
-                            return str.join('<br>');
-                        },
-                        color: function (f) {
-                            return "#399697";
-                        },
-                        infoWidgetId: "id",
-                        height: 10,
-                        histogramColor: "#399697",
-                        handlers: {
-                            'feature:mouseover': function (e) {
-//                        e.feature
-                                console.log(e);
-                            }
-                        }
-                    }),
-
-                    dataAdapter: new EvaAdapter({
-                        host: 'http://wwwdev.ebi.ac.uk/eva/webservices/rest',
-                        version: 'v1',
-                        category: "segments",
-                        resource: "variants",
-                        params: {
-                            exclude: 'files'
-                        },
-                        cacheConfig: {
-                            chunkSize: 10000,
-                            cacheId: "cellbase:evasnv"
-                        }
-                    })
-                })
-                this.genomeViewer.addTrack(track);
-                break;
-            case "Structural variation (<20Kb)":
+                    this.genomeViewer.addTrack(track);
+                    break;
+                case "Structural variation (<20Kb)":
 //            var structuralTrack = new TrackData(id, {
 //                adapter: new CellBaseAdapter({
 //                    category: "genomic",
@@ -535,8 +783,8 @@ Polymer({
 //                visibleRange: {start: 0, end: 100},
 //                featureTypes: FEATURE_TYPES
 //            });
-                break;
-            case "Structural variation (>20Kb)":
+                    break;
+                case "Structural variation (>20Kb)":
 //            var structuralTrack = new TrackData(id, {
 //                adapter: new CellBaseAdapter({
 //                    category: "genomic",
@@ -559,9 +807,9 @@ Polymer({
 //                visibleRange: {start: 0, end: 100},
 //                featureTypes: FEATURE_TYPES
 //            });
-                break;
-            case "miRNA targets":
-                console.log("TODO :  miRNA targets ")
+                    break;
+                case "miRNA targets":
+                    console.log("TODO :  miRNA targets ")
 //            var miRNATrack = new TrackData(id, {
 //                adapter: new CellBaseAdapter({
 //                    category: "genomic",
@@ -586,59 +834,58 @@ Polymer({
 //                visibleRange: {start: 0, end: 100},
 //                featureTypes: FEATURE_TYPES
 //            });
-//            break;
-            case "TFBS":
+                    break;
+                case "TFBS":
 
-                track = new FeatureTrack({
-                    title: 'TFBS',
-                    minHistogramRegionSize: 12000,
-                    maxLabelRegionSize: 3000,
-                    height: 120,
-                    renderer: new FeatureRenderer({
-                        label: function (f) {
-                            return ('name' in f) ? f.name : f.id;
-                        },
-                        tooltipTitle: function (f) {
-                            var name = ('name' in f) ? f.name : f.id;
-                            return f.featureType.toUpperCase() + ' - <span class="ok">' + name + '</span>';
-                        },
-                        tooltipText: function (f) {
-                            return 'matrix:&nbsp;<span class="ssel">' + f.matrix + '</span><br>' +
-                                    'score:&nbsp;<span class="ssel">' + f.score + '</span><br>' +
-                                    FEATURE_TYPES.getTipCommons(f) +
-                                    'source:&nbsp;<span class="ssel">' + f.source + '</span><br>';
-
-                        },
-                        color: 'lightblue',
-                        infoWidgetId: "id",
-                        height: 8,
-                        histogramColor: "orange",
-                        handlers: {
-                            'feature:mouseover': function (e) {
-                                console.log(e)
+                    track = new FeatureTrack({
+                        title: 'TFBS',
+                        minHistogramRegionSize: 12000,
+                        maxLabelRegionSize: 3000,
+                        height: 120,
+                        renderer: new FeatureRenderer({
+                            label: function (f) {
+                                return ('name' in f) ? f.name : f.id;
                             },
-                            'feature:click': function (event) {
-                                new SnpInfoWidget(null, _this.genomeViewer.species).draw(event);
+                            tooltipTitle: function (f) {
+                                var name = ('name' in f) ? f.name : f.id;
+                                return f.featureType.toUpperCase() + ' - <span class="ok">' + name + '</span>';
+                            },
+                            tooltipText: function (f) {
+                                return 'matrix:&nbsp;<span class="ssel">' + f.matrix + '</span><br>' +
+                                        'score:&nbsp;<span class="ssel">' + f.score + '</span><br>' +
+                                        FEATURE_TYPES.getTipCommons(f) +
+                                        'source:&nbsp;<span class="ssel">' + f.source + '</span><br>';
+
+                            },
+                            color: 'lightblue',
+                            infoWidgetId: "id",
+                            height: 8,
+                            histogramColor: "orange",
+                            handlers: {
+                                'feature:mouseover': function (e) {
+                                    console.log(e)
+                                },
+                                'feature:click': function (event) {
+                                    new SnpInfoWidget(null, me.genomeViewer.species).draw(event);
+                                }
                             }
-                        }
-                    }),
+                        }),
 
-                    dataAdapter: new CellBaseAdapter({
-                        category: "genomic",
-                        subCategory: "region",
-                        resource: "tfbs",
-                        species: this.genomeViewer.species,
-                        params: {
-                        },
-                        cacheConfig: {
-                            chunkSize: 50000,
-                            cacheId: "cellbase:tfbs"
-                        }
-                    })
-                });
+                        dataAdapter: new CellBaseAdapter({
+                            category: "genomic",
+                            subCategory: "region",
+                            resource: "tfbs",
+                            species: this.genomeViewer.species,
+                            params: {},
+                            cacheConfig: {
+                                chunkSize: 50000,
+                                cacheId: "cellbase:tfbs"
+                            }
+                        })
+                    });
 
-                this.genomeViewer.addTrack(track);
-                break;
+                    this.genomeViewer.addTrack(track);
+                    break;
 
 //	case "Histone":
 //
@@ -649,8 +896,8 @@ Polymer({
 //	case "Open Chromatin":
 //
 //		break;
-            case "Conserved regions":
-                track = new FeatureTrack({
+                case "Conserved regions":
+                    track = new FeatureTrack({
 //                targetId: null,
 //                id: id,
 //                title: 'Conserved Region',
@@ -697,10 +944,10 @@ Polymer({
 //                        chunkSize: 10000
 //                    }
 //                })
-                });
+                    });
 
-                this.genomeViewer.addTrack(track);
-                break;
+                    this.genomeViewer.addTrack(track);
+                    break;
 //            var conservedTrack = new TrackData(id, {
 //                adapter: new CellBaseAdapter({
 //                    category: "genomic",
@@ -723,40 +970,63 @@ Polymer({
 //                visibleRange: {start: 0, end: 100},
 //                featureTypes: FEATURE_TYPES
 //            });
-            case "bam":
-
-                track = new BamTrack({
-                    title: trackTitle,
-                    height: 200,
-                    visibleRegionSize: 100000,
-
-                    renderer: new BamRenderer(FEATURE_TYPES.bam),
-
-                    dataAdapter: new BamAdapter({
-                        category: "bam",
+                case "bam":
+                case "ALIGNMENT":
+                    var adapter = new OpencgaAdapter({
+                        category: "ALIGNMENT",
                         host: host,
                         resource: object,
                         species: this.genomeViewer.species,
+                        params: {
+                            sid: Cookies('bioinfo_sid')
+                        },
                         cacheConfig: {
-                            chunkSize: 5000
+                            chunkSize: 5000,
+                            cacheId: Cookies('bioinfo_sid') + 'opencga' + object.id,
                         }
-                    })
-                });
-                this.genomeViewer.addTrack(track);
-                break;
+                    });
+                    var renderer = new BamRenderer(FEATURE_TYPES.bam);
+
+                    track = new BamTrack({
+                        title: trackTitle,
+                        closable: true,
+                        //minHistogramRegionSize: 12000,
+                        //maxLabelRegionSize: 3000,
+                        //visibleRegionSize: 9000,
+                        height: 150,
+                        renderer: renderer,
+                        dataAdapter: adapter
+                    });
+                    this.genomeViewer.addTrack(track);
+                    break;
+
+                case "vcf":
+                case "VARIANT":
+
+                    //category: "genomic",
+                    //subCategory: "region",
+                    //resource: "tfbs",
+                    //species: this.genomeViewer.species,
+                    //params: {},
+                    //cacheConfig: {
+                    //    chunkSize: 50000,
+                    //    cacheId: "cellbase:tfbs"
+                    //}
 
 
-            case "vcf":
-
-                var adapter = new OpencgaAdapter({
-                    category: "vcf",
-                    host: host,
-                    resource: object,
-                    species: this.genomeViewer.species,
-                    cacheConfig: {
-                        chunkSize: 5000
-                    }
-                });
+                    var adapter = new OpencgaAdapter({
+                        category: "VARIANT",
+                        host: host,
+                        resource: object,
+                        species: this.genomeViewer.species,
+                        params: {
+                            sid: Cookies('bioinfo_sid')
+                        },
+                        cacheConfig: {
+                            chunkSize: 50000,
+                            cacheId: Cookies('bioinfo_sid') + 'opencga' + object.id,
+                        }
+                    });
 //            var renderer = new FeatureRenderer('vcf');
 //            renderer.on({
 //                'feature:click': function (event) {
@@ -764,33 +1034,31 @@ Polymer({
 //                    var vcfInfo = new VCFVariantInfoWidget(null, _this.genomeViewer.species, {adapter: adapter}).draw(event);
 //                }
 //            });
-                var renderer = new VcfMultisampleRenderer(FEATURE_TYPES.vcf);
-                renderer.on({
-                    'feature:click': function (event) {
-                        var vcfInfo = new VCFVariantInfoWidget(null, _this.genomeViewer.species, {adapter: adapter}).draw(event);
-                    }
-                });
+                    var renderer = new VcfMultisampleRenderer(FEATURE_TYPES.vcf);
+                    renderer.on({
+                        'feature:click': function (event) {
+                            var vcfInfo = new VCFVariantInfoWidget(null, me.genomeViewer.species, {adapter: adapter}).draw(event);
+                        }
+                    });
 
-                track = new FeatureTrack({
-                    targetId: null,
-                    id: id,
-                    title: trackTitle,
-                    histogramZoom: 0,
-                    height: 150,
-                    autoHeight: false,
-                    visibleRange: {start: 60, end: 100},
-                    labelZoom: 100,
-                    renderer: renderer,
-                    dataAdapter: adapter
-                });
-                this.genomeViewer.addTrack(track);
-                break;
+                    track = new FeatureTrack({
+                        title: trackTitle,
+                        closable: true,
+                        //minHistogramRegionSize: 12000,
+                        //maxLabelRegionSize: 3000,
+                        //visibleRegionSize: 9000,
+                        height: 150,
+                        renderer: renderer,
+                        dataAdapter: adapter
+                    });
+                    this.genomeViewer.addTrack(track);
+                    break;
 
-            default:
-                return null;
+                default:
+                    return null;
+            }
+            return track;
         }
-        return track;
-    }
-});
+    });
 </script>
-</polymer-element>
+

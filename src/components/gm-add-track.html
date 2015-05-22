@@ -1,101 +1,136 @@
-<polymer-element name="gm-add-track" attributes="collapsible collapsed selectedSpecies">
+<dom-module id="gm-add-track">
+    <style>
+        :host {
+            display: block;
+            position: relative;
+            box-sizing: border-box;
+            padding: 10px;
+
+            font-size: 14px;
+        }
+
+        ul, ul ul {
+            box-sizing: border-box;
+            list-style: none;
+            text-decoration: none;
+            line-height: 22px;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        li {
+            padding: 0 20px;
+        }
+
+        li:hover {
+            background-color: rgba(125, 125, 125, 0.2);
+        }
+
+        li:hover > .add:after {
+            position: absolute;
+            box-sizing: border-box;
+            right: 25px;
+            font-family: 'FontAwesome';
+            content: "\f067";
+            cursor: pointer;
+        }
+
+        ul:before {
+            font-family: 'FontAwesome';
+            content: "\f1b3";
+            margin-right: 5px;
+        }
+
+        li:before {
+            font-family: 'FontAwesome';
+            content: "\f1b2";
+            margin-right: 5px;
+            /*color: #435F7A;*/
+        }
+
+    </style>
     <template>
-        <link rel="stylesheet" href="gm-panel.css">
-        <style>
-            :host {
-                display: block;
-                position: relative;
-                box-sizing: border-box;
+        <ul>
+            Core
 
-                color: #444;
-                font-size: 14px;
-            }
+            <li class="horizontal layout" on-click="handleClickTrack">
+                <div>Sequence</div>
+                <div class="add"></div>
+            </li>
+            <li class="horizontal layout" on-click="handleClickTrack">
+                <div>Gene/Transcript</div>
+                <div class="add"></div>
+            </li>
 
-            .container {
-                padding: 10px 15px;
-            }
+            <!--<li class="horizontal layout" on-click="handleClickTrack">-->
+            <!--<div>CpG islands</div>-->
+            <!--</li>-->
+        </ul>
+        <ul>
+            Variation
+            <li class="horizontal layout" on-click="handleClickTrack">
+                <div>SNP</div>
+                <div class="add"></div>
+            </li>
+            <li class="horizontal layout" on-click="handleClickTrack">
+                <div>EBI EVA 1.0 SNVs</div>
+                <div class="add"></div>
+            </li>
+            <li class="horizontal layout" on-click="handleClickTrack">
+                <div>Clinvar</div>
+                <div class="add"></div>
+            </li>
 
-            ul, ul ul {
-                box-sizing: border-box;
-                list-style: none;
-                text-decoration: none;
-                line-height: 22px;
-                margin: 0px;
-                padding: 0px;
-            }
+            <!--<li class="horizontal layout" on-click="handleClickTrack">-->
+            <!--<div>Structural variation (<20Kb)</div>-->
+            <!--<div class="add"></div>-->
+            <!--</li>-->
+            <!--<li class="horizontal layout" on-click="handleClickTrack">-->
+            <!--<div>Structural variation (>20Kb)</div>-->
+            <!--<div class="add"></div>-->
+            <!--</li>-->
+        </ul>
+        <ul>
+            Regulatory
+            <li class="horizontal layout" on-click="handleClickTrack">
+                <div>TFBS</div>
+                <div class="add"></div>
+            </li>
 
-            li {
-                padding: 0 20px;
-            }
+            <!--<li class="horizontal layout" on-click="handleClickTrack">-->
+            <!--<div>miRNA targets</div>-->
+            <!--<div class="add"></div>-->
+            <!--</li>-->
 
-            li:hover {
-                background-color: #435F7A;
-                color: #FFFFFF;
-            }
 
-            ul:before {
-                font-family: 'FontAwesome';
-                content: "\f1b3";
-                margin-right: 5px;
-                color: #435F7A;
-            }
+            <li class="horizontal layout" on-click="handleClickTrack">
+                <div>Histone</div>
+                <div class="add"></div>
+            </li>
+            <li class="horizontal layout" on-click="handleClickTrack">
+                <div>Polymerase</div>
+                <div class="add"></div>
+            </li>
+            <li class="horizontal layout" on-click="handleClickTrack">
+                <div>Open Chromatin</div>
+                <div class="add"></div>
+            </li>
 
-            li:before {
-                font-family: 'FontAwesome';
-                content: "\f1b2";
-                margin-right: 5px;
-                /*color: #435F7A;*/
-            }
 
-        </style>
-        <div class="panel">
-            <div class="header"
-                 on-click="{{titleClick}}"
-                 data-collapsible="{{collapsible}}"
-                 data-collapsed="{{collapsed}}">
-                Add tracks
-            </div>
-            <div class="container">
-                <ul>
-                    Core
-                    <li on-click="{{handleClickTrack}}">Sequence</li>
-                    <li on-click="{{handleClickTrack}}">Gene/Transcript</li>
-                    <li on-click="{{handleClickTrack}}">CpG islands</li>
-                </ul>
-                <ul>
-                    Variation
-                    <li on-click="{{handleClickTrack}}">SNP</li>
-                    <li on-click="{{handleClickTrack}}">EBI EVA 1.0 SNVs</li>
-                    <li on-click="{{handleClickTrack}}">Mutation</li>
-                    <li on-click="{{handleClickTrack}}">Structural variation (<20Kb)</li>
-                    <li on-click="{{handleClickTrack}}">Structural variation (>20Kb)</li>
-                </ul>
-                <ul>
-                    Regulatory
-                    <li on-click="{{handleClickTrack}}">TFBS</li>
-                    <li on-click="{{handleClickTrack}}">miRNA targets</li>
-                    <li on-click="{{handleClickTrack}}">Histone</li>
-                    <li on-click="{{handleClickTrack}}">Polymerase</li>
-                    <li on-click="{{handleClickTrack}}">Open Chromatin</li>
-                    <li on-click="{{handleClickTrack}}">Conserved regions</li>
-                </ul>
-            </div>
-        </div>
+            <!--<li class="horizontal layout" on-click="handleClickTrack">-->
+            <!--<div>Conserved regions</div>-->
+            <!--<div class="add"></div>-->
+            <!--</li>-->
+        </ul>
     </template>
-    <script>
-        Polymer({
-            created: function () {
-
-            },
-            // properties and methods here
-            collapsed: false,
-            collapsible: true,
-            titleClick: function (e) {
-                this.collapsed = !this.collapsed;
-            },
-            handleClickTrack: function (e) {
-                console.log(e.currentTarget.innerText);
+</dom-module>
+<script>
+    Polymer({
+        is: 'gm-add-track',
+        handleClickTrack: function (e) {
+            if (e.target.classList.contains('add')) {
+                this.fire('addtrack', e.currentTarget.querySelector('div').innerHTML);
             }
-        });
-    </script>
-</polymer-element>
+        }
+    });
+</script>

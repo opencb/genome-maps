@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <title>Genome Maps</title>
+
+    <!--Config-->
+    <script src="conf/config.js" fix="config"></script>
+
+    <!--Fonts-->
+    <link href='lib/jsorolla/styles/fonts/fonts.css' rel='stylesheet' type='text/css'>
+    <link href='bower_components/fontawesome/css/font-awesome.min.css' rel='stylesheet' type='text/css'>
+
+    <!--CSS-->
+    <link href='lib/jsorolla/src/lib/components/jso-global.css' rel='stylesheet' type='text/css'>
+    <link href='lib/jsorolla/src/lib/components/jso-form.css' rel='stylesheet' type='text/css'>
+
+
+    <!--Web Components-->
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+
+
+    <!-- External -->
+    <link rel="stylesheet" href="bower_components/qtip2/jquery.qtip.css">
+    <link rel="stylesheet" href="lib/jsorolla/vendor/ChemDoodleWeb.css">
+
+    <script src="bower_components/underscore/underscore-min.js"></script>
+    <script src="bower_components/backbone/backbone.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+
+    <script src="bower_components/qtip2/jquery.qtip.min.js"></script>
+    <script src="bower_components/cookies-js/dist/cookies.min.js"></script>
+    <script src="bower_components/crypto-js-evanvosberg/core.js"></script>
+    <script src="bower_components/crypto-js-evanvosberg/sha1.js"></script>
+    <script src="bower_components/highcharts-release/adapters/standalone-framework.js"></script>
+    <script src="bower_components/highcharts-release/highcharts.js"></script>
+    <script src="bower_components/purl/purl.js"></script>
+    <script src="bower_components/jquery-mousewheel/jquery.mousewheel.min.js"></script>
+    <script src="bower_components/gl-matrix/dist/gl-matrix-min.js"></script>
+    <!--<script src="lib/jsorolla/vendor/ChemDoodleWeb.js"></script>-->
+
+
+    <link rel="import" href="src/genome-maps-element.html">
+
+    <style>
+        html, body {
+            position: relative;
+            margin: 0px;
+        }
+    </style>
+    <link rel="stylesheet" href="conf/genome-maps.css">
+</head>
+
+<body>
+
+<genome-maps-element></genome-maps-element>
+<script>
+    var genomeMaps = document.querySelector('genome-maps-element');
+</script>
+</body>
+</html>

@@ -1,152 +1,136 @@
 <link rel="import" href="gm-search-result.html">
-<polymer-element name="gm-search" attributes="collapsible collapsed selectedSpecies">
+<dom-module id="gm-search">
+    <style>
+        :host {
+            display: block;
+            position: relative;
+            box-sizing: border-box;
+            padding: 5px;
+        }
+
+        label {
+            display: inline-block;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        label::after {
+            content: ':'
+        }
+
+        .container {
+            padding: 0 10px 10px 10px;
+        }
+
+        textarea {
+            resize: none;
+            width: 100%;
+            height: 100px;
+        }
+
+        .action {
+            margin-top: 10px;
+            /*background-color: #f5f5f5 !important;*/
+            /*text-align: center;*/
+        }
+
+        .action:active {
+            /*background-color: #445D76 !important;*/
+            /*color: #fff !important;*/
+        }
+
+        .jso-select {
+            display: block;
+        }
+    </style>
     <template>
-        <link rel="stylesheet" href="../../lib/jsorolla/src/lib/components/jso-style.css">
-        <link rel="stylesheet" href="gm-panel.css">
-        <style>
-            :host {
-                display: block;
-                position: relative;
-                box-sizing:border-box;
-            }
+        <label> Search by any external reference </label>
+        <textarea id="textarea" class="jso"></textarea>
 
-            label {
-                display: inline-block;
-                color: #666;
-                margin-top: 10px;
-            }
+        <label> Result type </label>
 
-            label::after {
-                content: ':'
-            }
-
-            .container {
-                padding: 0 10px 10px 10px;
-            }
-
-            textarea {
-                resize: none;
-                width: 100%;
-                height: 100px;
-            }
-
-            .action {
-                margin-top: 10px;
-                /*background-color: #f5f5f5 !important;*/
-                /*text-align: center;*/
-            }
-
-            .action:active {
-                /*background-color: #445D76 !important;*/
-                /*color: #fff !important;*/
-            }
-        </style>
-        <div class="panel">
-            <div class="header"
-                 on-click="{{titleClick}}"
-                 data-collapsible="{{collapsible}}"
-                 data-collapsed="{{collapsed}}">
-                Advanced search
-            </div>
-            <div class="container">
-                <label> Search by any external reference </label>
-                <textarea id="textarea"></textarea>
-
-                <label> Result type </label>
-
-                <div class="dropdown">
-                    <div tabindex="-1" class="button">
-                        {{selectedResultType}} &nbsp;
-                    </div>
-                    <ul>
-                        <template repeat="{{resultType in resultTypes}}">
-                            <li>
-                                <div on-mousedown="{{handleResultTypeClick}}" data-option="{{resultType}}">
-                                    {{resultType}}
-                                </div>
-                            </li>
-                        </template>
-                    </ul>
-                </div>
-
-                <div class="button action" on-click="{{handleSearch}}">Search</div>
-
-                <template if="{{response}}">
-                    <label> Results </label>
-                    <template repeat="{{resp in response}}">
-                        <gm-search-result response="{{resp}}" on-feature="{{handleResultClick}}"></gm-search-result>
-                    </template>
+        <div class="jso-select">
+            <select class="jso" value="{{selectedResultType}}" on-change="handleResultTypeChange">
+                <template is="dom-repeat" items="{{resultTypes}}" as="resultType">
+                    <option value="{{resultType}}">{{resultType}}</option>
                 </template>
-
-            </div>
+            </select>
         </div>
-    </template>
-    <script>
-        Polymer({
-            created: function () {
-                this.selectedResultType;
-//                this.resultTypes = ['Genes', 'SNPs', 'Transcripts', 'Exons'];
-                this.resultTypes = ['Genes', 'SNPs'];
-                this.response;
-            },
-            // properties and methods here
-            collapsed: false,
-            collapsible: true,
-            dragSrcEl: null,
-            titleClick: function (e) {
-                this.collapsed = !this.collapsed;
-            },
-            handleResultTypeClick: function (e) {
-                this.selectedResultType = e.target.dataset.option;
-            },
-            handleResultClick: function (e) {
-                this.fire('feature', e.detail);
-            },
-            handleSearch: function () {
-                var me = this;
-                var features = this.$.textarea.value.trim().toUpperCase().split("\n");
+        <br>
 
-                if (features.length > 0 && this.selectedResultType) {
+        <div class="jso-btn jso-btn-shdw" on-click="handleSearch">Search</div>
+
+        <label> Results </label>
+        <template is="dom-repeat" items="{{response}}" as="resp">
+            <gm-search-result response="{{resp}}"></gm-search-result>
+        </template>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: 'gm-search',
+        properties: {
+            selectedSpecies: {
+                type: Object
+            },
+            resultTypes: {
+                type: Array,
+                value: ['Genes', 'SNPs'] //['Genes', 'SNPs', 'Transcripts', 'Exons']
+            },
+            selectedResultType: {
+                type: String,
+                value: 'Genes'
+            },
+            response: {
+                type: Array
+            },
+        },
+        handleResultTypeChange: function (e) {
+            this.selectedResultType = e.currentTarget.value;
+        },
+        handleSearch: function () {
+            var me = this;
+            var features = this.$.textarea.value.trim().toUpperCase().split("\n");
+            if (features[0] != "" && this.selectedResultType) {
 //                    var params = {
 //                        limit : 10,
 //                        skip:0
 //                    };
-                    var params = {};
-                    var resource;
-                    switch (this.selectedResultType) {
-                        case 'Genes':
-                            //genes
-                            params['exclude'] = 'transcripts';
-                            resource = 'info';
-                            break;
-                        case 'SNPs':
-                            params['exclude'] = 'transcriptVariations,xrefs,samples';
-                            resource = 'snp';
-                            break;
-                        case 'Transcripts':
-                            params['exclude'] = 'transcripts.exons,transcripts.xrefs,transcripts.tfbs';
-                            resource = 'transcript';
-                            break;
-                        case 'Exons':
-                            params['exclude'] = 'transcripts.exons';
-                            resource = 'exon';
-                            break;
-                    }
-                    CellBaseManager.get({
-                        species: this.selectedSpecies,
-                        category: 'feature',
-                        subCategory: 'gene',
-                        query: features,
-                        resource: resource,
-                        params: params,
-                        success: function (response) {
-                            me.response = response.response;
-                        }
-                    });
-
+                var params = {};
+                var resource;
+                switch (this.selectedResultType) {
+                    case 'Genes':
+                        //genes
+                        params['exclude'] = 'transcripts';
+                        resource = 'info';
+                        break;
+                    case 'SNPs':
+                        params['exclude'] = 'transcriptVariations,xrefs,samples';
+                        resource = 'snp';
+                        break;
+                    case 'Transcripts':
+                        params['exclude'] = 'transcripts.exons,transcripts.xrefs,transcripts.tfbs';
+                        resource = 'transcript';
+                        break;
+                    case 'Exons':
+                        params['exclude'] = 'transcripts.exons';
+                        resource = 'exon';
+                        break;
                 }
-            }
+                CellBaseManager.get({
+                    species: this.selectedSpecies,
+                    category: 'feature',
+                    subCategory: 'gene',
+                    query: features,
+                    resource: resource,
+                    params: params,
+                    success: function (response) {
+                        me.response = response.response;
+                    }
+                });
 
-        });
-    </script>
-</polymer-element>
+            }
+        }
+
+    });
+</script>

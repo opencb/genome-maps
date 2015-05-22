@@ -30,7 +30,7 @@ function EvaAdapter(args) {
     this.on(this.handlers);
 
     this.cacheConfig = {
-        cacheId: (this.params.species).replace(/[/_().\ -]/g, ''),
+        cacheId: this.params.species,
 //        subCacheId: this.resource + this.params.exclude,
         chunkSize: 3000
     };
@@ -59,7 +59,12 @@ EvaAdapter.prototype = {
 
         /** 2 category check **/
         //TODO define category
-        var categories = [this.resource + this.params.studies.join('_')];
+        var category = '';
+        if (this.params.studies) {
+            category = this.params.studies.join('_');
+        }
+        category += this.params.species;
+        var categories = [this.resource + category];
 
         /** 3 dataType check **/
         var dataType = args.dataType;
