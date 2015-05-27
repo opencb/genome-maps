@@ -6,7 +6,6 @@
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../lib/jsorolla/src/lib/components/jso-panel.html">
-<link rel="import" href="../lib/jsorolla/src/lib/components/jso-modal.html">
 
 <link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-header.html">
 <link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-footer.html">
@@ -36,24 +35,19 @@
             margin-left: 10px;
             cursor: pointer;
             text-align: center;
+            line-height: 30px;
+            margin-top: 15px;
+            margin-bottom: 15px;
             padding: 0 5px;
+        }
+
+        .menu > div[active] {
+            font-weight: normal;
+            border-bottom: 2px solid rgba(125, 125, 125, 0.5);
         }
 
         #content {
             background-color: inherit;
-        }
-
-        #browserpanel {
-            position: absolute;
-            top: 60px;
-            left: 0;
-            width: 800px;
-            box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.30);
-        }
-
-        #browser {
-            width: 800px;
-            height: 400px;
         }
 
         jso-genome-viewer-element {
@@ -61,22 +55,45 @@
             box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.2);
         }
 
+        jso-opencga-upload-file {
+            box-sizing: border-box;
+            padding: 20px 30px;
+        }
+
+        #uploadPanel {
+            width: 600px;
+        }
+
+        #browserPanel {
+            position: absolute;
+            top: 60px;
+            left: 0;
+        }
+
+        #browser {
+            width: 600px;
+            height: 400px;
+        }
+
+        #trackMenuPanel {
+            box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.30);
+        }
+
+        #cellbaseTrackPanel {
+            box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.30);
+        }
+
+        #cellbaseSearchPanel {
+            box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.30);
+        }
+
         #configure {
             position: absolute;
             top: 60px;
             right: 0;
             width: 300px;
-            box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.30);
         }
 
-        #upload {
-            width: 600px;
-        }
-
-        jso-opencga-upload-file {
-            box-sizing: border-box;
-            padding: 20px 30px;
-        }
 
     </style>
     <template>
@@ -92,15 +109,21 @@
             <span class="title">Genome Maps</span>
             <span id="description" class="description"></span>
 
-            <div class="menu horizontal layout">
-                <div class="hover" on-click="handleToggleUpload">
+            <div id="menu" class="menu horizontal layout">
+                <div class="hover" on-click="handleToggleUpload" data-panel="uploadPanel">
                     Upload
                 </div>
-                <div class="hover" on-click="handleToggleBrowser">
+                <div class="hover" on-click="handleToggleBrowser" data-panel="browserPanel">
                     Browse
                 </div>
-                <div class="hover" on-click="handleToggleConfigure">
-                    Configure
+                <div class="hover" on-click="handleToggleTrackMenuPanel" data-panel="trackMenuPanel">
+                    Tracks
+                </div>
+                <div class="hover" on-click="handleToggleCellbaseTrackPanel" data-panel="cellbaseTrackPanel">
+                    CellBase
+                </div>
+                <div class="hover" on-click="handleToggleCellbaseSearchPanel" data-panel="cellbaseSearchPanel">
+                    Search
                 </div>
             </div>
 
@@ -128,9 +151,9 @@
             <!--projects="{{projects}}"></jso-upload-variant-file>-->
 
 
-            <div id="configure" hidden$="{{configureHidden}}">
+            <div id="configure">
 
-                <jso-panel collapsible>
+                <jso-panel collapsible id="trackMenuPanel" on-hidden="handlePanelHidden">
                     <div class="header">
                         Active tracks
                     </div>
@@ -143,9 +166,9 @@
                 </jso-panel>
 
 
-                <jso-panel collapsible>
+                <jso-panel collapsible id="cellbaseTrackPanel" on-hidden="handlePanelHidden">
                     <div class="header">
-                        Add tracks
+                        Add CellBase tracks
                     </div>
                     <div class="container flex">
                         <gm-add-track
@@ -157,9 +180,9 @@
                 </jso-panel>
 
 
-                <jso-panel collapsible>
+                <jso-panel collapsible id="cellbaseSearchPanel" on-hidden="handlePanelHidden">
                     <div class="header">
-                        Advanced search
+                        Advanced Cellbase search
                     </div>
 
                     <div class="container flex">
@@ -172,7 +195,7 @@
                 </jso-panel>
             </div>
 
-            <jso-panel collapsible movable id="browserpanel" hidden$="{{browserHidden}}">
+            <jso-panel collapsible movable closable id="browserPanel" on-hidden="handlePanelHidden">
                 <div class="header">
                     Browse
                 </div>
@@ -187,12 +210,13 @@
             </jso-panel>
 
 
-            <jso-panel modal closable hidden id="upload">
+            <jso-panel modal closable hidden id="uploadPanel" on-hidden="handlePanelHidden">
                 <div class="header">
                     <i class="fa fa-cloud-upload"></i> &nbsp; Upload file
                 </div>
                 <div class="container" id="uploadFile">
                     <jso-opencga-upload-file
+                            bioformats="{{bioformats}}"
                             projects="{{projects}}"
                             ></jso-opencga-upload-file>
                 </div>
@@ -229,21 +253,28 @@
                 type: Array,
                 notify: true
             },
-            browserHidden: {
-                type: Boolean,
-                value: false,
-                reflectToAttribute: true
-            },
-            configureHidden: {
-                type: Boolean,
-                value: false,
-                reflectToAttribute: true
-            },
             bioformats: {
                 type: Array,
                 notify: true,
                 value: ['ALIGNMENT', 'VARIANT']
             }
+        },
+        ready: function () {
+            var panels = Polymer.dom(this.root).querySelectorAll('jso-panel');
+            for (var i = 0; i < panels.length; i++) {
+                var panEl = panels[i];
+                var id = panEl.getAttribute('id');
+                var el = Polymer.dom(this.$.menu).querySelector('[data-panel=' + id + ']');
+                if (el) {
+                    if (panEl.hidden) {
+                        el.removeAttribute('active')
+                    } else {
+                        el.setAttribute('active', '');
+                    }
+                }
+            }
+
+            this._init();
         },
 
         selectedOptionChanged: function (neo, old) {
@@ -267,25 +298,33 @@
                 this.selectedOption = option;
             }
         },
+
         handleToggleBrowser: function (e) {
-            this.browserHidden = !this.browserHidden;
-        },
-        handleCloseBrowser: function (e) {
-            this.browserHidden = true;
-        },
-        handleCloseUpload: function (e) {
-            this.uploadHidden = true;
+            this.$.browserPanel.hidden = !this.$.browserPanel.hidden;
         },
         handleToggleUpload: function (e) {
-            if (this.$.upload.hasAttribute('hidden')) {
-                this.$.upload.removeAttribute('hidden');
+            this.$.uploadPanel.hidden = !this.$.uploadPanel.hidden;
+        },
+        handleToggleTrackMenuPanel: function (e) {
+            this.$.trackMenuPanel.hidden = !this.$.trackMenuPanel.hidden;
+        },
+        handleToggleCellbaseTrackPanel: function (e) {
+            this.$.cellbaseTrackPanel.hidden = !this.$.cellbaseTrackPanel.hidden;
+        },
+        handleToggleCellbaseSearchPanel: function (e) {
+            this.$.cellbaseSearchPanel.hidden = !this.$.cellbaseSearchPanel.hidden;
+        },
+        handlePanelHidden: function (e) {
+            var id = e.currentTarget.getAttribute('id');
+            var sel = '[data-panel=' + id + ']';
+            var el = Polymer.dom(this.$.menu).querySelector(sel);
+            if (e.currentTarget.hidden) {
+                el.removeAttribute('active')
             } else {
-                this.$.upload.setAttribute('hidden', '');
+                el.setAttribute('active', '');
             }
         },
-        handleToggleConfigure: function (e) {
-            this.configureHidden = !this.configureHidden;
-        },
+
         handleRemoveTrack: function (e) {
             this.genomeViewer.removeTrack(e.detail);
         },
@@ -305,7 +344,7 @@
             }
             this.$.trackMenu.set('tracks', tracks);
         },
-        ready: function () {
+        _init: function () {
             var me = this;
 
             this.region = new Region();
