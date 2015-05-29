@@ -19,7 +19,7 @@
 <link rel="import" href="components/gm-track-menu.html">
 <link rel="import" href="components/gm-search.html">
 <link rel="import" href="components/gm-add-track.html">
-<!--<link rel="import" href="components/gm-import-data.html">-->
+<link rel="import" href="components/gm-status-bar.html">
 
 <dom-module id="genome-maps-element">
     <style>
@@ -43,15 +43,20 @@
 
         .menu > div[active] {
             font-weight: normal;
-            border-bottom: 2px solid rgba(125, 125, 125, 0.5);
+            border-bottom: 2px solid rgba(200, 200, 200, 0.3);
         }
 
         #content {
             background-color: inherit;
         }
 
+        gm-status-bar {
+            height: 30px;
+            padding: 4px;
+        }
+
         jso-genome-viewer-element {
-            height: calc(100vh - 60px);
+            height: calc(100vh - 90px);
             box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.2);
         }
 
@@ -68,10 +73,11 @@
             position: absolute;
             top: 60px;
             left: 0;
+            width: 600px;
         }
 
         #browser {
-            width: 600px;
+            /*width: 600px;*/
             height: 400px;
         }
 
@@ -102,7 +108,8 @@
                     user-data="{{userData}}"
                     on-login="handleLogin"
                     on-logout="handleLogout"
-                    show-menu-on-login>
+
+                >
              <span class="icon">
                     <!--<img src="" style="height: 50px;margin: 5px 0px 0 0;">-->
             </span>
@@ -195,7 +202,7 @@
                 </jso-panel>
             </div>
 
-            <jso-panel collapsible movable closable id="browserPanel" on-hidden="handlePanelHidden">
+            <jso-panel hidden collapsible movable closable id="browserPanel" on-hidden="handlePanelHidden">
                 <div class="header">
                     Browse
                 </div>
@@ -223,6 +230,11 @@
             </jso-panel>
 
         </div>
+        <gm-status-bar
+                id="statusBar"
+                version="{{version}}">
+            <span style="color:#666">created by Computational Genomics Department, Principe Felipe Research Center, 2015</span>
+        </gm-status-bar>
         <!--<div id="sidePanel" class="side-panel side-panel-shown">-->
         <!--<gm-import-data id="importData" userData="{{userData}}" genomeViewer="{{genomeViewer}}"-->
         <!--selectedSpecies="{{selectedSpecies}}"></gm-import-data>-->
@@ -234,6 +246,10 @@
     Polymer({
         is: "genome-maps-element",
         properties: {
+            version: {
+                type: String,
+                reflectToAttribute: true
+            },
             selectedOption: {
                 type: String,
                 value: "home",
@@ -300,10 +316,20 @@
         },
 
         handleToggleBrowser: function (e) {
-            this.$.browserPanel.hidden = !this.$.browserPanel.hidden;
+            if (this.$.jsoHeader.isLogged) {
+                this.$.browserPanel.hidden = !this.$.browserPanel.hidden;
+            } else {
+                this.selectedOption = 'login';
+                this._lastLogedRequest = this.$.browserPanel;
+            }
         },
         handleToggleUpload: function (e) {
-            this.$.uploadPanel.hidden = !this.$.uploadPanel.hidden;
+            if (this.$.jsoHeader.isLogged) {
+                this.$.uploadPanel.hidden = !this.$.uploadPanel.hidden;
+            } else {
+                this.selectedOption = 'login';
+                this._lastLogedRequest = this.$.uploadPanel;
+            }
         },
         handleToggleTrackMenuPanel: function (e) {
             this.$.trackMenuPanel.hidden = !this.$.trackMenuPanel.hidden;
@@ -447,6 +473,9 @@
                 this.genomeViewer.trackListPanel.on('tracks:refresh', function (e) {
                     me._updateTrackMenu();
                 });
+                this.genomeViewer.trackListPanel.on('mousePosition:change', function (event) {
+                    me.$.statusBar.set('mousePosition', event);
+                });
 
                 //TODO only test; uncomment on production
                 this._loadInitialTracksConfig();
@@ -457,11 +486,16 @@
 
 
         handleLogin: function () {
-//            this.browserHidden = false;
             this.selectedOption = "home";
+
+            if (this._lastLogedRequest) {
+                this._lastLogedRequest.hidden = false;
+                this._lastLogedRequest = null;
+            }
         },
         handleLogout: function () {
-            this.browserHidden = true;
+            this.$.browserPanel.hidden = true;
+            this.$.uploadPanel.hidden = true;
         },
         handleUserNeedRefresh: function () {
             this.$.jsoHeader.getUserInfo(true);
@@ -504,7 +538,6 @@
                 });
             } else {
                 console.log("no user data")
-                this.browserHidden = true;
             }
         },
 
@@ -670,7 +703,7 @@
 
 
                     break;
-                case "Mutation":
+                case "Clinical Variants":
 //            var mutationTrack = new TrackData(id, {
 //                adapter: new CellBaseAdapter({
 //                    category: "genomic",
@@ -694,13 +727,13 @@
 //            });
 
 
-                    var renderer = new FeatureRenderer(FEATURE_TYPES.mutation);
+                    var renderer = new FeatureRenderer(FEATURE_TYPES.clinical);
                     renderer.on('feature:click', function (e) {
                         console.log(e);
                     });
                     track = new FeatureTrack({
-                        title: 'Mutation',
-                        featureType: 'mutation',
+                        title: 'Clinical Variants',
+                        featureType: 'clinical',
                         minHistogramRegionSize: 12000,
                         maxLabelRegionSize: 3000,
                         visibleRegionSize: 9000,
@@ -711,14 +744,14 @@
                         dataAdapter: new CellBaseAdapter({
                             category: "genomic",
                             subCategory: "region",
-                            resource: "mutation",
+                            resource: "clinical",
                             params: {
                                 exclude: 'chunkIds'
                             },
                             species: this.genomeViewer.species,
                             cacheConfig: {
                                 chunkSize: 10000,
-                                cacheId: "cellbase:mutation"
+                                cacheId: "cellbase:clinical"
                             }
                         })
                     });
@@ -877,51 +910,56 @@
 //                featureTypes: FEATURE_TYPES
 //            });
                     break;
-                case "TFBS":
+                case "Regulatory":
+
 
                     track = new FeatureTrack({
-                        title: 'TFBS',
+                        title: 'Regulatory',
                         minHistogramRegionSize: 12000,
                         maxLabelRegionSize: 3000,
                         height: 120,
-                        renderer: new FeatureRenderer({
-                            label: function (f) {
-                                return ('name' in f) ? f.name : f.id;
-                            },
-                            tooltipTitle: function (f) {
-                                var name = ('name' in f) ? f.name : f.id;
-                                return f.featureType.toUpperCase() + ' - <span class="ok">' + name + '</span>';
-                            },
-                            tooltipText: function (f) {
-                                return 'matrix:&nbsp;<span class="ssel">' + f.matrix + '</span><br>' +
-                                        'score:&nbsp;<span class="ssel">' + f.score + '</span><br>' +
-                                        FEATURE_TYPES.getTipCommons(f) +
-                                        'source:&nbsp;<span class="ssel">' + f.source + '</span><br>';
+//                        renderer: new FeatureRenderer({
+//                            label: function (f) {
+//                                return ('name' in f) ? f.name : f.id;
+//                            },
+//                            tooltipTitle: function (f) {
+//                                var name = ('name' in f) ? f.name : f.id;
+//                                return f.featureType.toUpperCase() + ' - <span class="ok">' + name + '</span>';
+//                            },
+//                            tooltipText: function (f) {
+//                                return 'matrix:&nbsp;<span class="ssel">' + f.matrix + '</span><br>' +
+//                                        'score:&nbsp;<span class="ssel">' + f.score + '</span><br>' +
+//                                        FEATURE_TYPES.getTipCommons(f) +
+//                                        'source:&nbsp;<span class="ssel">' + f.source + '</span><br>';
+//
+//                            },
+//                            color: 'lightblue',
+//                            infoWidgetId: "id",
+//                            height: 8,
+//                            histogramColor: "orange",
+//                            handlers: {
+//                                'feature:mouseover': function (e) {
+//                                    console.log(e)
+//                                },
+//                                'feature:click': function (event) {
+//                                    new SnpInfoWidget(null, me.genomeViewer.species).draw(event);
+//                                }
+//                            }
+//                        }),
 
-                            },
-                            color: 'lightblue',
-                            infoWidgetId: "id",
-                            height: 8,
-                            histogramColor: "orange",
-                            handlers: {
-                                'feature:mouseover': function (e) {
-                                    console.log(e)
-                                },
-                                'feature:click': function (event) {
-                                    new SnpInfoWidget(null, me.genomeViewer.species).draw(event);
-                                }
-                            }
-                        }),
+                        renderer: new FeatureRenderer(FEATURE_TYPES.regulatory),
 
                         dataAdapter: new CellBaseAdapter({
                             category: "genomic",
                             subCategory: "region",
-                            resource: "tfbs",
+                            resource: "regulatory",
                             species: this.genomeViewer.species,
-                            params: {},
+                            params: {
+                                exclude: '_chunkIds,chunkIds'
+                            },
                             cacheConfig: {
                                 chunkSize: 50000,
-                                cacheId: "cellbase:tfbs"
+                                cacheId: "cellbase:regulatory"
                             }
                         })
                     });

@@ -6,6 +6,8 @@
             position: relative;
             box-sizing: border-box;
             padding: 5px;
+            max-height: 400px;
+            overflow-y: auto;
         }
 
         label {
@@ -42,6 +44,10 @@
         .jso-select {
             display: block;
         }
+
+        #results {
+            margin-top: 10px;
+        }
     </style>
     <template>
         <label> Search by any external reference </label>
@@ -60,7 +66,7 @@
 
         <div class="jso-btn jso-btn-shdw" on-click="handleSearch">Search</div>
 
-        <label> Results </label>
+        <label hidden$="{{computeLabelHidden(response)}}" id="results"> Results </label>
         <template is="dom-repeat" items="{{response}}" as="resp">
             <gm-search-result response="{{resp}}"></gm-search-result>
         </template>
@@ -82,8 +88,15 @@
                 value: 'Genes'
             },
             response: {
-                type: Array
+                type: Array,
+                value: null
             },
+        },
+        computeLabelHidden: function (response) {
+            if (response) {
+                return response.length < 1
+            }
+            return true;
         },
         handleResultTypeChange: function (e) {
             this.selectedResultType = e.currentTarget.value;
@@ -125,7 +138,7 @@
                     resource: resource,
                     params: params,
                     success: function (response) {
-                        me.response = response.response;
+                        me.set('response', response.response);
                     }
                 });
 

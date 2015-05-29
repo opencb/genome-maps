@@ -22,11 +22,11 @@
             padding: 0 20px;
         }
 
-        li:hover {
+        li:hover, ul.item:hover {
             background-color: rgba(125, 125, 125, 0.2);
         }
 
-        li:hover > .add:after {
+        li:hover > .add:after, ul.item:hover > .add:after {
             position: absolute;
             box-sizing: border-box;
             right: 25px;
@@ -77,7 +77,7 @@
                 <div class="add"></div>
             </li>
             <li class="horizontal layout" on-click="handleClickTrack">
-                <div>Clinvar</div>
+                <div>Clinical Variants</div>
                 <div class="add"></div>
             </li>
 
@@ -90,38 +90,42 @@
             <!--<div class="add"></div>-->
             <!--</li>-->
         </ul>
-        <ul>
-            Regulatory
-            <li class="horizontal layout" on-click="handleClickTrack">
-                <div>TFBS</div>
-                <div class="add"></div>
-            </li>
-
-            <!--<li class="horizontal layout" on-click="handleClickTrack">-->
-            <!--<div>miRNA targets</div>-->
-            <!--<div class="add"></div>-->
-            <!--</li>-->
-
-
-            <li class="horizontal layout" on-click="handleClickTrack">
-                <div>Histone</div>
-                <div class="add"></div>
-            </li>
-            <li class="horizontal layout" on-click="handleClickTrack">
-                <div>Polymerase</div>
-                <div class="add"></div>
-            </li>
-            <li class="horizontal layout" on-click="handleClickTrack">
-                <div>Open Chromatin</div>
-                <div class="add"></div>
-            </li>
-
-
-            <!--<li class="horizontal layout" on-click="handleClickTrack">-->
-            <!--<div>Conserved regions</div>-->
-            <!--<div class="add"></div>-->
-            <!--</li>-->
+        <ul class="item horizontal layout" on-click="handleClickTrack">
+            <div>Regulatory</div>
+            <div class="add"></div>
         </ul>
+        <!--<ul>-->
+            <!--Regulatory-->
+            <!--<li class="horizontal layout" on-click="handleClickTrack">-->
+                <!--<div>TFBS</div>-->
+                <!--<div class="add"></div>-->
+            <!--</li>-->
+
+            <!--&lt;!&ndash;<li class="horizontal layout" on-click="handleClickTrack">&ndash;&gt;-->
+            <!--&lt;!&ndash;<div>miRNA targets</div>&ndash;&gt;-->
+            <!--&lt;!&ndash;<div class="add"></div>&ndash;&gt;-->
+            <!--&lt;!&ndash;</li>&ndash;&gt;-->
+
+
+            <!--<li class="horizontal layout" on-click="handleClickTrack">-->
+                <!--<div>Histone</div>-->
+                <!--<div class="add"></div>-->
+            <!--</li>-->
+            <!--<li class="horizontal layout" on-click="handleClickTrack">-->
+                <!--<div>Polymerase</div>-->
+                <!--<div class="add"></div>-->
+            <!--</li>-->
+            <!--<li class="horizontal layout" on-click="handleClickTrack">-->
+                <!--<div>Open Chromatin</div>-->
+                <!--<div class="add"></div>-->
+            <!--</li>-->
+
+
+            <!--&lt;!&ndash;<li class="horizontal layout" on-click="handleClickTrack">&ndash;&gt;-->
+            <!--&lt;!&ndash;<div>Conserved regions</div>&ndash;&gt;-->
+            <!--&lt;!&ndash;<div class="add"></div>&ndash;&gt;-->
+            <!--&lt;!&ndash;</li>&ndash;&gt;-->
+        <!--</ul>-->
     </template>
 </dom-module>
 <script>
