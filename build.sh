@@ -37,10 +37,10 @@ sed -i s@bower_components/qtip2/jquery.qtip.css@css/jquery.qtip.css@g build/tmp/
 cp -r bower_components/qtip2/jquery.qtip.css build/css/
 
 
-sed -i s@src/components/components/lib/jsorolla/styles/css/style.css@css/style.css@g build/tmp/index.html
+sed -i s@src/components/components/components/lib/jsorolla/styles/css/style.css@css/style.css@g build/tmp/index.html
 cp -r lib/jsorolla/styles/css/style.css build/css/
 
-sed -i s@src/components/components/lib/jsorolla/bower_components/fontawesome/css/font-awesome.css@fontawesome/css/font-awesome.min.css@g build/tmp/index.html
+sed -i s@src/components/components/components/lib/jsorolla/bower_components/fontawesome/css/font-awesome.css@fontawesome/css/font-awesome.min.css@g build/tmp/index.html
 
 cp -r lib/jsorolla/styles/img/ build/
 # end fix paths
