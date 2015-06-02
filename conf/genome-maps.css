@@ -12,8 +12,9 @@ genome-maps-element .color-2 {
     color: #285785;
 }
 
-jso-header .hover:hover {
+genome-maps-element .hover:hover {
     color: #fff;
+    cursor: pointer;
 }
 
 jso-header a {
@@ -26,6 +27,7 @@ jso-header a:hover {
     color: #5fc1fd;
 }
 
+[drawer],
 jso-header {
     color: #ddd;
     background-color: #1c3d5d;
@@ -42,11 +44,12 @@ jso-help-menu {
     background-color: #1c3d5d;
 }
 
-jso-panel > .header{
+jso-panel > .header {
     background-color: #224a71;
     color: #FFFFFF;
 }
 
+gm-status-bar,
 jso-panel,
 jso-login,
 jso-signup,

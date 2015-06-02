@@ -4,10 +4,15 @@
 <script src="eva-adapter.js"></script>
 <script src="eva-manager.js"></script>
 
+
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+
+
 <link rel="import" href="../lib/jsorolla/src/lib/components/jso-panel.html">
 
 <link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-header.html">
+
 <link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-footer.html">
 <link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-help-menu.html">
 
@@ -29,16 +34,41 @@
             cursor: default;
             font-size: 13px;
             background-color: inherit;
+            height: 100%;
         }
 
-        .menu > div {
-            margin-left: 10px;
+        #sidemenu > div {
+            font-size: 20px;
+            box-sizing: border-box;
+            padding: 7px 20px;
+            border-bottom: 1px solid rgba(125, 125, 125, 0.3);
+        }
+
+        #sidemenu > div:hover {
+            background-color: rgba(125, 125, 125, 0.3);
+        }
+
+        #sidemenu > div[active] {
+            font-weight: normal;
+        }
+
+        #menu > div {
+            box-sizing: border-box;
+            margin-right: 1vw;
             cursor: pointer;
             text-align: center;
             line-height: 30px;
             margin-top: 15px;
             margin-bottom: 15px;
             padding: 0 5px;
+        }
+
+        div.icon {
+            margin-left: 10px;
+        }
+
+        div.menu-button {
+            margin-left: 7px;
         }
 
         .menu > div[active] {
@@ -53,6 +83,7 @@
         gm-status-bar {
             height: 30px;
             padding: 4px;
+            border-top: 1px solid rgba(125, 125, 125, 0.3);
         }
 
         jso-genome-viewer-element {
@@ -63,10 +94,6 @@
         jso-opencga-upload-file {
             box-sizing: border-box;
             padding: 20px 30px;
-        }
-
-        #uploadPanel {
-            width: 600px;
         }
 
         #browserPanel {
@@ -100,145 +127,176 @@
             width: 300px;
         }
 
+        @media (max-width: 1100px) {
+            .option-text {
+                display: none;
+            }
+        }
 
     </style>
     <template>
-        <jso-header id="jsoHeader"
-                    selected-option="{{selectedOption}}"
-                    user-data="{{userData}}"
-                    on-login="handleLogin"
-                    on-logout="handleLogout"
-
-                >
-             <span class="icon">
-                    <!--<img src="" style="height: 50px;margin: 5px 0px 0 0;">-->
-            </span>
-            <span class="title">Genome Maps</span>
-            <span id="description" class="description"></span>
-
-            <div id="menu" class="menu horizontal layout">
-                <div class="hover" on-click="handleToggleUpload" data-panel="uploadPanel">
-                    Upload
+        <paper-drawer-panel id="paperDrawerPanel" force-narrow>
+            <div drawer id="sidemenu">
+                <div title="Upload" class="hover" on-click="handleToggleUpload" data-panel="uploadPanel">
+                    <i class="fa fa-cloud-upload"></i>
+                    <span>Upload</span>
                 </div>
-                <div class="hover" on-click="handleToggleBrowser" data-panel="browserPanel">
-                    Browse
+                <div title="Browse" class="hover" on-click="handleToggleBrowser" data-panel="browserPanel">
+                    <i class="fa fa-folder-open"></i>
+                    <span>Browse</span>
                 </div>
-                <div class="hover" on-click="handleToggleTrackMenuPanel" data-panel="trackMenuPanel">
-                    Tracks
+                <div title="Tracks" class="hover" on-click="handleToggleTrackMenuPanel" data-panel="trackMenuPanel">
+                    <i class="fa fa-tasks"></i>
+                    <span>Tracks</span>
                 </div>
-                <div class="hover" on-click="handleToggleCellbaseTrackPanel" data-panel="cellbaseTrackPanel">
-                    CellBase
+                <div title="CellBase" class="hover" on-click="handleToggleCellbaseTrackPanel" data-panel="cellbaseTrackPanel">
+                    <i class="fa fa-database"></i>
+                    <span>CellBase</span>
                 </div>
-                <div class="hover" on-click="handleToggleCellbaseSearchPanel" data-panel="cellbaseSearchPanel">
-                    Search
+                <div title="Search" class="hover" on-click="handleToggleCellbaseSearchPanel" data-panel="cellbaseSearchPanel">
+                    <i class="fa fa-search"></i>
+                    <span>Search</span>
                 </div>
             </div>
-
-            <jso-help-menu class="helpmenu" selectedOption="{{selectedOption}}">
-                <a href="https://github.com/opencb/genome-maps/wiki" target="_blank">
-                    <i class="fa fa-book"></i>
-                    &nbsp; Documentation
-                </a>
-                <a href="https://github.com/opencb/genome-maps/" target="_blank">
-                    <i class="fa fa-github"></i>
-                    &nbsp; Source code
-                </a>
-            </jso-help-menu>
-        </jso-header>
-
-
-        <div id="content">
-            <jso-genome-viewer-element id="gv" menu-option="home"></jso-genome-viewer-element>
-
-
-            <!--<jso-upload-variant-file-->
-            <!--id="upload"-->
-            <!--hidden$="{{uploadHidden}}"-->
-            <!--on-close="handleCloseUpload"-->
-            <!--projects="{{projects}}"></jso-upload-variant-file>-->
-
-
-            <div id="configure">
-
-                <jso-panel collapsible id="trackMenuPanel" on-hidden="handlePanelHidden">
-                    <div class="header">
-                        Active tracks
+            <div main>
+                <jso-header id="jsoHeader"
+                            selected-option="{{selectedOption}}"
+                            user-data="{{userData}}"
+                            on-login="handleLogin"
+                            on-logout="handleLogout"
+                        >
+                    <div class="menu-button">
+                        <i class="fa fa-bars" paper-drawer-toggle></i>
                     </div>
-                    <div class="container flex">
-                        <gm-track-menu
-                                id="trackMenu"
-                                on-swap="handleSwapTrackMenu"
-                                on-removetrack="handleRemoveTrack"></gm-track-menu>
-                    </div>
-                </jso-panel>
+                    <!--<div hidden class="icon">-->
+                    <!--<img src="" style="height: 0px;margin: 5px 0px 0 0;">-->
+                    <!--</div>-->
+                    <span class="title">Genome Maps</span>
+                    <!--<span id="description" class="description"></span>-->
 
-
-                <jso-panel collapsible id="cellbaseTrackPanel" on-hidden="handlePanelHidden">
-                    <div class="header">
-                        Add CellBase tracks
-                    </div>
-                    <div class="container flex">
-                        <gm-add-track
-                                id="addTrack"
-                                on-addtrack="handleAddTrack"
-                                selectedSpecies="{{selectedSpecies}}"
-                                collapsed="true"></gm-add-track>
-                    </div>
-                </jso-panel>
-
-
-                <jso-panel collapsible id="cellbaseSearchPanel" on-hidden="handlePanelHidden">
-                    <div class="header">
-                        Advanced Cellbase search
+                    <div id="menu" class="menu horizontal layout">
+                        <div title="Upload" class="hover" on-click="handleToggleUpload" data-panel="uploadPanel">
+                            <i class="fa fa-cloud-upload"></i>
+                            <span class="option-text">Upload</span>
+                        </div>
+                        <div title="Browse" class="hover" on-click="handleToggleBrowser" data-panel="browserPanel">
+                            <i class="fa fa-folder-open"></i>
+                            <span class="option-text">Browse</span>
+                        </div>
+                        <div title="Tracks" class="hover" on-click="handleToggleTrackMenuPanel" data-panel="trackMenuPanel">
+                            <i class="fa fa-tasks"></i>
+                            <span class="option-text">Tracks</span>
+                        </div>
+                        <div title="CellBase" class="hover" on-click="handleToggleCellbaseTrackPanel" data-panel="cellbaseTrackPanel">
+                            <i class="fa fa-database"></i>
+                            <span class="option-text">CellBase</span>
+                        </div>
+                        <div title="Search" class="hover" on-click="handleToggleCellbaseSearchPanel" data-panel="cellbaseSearchPanel">
+                            <i class="fa fa-search"></i>
+                            <span class="option-text">Search</span>
+                        </div>
                     </div>
 
-                    <div class="container flex">
-                        <gm-search
-                                id="search"
-                                selected-species="{{selectedSpecies}}"
-                                collapsed="true"
-                                on-feature="handleResultClick"></gm-search>
+                    <jso-help-menu class="helpmenu" selectedOption="{{selectedOption}}">
+                        <a href="https://github.com/opencb/genome-maps/wiki" target="_blank">
+                            <i class="fa fa-book"></i>
+                            &nbsp; Documentation
+                        </a>
+                        <a href="https://github.com/opencb/genome-maps/" target="_blank">
+                            <i class="fa fa-github"></i>
+                            &nbsp; Source code
+                        </a>
+                    </jso-help-menu>
+                </jso-header>
+
+
+                <div id="content">
+                    <jso-genome-viewer-element id="gv" menu-option="home"></jso-genome-viewer-element>
+
+
+                    <div id="configure">
+
+                        <jso-panel collapsible id="trackMenuPanel" on-hidden="handlePanelHidden">
+                            <div class="header">
+                                Active tracks
+                            </div>
+                            <div class="container flex">
+                                <gm-track-menu
+                                        id="trackMenu"
+                                        on-swap="handleSwapTrackMenu"
+                                        on-removetrack="handleRemoveTrack"></gm-track-menu>
+                            </div>
+                        </jso-panel>
+
+
+                        <jso-panel collapsible id="cellbaseTrackPanel" on-hidden="handlePanelHidden">
+                            <div class="header">
+                                Add CellBase tracks
+                            </div>
+                            <div class="container flex">
+                                <gm-add-track
+                                        id="addTrack"
+                                        on-addtrack="handleAddTrack"
+                                        selectedSpecies="{{selectedSpecies}}"
+                                        collapsed="true"></gm-add-track>
+                            </div>
+                        </jso-panel>
+
+
+                        <jso-panel collapsible id="cellbaseSearchPanel" on-hidden="handlePanelHidden">
+                            <div class="header">
+                                Advanced Cellbase search
+                            </div>
+
+                            <div class="container flex">
+                                <gm-search
+                                        id="search"
+                                        selected-species="{{selectedSpecies}}"
+                                        collapsed="true"
+                                        on-feature="handleResultClick"></gm-search>
+                            </div>
+                        </jso-panel>
                     </div>
-                </jso-panel>
+
+                    <jso-panel hidden collapsible movable closable id="browserPanel" on-hidden="handlePanelHidden">
+                        <div class="header">
+                            Browse
+                        </div>
+                        <div class="container flex">
+                            <jso-opencga-browser
+                                    id="browser"
+                                    on-fileselect="handleFileSelect"
+                                    bioformats="{{bioformats}}"
+                                    projects="{{projects}}"
+                                    on-need-refresh="handleUserNeedRefresh"></jso-opencga-browser>
+                        </div>
+                    </jso-panel>
+
+
+                    <jso-panel modal closable hidden id="uploadPanel" on-hidden="handlePanelHidden">
+                        <div class="header">
+                            <i class="fa fa-cloud-upload"></i> &nbsp; Upload file
+                        </div>
+                        <div class="container" id="uploadFile">
+                            <jso-opencga-upload-file
+                                    bioformats="{{bioformats}}"
+                                    projects="{{projects}}"
+                                    ></jso-opencga-upload-file>
+                        </div>
+                    </jso-panel>
+
+                </div>
+                <gm-status-bar
+                        menu-option="home"
+                        id="statusBar"
+                        version="{{version}}">
+                    <span style="color:#666">created by Computational Genomics Department, Principe Felipe Research Center, 2015</span>
+                </gm-status-bar>
+
+
             </div>
+        </paper-drawer-panel>
 
-            <jso-panel hidden collapsible movable closable id="browserPanel" on-hidden="handlePanelHidden">
-                <div class="header">
-                    Browse
-                </div>
-                <div class="container flex">
-                    <jso-opencga-browser
-                            id="browser"
-                            on-fileselect="handleFileSelect"
-                            bioformats="{{bioformats}}"
-                            projects="{{projects}}"
-                            on-need-refresh="handleUserNeedRefresh"></jso-opencga-browser>
-                </div>
-            </jso-panel>
-
-
-            <jso-panel modal closable hidden id="uploadPanel" on-hidden="handlePanelHidden">
-                <div class="header">
-                    <i class="fa fa-cloud-upload"></i> &nbsp; Upload file
-                </div>
-                <div class="container" id="uploadFile">
-                    <jso-opencga-upload-file
-                            bioformats="{{bioformats}}"
-                            projects="{{projects}}"
-                            ></jso-opencga-upload-file>
-                </div>
-            </jso-panel>
-
-        </div>
-        <gm-status-bar
-                id="statusBar"
-                version="{{version}}">
-            <span style="color:#666">created by Computational Genomics Department, Principe Felipe Research Center, 2015</span>
-        </gm-status-bar>
-        <!--<div id="sidePanel" class="side-panel side-panel-shown">-->
-        <!--<gm-import-data id="importData" userData="{{userData}}" genomeViewer="{{genomeViewer}}"-->
-        <!--selectedSpecies="{{selectedSpecies}}"></gm-import-data>-->
-        <!--</div>-->
 
     </template>
 </dom-module>
@@ -288,6 +346,14 @@
                         el.setAttribute('active', '');
                     }
                 }
+                var el = Polymer.dom(this.$.sidemenu).querySelector('[data-panel=' + id + ']');
+                if (el) {
+                    if (panEl.hidden) {
+                        el.removeAttribute('active')
+                    } else {
+                        el.setAttribute('active', '');
+                    }
+                }
             }
 
             this._init();
@@ -316,6 +382,7 @@
         },
 
         handleToggleBrowser: function (e) {
+            this.$.paperDrawerPanel.closeDrawer();
             if (this.$.jsoHeader.isLogged) {
                 this.$.browserPanel.hidden = !this.$.browserPanel.hidden;
             } else {
@@ -324,6 +391,7 @@
             }
         },
         handleToggleUpload: function (e) {
+            this.$.paperDrawerPanel.closeDrawer();
             if (this.$.jsoHeader.isLogged) {
                 this.$.uploadPanel.hidden = !this.$.uploadPanel.hidden;
             } else {
@@ -344,6 +412,12 @@
             var id = e.currentTarget.getAttribute('id');
             var sel = '[data-panel=' + id + ']';
             var el = Polymer.dom(this.$.menu).querySelector(sel);
+            if (e.currentTarget.hidden) {
+                el.removeAttribute('active')
+            } else {
+                el.setAttribute('active', '');
+            }
+            var el = Polymer.dom(this.$.sidemenu).querySelector(sel);
             if (e.currentTarget.hidden) {
                 el.removeAttribute('active')
             } else {

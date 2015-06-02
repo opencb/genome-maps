@@ -28,6 +28,7 @@
     "bowser": "~0.7.2",
     "purl": "~2.3.1",
     "jquery-mousewheel": "~3.1.12",
-    "gl-matrix": "~2.2.1"
+    "gl-matrix": "~2.2.1",
+    "paper-drawer-panel": "PolymerElements/paper-drawer-panel#~1.0.1"
   }
 }

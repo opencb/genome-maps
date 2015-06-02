@@ -1,16 +1,39 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Genome Maps</title>
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <!-- Chrome for Android theme color -->
+    <!--<meta name="theme-color" content="#303F9F">-->
+    <meta name="theme-color" content="#000000">
+
+    <!-- Web Application Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Chrome for Android Theme color -->
+    <meta name="msapplication-TileColor" content="#3372DF">
+
+    <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Genome Maps">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Genome Maps">
+
+    <!-- Force Microsoft use latest web tech -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 
-    <title>Genome Maps</title>
+    <!-- END meta -->
+
 
     <!--Config-->
-    <script src="conf/config.js" fix="config"></script>
+    <script src="conf/config.js"></script>
 
     <!--Fonts-->
     <link href='lib/jsorolla/styles/fonts/fonts.css' rel='stylesheet' type='text/css'>
@@ -48,16 +71,10 @@
 
     <link rel="import" href="src/genome-maps-element.html">
 
-    <style>
-        html, body {
-            position: relative;
-            margin: 0px;
-        }
-    </style>
     <link rel="stylesheet" href="conf/genome-maps.css">
 </head>
 
-<body>
+<body unresolved class="fullbleed">
 
 <genome-maps-element version="3.2.0"></genome-maps-element>
 <script>

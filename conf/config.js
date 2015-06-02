@@ -13,8 +13,8 @@
  **/
 CELLBASE_VERSION = "v3";
 //CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
-//CELLBASE_HOST = "http://bioinfodev.hpc.cam.ac.uk/cellbase/webservices/rest";
-CELLBASE_HOST = "http://bioinfo.hpc.cam.ac.uk/cellbase/webservices/rest";
+CELLBASE_HOST = "http://bioinfodev.hpc.cam.ac.uk/cellbase/webservices/rest";
+//CELLBASE_HOST = "http://bioinfo.hpc.cam.ac.uk/cellbase/webservices/rest";
 OPENCGA_HOST = "ws.babelomics.org/opencga/rest";
 OPENCGA_LOCALHOST = "http://localhost:61976/opencga/rest";
 
