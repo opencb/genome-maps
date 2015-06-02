@@ -12,7 +12,7 @@ vulcanize \
     --inline-css \
     --strip-comments \
     --exclude "conf/config.js" \
-    --exclude "conf/genome-maps.css" \
+    --exclude "conf/theme.html" \
     genome-maps-index.html \
     | crisper \
     --html build/tmp/index.html \

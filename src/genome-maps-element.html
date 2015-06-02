@@ -33,19 +33,25 @@
             position: relative;
             cursor: default;
             font-size: 13px;
-            background-color: inherit;
+            background-color: var(--light-primary-color);
             height: 100%;
+        }
+
+        #sidemenu {
+            background-color: var(--default-primary-color);
+            color: var(--text-primary-color);
         }
 
         #sidemenu > div {
             font-size: 20px;
             box-sizing: border-box;
             padding: 7px 20px;
-            border-bottom: 1px solid rgba(125, 125, 125, 0.3);
+            border-bottom: 1px solid var(--divider-color);
         }
 
         #sidemenu > div:hover {
-            background-color: rgba(125, 125, 125, 0.3);
+            cursor: pointer;
+            background-color: var(--accent-color);
         }
 
         #sidemenu > div[active] {
@@ -64,16 +70,18 @@
         }
 
         div.icon {
-            margin-left: 10px;
+            margin-left: 15px;
         }
 
         div.menu-button {
-            margin-left: 7px;
+            padding:0 10px;
+        }
+        div.menu-button:hover {
+            background-color: rgba(0, 0, 0, 0.20);
         }
 
         .menu > div[active] {
-            font-weight: normal;
-            border-bottom: 2px solid rgba(200, 200, 200, 0.3);
+            border-bottom: 2px solid var(--accent-color);
         }
 
         #content {
@@ -165,7 +173,7 @@
                             on-login="handleLogin"
                             on-logout="handleLogout"
                         >
-                    <div class="menu-button">
+                    <div class="menu-button" paper-drawer-toggle>
                         <i class="fa fa-bars" paper-drawer-toggle></i>
                     </div>
                     <!--<div hidden class="icon">-->
