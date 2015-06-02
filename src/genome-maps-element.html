@@ -37,13 +37,20 @@
             height: 100%;
         }
 
-        #sidemenu {
+        [drawer] {
             background-color: var(--default-primary-color);
             color: var(--text-primary-color);
         }
 
+        #sidetitle {
+            text-align: center;
+            font-size: 24px;
+            background-color: var(--dark-primary-color);
+            padding:18px 0;
+        }
+
         #sidemenu > div {
-            font-size: 20px;
+            font-size: 18px;
             box-sizing: border-box;
             padding: 7px 20px;
             border-bottom: 1px solid var(--divider-color);
@@ -74,13 +81,15 @@
         }
 
         div.menu-button {
-            padding:0 10px;
+            padding: 0 10px;
         }
+
         div.menu-button:hover {
             background-color: rgba(0, 0, 0, 0.20);
         }
 
         .menu > div[active] {
+            font-weight: normal;
             border-bottom: 2px solid var(--accent-color);
         }
 
@@ -141,29 +150,40 @@
             }
         }
 
+        .userid{
+            color:var(--accent-color);
+            font-size: 16px;
+        }
+
     </style>
     <template>
         <paper-drawer-panel id="paperDrawerPanel" force-narrow>
-            <div drawer id="sidemenu">
-                <div title="Upload" class="hover" on-click="handleToggleUpload" data-panel="uploadPanel">
-                    <i class="fa fa-cloud-upload"></i>
-                    <span>Upload</span>
+            <div drawer>
+                <div id="sidetitle">
+                    Genome Maps<br>
+                    <span class="userid">{{userData.id}}</span>
                 </div>
-                <div title="Browse" class="hover" on-click="handleToggleBrowser" data-panel="browserPanel">
-                    <i class="fa fa-folder-open"></i>
-                    <span>Browse</span>
-                </div>
-                <div title="Tracks" class="hover" on-click="handleToggleTrackMenuPanel" data-panel="trackMenuPanel">
-                    <i class="fa fa-tasks"></i>
-                    <span>Tracks</span>
-                </div>
-                <div title="CellBase" class="hover" on-click="handleToggleCellbaseTrackPanel" data-panel="cellbaseTrackPanel">
-                    <i class="fa fa-database"></i>
-                    <span>CellBase</span>
-                </div>
-                <div title="Search" class="hover" on-click="handleToggleCellbaseSearchPanel" data-panel="cellbaseSearchPanel">
-                    <i class="fa fa-search"></i>
-                    <span>Search</span>
+                <div id="sidemenu">
+                    <div title="Upload" class="hover" on-click="handleToggleUpload" data-panel="uploadPanel">
+                        <i class="fa fa-cloud-upload"></i>
+                        <span>Upload</span>
+                    </div>
+                    <div title="Browse" class="hover" on-click="handleToggleBrowser" data-panel="browserPanel">
+                        <i class="fa fa-folder-open"></i>
+                        <span>Browse</span>
+                    </div>
+                    <div title="Tracks" class="hover" on-click="handleToggleTrackMenuPanel" data-panel="trackMenuPanel">
+                        <i class="fa fa-tasks"></i>
+                        <span>Tracks</span>
+                    </div>
+                    <div title="CellBase" class="hover" on-click="handleToggleCellbaseTrackPanel" data-panel="cellbaseTrackPanel">
+                        <i class="fa fa-database"></i>
+                        <span>CellBase</span>
+                    </div>
+                    <div title="Search" class="hover" on-click="handleToggleCellbaseSearchPanel" data-panel="cellbaseSearchPanel">
+                        <i class="fa fa-search"></i>
+                        <span>Search</span>
+                    </div>
                 </div>
             </div>
             <div main>
