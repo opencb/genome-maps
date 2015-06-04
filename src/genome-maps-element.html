@@ -10,13 +10,13 @@
 
 
 <link rel="import" href="../lib/jsorolla/src/lib/components/jso-panel.html">
+<link rel="import" href="../lib/jsorolla/src/lib/components/jso-opencga-input-text.html">
 
-<link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-header.html">
+<link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-opencga-header.html">
 
-<link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-footer.html">
-<link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-help-menu.html">
+<link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-opencga-footer.html">
+<link rel="import" href="../lib/jsorolla/src/lib/components/jso-help-menu.html">
 
-<link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-upload-variant-file.html">
 <link rel="import" href="../lib/jsorolla/src/lib/components/opencga/files/jso-opencga-browser.html">
 
 <link rel="import" href="../lib/jsorolla/src/lib/components/jso-genome-viewer-element.html">
@@ -46,7 +46,7 @@
             text-align: center;
             font-size: 24px;
             background-color: var(--dark-primary-color);
-            padding:18px 0;
+            padding: 18px 0;
         }
 
         #sidemenu > div {
@@ -150,8 +150,8 @@
             }
         }
 
-        .userid{
-            color:var(--accent-color);
+        .userid {
+            color: var(--accent-color);
             font-size: 16px;
         }
 
@@ -187,11 +187,11 @@
                 </div>
             </div>
             <div main>
-                <jso-header id="jsoHeader"
-                            selected-option="{{selectedOption}}"
-                            user-data="{{userData}}"
-                            on-login="handleLogin"
-                            on-logout="handleLogout"
+                <jso-opencga-header id="jsoHeader"
+                                    selected-option="{{selectedOption}}"
+                                    user-data="{{userData}}"
+                                    on-login="handleLogin"
+                                    on-logout="handleLogout"
                         >
                     <div class="menu-button" paper-drawer-toggle>
                         <i class="fa fa-bars" paper-drawer-toggle></i>
@@ -235,7 +235,7 @@
                             &nbsp; Source code
                         </a>
                     </jso-help-menu>
-                </jso-header>
+                </jso-opencga-header>
 
 
                 <div id="content">
@@ -307,6 +307,7 @@
                         </div>
                         <div class="container" id="uploadFile">
                             <jso-opencga-upload-file
+                                    showbioformats
                                     bioformats="{{bioformats}}"
                                     projects="{{projects}}"
                                     ></jso-opencga-upload-file>
@@ -358,7 +359,13 @@
             bioformats: {
                 type: Array,
                 notify: true,
-                value: ['ALIGNMENT', 'VARIANT']
+                value: [{
+                    value: 'ALIGNMENT',
+                    text: 'Alignment'
+                }, {
+                    value: 'VARIANT',
+                    text: 'Variant'
+                }]
             }
         },
         ready: function () {
