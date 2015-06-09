@@ -17,6 +17,7 @@
   "dependencies": {
     "polymer": "Polymer/polymer#1.0.0",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#1.0.1",
+    "paper-drawer-panel": "PolymerElements/paper-drawer-panel#~1.0.1",
     "fontawesome": "*",
     "cookies-js": "~1.1.0",
     "crypto-js-evanvosberg": "3.1.4",
@@ -28,7 +29,6 @@
     "bowser": "~0.7.2",
     "purl": "~2.3.1",
     "jquery-mousewheel": "~3.1.12",
-    "gl-matrix": "~2.2.1",
-    "paper-drawer-panel": "PolymerElements/paper-drawer-panel#~1.0.1"
+    "gl-matrix": "~2.2.1"
   }
 }

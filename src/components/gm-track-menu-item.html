@@ -50,6 +50,8 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+
+            cursor: move;
         }
 
         #remove {
@@ -105,10 +107,10 @@
                 type: Boolean
             }
         },
-        attached:function(){
+        attached: function () {
 //            console.log(this.track.title);
         },
-        ready:function(){
+        ready: function () {
 //            console.log(this.track.title);
         },
         trackChanged: function (neo, old) {
