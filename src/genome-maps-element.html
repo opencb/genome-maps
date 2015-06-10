@@ -464,6 +464,7 @@
             var file = e.detail;
             if (file.index && file.index.status == 'READY') {
                 var track = this.addTrack(file.bioformat, file.name, file);
+                this._updateTrackMenu();
             }
         },
         _updateTrackMenu: function () {
