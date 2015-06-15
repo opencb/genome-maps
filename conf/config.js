@@ -15,7 +15,7 @@ CELLBASE_VERSION = "v3";
 //CELLBASE_HOST = "http://ws.bioinfo.cipf.es/cellbase/rest";
 CELLBASE_HOST = "http://bioinfodev.hpc.cam.ac.uk/cellbase/webservices/rest";
 //CELLBASE_HOST = "http://bioinfo.hpc.cam.ac.uk/cellbase/webservices/rest";
-OPENCGA_HOST = "ws.babelomics.org/opencga/rest";
+OPENCGA_HOST = "ws.babelomics.org/opencga/webservices/rest";
 OPENCGA_LOCALHOST = "http://localhost:61976/opencga/rest";
 
 /** Devel only: custom URL check **/
@@ -35,7 +35,7 @@ if (
     OPENCGA_HOST = "http://ws-beta.bioinfo.cipf.es/opencga-staging/rest";
 //    OPENCGA_HOST = "http://fsalavert:8080/opencga/rest";
 //    OPENCGA_HOST = "http://aaleman:8080/opencga-server-0.3.2/rest";
-    OPENCGA_HOST = "http://test.babelomics.org/opencga/rest";
+    OPENCGA_HOST = "http://test.babelomics.org/opencga";
 }
 
 
@@ -62,8 +62,8 @@ var AVAILABLE_SPECIES = {
         {
             "text": "Vertebrates",
             "items": [
-                //{"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "13", "start": 32889611, "end": 32889611}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-75/"},
-                {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "20", "start": 32878277, "end": 32878277}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-76/"},
+                // {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "13", "start": 32889611, "end": 32889611}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-75/"},
+                // {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "20", "start": 32878277, "end": 32878277}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-76/"},
                 //{"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "20", "start":14370, "end": 14370}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-76/"},
 //                {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "13", "start": 32889611, "end": 32973805}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-76/"},
                 // {"text": "Homo sapiens", "assembly": "GRCh37.p10", "region": {"chromosome": "20", "start": 32886270, "end": 32886288}, "chromosomes": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "X", "Y", "MT"], "url": "ftp://ftp.ensembl.org/pub/release-76/"},

@@ -152,7 +152,7 @@
 
     </style>
     <template>
-        <paper-drawer-panel id="paperDrawerPanel" force-narrow>
+        <paper-drawer-panel id="paperDrawerPanel" force-narrow disable-swipe>
             <div drawer>
                 <div id="sidetitle">
                     Genome Maps<br>
@@ -689,6 +689,8 @@
             var me = this;
             var track;
             switch (trackType) {
+
+                // Core
                 case "Sequence":
                     track = new SequenceTrack({
                         title: 'Sequence',
@@ -741,39 +743,15 @@
                                 exclude: 'transcripts.tfbs,transcripts.xrefs,transcripts.exons.sequence'
                             },
                             cacheConfig: {
-                                chunkSize: 100000,
-                                cacheId: "cellbase:gene"
+                                chunkSize: 100000
                             }
                         })
                     });
                     this.genomeViewer.addTrack(track);
                     break;
-                case "Cytoband":
 
-                    break;
-                case "CpG islands":
-//            var cpgTrack = new TrackData(id, {
-//                adapter: new CellBaseAdapter({
-//                    category: "genomic",
-//                    subCategory: "region",
-//                    resource: "cpg_island",
-//                    species: this.genomeViewer.species,
-//                    cacheConfig: {
-//                        chunkSize: 50000
-//                    }
-//                })
-//            });
-//            this.genomeViewer.addTrack(cpgTrack, {
-//                id: id,
-//                type: trackType,
-//                title: trackTitle,
-//                featuresRender: "MultiFeatureRender",
-//                histogramZoom: 10,
-//                height: 150,
-//                visibleRange: {start: 0, end: 100},
-//                featureTypes: FEATURE_TYPES
-//            });
-//            break;
+
+                // Variation
                 case "SNP":
                     var renderer = new FeatureRenderer(FEATURE_TYPES.snp);
                     renderer.on('feature:click', function (e) {
@@ -798,16 +776,14 @@
                             },
                             species: this.genomeViewer.species,
                             cacheConfig: {
-                                chunkSize: 10000,
-                                cacheId: "cellbase:snp"
+                                chunkSize: 10000
                             }
                         })
                     });
 
                     this.genomeViewer.addTrack(track);
-
-
                     break;
+
                 case "Clinical Variants":
 //            var mutationTrack = new TrackData(id, {
 //                adapter: new CellBaseAdapter({
@@ -832,7 +808,7 @@
 //            });
 
 
-                    var renderer = new FeatureRenderer(FEATURE_TYPES.clinical);
+                    var renderer = new FeatureRenderer();
                     renderer.on('feature:click', function (e) {
                         console.log(e);
                     });
@@ -855,8 +831,7 @@
                             },
                             species: this.genomeViewer.species,
                             cacheConfig: {
-                                chunkSize: 10000,
-                                cacheId: "cellbase:clinical"
+                                chunkSize: 10000
                             }
                         })
                     });
@@ -933,13 +908,173 @@
                                 species: Utils.getSpeciesCode(this.genomeViewer.species.text) + '_' + this.genomeViewer.species.assembly.split('.')[0].toLowerCase()
                             },
                             cacheConfig: {
-                                chunkSize: 10000,
-                                cacheId: "cellbase:evasnv"
+                                chunkSize: 10000
                             }
                         })
                     })
                     this.genomeViewer.addTrack(track);
                     break;
+
+
+                // Regulatory
+
+                case "TFBS":
+                    var tfbs = new FeatureTrack({
+                        title: 'TFBS',
+                        minHistogramRegionSize: 12000,
+                        maxLabelRegionSize: 3000,
+                        height: 120,
+                        renderer: new FeatureRenderer(),
+                        dataAdapter: new CellBaseAdapter({
+                            category: "genomic",
+                            subCategory: "region",
+                            resource: "regulatory",
+                            species: this.genomeViewer.species,
+                            params: {
+                                type: 'TF_binding_site'
+                            },
+                            cacheConfig: {
+                                chunkSize: 50000
+                            }
+                        })
+                    });
+                    this.genomeViewer.addTrack(tfbs);
+                    break;
+                case "miRNA targets":
+                    var mirna = new FeatureTrack({
+                        title: 'miRNA targets',
+                        minHistogramRegionSize: 12000,
+                        maxLabelRegionSize: 3000,
+                        height: 120,
+                        renderer: new FeatureRenderer(),
+                        dataAdapter: new CellBaseAdapter({
+                            category: "genomic",
+                            subCategory: "region",
+                            resource: "regulatory",
+                            species: this.genomeViewer.species,
+                            params: {
+                                type: 'mirna_target'
+                            },
+                            cacheConfig: {
+                                chunkSize: 50000
+                            }
+                        })
+                    });
+                    this.genomeViewer.addTrack(mirna);
+                    break;
+
+
+                // Conservation
+                case "PhastCons":
+                    //TODO
+                    break;
+                case "PhyloP":
+                    //TODO
+                    break;
+
+
+                // OPENCGA ALIGNMENTS AND VARIANTS
+                case "bam":
+                case "ALIGNMENT":
+                    var adapter = new OpencgaAdapter({
+                        category: "alignments",
+                        host: host,
+                        resource: object,
+                        species: this.genomeViewer.species,
+                        params: {
+                            sid: Cookies('bioinfo_sid')
+                        },
+                        cacheConfig: {
+                            chunkSize: 5000,
+                            cacheId: Cookies('bioinfo_sid') + 'opencga' + object.id,
+                        }
+                    });
+                    var renderer = new BamRenderer(FEATURE_TYPES.bam);
+
+                    track = new BamTrack({
+                        title: trackTitle,
+                        closable: true,
+                        //minHistogramRegionSize: 12000,
+                        //maxLabelRegionSize: 3000,
+                        //visibleRegionSize: 9000,
+                        height: 150,
+                        renderer: renderer,
+                        dataAdapter: adapter
+                    });
+                    this.genomeViewer.addTrack(track);
+                    break;
+
+                case "vcf":
+                case "VARIANT":
+                    var adapter = new OpencgaAdapter({
+                        category: "variants",
+                        host: host,
+                        resource: object,
+                        species: this.genomeViewer.species,
+                        params: {
+                            sid: Cookies('bioinfo_sid')
+                        },
+                        cacheConfig: {
+                            chunkSize: 50000,
+                            cacheId: Cookies('bioinfo_sid') + 'opencga' + object.id,
+                        }
+                    });
+                    var renderer = new VcfMultisampleRenderer(FEATURE_TYPES.vcf);
+                    renderer.on({
+                        'feature:click': function (event) {
+                            var vcfInfo = new VCFVariantInfoWidget(null, me.genomeViewer.species, {adapter: adapter}).draw(event);
+                        }
+                    });
+                    renderer.file = object;
+
+                    track = new FeatureTrack({
+                        title: trackTitle,
+                        closable: true,
+                        //minHistogramRegionSize: 12000,
+                        //maxLabelRegionSize: 3000,
+                        //visibleRegionSize: 9000,
+                        height: 150,
+                        renderer: renderer,
+                        dataAdapter: adapter
+                    });
+                    this.genomeViewer.addTrack(track);
+                    break;
+
+
+                //
+                //
+                //
+                // OLD
+                //
+                //
+                //
+                case "Cytoband":
+
+                    break;
+                case "CpG islands":
+//            var cpgTrack = new TrackData(id, {
+//                adapter: new CellBaseAdapter({
+//                    category: "genomic",
+//                    subCategory: "region",
+//                    resource: "cpg_island",
+//                    species: this.genomeViewer.species,
+//                    cacheConfig: {
+//                        chunkSize: 50000
+//                    }
+//                })
+//            });
+//            this.genomeViewer.addTrack(cpgTrack, {
+//                id: id,
+//                type: trackType,
+//                title: trackTitle,
+//                featuresRender: "MultiFeatureRender",
+//                histogramZoom: 10,
+//                height: 150,
+//                visibleRange: {start: 0, end: 100},
+//                featureTypes: FEATURE_TYPES
+//            });
+//            break;
+
                 case "Structural variation (<20Kb)":
 //            var structuralTrack = new TrackData(id, {
 //                adapter: new CellBaseAdapter({
@@ -1015,63 +1150,6 @@
 //                featureTypes: FEATURE_TYPES
 //            });
                     break;
-                case "Regulatory":
-
-
-                    track = new FeatureTrack({
-                        title: 'Regulatory',
-                        minHistogramRegionSize: 12000,
-                        maxLabelRegionSize: 3000,
-                        height: 120,
-//                        renderer: new FeatureRenderer({
-//                            label: function (f) {
-//                                return ('name' in f) ? f.name : f.id;
-//                            },
-//                            tooltipTitle: function (f) {
-//                                var name = ('name' in f) ? f.name : f.id;
-//                                return f.featureType.toUpperCase() + ' - <span class="ok">' + name + '</span>';
-//                            },
-//                            tooltipText: function (f) {
-//                                return 'matrix:&nbsp;<span class="ssel">' + f.matrix + '</span><br>' +
-//                                        'score:&nbsp;<span class="ssel">' + f.score + '</span><br>' +
-//                                        FEATURE_TYPES.getTipCommons(f) +
-//                                        'source:&nbsp;<span class="ssel">' + f.source + '</span><br>';
-//
-//                            },
-//                            color: 'lightblue',
-//                            infoWidgetId: "id",
-//                            height: 8,
-//                            histogramColor: "orange",
-//                            handlers: {
-//                                'feature:mouseover': function (e) {
-//                                    console.log(e)
-//                                },
-//                                'feature:click': function (event) {
-//                                    new SnpInfoWidget(null, me.genomeViewer.species).draw(event);
-//                                }
-//                            }
-//                        }),
-
-                        renderer: new FeatureRenderer(FEATURE_TYPES.regulatory),
-
-                        dataAdapter: new CellBaseAdapter({
-                            category: "genomic",
-                            subCategory: "region",
-                            resource: "regulatory",
-                            species: this.genomeViewer.species,
-                            params: {
-                                exclude: '_chunkIds,chunkIds'
-                            },
-                            cacheConfig: {
-                                chunkSize: 50000,
-                                cacheId: "cellbase:regulatory"
-                            }
-                        })
-                    });
-
-                    this.genomeViewer.addTrack(track);
-                    break;
-
 //	case "Histone":
 //
 //		break;
@@ -1155,89 +1233,6 @@
 //                visibleRange: {start: 0, end: 100},
 //                featureTypes: FEATURE_TYPES
 //            });
-                case "bam":
-                case "ALIGNMENT":
-                    var adapter = new OpencgaAdapter({
-                        category: "ALIGNMENT",
-                        host: host,
-                        resource: object,
-                        species: this.genomeViewer.species,
-                        params: {
-                            sid: Cookies('bioinfo_sid')
-                        },
-                        cacheConfig: {
-                            chunkSize: 5000,
-                            cacheId: Cookies('bioinfo_sid') + 'opencga' + object.id,
-                        }
-                    });
-                    var renderer = new BamRenderer(FEATURE_TYPES.bam);
-
-                    track = new BamTrack({
-                        title: trackTitle,
-                        closable: true,
-                        //minHistogramRegionSize: 12000,
-                        //maxLabelRegionSize: 3000,
-                        //visibleRegionSize: 9000,
-                        height: 150,
-                        renderer: renderer,
-                        dataAdapter: adapter
-                    });
-                    this.genomeViewer.addTrack(track);
-                    break;
-
-                case "vcf":
-                case "VARIANT":
-
-                    //category: "genomic",
-                    //subCategory: "region",
-                    //resource: "tfbs",
-                    //species: this.genomeViewer.species,
-                    //params: {},
-                    //cacheConfig: {
-                    //    chunkSize: 50000,
-                    //    cacheId: "cellbase:tfbs"
-                    //}
-
-
-                    var adapter = new OpencgaAdapter({
-                        category: "VARIANT",
-                        host: host,
-                        resource: object,
-                        species: this.genomeViewer.species,
-                        params: {
-                            sid: Cookies('bioinfo_sid')
-                        },
-                        cacheConfig: {
-                            chunkSize: 50000,
-                            cacheId: Cookies('bioinfo_sid') + 'opencga' + object.id,
-                        }
-                    });
-//            var renderer = new FeatureRenderer('vcf');
-//            renderer.on({
-//                'feature:click': function (event) {
-//
-//                    var vcfInfo = new VCFVariantInfoWidget(null, _this.genomeViewer.species, {adapter: adapter}).draw(event);
-//                }
-//            });
-                    var renderer = new VcfMultisampleRenderer(FEATURE_TYPES.vcf);
-                    renderer.on({
-                        'feature:click': function (event) {
-                            var vcfInfo = new VCFVariantInfoWidget(null, me.genomeViewer.species, {adapter: adapter}).draw(event);
-                        }
-                    });
-
-                    track = new FeatureTrack({
-                        title: trackTitle,
-                        closable: true,
-                        //minHistogramRegionSize: 12000,
-                        //maxLabelRegionSize: 3000,
-                        //visibleRegionSize: 9000,
-                        height: 150,
-                        renderer: renderer,
-                        dataAdapter: adapter
-                    });
-                    this.genomeViewer.addTrack(track);
-                    break;
 
                 default:
                     return null;
