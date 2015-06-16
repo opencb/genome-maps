@@ -691,7 +691,7 @@
             switch (trackType) {
 
                 // Core
-                case "Sequence":
+                case "Sequence_off":
                     track = new SequenceTrack({
                         title: 'Sequence',
                         height: 25,
@@ -704,6 +704,28 @@
                             subCategory: "region",
                             resource: "sequence",
                             species: this.genomeViewer.species
+                        })
+                    });
+                    this.genomeViewer.addTrack(track);
+                    break;
+
+                // Core
+                case "Sequence":
+                    track = new FeatureTrack({
+                        title: 'Sequence',
+                        height: 25,
+                        visibleRegionSize: 200,
+
+                        renderer: new SequenceRenderer(),
+                        dataAdapter: new CellBaseAdapter({
+                            category: "genomic",
+                            subCategory: "region",
+                            resource: "sequence",
+                            params: {},
+                            species: this.genomeViewer.species,
+                            cacheConfig: {
+                                chunkSize: 100
+                            }
                         })
                     });
                     this.genomeViewer.addTrack(track);
