@@ -237,7 +237,7 @@
                     <jso-genome-viewer-element id="gv" menu-option="home"></jso-genome-viewer-element>
 
 
-                    <div id="configure">
+                    <div id="configure" hidden>
 
                         <jso-panel collapsible id="trackMenuPanel" on-hidden="handlePanelHidden">
                             <div class="header">
@@ -742,12 +742,14 @@
                         renderer: new GeneRenderer({
                             handlers: {
                                 'feature:click': function (e) {
+                                    console.log(e);
+                                    console.log(e.feature);
                                     switch (e.featureType) {
                                         case "gene":
-                                            new GeneInfoWidget(null, me.genomeViewer.species).draw(e);
+//                                            new GeneInfoWidget(null, me.genomeViewer.species).draw(e);
                                             break;
                                         case "transcript":
-                                            new TranscriptInfoWidget(null, me.genomeViewer.species).draw(e);
+//                                            new TranscriptInfoWidget(null, me.genomeViewer.species).draw(e);
                                             break;
                                         default:
                                             break;
@@ -777,8 +779,7 @@
                 case "SNP":
                     var renderer = new FeatureRenderer(FEATURE_TYPES.snp);
                     renderer.on('feature:click', function (e) {
-                        new SnpInfoWidget(null, me.genomeViewer.species).draw(e);
-
+//                        new SnpInfoWidget(null, me.genomeViewer.species).draw(e);
                     });
                     track = new FeatureTrack({
                         title: 'SNP',
