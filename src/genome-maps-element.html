@@ -118,6 +118,12 @@
             width: 600px;
         }
 
+        #settings {
+            width: 600px;
+            height: 400px;
+            padding: 10px;
+        }
+
         #browser {
             /*width: 600px;*/
             height: 400px;
@@ -173,23 +179,27 @@
                 <div id="sidemenu">
                     <!--<div title="Upload" class="hover" on-click="handleToggleUpload" data-panel="uploadPanel">-->
                     <!--<i class="fa fa-cloud-upload"></i>-->
-                    <!--<span>Upload</span>-->
+                    <!--<span class="">Upload</span>-->
                     <!--</div>-->
-                    <div title="Browse" class="hover" on-click="handleToggleBrowser" data-panel="browserPanel">
+                    <div title="Browse" class="hover" on-click="handleBrowserOption" data-panel="browserPanel">
                         <i class="fa fa-cloud"></i>
-                        <span>My data</span>
+                        <span class="">My data</span>
                     </div>
-                    <div title="Tracks" class="hover" on-click="handleToggleTrackMenuPanel" data-panel="trackMenuPanel">
+                    <div title="Tracks" class="hover" on-click="handleMenuOption" data-panel="trackMenuPanel">
                         <i class="fa fa-tasks"></i>
-                        <span>Tracks</span>
+                        <span class="">Tracks</span>
                     </div>
-                    <div title="CellBase" class="hover" on-click="handleToggleCellbaseTrackPanel" data-panel="cellbaseTrackPanel">
+                    <div title="CellBase" class="hover" on-click="handleMenuOption" data-panel="cellbaseTrackPanel">
                         <i class="fa fa-database"></i>
-                        <span>CellBase</span>
+                        <span class="">CellBase</span>
                     </div>
-                    <div title="Search" class="hover" on-click="handleToggleCellbaseSearchPanel" data-panel="cellbaseSearchPanel">
+                    <div title="Search" class="hover" on-click="handleMenuOption" data-panel="cellbaseSearchPanel">
                         <i class="fa fa-search"></i>
-                        <span>Search</span>
+                        <span class="">Search</span>
+                    </div>
+                    <div title="Settings" class="hover" on-click="handleMenuOption" data-panel="settingsPanel">
+                        <i class="fa fa-wrench"></i>
+                        <span class="">Settings</span>
                     </div>
                 </div>
             </div>
@@ -217,21 +227,25 @@
                         <!--<i class="fa fa-cloud-upload"></i>-->
                         <!--<span class="option-text">Upload</span>-->
                         <!--</div>-->
-                        <div title="Browse" class="hover" on-click="handleToggleBrowser" data-panel="browserPanel">
+                        <div title="Browse" class="hover" on-click="handleBrowserOption" data-panel="browserPanel">
                             <i class="fa fa-cloud"></i>
                             <span class="option-text">My data</span>
                         </div>
-                        <div title="Tracks" class="hover" on-click="handleToggleTrackMenuPanel" data-panel="trackMenuPanel">
+                        <div title="Tracks" class="hover" on-click="handleMenuOption" data-panel="trackMenuPanel">
                             <i class="fa fa-tasks"></i>
                             <span class="option-text">Tracks</span>
                         </div>
-                        <div title="CellBase" class="hover" on-click="handleToggleCellbaseTrackPanel" data-panel="cellbaseTrackPanel">
+                        <div title="CellBase" class="hover" on-click="handleMenuOption" data-panel="cellbaseTrackPanel">
                             <i class="fa fa-database"></i>
                             <span class="option-text">CellBase</span>
                         </div>
-                        <div title="Search" class="hover" on-click="handleToggleCellbaseSearchPanel" data-panel="cellbaseSearchPanel">
+                        <div title="Search" class="hover" on-click="handleMenuOption" data-panel="cellbaseSearchPanel">
                             <i class="fa fa-search"></i>
                             <span class="option-text">Search</span>
+                        </div>
+                        <div title="Settings" class="hover" on-click="handleMenuOption" data-panel="settingsPanel">
+                            <i class="fa fa-wrench"></i>
+                            <span class="option-text">Settings</span>
                         </div>
                     </div>
 
@@ -336,6 +350,19 @@
             </div>
         </paper-drawer-panel>
 
+        <jso-panel hidden modal closable id="settingsPanel" on-hidden="handlePanelHidden">
+            <div class="header">
+                <i class="fa fa-wrench"></i> Genome Maps settings
+            </div>
+            <div id="settings" class="container flex">
+                <label class="jso">CellBase host:</label>
+                <input class="jso" type="text">
+                <br>
+                <label class="jso">OpenCGA host:</label>
+                <input class="jso" type="text">
+            </div>
+        </jso-panel>
+
 
     </template>
 </dom-module>
@@ -426,7 +453,13 @@
             }
         },
 
-        handleToggleBrowser: function (e) {
+
+        handleMenuOption: function (e) {
+            var panel = this.$[e.currentTarget.dataset.panel];
+            panel.hidden = !panel.hidden;
+        },
+
+        handleBrowserOption: function (e) {
             this.$.paperDrawerPanel.closeDrawer();
             if (this.$.jsoHeader.isLogged) {
                 this.$.browserPanel.hidden = !this.$.browserPanel.hidden;
@@ -435,24 +468,16 @@
                 this._lastLogedRequest = this.$.browserPanel;
             }
         },
-        handleToggleUpload: function (e) {
-            this.$.paperDrawerPanel.closeDrawer();
-            if (this.$.jsoHeader.isLogged) {
-                this.$.uploadPanel.hidden = !this.$.uploadPanel.hidden;
-            } else {
-                this.selectedOption = 'login';
-                this._lastLogedRequest = this.$.uploadPanel;
-            }
-        },
-        handleToggleTrackMenuPanel: function (e) {
-            this.$.trackMenuPanel.hidden = !this.$.trackMenuPanel.hidden;
-        },
-        handleToggleCellbaseTrackPanel: function (e) {
-            this.$.cellbaseTrackPanel.hidden = !this.$.cellbaseTrackPanel.hidden;
-        },
-        handleToggleCellbaseSearchPanel: function (e) {
-            this.$.cellbaseSearchPanel.hidden = !this.$.cellbaseSearchPanel.hidden;
-        },
+//        handleUploadOption: function (e) {
+//            this.$.paperDrawerPanel.closeDrawer();
+//            if (this.$.jsoHeader.isLogged) {
+//                this.$.uploadPanel.hidden = !this.$.uploadPanel.hidden;
+//            } else {
+//                this.selectedOption = 'login';
+//                this._lastLogedRequest = this.$.uploadPanel;
+//            }
+//        },
+
         handlePanelHidden: function (e) {
             var id = e.currentTarget.getAttribute('id');
             var sel = '[data-panel=' + id + ']';
