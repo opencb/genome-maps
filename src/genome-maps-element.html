@@ -16,10 +16,13 @@
 <link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-opencga-footer.html">
 <link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-opencga-header.html">
 
+<link rel="import" href="../lib/jsorolla/src/lib/components/jso-opencga-button-tooltip.html">
+
 <link rel="import" href="components/gm-add-track.html">
 <link rel="import" href="components/gm-search.html">
 <link rel="import" href="components/gm-status-bar.html">
 <link rel="import" href="components/gm-track-menu.html">
+
 
 <dom-module id="genome-maps-element">
     <style>
@@ -110,7 +113,7 @@
 
         #browserPanel {
             position: absolute;
-            top: 60px;
+            top: 94px;
             left: 0;
             width: 600px;
         }
@@ -121,20 +124,20 @@
         }
 
         #trackMenuPanel {
-            box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.30);
+            box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.30);
         }
 
         #cellbaseTrackPanel {
-            box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.30);
+            box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.30);
         }
 
         #cellbaseSearchPanel {
-            box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.30);
+            box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.30);
         }
 
         #configure {
             position: absolute;
-            top: 60px;
+            top: 94px;
             right: 0;
             width: 300px;
         }
@@ -150,6 +153,15 @@
             font-size: 16px;
         }
 
+        #description {
+            color: var(--accent-color);
+            font-weight: normal;
+        }
+
+        #assembly {
+            color: var(--text-primary-color);
+        }
+
     </style>
     <template>
         <paper-drawer-panel id="paperDrawerPanel" force-narrow disable-swipe>
@@ -159,13 +171,13 @@
                     <span class="userid">{{userData.id}}</span>
                 </div>
                 <div id="sidemenu">
-                    <div title="Upload" class="hover" on-click="handleToggleUpload" data-panel="uploadPanel">
-                        <i class="fa fa-cloud-upload"></i>
-                        <span>Upload</span>
-                    </div>
+                    <!--<div title="Upload" class="hover" on-click="handleToggleUpload" data-panel="uploadPanel">-->
+                    <!--<i class="fa fa-cloud-upload"></i>-->
+                    <!--<span>Upload</span>-->
+                    <!--</div>-->
                     <div title="Browse" class="hover" on-click="handleToggleBrowser" data-panel="browserPanel">
-                        <i class="fa fa-folder-open"></i>
-                        <span>Browse</span>
+                        <i class="fa fa-cloud"></i>
+                        <span>My data</span>
                     </div>
                     <div title="Tracks" class="hover" on-click="handleToggleTrackMenuPanel" data-panel="trackMenuPanel">
                         <i class="fa fa-tasks"></i>
@@ -195,16 +207,19 @@
                     <!--<img src="" style="height: 0px;margin: 5px 0px 0 0;">-->
                     <!--</div>-->
                     <span class="title">Genome Maps</span>
-                    <!--<span id="description" class="description"></span>-->
+                    <span id="description" class="description">
+                        <span>{{selectedSpecies.text}}</span>
+                        <span id="assembly">{{selectedSpecies.assembly}}</span>
+                    </span>
 
                     <div id="menu" class="menu horizontal layout">
-                        <div title="Upload" class="hover" on-click="handleToggleUpload" data-panel="uploadPanel">
-                            <i class="fa fa-cloud-upload"></i>
-                            <span class="option-text">Upload</span>
-                        </div>
+                        <!--<div title="Upload" class="hover" on-click="handleToggleUpload" data-panel="uploadPanel">-->
+                        <!--<i class="fa fa-cloud-upload"></i>-->
+                        <!--<span class="option-text">Upload</span>-->
+                        <!--</div>-->
                         <div title="Browse" class="hover" on-click="handleToggleBrowser" data-panel="browserPanel">
-                            <i class="fa fa-folder-open"></i>
-                            <span class="option-text">Browse</span>
+                            <i class="fa fa-cloud"></i>
+                            <span class="option-text">My data</span>
                         </div>
                         <div title="Tracks" class="hover" on-click="handleToggleTrackMenuPanel" data-panel="trackMenuPanel">
                             <i class="fa fa-tasks"></i>
@@ -283,7 +298,7 @@
 
                     <jso-panel hidden collapsible movable closable id="browserPanel" on-hidden="handlePanelHidden">
                         <div class="header">
-                            Browse
+                            Browse my data
                         </div>
                         <div class="container flex">
                             <jso-opencga-browser
@@ -296,18 +311,18 @@
                     </jso-panel>
 
 
-                    <jso-panel modal closable hidden id="uploadPanel" on-hidden="handlePanelHidden">
-                        <div class="header">
-                            <i class="fa fa-cloud-upload"></i> &nbsp; Upload file
-                        </div>
-                        <div class="container" id="uploadFile">
-                            <jso-opencga-upload-file
-                                    showbioformats
-                                    bioformats="{{bioformats}}"
-                                    projects="{{projects}}"
-                                    ></jso-opencga-upload-file>
-                        </div>
-                    </jso-panel>
+                    <!--<jso-panel modal closable hidden id="uploadPanel" on-hidden="handlePanelHidden">-->
+                    <!--<div class="header">-->
+                    <!--<i class="fa fa-cloud-upload"></i> &nbsp; Upload file-->
+                    <!--</div>-->
+                    <!--<div class="container" id="uploadFile">-->
+                    <!--<jso-opencga-upload-file-->
+                    <!--showbioformats-->
+                    <!--bioformats="{{bioformats}}"-->
+                    <!--projects="{{projects}}">-->
+                    <!--</jso-opencga-upload-file>-->
+                    <!--</div>-->
+                    <!--</jso-panel>-->
 
                 </div>
                 <gm-status-bar
@@ -550,10 +565,9 @@
                         console.log(e)
                     },
                     'species:change': function (event) {
+                        debugger
 //            me._setTracks();
 //            me.setTracksMenu();
-                        var text = me.species.text + ' <span style="color: #8396b2">' + me.species.assembly + '</span>';
-                        me.$.description.innerHTML = text;
                         me.set('selectedSpecies', event.species);
 //                    me._refreshInitialTracksConfig();
                     }
@@ -600,7 +614,7 @@
         },
         handleLogout: function () {
             this.$.browserPanel.hidden = true;
-            this.$.uploadPanel.hidden = true;
+//            this.$.uploadPanel.hidden = true;
         },
         handleUserNeedRefresh: function () {
             this.$.jsoHeader.getUserInfo(true);
@@ -689,25 +703,6 @@
             var me = this;
             var track;
             switch (trackType) {
-
-                // Core
-                case "Sequence_off":
-                    track = new SequenceTrack({
-                        title: 'Sequence',
-                        height: 25,
-                        visibleRegionSize: 200,
-
-                        renderer: new SequenceRenderer(),
-
-                        dataAdapter: new SequenceAdapter({
-                            category: "genomic",
-                            subCategory: "region",
-                            resource: "sequence",
-                            species: this.genomeViewer.species
-                        })
-                    });
-                    this.genomeViewer.addTrack(track);
-                    break;
 
                 // Core
                 case "Sequence":
@@ -985,16 +980,75 @@
                     });
                     this.genomeViewer.addTrack(mirna);
                     break;
+                case "Others":
+                    var others = new FeatureTrack({
+                        title: 'Regulatory others',
+                        minHistogramRegionSize: 12000,
+                        maxLabelRegionSize: 3000,
+                        height: 120,
+                        renderer: new FeatureRenderer(),
+                        dataAdapter: new CellBaseAdapter({
+                            category: "genomic",
+                            subCategory: "region",
+                            resource: "regulatory",
+                            species: this.genomeViewer.species,
+                            params: {
+                                "class": 'Histone,Polymerase,Open Chromatin'
+                            },
+                            cacheConfig: {
+                                chunkSize: 50000
+                            }
+                        })
+                    });
+                    this.genomeViewer.addTrack(others);
+                    break;
 
 
                 // Conservation
                 case "PhastCons":
-                    //TODO
+                    var phastCons = new FeatureTrack({
+                        title: 'PhastCons',
+                        minHistogramRegionSize: 12000,
+                        maxLabelRegionSize: 3000,
+                        height: 120,
+                        renderer: new ConservedRenderer(),
+                        dataAdapter: new CellBaseAdapter({
+                            category: "genomic",
+                            subCategory: "region",
+                            resource: "conserved_region",
+                            species: this.genomeViewer.species,
+                            params: {
+                                "type": 'phastcons'
+                            },
+                            cacheConfig: {
+                                chunkSize: 5000
+                            }
+                        })
+                    });
+                    this.genomeViewer.addTrack(phastCons);
                     break;
                 case "PhyloP":
-                    //TODO
+                    var phylop = new FeatureTrack({
+                        title: 'PhyloP',
+                        minHistogramRegionSize: 12000,
+                        maxLabelRegionSize: 3000,
+                        height: 120,
+                        renderer: new ConservedRenderer(),
+                        dataAdapter: new CellBaseAdapter({
+                            category: "genomic",
+                            subCategory: "region",
+                            resource: "conserved_region",
+                            species: this.genomeViewer.species,
+                            params: {
+                                "type": 'phylop'
+                            },
+                            cacheConfig: {
+                                chunkSize: 5000
+                            }
+                        })
+                    });
+                    this.genomeViewer.addTrack(phylop);
                     break;
-
 
                 // OPENCGA ALIGNMENTS AND VARIANTS
                 case "bam":
@@ -1063,199 +1117,6 @@
                     this.genomeViewer.addTrack(track);
                     break;
 
-
-                //
-                //
-                //
-                // OLD
-                //
-                //
-                //
-                case "Cytoband":
-
-                    break;
-                case "CpG islands":
-//            var cpgTrack = new TrackData(id, {
-//                adapter: new CellBaseAdapter({
-//                    category: "genomic",
-//                    subCategory: "region",
-//                    resource: "cpg_island",
-//                    species: this.genomeViewer.species,
-//                    cacheConfig: {
-//                        chunkSize: 50000
-//                    }
-//                })
-//            });
-//            this.genomeViewer.addTrack(cpgTrack, {
-//                id: id,
-//                type: trackType,
-//                title: trackTitle,
-//                featuresRender: "MultiFeatureRender",
-//                histogramZoom: 10,
-//                height: 150,
-//                visibleRange: {start: 0, end: 100},
-//                featureTypes: FEATURE_TYPES
-//            });
-//            break;
-
-                case "Structural variation (<20Kb)":
-//            var structuralTrack = new TrackData(id, {
-//                adapter: new CellBaseAdapter({
-//                    category: "genomic",
-//                    subCategory: "region",
-//                    resource: "structural_variation",
-//                    species: this.genomeViewer.species,
-//                    params: {min_length: 1, max_length: 20000},
-//                    cacheConfig: {
-//                        chunkSize: 50000
-//                    }
-//                })
-//            });
-//            this.genomeViewer.addTrack(structuralTrack, {
-//                id: id,
-//                type: trackType,
-//                title: trackTitle,
-//                featuresRender: "MultiFeatureRender",
-//                histogramZoom: 40,
-//                height: 150,
-//                visibleRange: {start: 0, end: 100},
-//                featureTypes: FEATURE_TYPES
-//            });
-                    break;
-                case "Structural variation (>20Kb)":
-//            var structuralTrack = new TrackData(id, {
-//                adapter: new CellBaseAdapter({
-//                    category: "genomic",
-//                    subCategory: "region",
-//                    resource: "structural_variation",
-//                    species: this.genomeViewer.species,
-//                    params: {min_length: 20000, max_length: 300000000},
-//                    cacheConfig: {
-//                        chunkSize: 5000000
-//                    }
-//                })
-//            });
-//            this.genomeViewer.addTrack(structuralTrack, {
-//                id: id,
-//                type: trackType,
-//                title: trackTitle,
-//                featuresRender: "MultiFeatureRender",
-//                histogramZoom: 40,
-//                height: 150,
-//                visibleRange: {start: 0, end: 100},
-//                featureTypes: FEATURE_TYPES
-//            });
-                    break;
-                case "miRNA targets":
-                    console.log("TODO :  miRNA targets ")
-//            var miRNATrack = new TrackData(id, {
-//                adapter: new CellBaseAdapter({
-//                    category: "genomic",
-//                    subCategory: "region",
-//                    resource: 'regulatory',
-//                    params: {
-//                        type: 'mirna_target'
-//                    },
-//                    species: this.genomeViewer.species,
-//            cacheConfig: {
-//                chunkSize: 10000
-//            }
-//                })
-//            });
-//            this.genomeViewer.addTrack(miRNATrack, {
-//                id: id,
-//                type: trackType,
-//                title: trackTitle,
-//                featuresRender: "MultiFeatureRender",
-//                histogramZoom: 0,
-//                height: 150,
-//                visibleRange: {start: 0, end: 100},
-//                featureTypes: FEATURE_TYPES
-//            });
-                    break;
-//	case "Histone":
-//
-//		break;
-//	case "Polymerase":
-//
-//		break;
-//	case "Open Chromatin":
-//
-//		break;
-                case "Conserved regions":
-                    track = new FeatureTrack({
-//                targetId: null,
-//                id: id,
-//                title: 'Conserved Region',
-//                histogramZoom: 0,
-//                labelZoom: 80,
-//                height: 120,
-//                visibleRange: {start: 0, end: 100},
-//                featureTypes: FEATURE_TYPES,
-//                renderer: new ConservedRenderer({
-//                    label: function (f) {
-//                        return f.chromosome + ":" + f.start + "-" + f.end;
-//                    },
-//                    tooltipTitle: function (f) {
-//                        var name = (f.name != null) ? f.name : f.id;
-//                        return f.featureType.toUpperCase() + ' - <span class="ok">' + name + '</span>';
-//                    },
-//                    tooltipText: function (f) {
-//                        return 'alleles:&nbsp;<span class="ssel">' + f.alleleString + '</span><br>' +
-//                            FEATURE_TYPES.getTipCommons(f) +
-//                            'source:&nbsp;<span class="ssel">' + f.source + '</span><br>';
-//
-//                    },
-//                    color: 'lightblue',
-//                    infoWidgetId: "id",
-//                    height: 8,
-//                    histogramColor: "orange",
-//                    handlers: {
-//                        'feature:mouseover': function (e) {
-//                            console.log(e)
-//                        },
-//                        'feature:click': function (event) {
-//                            new SnpInfoWidget(null, _this.genomeViewer.species).draw(event);
-//                        }
-//                    }
-//                }),
-//
-//                dataAdapter: new CellBaseAdapter({
-//                    category: "genomic",
-//                    subCategory: "region",
-//                    resource: "conserved_region",
-//                    params: {
-//                    },
-//                    cacheConfig: {
-//                        chunkSize: 10000
-//                    }
-//                })
-                    });
-
-                    this.genomeViewer.addTrack(track);
-                    break;
-//            var conservedTrack = new TrackData(id, {
-//                adapter: new CellBaseAdapter({
-//                    category: "genomic",
-//                    subCategory: "region",
-//                    resource: "conserved_region2",
-//                    species: this.genomeViewer.species,
-//                    featureCache: {
-//                        gzip: true,
-//                        chunkSize: 10000
-//                    }
-//                })
-//            });
-//            this.genomeViewer.addTrack(conservedTrack, {
-//                id: id,
-//                type: trackType,
-//                title: trackTitle,
-//                featuresRender: "MultiFeatureRender",
-//                histogramZoom: 50,
-//                height: 150,
-//                visibleRange: {start: 0, end: 100},
-//                featureTypes: FEATURE_TYPES
-//            });
 
                 default:
                     return null;

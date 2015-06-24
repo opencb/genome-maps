@@ -26,7 +26,7 @@
             background-color: rgba(125, 125, 125, 0.2);
         }
 
-        li:hover > .add:after, ul.item:hover > .add:after {
+        li > .add:after, ul.item > .add:after {
             position: absolute;
             box-sizing: border-box;
             right: 25px;
@@ -50,14 +50,15 @@
 
     </style>
     <template>
+
+
         <ul>
             Core
-
-            <li class="horizontal layout" on-click="handleClickTrack">
+            <li class="horizontal layout" on-click="handleClickTrack"  title="Reference genome sequence from Ensembl">
                 <div>Sequence</div>
                 <div class="add"></div>
             </li>
-            <li class="horizontal layout" on-click="handleClickTrack">
+            <li class="horizontal layout" on-click="handleClickTrack"  title="Gene sets from Ensembl">
                 <div>Gene/Transcript</div>
                 <div class="add"></div>
             </li>
@@ -68,15 +69,15 @@
         </ul>
         <ul>
             Variation
-            <li class="horizontal layout" on-click="handleClickTrack">
+            <li class="horizontal layout" on-click="handleClickTrack"  title="Short variations from Ensembl Variation and dbSNP">
                 <div>SNP</div>
                 <div class="add"></div>
             </li>
-            <li class="horizontal layout" on-click="handleClickTrack">
+            <li class="horizontal layout" on-click="handleClickTrack"  title="Variants from EMBL-EBI EVA 1.0 project">
                 <div>EBI EVA 1.0 SNVs</div>
                 <div class="add"></div>
             </li>
-            <li class="horizontal layout" on-click="handleClickTrack">
+            <li class="horizontal layout" on-click="handleClickTrack"  title="Clinical associated variants from ClinVar, Cosmic and GWAS Catalog">
                 <div>Clinical Variants</div>
                 <div class="add"></div>
             </li>
@@ -96,16 +97,19 @@
         <!--</ul>-->
         <ul>
             Regulatory
-            <li class="horizontal layout" on-click="handleClickTrack">
+            <li class="horizontal layout" on-click="handleClickTrack" title="TFBS from Ensembl Regulatory">
                 <div>TFBS</div>
                 <div class="add"></div>
             </li>
 
-            <li class="horizontal layout" on-click="handleClickTrack">
+            <li class="horizontal layout" on-click="handleClickTrack" title="miRNA targets from TargetScan">
                 <div>miRNA targets</div>
                 <div class="add"></div>
             </li>
-
+            <li class="horizontal layout" on-click="handleClickTrack" title="Open chromatin, Polymerase, CTFC and Histones from Ensembl Regulatory">
+                <div>Others</div>
+                <div class="add"></div>
+            </li>
 
             <!--<li class="horizontal layout" on-click="handleClickTrack">-->
             <!--<div>Polymerase</div>-->
@@ -128,12 +132,12 @@
         </ul>
 
         <ul>
-            Conservation (TODO)
-            <li class="horizontal layout" on-click="handleClickTrack">
+            Conservation
+            <li class="horizontal layout" on-click="handleClickTrack" title="Conservation scores from UCSC">
                 <div>PhastCons</div>
                 <div class="add"></div>
             </li>
-            <li class="horizontal layout" on-click="handleClickTrack">
+            <li class="horizontal layout" on-click="handleClickTrack" title="Conservation scores from UCSC">
                 <div>PhyloP</div>
                 <div class="add"></div>
             </li>
