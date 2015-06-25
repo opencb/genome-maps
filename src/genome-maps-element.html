@@ -47,23 +47,23 @@
             padding: 18px 0;
         }
 
-        #sidemenu > div {
+        #sidemenu div.option {
             font-size: 18px;
             box-sizing: border-box;
             padding: 7px 20px;
             border-bottom: 1px solid var(--divider-color);
         }
 
-        #sidemenu > div:hover {
+        #sidemenu div.option:hover {
             cursor: pointer;
             background-color: var(--accent-color);
         }
 
-        #sidemenu > div[active] {
+        #sidemenu div.option[active] {
             font-weight: normal;
         }
 
-        #menu > div {
+        #menu div.option {
             box-sizing: border-box;
             margin-right: 1vw;
             cursor: pointer;
@@ -72,6 +72,15 @@
             margin-top: 15px;
             margin-bottom: 15px;
             padding: 0 5px;
+        }
+
+        #menu div.option:hover {
+            border-bottom: 1px solid var(--divider-color);
+        }
+
+        #menu div.option[active] {
+            font-weight: normal;
+            border-bottom: 2px solid var(--accent-color);
         }
 
         div.icon {
@@ -84,11 +93,6 @@
 
         div.menu-button:hover {
             background-color: rgba(0, 0, 0, 0.20);
-        }
-
-        .menu > div[active] {
-            font-weight: normal;
-            border-bottom: 2px solid var(--accent-color);
         }
 
         #content {
@@ -119,9 +123,8 @@
         }
 
         #settings {
-            width: 600px;
-            height: 400px;
-            padding: 10px;
+            width: 400px;
+            padding: 20px;
         }
 
         #browser {
@@ -181,23 +184,23 @@
                     <!--<i class="fa fa-cloud-upload"></i>-->
                     <!--<span class="">Upload</span>-->
                     <!--</div>-->
-                    <div title="Browse" class="hover" on-click="handleBrowserOption" data-panel="browserPanel">
+                    <div title="Browse" class="option" on-click="handleBrowserOption" data-panel="browserPanel">
                         <i class="fa fa-cloud"></i>
                         <span class="">My data</span>
                     </div>
-                    <div title="Tracks" class="hover" on-click="handleMenuOption" data-panel="trackMenuPanel">
+                    <div title="Tracks" class="option" on-click="handleMenuOption" data-panel="trackMenuPanel">
                         <i class="fa fa-tasks"></i>
                         <span class="">Tracks</span>
                     </div>
-                    <div title="CellBase" class="hover" on-click="handleMenuOption" data-panel="cellbaseTrackPanel">
+                    <div title="CellBase" class="option" on-click="handleMenuOption" data-panel="cellbaseTrackPanel">
                         <i class="fa fa-database"></i>
                         <span class="">CellBase</span>
                     </div>
-                    <div title="Search" class="hover" on-click="handleMenuOption" data-panel="cellbaseSearchPanel">
+                    <div title="Search" class="option" on-click="handleMenuOption" data-panel="cellbaseSearchPanel">
                         <i class="fa fa-search"></i>
                         <span class="">Search</span>
                     </div>
-                    <div title="Settings" class="hover" on-click="handleMenuOption" data-panel="settingsPanel">
+                    <div title="Settings" class="option" on-click="handleMenuOption" data-panel="settingsPanel">
                         <i class="fa fa-wrench"></i>
                         <span class="">Settings</span>
                     </div>
@@ -222,28 +225,28 @@
                         <span id="assembly">{{selectedSpecies.assembly}}</span>
                     </span>
 
-                    <div id="menu" class="menu horizontal layout">
-                        <!--<div title="Upload" class="hover" on-click="handleToggleUpload" data-panel="uploadPanel">-->
-                        <!--<i class="fa fa-cloud-upload"></i>-->
-                        <!--<span class="option-text">Upload</span>-->
-                        <!--</div>-->
-                        <div title="Browse" class="hover" on-click="handleBrowserOption" data-panel="browserPanel">
+                    <div id="menu" class="menu horizontal layout flex">
+                        <div style="margin-left:4vw;"></div>
+                        <div title="Browse" class="option" on-click="handleBrowserOption" data-panel="browserPanel">
                             <i class="fa fa-cloud"></i>
                             <span class="option-text">My data</span>
                         </div>
-                        <div title="Tracks" class="hover" on-click="handleMenuOption" data-panel="trackMenuPanel">
+                        <div style="margin-left:2vw;"></div>
+                        <div title="Tracks" class="option" on-click="handleMenuOption" data-panel="trackMenuPanel">
                             <i class="fa fa-tasks"></i>
                             <span class="option-text">Tracks</span>
                         </div>
-                        <div title="CellBase" class="hover" on-click="handleMenuOption" data-panel="cellbaseTrackPanel">
+                        <div title="CellBase" class="option" on-click="handleMenuOption"
+                             data-panel="cellbaseTrackPanel">
                             <i class="fa fa-database"></i>
                             <span class="option-text">CellBase</span>
                         </div>
-                        <div title="Search" class="hover" on-click="handleMenuOption" data-panel="cellbaseSearchPanel">
+                        <div title="Search" class="option" on-click="handleMenuOption" data-panel="cellbaseSearchPanel">
                             <i class="fa fa-search"></i>
                             <span class="option-text">Search</span>
                         </div>
-                        <div title="Settings" class="hover" on-click="handleMenuOption" data-panel="settingsPanel">
+                        <div style="margin-left:2vw;"></div>
+                        <div title="Settings" class="option" on-click="handleMenuOption" data-panel="settingsPanel">
                             <i class="fa fa-wrench"></i>
                             <span class="option-text">Settings</span>
                         </div>
@@ -294,7 +297,6 @@
                             </div>
                         </jso-panel>
 
-
                         <jso-panel collapsible id="cellbaseSearchPanel" on-hidden="handlePanelHidden">
                             <div class="header">
                                 Advanced Cellbase search
@@ -323,21 +325,6 @@
                                     on-need-refresh="handleUserNeedRefresh"></jso-opencga-browser>
                         </div>
                     </jso-panel>
-
-
-                    <!--<jso-panel modal closable hidden id="uploadPanel" on-hidden="handlePanelHidden">-->
-                    <!--<div class="header">-->
-                    <!--<i class="fa fa-cloud-upload"></i> &nbsp; Upload file-->
-                    <!--</div>-->
-                    <!--<div class="container" id="uploadFile">-->
-                    <!--<jso-opencga-upload-file-->
-                    <!--showbioformats-->
-                    <!--bioformats="{{bioformats}}"-->
-                    <!--projects="{{projects}}">-->
-                    <!--</jso-opencga-upload-file>-->
-                    <!--</div>-->
-                    <!--</jso-panel>-->
-
                 </div>
                 <gm-status-bar
                         menu-option="home"
@@ -352,14 +339,32 @@
 
         <jso-panel hidden modal closable id="settingsPanel" on-hidden="handlePanelHidden">
             <div class="header">
-                <i class="fa fa-wrench"></i> Genome Maps settings
+                <i class="fa fa-wrench"></i> &nbsp; Genome Maps settings
             </div>
             <div id="settings" class="container flex">
                 <label class="jso">CellBase host:</label>
-                <input class="jso" type="text">
+                <input class="jso" type="text" value="{{cellbaseHost::input}}">
+
+                <div class="horizontal layout flex end-justified">
+                    <div class="jso-btn jso-btn-shdw" style="width:100px;margin:5px;"
+                         on-click="handleResetCellbaseHost">Reset
+                    </div>
+                    <div class="jso-btn jso-btn-shdw" style="width:100px;margin:5px;"
+                         on-click="handleApplyCellbaseHost">Apply
+                    </div>
+                </div>
                 <br>
                 <label class="jso">OpenCGA host:</label>
                 <input class="jso" type="text">
+
+                <div class="horizontal layout flex end-justified">
+                    <div class="jso-btn jso-btn-shdw" style="width:100px;margin:5px;"
+                         on-click="handleResetOpencgaHost">Reset
+                    </div>
+                    <div class="jso-btn jso-btn-shdw" style="width:100px;margin:5px;"
+                         on-click="handleApplyOpencgaHost">Apply
+                    </div>
+                </div>
             </div>
         </jso-panel>
 
@@ -403,6 +408,14 @@
                     value: 'VARIANT',
                     text: 'Variant'
                 }]
+            },
+            cellbaseHost: {
+                type: String,
+                value: CellBaseManager.host
+            },
+            opencgaHost: {
+                type: String,
+                value: OpencgaManager.host
             }
         },
         ready: function () {
@@ -468,15 +481,6 @@
                 this._lastLogedRequest = this.$.browserPanel;
             }
         },
-//        handleUploadOption: function (e) {
-//            this.$.paperDrawerPanel.closeDrawer();
-//            if (this.$.jsoHeader.isLogged) {
-//                this.$.uploadPanel.hidden = !this.$.uploadPanel.hidden;
-//            } else {
-//                this.selectedOption = 'login';
-//                this._lastLogedRequest = this.$.uploadPanel;
-//            }
-//        },
 
         handlePanelHidden: function (e) {
             var id = e.currentTarget.getAttribute('id');
@@ -684,10 +688,12 @@
                 console.log("no user data")
             }
         },
-
-
-        handleAppMenu: function (e) {
-            this.$.sidePanel.classList.toggle('side-panel-shown');
+        handleResetCellbaseHost: function (e) {
+            CellBaseManager.host = CELLBASE_HOST;
+        },
+        handleResetOpencgaHost: function (e) {
+            this.$.jsoHeader.sessionFinished();
+            OpencgaManager.host = OPENCGA_HOST;
         },
         handleSwapTrackMenu: function (e) {
             this.genomeViewer.trackListPanel.swapTracks(e.detail.t1, e.detail.t2);

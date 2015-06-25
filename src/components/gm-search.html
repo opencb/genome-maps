@@ -56,7 +56,7 @@
         <label> Result type </label>
 
         <div class="jso-select">
-            <select class="jso" value="{{selectedResultType}}" on-change="handleResultTypeChange">
+            <select value="{{selectedResultType}}" on-change="handleResultTypeChange">
                 <template is="dom-repeat" items="{{resultTypes}}" as="resultType">
                     <option value="{{resultType}}">{{resultType}}</option>
                 </template>
