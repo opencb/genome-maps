@@ -34,11 +34,6 @@
             height: 100%;
         }
 
-        [drawer] {
-            background-color: var(--default-primary-color);
-            color: var(--text-primary-color);
-        }
-
         #sidetitle {
             text-align: center;
             font-size: 24px;
@@ -407,7 +402,6 @@
         },
 
         handleBrowserOption: function (e) {
-            this.$.paperDrawerPanel.closeDrawer();
             if (this.$.jsoHeader.isLogged) {
                 this.$.browserPanel.hidden = !this.$.browserPanel.hidden;
             } else {
