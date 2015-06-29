@@ -79,10 +79,16 @@ var EvaManager = {
             version: version
         };
 
-        var params = {
-        };
-
+        var params = {};
         _.extend(config, args);
+
+        //species can be the species code(String) or an object with text attribute
+        if ($.isPlainObject(config.species)) {
+            config.params["species"] = Utils.getSpeciesCode(config.species.text) + '_' + config.species.assembly.split('.')[0].toLowerCase();
+        } else {
+            config.params["species"] = config.species;
+        }
+
         _.extend(config.params, params);
 
         var query = '';
@@ -92,6 +98,7 @@ var EvaManager = {
             }
             query = '/' + config.query;
         }
+
 
         var url = config.host + '/' + config.version + '/' + config.category + query + '/' + config.resource;
         url = Utils.addQueryParamtersToUrl(config.params, url);

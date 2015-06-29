@@ -22,34 +22,46 @@ function EvaAdapter(args) {
 
     _.extend(this, Backbone.Events);
 
-    this.host;
-    this.version;
-
     _.extend(this, args);
 
     this.on(this.handlers);
 
-    this.cacheConfig = {
-        cacheId: this.params.species,
-//        subCacheId: this.resource + this.params.exclude,
-        chunkSize: 3000
-    };
-    _.extend(this.cacheConfig, args.cacheConfig);
+    this.configureCache();
 
-    this.cache = new FeatureChunkCache(this.cacheConfig);
+    this.debug = false;
 }
 
 EvaAdapter.prototype = {
-
+    setSpecies: function (species) {
+        this.species = species;
+        this.configureCache();
+    },
+    setHost: function (host) {
+        this.host = host;
+        this.configureCache();
+    },
+    configureCache: function () {
+        var host = this.host || EvaManager.host;
+        var cacheId = host + (this.species.text + this.species.assembly).replace(/[/_().\ -]/g, '');
+        if (!this.cacheConfig) {
+            this.cacheConfig = {
+                //    //subCacheId: this.resource + this.params.keys(),
+                chunkSize: 3000
+            }
+        }
+        this.cacheConfig.cacheId = cacheId;
+        this.cache = new FeatureChunkCache(this.cacheConfig);
+    },
     getData: function (args) {
         var _this = this;
-        args.webServiceCallCount = 0;
 
         var params = {};
+        //histogram: (dataType == 'histogram')
         _.extend(params, this.params);
         _.extend(params, args.params);
 
-        /** region check **/
+
+        /** 1 region check **/
         var region = args.region;
         if (region.start > 300000000 || region.end < 1) {
             return;
@@ -58,13 +70,7 @@ EvaAdapter.prototype = {
         region.end = (region.end > 300000000) ? 300000000 : region.end;
 
         /** 2 category check **/
-        //TODO define category
-        var category = '';
-        if (this.params.studies) {
-            category = this.params.studies.join('_');
-        }
-        category += this.params.species;
-        var categories = [this.resource + category];
+        var categories = [this.category + this.subCategory + this.resource + Utils.queryString(params)];
 
         /** 3 dataType check **/
         var dataType = args.dataType;
@@ -73,7 +79,7 @@ EvaAdapter.prototype = {
         }
 
         /** 4 chunkSize check **/
-        var chunkSize = args.params.interval ? args.params.interval : this.cacheConfig.chunkSize; // this.cache.defaultChunkSize should be the same
+        var chunkSize = params.interval ? params.interval : this.cacheConfig.chunkSize; // this.cache.defaultChunkSize should be the same
         if (this.debug) {
             console.log(chunkSize);
         }
@@ -92,49 +98,55 @@ EvaAdapter.prototype = {
                 categoriesName += "," + categories[j];
             }
             categoriesName = categoriesName.slice(1);   // to remove first ','
-            /**
-             * Process uncached regions
-             */
-            // TODO check if EVA allows multiple regions
+
+            var chunks = cachedChunks[category];
+            // TODO check how to manage multiple regions
             var queriesList = _this._groupQueries(uncachedRegions[category]);
 
-            for (var i = 0; i < queriesList.length; i++) {
-                args.webServiceCallCount++;
-                var queryRegion = queriesList[i];
+            /** Uncached regions found **/
+            if (queriesList.length > 0) {
+                args.webServiceCallCount = 0;
+                for (var i = 0; i < queriesList.length; i++) {
+                    args.webServiceCallCount++;
+                    var queryRegion = queriesList[i];
 
-                EvaManager.get({
-                    host: _this.host,
-                    version: _this.version,
-                    species: _this.species,
-                    category: _this.category,
-                    query: queryRegion.toString(),
-                    resource: _this.resource,
-                    params: params,
-                    success: function (response) {
-                        _this._success(response, categories, dataType, chunkSize, args);
-                    },
-                    error: function () {
-                        console.log('Server error');
-                    }
+                    EvaManager.get({
+                        host: _this.host,
+                        version: _this.version,
+                        species: _this.species,
+                        category: _this.category,
+                        query: queryRegion.toString(),
+                        resource: _this.resource,
+                        params: params,
+                        success: function (response) {
+                            var responseChunks = _this._success(response, categories, dataType, chunkSize);
+                            args.webServiceCallCount--;
+
+                            chunks = chunks.concat(responseChunks);
+                            if (args.webServiceCallCount === 0) {
+                                args.done({
+                                    items: chunks, dataType: dataType, chunkSize: chunkSize, sender: _this
+                                });
+                            }
+
+                        },
+                        error: function () {
+                            console.log('Server error');
+                        }
+                    });
+                }
+            } else
+            /** All regions are cached **/
+            {
+                args.done({
+                    items: chunks, dataType: dataType, chunkSize: chunkSize, sender: _this
                 });
             }
-
-            /**
-             * Process Cached chunks
-             */
-            if (cachedChunks[category].length > 0) {
-                if (args.webServiceCallCount === 0) {
-                    args.done();
-                }
-                _this.trigger('data:ready', {items: cachedChunks[category], dataType: dataType, chunkSize: chunkSize, sender: _this});
-//                args.dataReady({items: cachedChunks[category], dataType: dataType, chunkSize: chunkSize, sender: _this});
-            }
         });
-
     },
 
-    _success: function (data, categories, dataType, chunkSize, args) {
-        args.webServiceCallCount--;
+
+    _success: function (data, categories, dataType, chunkSize) {
         var timeId = Utils.randomString(4) + this.resource + " save";
         console.time(timeId);
         /** time log **/
@@ -160,13 +172,7 @@ EvaAdapter.prototype = {
         /** time log **/
         console.timeEnd(timeId);
 
-        if (args.webServiceCallCount === 0) {
-            args.done();
-        }
-
-        if (items.length > 0) {
-            this.trigger('data:ready', {items: items, dataType: dataType, chunkSize: chunkSize, sender: this});
-        }
+        return items;
     },
 
     /**

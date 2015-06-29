@@ -227,11 +227,6 @@
 
                     <div id="menu" class="menu horizontal layout flex">
                         <div style="margin-left:4vw;"></div>
-                        <div title="Browse" class="option" on-click="handleBrowserOption" data-panel="browserPanel">
-                            <i class="fa fa-cloud"></i>
-                            <span class="option-text">My data</span>
-                        </div>
-                        <div style="margin-left:2vw;"></div>
                         <div title="Tracks" class="option" on-click="handleMenuOption" data-panel="trackMenuPanel">
                             <i class="fa fa-tasks"></i>
                             <span class="option-text">Tracks</span>
@@ -246,6 +241,11 @@
                             <span class="option-text">Search</span>
                         </div>
                         <div style="margin-left:2vw;"></div>
+                        <div title="Browse" class="option" on-click="handleBrowserOption" data-panel="browserPanel">
+                            <i class="fa fa-cloud"></i>
+                            <span class="option-text">My data</span>
+                        </div>
+                        <div class="flex" style="margin-left:2vw;"></div>
                         <div title="Settings" class="option" on-click="handleMenuOption" data-panel="settingsPanel">
                             <i class="fa fa-wrench"></i>
                             <span class="option-text">Settings</span>
@@ -268,8 +268,7 @@
                 <div id="content">
                     <jso-genome-viewer-element id="gv" menu-option="home"></jso-genome-viewer-element>
 
-
-                    <div id="configure">
+                    <div id="configure" menu-option="home">
 
                         <jso-panel collapsible id="trackMenuPanel" on-hidden="handlePanelHidden">
                             <div class="header">
@@ -343,19 +342,19 @@
             </div>
             <div id="settings" class="container flex">
                 <label class="jso">CellBase host:</label>
-                <input class="jso" type="text" value="{{cellbaseHost::input}}">
+                <input class="jso" type="text" value="{{cellBaseHost::input}}">
 
                 <div class="horizontal layout flex end-justified">
                     <div class="jso-btn jso-btn-shdw" style="width:100px;margin:5px;"
-                         on-click="handleResetCellbaseHost">Reset
+                         on-click="handleResetCellBaseHost">Reset
                     </div>
                     <div class="jso-btn jso-btn-shdw" style="width:100px;margin:5px;"
-                         on-click="handleApplyCellbaseHost">Apply
+                         on-click="handleApplyCellBaseHost">Apply
                     </div>
                 </div>
                 <br>
-                <label class="jso">OpenCGA host:</label>
-                <input class="jso" type="text">
+                <label class="jso">OpenCGA host: (You will need to sign in again)</label>
+                <input class="jso" type="text" value="{{opencgaHost::input}}">
 
                 <div class="horizontal layout flex end-justified">
                     <div class="jso-btn jso-btn-shdw" style="width:100px;margin:5px;"
@@ -409,7 +408,7 @@
                     text: 'Variant'
                 }]
             },
-            cellbaseHost: {
+            cellBaseHost: {
                 type: String,
                 value: CellBaseManager.host
             },
@@ -688,12 +687,25 @@
                 console.log("no user data")
             }
         },
-        handleResetCellbaseHost: function (e) {
-            CellBaseManager.host = CELLBASE_HOST;
+        handleApplyCellBaseHost: function (e) {
+            this.genomeViewer.setCellBaseHost(this.cellBaseHost);
+        },
+        handleResetCellBaseHost: function (e) {
+            this.set('cellBaseHost', CELLBASE_HOST);
+            this.genomeViewer.setCellBaseHost(this.cellBaseHost);
+        },
+        handleApplyOpencgaHost: function (e) {
+            if (this.opencgaHost != OpencgaManager.host) {
+                this.$.jsoHeader.sessionFinished();
+                OpencgaManager.host = this.opencgaHost
+            }
         },
         handleResetOpencgaHost: function (e) {
-            this.$.jsoHeader.sessionFinished();
-            OpencgaManager.host = OPENCGA_HOST;
+            if (this.opencgaHost != OPENCGA_HOST) {
+                this.$.jsoHeader.sessionFinished();
+                this.set('opencgaHost', OPENCGA_HOST);
+                OpencgaManager.host = OPENCGA_HOST;
+            }
         },
         handleSwapTrackMenu: function (e) {
             this.genomeViewer.trackListPanel.swapTracks(e.detail.t1, e.detail.t2);
@@ -949,12 +961,12 @@
                         }),
                         dataAdapter: new EvaAdapter({
                             host: 'http://wwwdev.ebi.ac.uk/eva/webservices/rest',
+                            species: this.genomeViewer.species,
                             version: 'v1',
                             category: "segments",
                             resource: "variants",
                             params: {
-                                exclude: 'sourceEntries',
-                                species: Utils.getSpeciesCode(this.genomeViewer.species.text) + '_' + this.genomeViewer.species.assembly.split('.')[0].toLowerCase()
+                                exclude: 'sourceEntries'
                             },
                             cacheConfig: {
                                 chunkSize: 10000
