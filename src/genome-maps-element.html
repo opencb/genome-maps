@@ -5,7 +5,6 @@
 <script src="eva-manager.js"></script>
 
 
-<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
 <link rel="import" href="../lib/jsorolla/src/lib/components/jso-genome-viewer-element.html">
@@ -45,22 +44,6 @@
             font-size: 24px;
             background-color: var(--dark-primary-color);
             padding: 18px 0;
-        }
-
-        #sidemenu div.option {
-            font-size: 18px;
-            box-sizing: border-box;
-            padding: 7px 20px;
-            border-bottom: 1px solid var(--divider-color);
-        }
-
-        #sidemenu div.option:hover {
-            cursor: pointer;
-            background-color: var(--accent-color);
-        }
-
-        #sidemenu div.option[active] {
-            font-weight: normal;
         }
 
         #menu div.option {
@@ -173,168 +156,128 @@
 
     </style>
     <template>
-        <paper-drawer-panel id="paperDrawerPanel" force-narrow disable-swipe>
-            <div drawer>
-                <div id="sidetitle">
-                    Genome Maps<br>
-                    <span class="userid">{{userData.id}}</span>
-                </div>
-                <div id="sidemenu">
-                    <!--<div title="Upload" class="hover" on-click="handleToggleUpload" data-panel="uploadPanel">-->
-                    <!--<i class="fa fa-cloud-upload"></i>-->
-                    <!--<span class="">Upload</span>-->
-                    <!--</div>-->
-                    <div title="Browse" class="option" on-click="handleBrowserOption" data-panel="browserPanel">
-                        <i class="fa fa-cloud"></i>
-                        <span class="">My data</span>
-                    </div>
-                    <div title="Tracks" class="option" on-click="handleMenuOption" data-panel="trackMenuPanel">
-                        <i class="fa fa-tasks"></i>
-                        <span class="">Tracks</span>
-                    </div>
-                    <div title="CellBase" class="option" on-click="handleMenuOption" data-panel="cellbaseTrackPanel">
-                        <i class="fa fa-database"></i>
-                        <span class="">CellBase</span>
-                    </div>
-                    <div title="Search" class="option" on-click="handleMenuOption" data-panel="cellbaseSearchPanel">
-                        <i class="fa fa-search"></i>
-                        <span class="">Search</span>
-                    </div>
-                    <div title="Settings" class="option" on-click="handleMenuOption" data-panel="settingsPanel">
-                        <i class="fa fa-wrench"></i>
-                        <span class="">Settings</span>
-                    </div>
-                </div>
-            </div>
-            <div main>
-                <jso-opencga-header id="jsoHeader"
-                                    selected-option="{{selectedOption}}"
-                                    user-data="{{userData}}"
-                                    on-login="handleLogin"
-                                    on-logout="handleLogout"
-                        >
-                    <div class="menu-button" paper-drawer-toggle>
-                        <i class="fa fa-bars" paper-drawer-toggle></i>
-                    </div>
-                    <!--<div hidden class="icon">-->
-                    <!--<img src="" style="height: 0px;margin: 5px 0px 0 0;">-->
-                    <!--</div>-->
-                    <span class="title">Genome Maps</span>
+        <jso-opencga-header id="jsoHeader"
+                            selected-option="{{selectedOption}}"
+                            user-data="{{userData}}"
+                            on-login="handleLogin"
+                            on-logout="handleLogout"
+                >
+            <!--<div hidden class="icon">-->
+            <!--<img src="" style="height: 0px;margin: 5px 0px 0 0;">-->
+            <!--</div>-->
+            <span class="title">Genome Maps</span>
                     <span id="description" class="description">
                         <span>{{selectedSpecies.text}}</span>
                         <span id="assembly">{{selectedSpecies.assembly}}</span>
                     </span>
 
-                    <div id="menu" class="menu horizontal layout flex">
-                        <div style="margin-left:4vw;"></div>
-                        <div title="Tracks" class="option" on-click="handleMenuOption" data-panel="trackMenuPanel">
-                            <i class="fa fa-tasks"></i>
-                            <span class="option-text">Tracks</span>
-                        </div>
-                        <div title="CellBase" class="option" on-click="handleMenuOption"
-                             data-panel="cellbaseTrackPanel">
-                            <i class="fa fa-database"></i>
-                            <span class="option-text">CellBase</span>
-                        </div>
-                        <div title="Search" class="option" on-click="handleMenuOption" data-panel="cellbaseSearchPanel">
-                            <i class="fa fa-search"></i>
-                            <span class="option-text">Search</span>
-                        </div>
-                        <div style="margin-left:2vw;"></div>
-                        <div title="Browse" class="option" on-click="handleBrowserOption" data-panel="browserPanel">
-                            <i class="fa fa-cloud"></i>
-                            <span class="option-text">My data</span>
-                        </div>
-                        <div class="flex" style="margin-left:2vw;"></div>
-                        <div title="Settings" class="option" on-click="handleMenuOption" data-panel="settingsPanel">
-                            <i class="fa fa-wrench"></i>
-                            <span class="option-text">Settings</span>
-                        </div>
-                    </div>
-
-                    <jso-help-menu class="helpmenu" selectedOption="{{selectedOption}}">
-                        <a href="https://github.com/opencb/genome-maps/wiki" target="_blank">
-                            <i class="fa fa-book"></i>
-                            &nbsp; Documentation
-                        </a>
-                        <a href="https://github.com/opencb/genome-maps/" target="_blank">
-                            <i class="fa fa-github"></i>
-                            &nbsp; Source code
-                        </a>
-                    </jso-help-menu>
-                </jso-opencga-header>
-
-
-                <div id="content">
-                    <jso-genome-viewer-element id="gv" menu-option="home"></jso-genome-viewer-element>
-
-                    <div id="configure" menu-option="home">
-
-                        <jso-panel collapsible id="trackMenuPanel" on-hidden="handlePanelHidden">
-                            <div class="header">
-                                Active tracks
-                            </div>
-                            <div class="container flex">
-                                <gm-track-menu
-                                        id="trackMenu"
-                                        on-swap="handleSwapTrackMenu"
-                                        on-removetrack="handleRemoveTrack"></gm-track-menu>
-                            </div>
-                        </jso-panel>
-
-
-                        <jso-panel collapsible id="cellbaseTrackPanel" on-hidden="handlePanelHidden">
-                            <div class="header">
-                                Add CellBase tracks
-                            </div>
-                            <div class="container flex">
-                                <gm-add-track
-                                        id="addTrack"
-                                        on-addtrack="handleAddTrack"
-                                        selectedSpecies="{{selectedSpecies}}"
-                                        collapsed="true"></gm-add-track>
-                            </div>
-                        </jso-panel>
-
-                        <jso-panel collapsible id="cellbaseSearchPanel" on-hidden="handlePanelHidden">
-                            <div class="header">
-                                Advanced Cellbase search
-                            </div>
-
-                            <div class="container flex">
-                                <gm-search
-                                        id="search"
-                                        selected-species="{{selectedSpecies}}"
-                                        collapsed="true"
-                                        on-feature="handleResultClick"></gm-search>
-                            </div>
-                        </jso-panel>
-                    </div>
-
-                    <jso-panel hidden collapsible movable closable id="browserPanel" on-hidden="handlePanelHidden">
-                        <div class="header">
-                            Browse my data
-                        </div>
-                        <div class="container flex">
-                            <jso-opencga-browser
-                                    id="browser"
-                                    on-fileselect="handleFileSelect"
-                                    bioformats="{{bioformats}}"
-                                    projects="{{projects}}"
-                                    on-need-refresh="handleUserNeedRefresh"></jso-opencga-browser>
-                        </div>
-                    </jso-panel>
+            <div id="menu" class="menu horizontal layout flex">
+                <div style="margin-left:4vw;"></div>
+                <div title="Tracks" class="option" on-click="handleMenuOption" data-panel="trackMenuPanel">
+                    <i class="fa fa-tasks"></i>
+                    <span class="option-text">Tracks</span>
                 </div>
-                <gm-status-bar
-                        menu-option="home"
-                        id="statusBar"
-                        version="{{version}}">
-                    <span style="color:#666">created by Computational Genomics Department, Principe Felipe Research Center, 2015</span>
-                </gm-status-bar>
-
-
+                <div title="CellBase" class="option" on-click="handleMenuOption"
+                     data-panel="cellbaseTrackPanel">
+                    <i class="fa fa-database"></i>
+                    <span class="option-text">CellBase</span>
+                </div>
+                <div title="Search" class="option" on-click="handleMenuOption" data-panel="cellbaseSearchPanel">
+                    <i class="fa fa-search"></i>
+                    <span class="option-text">Search</span>
+                </div>
+                <div style="margin-left:2vw;"></div>
+                <div title="Browse" class="option" on-click="handleBrowserOption" data-panel="browserPanel">
+                    <i class="fa fa-cloud"></i>
+                    <span class="option-text">My data</span>
+                </div>
+                <div class="flex" style="margin-left:2vw;"></div>
+                <div title="Settings" class="option" on-click="handleMenuOption" data-panel="settingsPanel">
+                    <i class="fa fa-wrench"></i>
+                    <span class="option-text">Settings</span>
+                </div>
             </div>
-        </paper-drawer-panel>
+
+            <jso-help-menu class="helpmenu" selectedOption="{{selectedOption}}">
+                <a href="https://github.com/opencb/genome-maps/wiki" target="_blank">
+                    <i class="fa fa-book"></i>
+                    &nbsp; Documentation
+                </a>
+                <a href="https://github.com/opencb/genome-maps/" target="_blank">
+                    <i class="fa fa-github"></i>
+                    &nbsp; Source code
+                </a>
+            </jso-help-menu>
+        </jso-opencga-header>
+
+
+        <div id="content">
+            <jso-genome-viewer-element id="gv" menu-option="home"></jso-genome-viewer-element>
+
+            <div id="configure" menu-option="home">
+
+                <jso-panel collapsible id="trackMenuPanel" on-hidden="handlePanelHidden">
+                    <div class="header">
+                        Active tracks
+                    </div>
+                    <div class="container flex">
+                        <gm-track-menu
+                                id="trackMenu"
+                                on-swap="handleSwapTrackMenu"
+                                on-removetrack="handleRemoveTrack"></gm-track-menu>
+                    </div>
+                </jso-panel>
+
+
+                <jso-panel collapsible id="cellbaseTrackPanel" on-hidden="handlePanelHidden">
+                    <div class="header">
+                        Add CellBase tracks
+                    </div>
+                    <div class="container flex">
+                        <gm-add-track
+                                id="addTrack"
+                                on-addtrack="handleAddTrack"
+                                selectedSpecies="{{selectedSpecies}}"
+                                collapsed="true"></gm-add-track>
+                    </div>
+                </jso-panel>
+
+                <jso-panel collapsible id="cellbaseSearchPanel" on-hidden="handlePanelHidden">
+                    <div class="header">
+                        Advanced Cellbase search
+                    </div>
+
+                    <div class="container flex">
+                        <gm-search
+                                id="search"
+                                selected-species="{{selectedSpecies}}"
+                                collapsed="true"
+                                on-feature="handleResultClick"></gm-search>
+                    </div>
+                </jso-panel>
+            </div>
+
+            <jso-panel hidden collapsible movable closable id="browserPanel" on-hidden="handlePanelHidden">
+                <div class="header">
+                    Browse my data
+                </div>
+                <div class="container flex">
+                    <jso-opencga-browser
+                            id="browser"
+                            on-fileselect="handleFileSelect"
+                            bioformats="{{bioformats}}"
+                            projects="{{projects}}"
+                            on-need-refresh="handleUserNeedRefresh"></jso-opencga-browser>
+                </div>
+            </jso-panel>
+        </div>
+        <gm-status-bar
+                menu-option="home"
+                id="statusBar"
+                version="{{version}}">
+            <span style="color:#666">created by Computational Genomics Department, Principe Felipe Research Center, 2015</span>
+        </gm-status-bar>
+
 
         <jso-panel hidden modal closable id="settingsPanel" on-hidden="handlePanelHidden">
             <div class="header">
@@ -430,14 +373,6 @@
                         el.setAttribute('active', '');
                     }
                 }
-                var el = Polymer.dom(this.$.sidemenu).querySelector('[data-panel=' + id + ']');
-                if (el) {
-                    if (panEl.hidden) {
-                        el.removeAttribute('active')
-                    } else {
-                        el.setAttribute('active', '');
-                    }
-                }
             }
 
             this._init();
@@ -485,12 +420,6 @@
             var id = e.currentTarget.getAttribute('id');
             var sel = '[data-panel=' + id + ']';
             var el = Polymer.dom(this.$.menu).querySelector(sel);
-            if (e.currentTarget.hidden) {
-                el.removeAttribute('active')
-            } else {
-                el.setAttribute('active', '');
-            }
-            var el = Polymer.dom(this.$.sidemenu).querySelector(sel);
             if (e.currentTarget.hidden) {
                 el.removeAttribute('active')
             } else {
@@ -1109,9 +1038,9 @@
                             cacheId: Cookies('bioinfo_sid') + 'opencga' + object.id,
                         }
                     });
-                    var renderer = new BamRenderer(FEATURE_TYPES.bam);
+                    var renderer = new AlignmentRenderer(FEATURE_TYPES.alignment);
 
-                    track = new BamTrack({
+                    track = new AlignmentTrack({
                         title: trackTitle,
                         closable: true,
                         //minHistogramRegionSize: 12000,
