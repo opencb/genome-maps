@@ -4,24 +4,25 @@
 <script src="eva-adapter.js"></script>
 <script src="eva-manager.js"></script>
 
-
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
 <link rel="import" href="../lib/jsorolla/src/lib/components/jso-genome-viewer-element.html">
 <link rel="import" href="../lib/jsorolla/src/lib/components/jso-help-menu.html">
 <link rel="import" href="../lib/jsorolla/src/lib/components/jso-opencga-input-text.html">
 <link rel="import" href="../lib/jsorolla/src/lib/components/jso-panel.html">
+<link rel="import" href="../lib/jsorolla/src/lib/components/table/jso-table.html">
 <link rel="import" href="../lib/jsorolla/src/lib/components/opencga/files/jso-opencga-browser.html">
 <link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-opencga-footer.html">
 <link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-opencga-header.html">
 
 <link rel="import" href="../lib/jsorolla/src/lib/components/jso-opencga-button-tooltip.html">
 
+<link rel="import" href="../lib/jsorolla/src/lib/components/cellbase/jso-gene-info-panel.html">
+
 <link rel="import" href="components/gm-add-track.html">
 <link rel="import" href="components/gm-search.html">
 <link rel="import" href="components/gm-status-bar.html">
 <link rel="import" href="components/gm-track-menu.html">
-
 
 <dom-module id="genome-maps-element">
     <style>
@@ -34,21 +35,14 @@
             height: 100%;
         }
 
-        #sidetitle {
-            text-align: center;
-            font-size: 24px;
-            background-color: var(--dark-primary-color);
-            padding: 18px 0;
-        }
-
         #menu div.option {
             box-sizing: border-box;
             margin-right: 1vw;
+            margin-top: 15px;
+            margin-bottom: 15px;
             cursor: pointer;
             text-align: center;
             line-height: 30px;
-            margin-top: 15px;
-            margin-bottom: 15px;
             padding: 0 5px;
         }
 
@@ -107,6 +101,7 @@
 
         #browser {
             /*width: 600px;*/
+
             height: 400px;
         }
 
@@ -148,23 +143,18 @@
         #assembly {
             color: var(--text-primary-color);
         }
-
     </style>
     <template>
-        <jso-opencga-header id="jsoHeader"
-                            selected-option="{{selectedOption}}"
-                            user-data="{{userData}}"
-                            on-login="handleLogin"
-                            on-logout="handleLogout"
-                >
+        <jso-opencga-header id="jsoHeader" selected-option="{{selectedOption}}" user-data="{{userData}}"
+                            on-login="handleLogin" on-logout="handleLogout">
             <!--<div hidden class="icon">-->
             <!--<img src="" style="height: 0px;margin: 5px 0px 0 0;">-->
             <!--</div>-->
             <span class="title">Genome Maps</span>
-                    <span id="description" class="description">
+            <span id="description" class="description">
                         <span>{{selectedSpecies.text}}</span>
-                        <span id="assembly">{{selectedSpecies.assembly}}</span>
-                    </span>
+            <span id="assembly">{{selectedSpecies.assembly}}</span>
+            </span>
 
             <div id="menu" class="menu horizontal layout flex">
                 <div style="margin-left:4vw;"></div>
@@ -172,8 +162,7 @@
                     <i class="fa fa-tasks"></i>
                     <span class="option-text">Tracks</span>
                 </div>
-                <div title="CellBase" class="option" on-click="handleMenuOption"
-                     data-panel="cellbaseTrackPanel">
+                <div title="CellBase" class="option" on-click="handleMenuOption" data-panel="cellbaseTrackPanel">
                     <i class="fa fa-database"></i>
                     <span class="option-text">CellBase</span>
                 </div>
@@ -195,45 +184,36 @@
 
             <jso-help-menu class="helpmenu" selectedOption="{{selectedOption}}">
                 <a href="https://github.com/opencb/genome-maps/wiki" target="_blank">
-                    <i class="fa fa-book"></i>
-                    &nbsp; Documentation
+                    <i class="fa fa-book"></i> &nbsp; Documentation
                 </a>
                 <a href="https://github.com/opencb/genome-maps/" target="_blank">
-                    <i class="fa fa-github"></i>
-                    &nbsp; Source code
+                    <i class="fa fa-github"></i> &nbsp; Source code
                 </a>
             </jso-help-menu>
         </jso-opencga-header>
 
+        <div id="content" menu-option="home">
+            <jso-genome-viewer-element id="gv"></jso-genome-viewer-element>
 
-        <div id="content">
-            <jso-genome-viewer-element id="gv" menu-option="home"></jso-genome-viewer-element>
-
-            <div id="configure" menu-option="home">
+            <div id="configure">
 
                 <jso-panel collapsible id="trackMenuPanel" on-hidden="handlePanelHidden">
                     <div class="header">
                         Active tracks
                     </div>
                     <div class="container flex">
-                        <gm-track-menu
-                                id="trackMenu"
-                                on-swap="handleSwapTrackMenu"
-                                on-removetrack="handleRemoveTrack"></gm-track-menu>
+                        <gm-track-menu id="trackMenu" on-swap="handleSwapTrackMenu"
+                                       on-removetrack="handleRemoveTrack"></gm-track-menu>
                     </div>
                 </jso-panel>
-
 
                 <jso-panel collapsible id="cellbaseTrackPanel" on-hidden="handlePanelHidden">
                     <div class="header">
                         Add CellBase tracks
                     </div>
                     <div class="container flex">
-                        <gm-add-track
-                                id="addTrack"
-                                on-addtrack="handleAddTrack"
-                                selectedSpecies="{{selectedSpecies}}"
-                                collapsed="true"></gm-add-track>
+                        <gm-add-track id="addTrack" on-addtrack="handleAddTrack" selectedSpecies="{{selectedSpecies}}"
+                                      collapsed="true"></gm-add-track>
                     </div>
                 </jso-panel>
 
@@ -243,11 +223,8 @@
                     </div>
 
                     <div class="container flex">
-                        <gm-search
-                                id="search"
-                                selected-species="{{selectedSpecies}}"
-                                collapsed="true"
-                                on-feature="handleResultClick"></gm-search>
+                        <gm-search id="search" selected-species="{{selectedSpecies}}" collapsed="true"
+                                   on-feature="handleResultClick"></gm-search>
                     </div>
                 </jso-panel>
             </div>
@@ -257,22 +234,15 @@
                     Browse my data
                 </div>
                 <div class="container flex">
-                    <jso-opencga-browser
-                            id="browser"
-                            on-fileselect="handleFileSelect"
-                            bioformats="{{bioformats}}"
-                            projects="{{projects}}"
-                            on-need-refresh="handleUserNeedRefresh"></jso-opencga-browser>
+                    <jso-opencga-browser id="browser" on-fileselect="handleFileSelect" bioformats="{{bioformats}}"
+                                         projects="{{projects}}"
+                                         on-need-refresh="handleUserNeedRefresh"></jso-opencga-browser>
                 </div>
             </jso-panel>
         </div>
-        <gm-status-bar
-                menu-option="home"
-                id="statusBar"
-                version="{{version}}">
+        <gm-status-bar menu-option="home" id="statusBar" version="{{version}}">
             <span style="color:#666">created by Computational Genomics Department, Principe Felipe Research Center, 2015</span>
         </gm-status-bar>
-
 
         <jso-panel hidden modal closable id="settingsPanel" on-hidden="handlePanelHidden">
             <div class="header">
@@ -295,16 +265,15 @@
                 <input class="jso" type="text" value="{{opencgaHost::input}}">
 
                 <div class="horizontal layout flex end-justified">
-                    <div class="jso-btn jso-btn-shdw" style="width:100px;margin:5px;"
-                         on-click="handleResetOpencgaHost">Reset
+                    <div class="jso-btn jso-btn-shdw" style="width:100px;margin:5px;" on-click="handleResetOpencgaHost">
+                        Reset
                     </div>
-                    <div class="jso-btn jso-btn-shdw" style="width:100px;margin:5px;"
-                         on-click="handleApplyOpencgaHost">Apply
+                    <div class="jso-btn jso-btn-shdw" style="width:100px;margin:5px;" on-click="handleApplyOpencgaHost">
+                        Apply
                     </div>
                 </div>
             </div>
         </jso-panel>
-
 
     </template>
 </dom-module>
@@ -369,10 +338,8 @@
                     }
                 }
             }
-
             this._init();
         },
-
         selectedOptionChanged: function (neo, old) {
             var menuItems = Polymer.dom(this.root).querySelectorAll('[menu-option]');
             for (var i = 0; i < menuItems.length; i++) {
@@ -394,13 +361,10 @@
                 this.selectedOption = option;
             }
         },
-
-
         handleMenuOption: function (e) {
             var panel = this.$[e.currentTarget.dataset.panel];
             panel.hidden = !panel.hidden;
         },
-
         handleBrowserOption: function (e) {
             if (this.$.jsoHeader.isLogged) {
                 this.$.browserPanel.hidden = !this.$.browserPanel.hidden;
@@ -409,7 +373,6 @@
                 this._lastLogedRequest = this.$.browserPanel;
             }
         },
-
         handlePanelHidden: function (e) {
             var id = e.currentTarget.getAttribute('id');
             var sel = '[data-panel=' + id + ']';
@@ -420,7 +383,6 @@
                 el.setAttribute('active', '');
             }
         },
-
         handleRemoveTrack: function (e) {
             this.genomeViewer.removeTrack(e.detail);
         },
@@ -443,15 +405,12 @@
         },
         _init: function () {
             var me = this;
-
             this.region = new Region();
-
             var url = $.url();
             var url_cbhost = url.param('CELLBASE_HOST');
             if (url_cbhost != null) {
                 CELLBASE_HOST = url_cbhost;
             }
-
             this.speciesObj = DEFAULT_SPECIES;
             var urlSpecies = url.param('species');
             if (typeof urlSpecies !== 'undefined' && urlSpecies != '') {
@@ -459,20 +418,16 @@
             }
             this.species = this.speciesObj;
             this.region.load(this.speciesObj.region);
-
             this.selectedSpecies = this.species;
             //console.log(speciesObj);
-
             var regionStr = url.param('region');
             if (regionStr != null) {
                 this.region.parse(regionStr);
             }
-
             var urlZoom = parseInt(url.param('zoom'));
             if (isNaN(urlZoom) || urlZoom > 100 || urlZoom < 0) {
                 urlZoom = null;
             }
-
             var urlGene = url.param('gene');
             if (urlGene != null && urlGene != "") {
                 this.region.load(this.getRegionByFeature(urlGene, "gene"));
@@ -481,7 +436,6 @@
             if (urlSnp != null && urlSnp != "") {
                 this.region.load(this.getRegionByFeature(urlSnp, "snp"));
             }
-
             var gvConfig = {
                 cellBaseHost: CELLBASE_HOST,
                 cellBaseVersion: 'v3',
@@ -492,8 +446,8 @@
                 species: this.speciesObj,
                 sidePanel: false,
                 resizable: false,
-//        quickSearchResultFn:quickSearchResultFn,
-//        quickSearchDisplayKey:,
+                //        quickSearchResultFn:quickSearchResultFn,
+                //        quickSearchDisplayKey:,
                 karyotypePanelConfig: {
                     hidden: true,
                     collapsed: false,
@@ -510,54 +464,35 @@
                     collapsible: true
                 },
                 drawStatusBar: false,
-//            drawNavigationBar: false,
+                //            drawNavigationBar: false,
                 handlers: {
                     'region:change': function (e) {
                         console.log(e)
                     },
                     'species:change': function (event) {
-                        debugger
-//            me._setTracks();
-//            me.setTracksMenu();
+//                        me._setTracks();
+//                        me.setTracksMenu();
                         me.set('selectedSpecies', event.species);
-//                    me._refreshInitialTracksConfig();
+//                        me._refreshInitialTracksConfig();
                     }
                 }
-
-
-//        chromosomeList:[]
-//            trackListTitle: ''
-//            drawNavigationBar = true;
-//            drawKaryotypePanel: false,
-//            drawChromosomePanel: false,
-//            drawOverviewTrackListPanel: false
-
             };
-
             this.async(function () {
-
                 this.$.gv.createGenomeViewer(gvConfig);
                 this.genomeViewer = this.$.gv.genomeViewer;
                 this.genomeViewer.draw();
-
                 this.genomeViewer.trackListPanel.on('tracks:refresh', function (e) {
                     me._updateTrackMenu();
                 });
                 this.genomeViewer.trackListPanel.on('mousePosition:change', function (event) {
                     me.$.statusBar.set('mousePosition', event);
                 });
-
                 //TODO only test; uncomment on production
                 this._loadInitialTracksConfig();
-
             }, 100);
-
         },
-
-
         handleLogin: function () {
             this.selectedOption = "home";
-
             if (this._lastLogedRequest) {
                 this._lastLogedRequest.hidden = false;
                 this._lastLogedRequest = null;
@@ -565,7 +500,6 @@
         },
         handleLogout: function () {
             this.$.browserPanel.hidden = true;
-//            this.$.uploadPanel.hidden = true;
         },
         handleUserNeedRefresh: function () {
             this.$.jsoHeader.getUserInfo(true);
@@ -647,7 +581,6 @@
                     var trackType = track.id;
                     var checked = track.checked;
                     var disabled = track.disabled;
-
                     if (checked) {
                         var track = this.addTrack(trackType, trackType);
                     }
@@ -669,14 +602,12 @@
             var me = this;
             var track;
             switch (trackType) {
-
                 // Core
                 case "Sequence":
                     track = new FeatureTrack({
                         title: 'Sequence',
                         height: 25,
                         visibleRegionSize: 200,
-
                         renderer: new SequenceRenderer(),
                         dataAdapter: new CellBaseAdapter({
                             category: "genomic",
@@ -691,7 +622,6 @@
                     });
                     this.genomeViewer.addTrack(track);
                     break;
-
                 case "Gene/Transcript":
                     track = new GeneTrack({
                         title: 'Gene',
@@ -699,7 +629,6 @@
                         maxLabelRegionSize: 10000000,
                         minTranscriptRegionSize: 200000,
                         height: 100,
-
                         renderer: new GeneRenderer({
                             handlers: {
                                 'feature:click': function (e) {
@@ -708,6 +637,7 @@
                                     switch (e.featureType) {
                                         case "gene":
 //                                            new GeneInfoWidget(null, me.genomeViewer.species).draw(e);
+                                            me.$.content.appendChild(new JsoGeneInfoPanel(e.query, e.feature, me.cellBaseHost, me.genomeViewer.species));
                                             break;
                                         case "transcript":
 //                                            new TranscriptInfoWidget(null, me.genomeViewer.species).draw(e);
@@ -718,7 +648,6 @@
                                 }
                             }
                         }),
-
                         dataAdapter: new CellBaseAdapter({
                             category: "genomic",
                             subCategory: "region",
@@ -734,13 +663,11 @@
                     });
                     this.genomeViewer.addTrack(track);
                     break;
-
-
                 // Variation
                 case "SNP":
                     var renderer = new FeatureRenderer(FEATURE_TYPES.snp);
                     renderer.on('feature:click', function (e) {
-//                        new SnpInfoWidget(null, me.genomeViewer.species).draw(e);
+                        //                        new SnpInfoWidget(null, me.genomeViewer.species).draw(e);
                     });
                     track = new FeatureTrack({
                         title: 'SNP',
@@ -748,9 +675,7 @@
                         minHistogramRegionSize: 12000,
                         maxLabelRegionSize: 3000,
                         height: 120,
-
                         renderer: renderer,
-
                         dataAdapter: new CellBaseAdapter({
                             category: "genomic",
                             subCategory: "region",
@@ -764,34 +689,9 @@
                             }
                         })
                     });
-
                     this.genomeViewer.addTrack(track);
                     break;
-
                 case "Clinical Variants":
-//            var mutationTrack = new TrackData(id, {
-//                adapter: new CellBaseAdapter({
-//                    category: "genomic",
-//                    subCategory: "region",
-//                    resource: "mutation",
-//                    species: this.genomeViewer.species,
-//                    cacheConfig: {
-//                        chunkSize: 10000
-//                    }
-//                })
-//            });
-//            this.genomeViewer.addTrack(mutationTrack, {
-//                id: id,
-//                type: trackType,
-//                title: trackTitle,
-//                featuresRender: "MultiFeatureRender",
-//                histogramZoom: 50,
-//                height: 150,
-//                visibleRange: {start: 0, end: 100},
-//                featureTypes: FEATURE_TYPES
-//            });
-
-
                     var renderer = new FeatureRenderer();
                     renderer.on('feature:click', function (e) {
                         console.log(e);
@@ -803,15 +703,13 @@
                         maxLabelRegionSize: 3000,
                         visibleRegionSize: 9000,
                         height: 120,
-
                         renderer: renderer,
-
                         dataAdapter: new CellBaseAdapter({
                             category: "genomic",
                             subCategory: "region",
                             resource: "clinical",
                             params: {
-                                exclude: 'chunkIds'
+                                exclude: 'chunkIds,annot'
                             },
                             species: this.genomeViewer.species,
                             cacheConfig: {
@@ -819,19 +717,15 @@
                             }
                         })
                     });
-
                     this.genomeViewer.addTrack(track);
-
                     break;
-
-                case "EBI EVA 1.0 SNVs":
+                case "EMBL-EBI EVA SNVs":
                     track = new FeatureTrack({
                         title: 'EVA 1.0 SNVs',
                         featureType: 'eva',
                         minHistogramRegionSize: 10000,
                         maxLabelRegionSize: 3000,
                         height: 100,
-
                         renderer: new FeatureRenderer({
                             label: function (f) {
                                 var title = f.id;
@@ -898,10 +792,7 @@
                     })
                     this.genomeViewer.addTrack(track);
                     break;
-
-
                 // Regulatory
-
                 case "TFBS":
                     var tfbs = new FeatureTrack({
                         title: 'TFBS',
@@ -924,7 +815,7 @@
                     });
                     this.genomeViewer.addTrack(tfbs);
                     break;
-                case "miRNA targets":
+                case "miRNA Targets":
                     var mirna = new FeatureTrack({
                         title: 'miRNA targets',
                         minHistogramRegionSize: 12000,
@@ -968,8 +859,6 @@
                     });
                     this.genomeViewer.addTrack(others);
                     break;
-
-
                 // Conservation
                 case "PhastCons":
                     var phastCons = new FeatureTrack({
@@ -1015,7 +904,6 @@
                     });
                     this.genomeViewer.addTrack(phylop);
                     break;
-
                 // OPENCGA ALIGNMENTS AND VARIANTS
                 case "bam":
                 case "ALIGNMENT":
@@ -1033,7 +921,6 @@
                         }
                     });
                     var renderer = new AlignmentRenderer(FEATURE_TYPES.alignment);
-
                     track = new AlignmentTrack({
                         title: trackTitle,
                         closable: true,
@@ -1046,7 +933,6 @@
                     });
                     this.genomeViewer.addTrack(track);
                     break;
-
                 case "vcf":
                 case "VARIANT":
                     var adapter = new OpencgaAdapter({
@@ -1069,7 +955,6 @@
                         }
                     });
                     renderer.file = object;
-
                     track = new FeatureTrack({
                         title: trackTitle,
                         closable: true,
@@ -1082,8 +967,6 @@
                     });
                     this.genomeViewer.addTrack(track);
                     break;
-
-
                 default:
                     return null;
             }
@@ -1091,4 +974,3 @@
         }
     });
 </script>
-
