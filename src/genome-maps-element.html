@@ -18,6 +18,8 @@
 <link rel="import" href="../lib/jsorolla/src/lib/components/jso-opencga-button-tooltip.html">
 
 <link rel="import" href="../lib/jsorolla/src/lib/components/cellbase/jso-gene-info-panel.html">
+<link rel="import" href="../lib/jsorolla/src/lib/components/cellbase/jso-transcript-info-panel.html">
+<link rel="import" href="../lib/jsorolla/src/lib/components/cellbase/jso-snp-info-panel.html">
 
 <link rel="import" href="components/gm-add-track.html">
 <link rel="import" href="components/gm-search.html">
@@ -241,7 +243,7 @@
             </jso-panel>
         </div>
         <gm-status-bar menu-option="home" id="statusBar" version="{{version}}">
-            <span style="color:#666">created by Computational Genomics Department, Principe Felipe Research Center, 2015</span>
+            <span style="color:#666">Created by Computational Genomics Department @ Principe Felipe Research Center, 2015</span>
         </gm-status-bar>
 
         <jso-panel hidden modal closable id="settingsPanel" on-hidden="handlePanelHidden">
@@ -640,6 +642,7 @@
                                             me.$.content.appendChild(new JsoGeneInfoPanel(e.query, e.feature, me.cellBaseHost, me.genomeViewer.species));
                                             break;
                                         case "transcript":
+                                            me.$.content.appendChild(new JsoTranscriptInfoPanel(e.query, e.feature, me.cellBaseHost, me.genomeViewer.species));
 //                                            new TranscriptInfoWidget(null, me.genomeViewer.species).draw(e);
                                             break;
                                         default:
@@ -667,7 +670,7 @@
                 case "SNP":
                     var renderer = new FeatureRenderer(FEATURE_TYPES.snp);
                     renderer.on('feature:click', function (e) {
-                        //                        new SnpInfoWidget(null, me.genomeViewer.species).draw(e);
+                        me.$.content.appendChild(new JsoSnpInfoPanel(e.query, e.feature, me.cellBaseHost, me.genomeViewer.species));
                     });
                     track = new FeatureTrack({
                         title: 'SNP',
