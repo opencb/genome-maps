@@ -33,7 +33,7 @@
             position: relative;
             cursor: default;
             font-size: 13px;
-            background-color: var(--light-primary-color);
+            background-color: var(--default-primary-color);
             height: 100%;
         }
 
@@ -71,6 +71,7 @@
 
         #content {
             background-color: inherit;
+            background-color: var(--light-primary-color);
         }
 
         gm-status-bar {
@@ -154,8 +155,8 @@
             <!--</div>-->
             <span class="title">Genome Maps</span>
             <span id="description" class="description">
-                        <span>{{selectedSpecies.text}}</span>
-            <span id="assembly">{{selectedSpecies.assembly}}</span>
+                <span>{{selectedSpecies.text}}</span>
+                <span id="assembly">{{selectedSpecies.assembly}}</span>
             </span>
 
             <div id="menu" class="menu horizontal layout flex">
@@ -954,7 +955,7 @@
                     var renderer = new VcfMultisampleRenderer(FEATURE_TYPES.vcf);
                     renderer.on({
                         'feature:click': function (event) {
-                            var vcfInfo = new VCFVariantInfoWidget(null, me.genomeViewer.species, {adapter: adapter}).draw(event);
+//                            var vcfInfo = new VCFVariantInfoWidget(null, me.genomeViewer.species, {adapter: adapter}).draw(event);
                         }
                     });
                     renderer.file = object;
