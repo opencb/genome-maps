@@ -945,7 +945,9 @@
                         resource: object,
                         species: this.genomeViewer.species,
                         params: {
-                            sid: Cookies('bioinfo_sid')
+                            sid: Cookies('bioinfo_sid'),
+                            process_differences: false,
+                            exclude: 'sourceEntries.samplesData,annotation'
                         },
                         cacheConfig: {
                             chunkSize: 50000,
