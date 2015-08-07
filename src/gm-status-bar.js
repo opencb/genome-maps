@@ -50,7 +50,7 @@ GmStatusBar.prototype = {
         this.targetDiv = $('#' + this.targetId)[0];
         this.div = $('<div id="' + this.id + '"></div>')[0];
         $(this.targetDiv).append(this.div);
-
+        $(this.div).css({height:'26px'});
 
         var geneLegendPanel = new LegendPanel({title: 'Gene legend'});
         var snpLegendPanel = new LegendPanel({title: 'SNP legend'});
@@ -100,7 +100,6 @@ GmStatusBar.prototype = {
             layout: 'hbox',
             region: "south",
             cls: "gm-navigation-bar unselectable",
-//            height: 30,
             border: true,
             items: [taskbar, toolbar]
         });
