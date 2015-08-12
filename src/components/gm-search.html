@@ -1,0 +1,149 @@
+<link rel="import" href="gm-search-result.html">
+<dom-module id="gm-search">
+    <style>
+        :host {
+            display: block;
+            position: relative;
+            box-sizing: border-box;
+            padding: 5px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        label {
+            display: inline-block;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        label::after {
+            content: ':'
+        }
+
+        .container {
+            padding: 0 10px 10px 10px;
+        }
+
+        textarea {
+            resize: none;
+            width: 100%;
+            height: 100px;
+        }
+
+        .action {
+            margin-top: 10px;
+            /*background-color: #f5f5f5 !important;*/
+            /*text-align: center;*/
+        }
+
+        .action:active {
+            /*background-color: #445D76 !important;*/
+            /*color: #fff !important;*/
+        }
+
+        .jso-select {
+            display: block;
+        }
+
+        #results {
+            margin-top: 10px;
+        }
+    </style>
+    <template>
+        <label> Search by any external reference </label>
+        <textarea id="textarea" class="jso"></textarea>
+
+        <label> Result type </label>
+
+        <div class="jso-select">
+            <select value="{{selectedResultType}}" on-change="handleResultTypeChange">
+                <template is="dom-repeat" items="{{resultTypes}}" as="resultType">
+                    <option value="{{resultType}}">{{resultType}}</option>
+                </template>
+            </select>
+        </div>
+        <br>
+
+        <div class="jso-btn jso-btn-shdw" on-click="handleSearch">Search</div>
+
+        <label hidden$="{{computeLabelHidden(response)}}" id="results"> Results </label>
+        <template is="dom-repeat" items="{{response}}" as="resp">
+            <gm-search-result response="{{resp}}"></gm-search-result>
+        </template>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: 'gm-search',
+        properties: {
+            selectedSpecies: {
+                type: Object
+            },
+            resultTypes: {
+                type: Array,
+                value: ['Genes', 'SNPs'] //['Genes', 'SNPs', 'Transcripts', 'Exons']
+            },
+            selectedResultType: {
+                type: String,
+                value: 'Genes'
+            },
+            response: {
+                type: Array,
+                value: null
+            },
+        },
+        computeLabelHidden: function (response) {
+            if (response) {
+                return response.length < 1
+            }
+            return true;
+        },
+        handleResultTypeChange: function (e) {
+            this.selectedResultType = e.currentTarget.value;
+        },
+        handleSearch: function () {
+            var me = this;
+            var features = this.$.textarea.value.trim().toUpperCase().split("\n");
+            if (features[0] != "" && this.selectedResultType) {
+//                    var params = {
+//                        limit : 10,
+//                        skip:0
+//                    };
+                var params = {};
+                var resource;
+                switch (this.selectedResultType) {
+                    case 'Genes':
+                        //genes
+                        params['exclude'] = 'transcripts';
+                        resource = 'info';
+                        break;
+                    case 'SNPs':
+                        params['exclude'] = 'transcriptVariations,xrefs,samples';
+                        resource = 'snp';
+                        break;
+                    case 'Transcripts':
+                        params['exclude'] = 'transcripts.exons,transcripts.xrefs,transcripts.tfbs';
+                        resource = 'transcript';
+                        break;
+                    case 'Exons':
+                        params['exclude'] = 'transcripts.exons';
+                        resource = 'exon';
+                        break;
+                }
+                CellBaseManager.get({
+                    species: this.selectedSpecies,
+                    category: 'feature',
+                    subCategory: 'gene',
+                    query: features,
+                    resource: resource,
+                    params: params,
+                    success: function (response) {
+                        me.set('response', response.response);
+                    }
+                });
+
+            }
+        }
+
+    });
+</script>

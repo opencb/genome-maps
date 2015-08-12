@@ -1,0 +1,127 @@
+<dom-module id="gm-track-menu-item">
+    <style>
+        :host {
+            display: block;
+            height: 23px;
+        }
+
+        #main {
+            box-sizing: border-box;
+            height: 23px;
+        }
+
+        /*#main:hover {*/
+        /*background-color: #D1D9E3;*/
+        /*}*/
+
+        #visible {
+            /*display: block;*/
+            /*float: left;*/
+            box-sizing: border-box;
+            width: 20px;
+            line-height: 21px;
+            font-size: 17px;
+            padding: 0px 3px;
+            margin: 0px 2px;
+            cursor: pointer;
+        }
+
+        #visible:before {
+            font-family: 'FontAwesome';
+            content: "\f096";
+        }
+
+        #visible[data-visible]:before {
+            font-family: 'FontAwesome';
+            content: "\f14a";
+        }
+
+        #title {
+            /*display: block;*/
+            /*float: left;*/
+            box-sizing: border-box;
+            line-height: 21px;
+            /*padding: 0px 5px;*/
+            margin: 0px 2px;
+            color: #333;
+            /*background-color: #f2f2f2;*/
+            font-size: inherit;
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            cursor: move;
+        }
+
+        #remove {
+            /*float: right;*/
+            /*display: inline-block;*/
+            box-sizing: border-box;
+            padding: 0px 3px;
+            margin: 0px 2px;
+            line-height: 21px;
+            font-size: 18px;
+            text-align: right;
+            cursor: pointer;
+        }
+
+        #remove:hover {
+            color: darkred;
+        }
+
+        #remove:after {
+            font-family: 'FontAwesome';
+            font-size: 0.8em;
+            content: "\f00d";
+        }
+
+        [draggable] {
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+            /*Required to make elements draggable in old WebKit*/
+            -khtml-user-drag: element;
+            -webkit-user-drag: element;
+        }
+
+    </style>
+    <template>
+        <div class="horizontal layout" id="main" draggable="true">
+            <div id="visible" data-visible$="{{visible}}" on-click="handleVisible" class="color-2 hover">&nbsp;</div>
+            <div class="flex" id="title">{{track.title}}</div>
+            <div id="remove" on-click="handleRemoveTrack"></div>
+        </div>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: 'gm-track-menu-item',
+        properties: {
+            track: {
+                type: Object,
+                observer: 'trackChanged'
+            },
+            visible: {
+                type: Boolean
+            }
+        },
+        attached: function () {
+//            console.log(this.track.title);
+        },
+        ready: function () {
+//            console.log(this.track.title);
+        },
+        trackChanged: function (neo, old) {
+            this.visible = neo.visible;
+        },
+        handleVisible: function () {
+            this.track.toggle();
+            this.visible = this.track.visible;
+        },
+        handleRemoveTrack: function (e) {
+            this.fire('removetrack', this.track);
+        }
+    });
+</script>

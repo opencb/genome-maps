@@ -1,0 +1,156 @@
+<dom-module id="gm-add-track">
+    <style>
+        :host {
+            display: block;
+            position: relative;
+            box-sizing: border-box;
+            padding: 10px;
+
+            font-size: 14px;
+        }
+
+        ul, ul ul {
+            box-sizing: border-box;
+            list-style: none;
+            text-decoration: none;
+            line-height: 22px;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        li {
+            padding: 0 20px;
+        }
+
+        li:hover, ul.item:hover {
+            background-color: rgba(125, 125, 125, 0.2);
+        }
+
+        li > .add:after, ul.item > .add:after {
+            position: absolute;
+            box-sizing: border-box;
+            right: 25px;
+            font-family: 'FontAwesome';
+            content: "\f067";
+            cursor: pointer;
+        }
+
+        ul:before {
+            font-family: 'FontAwesome';
+            content: "\f1b3";
+            margin-right: 5px;
+        }
+
+        li:before {
+            font-family: 'FontAwesome';
+            content: "\f1b2";
+            margin-right: 5px;
+            /*color: #435F7A;*/
+        }
+
+    </style>
+    <template>
+
+
+        <ul>
+            Core
+            <li class="horizontal layout" on-click="handleClickTrack"  title="Reference genome sequence from Ensembl">
+                <div>Sequence</div>
+                <div class="add"></div>
+            </li>
+            <li class="horizontal layout" on-click="handleClickTrack"  title="Gene sets from Ensembl">
+                <div>Gene/Transcript</div>
+                <div class="add"></div>
+            </li>
+
+            <!--<li class="horizontal layout" on-click="handleClickTrack">-->
+            <!--<div>CpG islands</div>-->
+            <!--</li>-->
+        </ul>
+        <ul>
+            Variation
+            <li class="horizontal layout" on-click="handleClickTrack"  title="Short variations from Ensembl Variation and dbSNP">
+                <div>SNP</div>
+                <div class="add"></div>
+            </li>
+            <li class="horizontal layout" on-click="handleClickTrack"  title="Variants from EMBL-EBI EVA 1.0 project">
+                <div>EMBL-EBI EVA SNVs</div>
+                <div class="add"></div>
+            </li>
+            <li class="horizontal layout" on-click="handleClickTrack"  title="Clinical associated variants from ClinVar, Cosmic and GWAS Catalog">
+                <div>Clinical Variants</div>
+                <div class="add"></div>
+            </li>
+
+            <!--<li class="horizontal layout" on-click="handleClickTrack">-->
+            <!--<div>Structural variation (<20Kb)</div>-->
+            <!--<div class="add"></div>-->
+            <!--</li>-->
+            <!--<li class="horizontal layout" on-click="handleClickTrack">-->
+            <!--<div>Structural variation (>20Kb)</div>-->
+            <!--<div class="add"></div>-->
+            <!--</li>-->
+        </ul>
+        <!--<ul class="item horizontal layout" on-click="handleClickTrack">-->
+        <!--<div>Regulatory</div>-->
+        <!--<div class="add"></div>-->
+        <!--</ul>-->
+        <ul>
+            Regulatory
+            <li class="horizontal layout" on-click="handleClickTrack" title="TFBS from Ensembl Regulatory">
+                <div>TFBS</div>
+                <div class="add"></div>
+            </li>
+
+            <li class="horizontal layout" on-click="handleClickTrack" title="miRNA targets from TargetScan">
+                <div>miRNA Targets</div>
+                <div class="add"></div>
+            </li>
+            <li class="horizontal layout" on-click="handleClickTrack" title="Open chromatin, Polymerase, CTFC and Histones from Ensembl Regulatory">
+                <div>Others</div>
+                <div class="add"></div>
+            </li>
+
+            <!--<li class="horizontal layout" on-click="handleClickTrack">-->
+            <!--<div>Polymerase</div>-->
+            <!--<div class="add"></div>-->
+            <!--</li>-->
+            <!--<li class="horizontal layout" on-click="handleClickTrack">-->
+            <!--<div>Open Chromatin</div>-->
+            <!--<div class="add"></div>-->
+            <!--</li>-->
+            <!--<li class="horizontal layout" on-click="handleClickTrack">-->
+            <!--<div>Histone</div>-->
+            <!--<div class="add"></div>-->
+            <!--</li>-->
+
+
+            <!--&lt;!&ndash;<li class="horizontal layout" on-click="handleClickTrack">&ndash;&gt;-->
+            <!--&lt;!&ndash;<div>Conserved regions</div>&ndash;&gt;-->
+            <!--&lt;!&ndash;<div class="add"></div>&ndash;&gt;-->
+            <!--&lt;!&ndash;</li>&ndash;&gt;-->
+        </ul>
+
+        <ul>
+            Conservation
+            <li class="horizontal layout" on-click="handleClickTrack" title="Conservation scores from UCSC">
+                <div>PhastCons</div>
+                <div class="add"></div>
+            </li>
+            <li class="horizontal layout" on-click="handleClickTrack" title="Conservation scores from UCSC">
+                <div>PhyloP</div>
+                <div class="add"></div>
+            </li>
+        </ul>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: 'gm-add-track',
+        handleClickTrack: function (e) {
+            if (e.target.classList.contains('add')) {
+                this.fire('addtrack', e.currentTarget.querySelector('div').innerHTML);
+            }
+        }
+    });
+</script>

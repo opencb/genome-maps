@@ -1,0 +1,98 @@
+<link rel="import" href="gm-track-menu-item.html">
+
+<dom-module id="gm-track-menu">
+    <style>
+        :host {
+            position: relative;
+            display: block;
+            box-sizing: border-box;
+            padding: 5px;
+        }
+    </style>
+    <template>
+        <template is="dom-repeat" items="{{tracks}}" as="track">
+            <gm-track-menu-item track="{{track}}"
+                                on-dragstart="handleDragStart"
+                                on-dragenter="handleDragEnter"
+                                on-dragover="handleDragOver"
+                                on-dragleave="handleDragLeave"
+                                on-drop="handleDrop"
+                                on-dragend="handleDragEnd"
+                    >
+            </gm-track-menu-item>
+        </template>
+    </template>
+
+</dom-module>
+
+<script>
+    Polymer({
+        is: 'gm-track-menu',
+        properties: {
+            tracks: {
+                type: Array
+            }
+        },
+        dragSrcEl: null,
+        /*DRAG EVENTS*/
+        handleDragStart: function (e) {
+            // e.currentTarget is gm-track-menu-item node
+            e.dataTransfer.effectAllowed = 'move';
+            e.currentTarget.style.opacity = '0.4';
+            this.dragSrcEl = e.currentTarget;
+        },
+        handleDragOver: function (e) {
+            if (e.preventDefault) {
+                e.preventDefault(); // Necessary. Allows us to drop.
+            }
+            e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+            return false;
+        },
+        handleDragEnter: function (e) {
+            // this / e.target is the current hover target.
+            e.currentTarget.style.opacity = "0.4";
+        },
+        handleDragLeave: function (e) {
+            // this / e.target is previous target element.
+            if (e.currentTarget !== this.dragSrcEl) {
+                e.currentTarget.style.opacity = "inherit";
+            }
+        },
+        handleDrop: function (e) {
+            // this / e.target is current target element.
+
+            if (e.stopPropagation) {
+                e.stopPropagation(); // stops the browser from redirecting.
+            }
+
+            // Don't do anything if dropping the same column we're dragging.
+            if (this.dragSrcEl != e.currentTarget) {
+//                    var dragIndex = [].indexOf.call(this.$.tracks.children, this.dragSrcEl);
+//                    var targetIndex = [].indexOf.call(this.$.tracks.children, e.target);
+//                    console.log(dragIndex)
+//                    console.log(targetIndex)
+//
+//                    var elementAfterFirstNode = this.dragSrcEl.nextSibling;
+//                    var elementAfterSecondNode = e.target.nextSibling;
+//
+//                    this.$.tracks.insertBefore(this.dragSrcEl, elementAfterSecondNode);
+//                    this.$.tracks.insertBefore(e.target, elementAfterFirstNode);
+
+                this.fire('swap', {t1: this.dragSrcEl.track, t2: e.currentTarget.track});
+            }
+            this.dragSrcEl.style.opacity = "inherit";
+            e.currentTarget.style.opacity = "inherit";
+
+            return false;
+        },
+
+        handleDragEnd: function (e) {
+            // this/e.target is the source node.
+            var els = this.querySelectorAll('gm-track-menu-item');
+            for (var i = 0; i < els.length; i++) {
+                var el = els[i];
+                el.style.opacity = "";
+            }
+        }
+    });
+</script>

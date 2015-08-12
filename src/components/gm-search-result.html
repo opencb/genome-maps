@@ -1,0 +1,123 @@
+<dom-module id="gm-search-result">
+    <style>
+        :host {
+            position: relative;
+            margin-top: 5px;
+        }
+
+        #main {
+            border: 1px solid #d4d4d4;
+            position: relative;
+            box-sizing: border-box;
+            /*box-shadow: -4px 4px 4px rgba(0, 0, 0, 0.2);*/
+        }
+
+        #header, #container {
+            position: relative;
+            font-size: 13px;
+        }
+
+        #header {
+            /*background-image: linear-gradient(to bottom, #ffffff, #f2f2f2);*/
+            /*background-image: -webkit-linear-gradient(top, #ffffff, #f2f2f2);*/
+            /*background-repeat: repeat-x;*/
+            line-height: 24px;
+            color: #333;
+            padding: 0 5px;
+            border-bottom: 1px solid #d4d4d4;
+        }
+
+        #header[data-collapsible=true][data-collapsed=true]:after {
+            font-family: FontAwesome;
+            content: "\f103";
+            position: absolute;
+            right: 10px;
+        }
+
+        #header[data-collapsible=true][data-collapsed=false]:after {
+            font-family: FontAwesome;
+            content: "\f102";
+            position: absolute;
+            right: 10px;
+        }
+
+        #header[data-collapsible=true][data-collapsed=true] + div {
+            display: none;
+        }
+
+        core-list {
+            height: 100px;
+        }
+
+        .query {
+            color: #435f7a;
+        }
+
+        .num {
+            color: #888;
+        }
+    </style>
+    <template>
+        <div id="main">
+            <div id="header" class="noselect" on-dblclick="titleDblClick"
+                 data-collapsible="{{collapsible}}"
+                 data-collapsed="{{collapsed}}"><span class="query">{{response.id}}</span> (<span class="num">{{response.numResults}}</span>)
+                <!--<span on-click="{{handlePrev}}">Prev</span>-->
+                <!--<span on-click="{{handleNext}}">Next</span>-->
+            </div>
+            <div id="container">
+                <template is="dom-repeat" items="{{response.result}}" as="f">
+                    <gm-search-feature feature="{{f}}" on-click="handleResultClick"></gm-search-feature>
+                </template>
+            </div>
+        </div>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: 'gm-search-result',
+        properties: {
+            response: {
+                type: Object
+            },
+        },
+        titleDblClick: function (e) {
+            this.collapsed = !this.collapsed;
+        },
+        handleResultClick: function (e) {
+            this.fire('feature', e.currentTarget.feature);
+        }
+    });
+</script>
+
+<dom-module id="gm-search-feature">
+    <style>
+        :host {
+            display: block;
+            box-sizing: border-box;
+            padding: 2px 5px;
+            height: 20px;
+            overflow: hidden;
+        }
+
+        :host(:hover) {
+            background-color: #f5f5f5;
+        }
+    </style>
+    <template>
+        <div class="horizontal layout">
+            <div>{{feature.id}}</div>
+            <div>{{feature.name}}</div>
+        </div>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+        is: 'gm-search-feature',
+        properties: {
+            feature: {
+                type: Object
+            }
+        }
+    });
+</script>
