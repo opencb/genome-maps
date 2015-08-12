@@ -31,7 +31,6 @@
 
     <!-- END meta -->
 
-
     <!--Config-->
     <script src="conf/config.js"></script>
 
@@ -65,6 +64,7 @@
     <script src="bower_components/purl/purl.js"></script>
     <script src="bower_components/jquery-mousewheel/jquery.mousewheel.min.js"></script>
     <script src="bower_components/gl-matrix/dist/gl-matrix-min.js"></script>
+    <script src="bower_components/uri.js/src/URI.min.js"></script>
     <script src="lib/jsorolla/vendor/ChemDoodleWeb.js"></script>
 
 
@@ -74,9 +74,44 @@
 </head>
 
 <body unresolved class="fullbleed">
-<genome-maps-element version="3.2.0"></genome-maps-element>
+
 <script>
-    var genomeMaps = document.querySelector('genome-maps-element');
+
+    window.addEventListener('WebComponentsReady', function(e) {
+        getSpecies(function(s) {
+            AVAILABLE_SPECIES = s;
+            DEFAULT_SPECIES = AVAILABLE_SPECIES.vertebrates[0];
+            var genomeMaps = document.createElement('genome-maps-element');
+            genomeMaps.setAttribute('version', '3.2.0');
+            document.body.appendChild(genomeMaps);
+        });
+    });
+
+    function getSpecies(callback) {
+        CellBaseManager.get({
+            host: CELLBASE_HOST,
+            category: "meta",
+            subCategory: "species",
+            success: function(r) {
+                var taxonomies = r.response[0].result[0];
+                for (var taxonomy in taxonomies) {
+                    var newSpecies = [];
+                    for (var i = 0; i < taxonomies[taxonomy].length; i++) {
+                        var species = taxonomies[taxonomy][i];
+                        for (var j = 0; j < species.assemblies.length; j++) {
+                            var s = Utils.clone(species)
+                            s.assembly = species.assemblies[j];
+                            delete s.assemblies;
+                            newSpecies.push(s)
+                        }
+                    }
+                    taxonomies[taxonomy] = newSpecies;
+                }
+                callback(taxonomies);
+            }
+        });
+    }
+
 </script>
 </body>
 </html>

@@ -155,8 +155,8 @@
             <!--</div>-->
             <span class="title">Genome Maps</span>
             <span id="description" class="description">
-                <span>{{selectedSpecies.text}}</span>
-                <span id="assembly">{{selectedSpecies.assembly}}</span>
+                <span>{{selectedSpecies.scientificName}}</span>
+                <span id="assembly">{{selectedSpecies.assembly.name}}</span>
             </span>
 
             <div id="menu" class="menu horizontal layout flex">
@@ -327,7 +327,7 @@
                 value: OpencgaManager.host
             }
         },
-        ready: function () {
+        ready: function() {
             var panels = Polymer.dom(this.root).querySelectorAll('jso-panel');
             for (var i = 0; i < panels.length; i++) {
                 var panEl = panels[i];
@@ -341,9 +341,10 @@
                     }
                 }
             }
+
             this._init();
         },
-        selectedOptionChanged: function (neo, old) {
+        selectedOptionChanged: function(neo, old) {
             var menuItems = Polymer.dom(this.root).querySelectorAll('[menu-option]');
             for (var i = 0; i < menuItems.length; i++) {
                 var item = menuItems[i];
@@ -355,20 +356,20 @@
                 }
             }
         },
-        handleMenu: function (e) {
+        handleMenu: function(e) {
             var option = e.currentTarget.dataset['option'];
             this.setMenu(option);
         },
-        setMenu: function (option) {
+        setMenu: function(option) {
             if (option) {
                 this.selectedOption = option;
             }
         },
-        handleMenuOption: function (e) {
+        handleMenuOption: function(e) {
             var panel = this.$[e.currentTarget.dataset.panel];
             panel.hidden = !panel.hidden;
         },
-        handleBrowserOption: function (e) {
+        handleBrowserOption: function(e) {
             if (this.$.jsoHeader.isLogged) {
                 this.$.browserPanel.hidden = !this.$.browserPanel.hidden;
             } else {
@@ -376,7 +377,7 @@
                 this._lastLogedRequest = this.$.browserPanel;
             }
         },
-        handlePanelHidden: function (e) {
+        handlePanelHidden: function(e) {
             var id = e.currentTarget.getAttribute('id');
             var sel = '[data-panel=' + id + ']';
             var el = Polymer.dom(this.$.menu).querySelector(sel);
@@ -386,10 +387,10 @@
                 el.setAttribute('active', '');
             }
         },
-        handleRemoveTrack: function (e) {
+        handleRemoveTrack: function(e) {
             this.genomeViewer.removeTrack(e.detail);
         },
-        handleFileSelect: function (e) {
+        handleFileSelect: function(e) {
             console.log("file");
             console.log(e.detail);
             var file = e.detail;
@@ -398,7 +399,7 @@
                 this._updateTrackMenu();
             }
         },
-        _updateTrackMenu: function () {
+        _updateTrackMenu: function() {
             var tracks = [];
             for (var i = 0; i < this.genomeViewer.trackListPanel.tracks.length; i++) {
                 var t = this.genomeViewer.trackListPanel.tracks[i];
@@ -406,7 +407,7 @@
             }
             this.$.trackMenu.set('tracks', tracks);
         },
-        _init: function () {
+        _init: function() {
             var me = this;
             this.region = new Region();
             var url = $.url();
@@ -420,7 +421,27 @@
                 this.speciesObj = Utils.getSpeciesFromAvailable(AVAILABLE_SPECIES, urlSpecies) || speciesObj;
             }
             this.species = this.speciesObj;
-            this.region.load(this.speciesObj.region);
+
+
+            var firstGeneRegion;
+            CellBaseManager.get({
+                host: CELLBASE_HOST,
+                async: false,
+                category: 'feature',
+                subCategory: 'gene',
+                resource: 'first',
+                species: this.speciesObj,
+                params: {
+                    include: 'chromosome,start,end'
+                },
+                success: function(r) {
+                    firstGeneRegion = r.response[0].result[0];
+                }
+            })
+
+            this.region.load(firstGeneRegion);
+
+
             this.selectedSpecies = this.species;
             //console.log(speciesObj);
             var regionStr = url.param('region');
@@ -469,10 +490,10 @@
                 drawStatusBar: false,
                 //            drawNavigationBar: false,
                 handlers: {
-                    'region:change': function (e) {
+                    'region:change': function(e) {
                         console.log(e)
                     },
-                    'species:change': function (event) {
+                    'species:change': function(event) {
 //                        me._setTracks();
 //                        me.setTracksMenu();
                         me.set('selectedSpecies', event.species);
@@ -480,34 +501,34 @@
                     }
                 }
             };
-            this.async(function () {
+            this.async(function() {
                 this.$.gv.createGenomeViewer(gvConfig);
                 this.genomeViewer = this.$.gv.genomeViewer;
                 this.genomeViewer.draw();
-                this.genomeViewer.trackListPanel.on('tracks:refresh', function (e) {
+                this.genomeViewer.trackListPanel.on('tracks:refresh', function(e) {
                     me._updateTrackMenu();
                 });
-                this.genomeViewer.trackListPanel.on('mousePosition:change', function (event) {
+                this.genomeViewer.trackListPanel.on('mousePosition:change', function(event) {
                     me.$.statusBar.set('mousePosition', event);
                 });
                 //TODO only test; uncomment on production
                 this._loadInitialTracksConfig();
             }, 100);
         },
-        handleLogin: function () {
+        handleLogin: function() {
             this.selectedOption = "home";
             if (this._lastLogedRequest) {
                 this._lastLogedRequest.hidden = false;
                 this._lastLogedRequest = null;
             }
         },
-        handleLogout: function () {
+        handleLogout: function() {
             this.$.browserPanel.hidden = true;
         },
-        handleUserNeedRefresh: function () {
+        handleUserNeedRefresh: function() {
             this.$.jsoHeader.getUserInfo(true);
         },
-        userDataChanged: function (neo, old) {
+        userDataChanged: function(neo, old) {
             var me = this;
             if (this.userData) {
                 var projectIds = [];
@@ -522,7 +543,7 @@
                         sid: Cookies("bioinfo_sid")
                     },
                     request: {
-                        success: function (response) {
+                        success: function(response) {
                             if (response.response[0].errorMsg === '' || response.response[0].errorMsg == null) {
                                 for (var i = 0; i < response.response.length; i++) {
                                     var r = response.response[i];
@@ -537,7 +558,7 @@
                             }
                             me.loading = false;
                         },
-                        error: function () {
+                        error: function() {
                             console.log('Server error, try again later.');
                             me.loading = false;
                         }
@@ -547,35 +568,35 @@
                 console.log("no user data")
             }
         },
-        handleApplyCellBaseHost: function (e) {
+        handleApplyCellBaseHost: function(e) {
             this.genomeViewer.setCellBaseHost(this.cellBaseHost);
         },
-        handleResetCellBaseHost: function (e) {
+        handleResetCellBaseHost: function(e) {
             this.set('cellBaseHost', CELLBASE_HOST);
             this.genomeViewer.setCellBaseHost(this.cellBaseHost);
         },
-        handleApplyOpencgaHost: function (e) {
+        handleApplyOpencgaHost: function(e) {
             if (this.opencgaHost != OpencgaManager.host) {
                 this.$.jsoHeader.sessionFinished();
                 OpencgaManager.host = this.opencgaHost
             }
         },
-        handleResetOpencgaHost: function (e) {
+        handleResetOpencgaHost: function(e) {
             if (this.opencgaHost != OPENCGA_HOST) {
                 this.$.jsoHeader.sessionFinished();
                 this.set('opencgaHost', OPENCGA_HOST);
                 OpencgaManager.host = OPENCGA_HOST;
             }
         },
-        handleSwapTrackMenu: function (e) {
+        handleSwapTrackMenu: function(e) {
             this.genomeViewer.trackListPanel.swapTracks(e.detail.t1, e.detail.t2);
         },
-        handleResultClick: function (e) {
+        handleResultClick: function(e) {
             this.genomeViewer.setRegion(new Region(e.detail));
         },
-        _loadInitialTracksConfig: function () {
+        _loadInitialTracksConfig: function() {
             //Load initial TRACKS config
-            var categories = TRACKS[SPECIES_TRACKS_GROUP[Utils.getSpeciesCode(this.genomeViewer.species.text)]];
+            var categories = TRACKS[SPECIES_TRACKS_GROUP[Utils.getSpeciesCode(this.genomeViewer.species.scientificName)]];
             for (var i = 0, leni = categories.length; i < leni; i++) {
                 var category = categories[i];
                 var tracks = category.tracks;
@@ -597,11 +618,11 @@
 //            }
             this.$.trackMenu.tracks = this.genomeViewer.trackListPanel.tracks;
         },
-        handleAddTrack: function (e) {
+        handleAddTrack: function(e) {
             this.addTrack(e.detail);
             this._updateTrackMenu();
         },
-        addTrack: function (trackType, trackTitle, object, host) {
+        addTrack: function(trackType, trackTitle, object, host) {
             var me = this;
             var track;
             switch (trackType) {
@@ -634,7 +655,7 @@
                         height: 100,
                         renderer: new GeneRenderer({
                             handlers: {
-                                'feature:click': function (e) {
+                                'feature:click': function(e) {
                                     console.log(e);
                                     console.log(e.feature);
                                     switch (e.featureType) {
@@ -670,7 +691,7 @@
                 // Variation
                 case "SNP":
                     var renderer = new FeatureRenderer(FEATURE_TYPES.snp);
-                    renderer.on('feature:click', function (e) {
+                    renderer.on('feature:click', function(e) {
                         me.$.content.appendChild(new JsoSnpInfoPanel(e.query, e.feature, me.cellBaseHost, me.genomeViewer.species));
                     });
                     track = new FeatureTrack({
@@ -697,7 +718,7 @@
                     break;
                 case "Clinical Variants":
                     var renderer = new FeatureRenderer();
-                    renderer.on('feature:click', function (e) {
+                    renderer.on('feature:click', function(e) {
                         console.log(e);
                     });
                     track = new FeatureTrack({
@@ -731,21 +752,21 @@
                         maxLabelRegionSize: 3000,
                         height: 100,
                         renderer: new FeatureRenderer({
-                            label: function (f) {
+                            label: function(f) {
                                 var title = f.id;
                                 if (title == '') {
                                     title = f.chromosome + ":" + f.start + "-" + f.end;
                                 }
                                 return title;
                             },
-                            tooltipTitle: function (f) {
+                            tooltipTitle: function(f) {
                                 var title = f.id;
                                 if (title == '') {
                                     title = f.chromosome + ":" + f.start + "-" + f.end;
                                 }
                                 return f.type + ' - <span style="color:#399697">' + title + '</span>';
                             },
-                            tooltipText: function (f) {
+                            tooltipText: function(f) {
                                 var str = [
                                     'Location: ' + '<span style="color:#156765">' + f.chromosome + ":" + f.start + "-" + f.end + '</span>',
                                     'Alt. allele: ' + '<span style="color:#156765">' + f.allele + '</span>',
@@ -767,33 +788,56 @@
                                 }
                                 return str.join('<br>');
                             },
-                            color: function (f) {
+                            color: function(f) {
                                 return "#399697";
                             },
                             infoWidgetId: "id",
                             height: 10,
                             histogramColor: "#399697",
                             handlers: {
-                                'feature:mouseover': function (e) {
+                                'feature:mouseover': function(e) {
                                     // e.feature
                                     console.log(e);
                                 }
                             }
                         }),
-                        dataAdapter: new EvaAdapter({
-                            host: 'http://wwwdev.ebi.ac.uk/eva/webservices/rest',
-                            species: this.genomeViewer.species,
-                            version: 'v1',
-                            category: "segments",
-                            resource: "variants",
+                        dataAdapter: new FeatureTemplateAdapter({
+                            uriTemplate: 'http://wwwdev.ebi.ac.uk/eva/webservices/rest/{version}/{category}/{region}/{resource}?species={species}',
+                            templateVariables: {
+                                version: 'v1',
+                                category: "segments",
+                                resource: "variants",
+                            },
                             params: {
                                 exclude: 'sourceEntries'
                             },
+                            species: this.genomeViewer.species,
+                            speciesParse: function(species) {
+                                return Utils.getSpeciesCode(species.scientificName) + '_' + species.assembly.name.split('.')[0].toLowerCase();
+                            },
                             cacheConfig: {
                                 chunkSize: 10000
+                            },
+                            parse: function(response, dataType) {
+                                var itemsArray = [];
+                                if (dataType == "histogram") {
+                                    for (var i = 0; i < response.response.length; i++) {
+                                        var r = response.response[i]
+                                        for (var j = 0; j < r.result.length; j++) {
+                                            var interval = r.result[j];
+                                            itemsArray.push(interval);
+                                        }
+                                    }
+                                } else {
+                                    for (var i = 0; i < response.response.length; i++) {
+                                        var r = response.response[i];
+                                        itemsArray.push(r.result);
+                                    }
+                                }
+                                return itemsArray;
                             }
                         })
-                    })
+                    });
                     this.genomeViewer.addTrack(track);
                     break;
                 // Regulatory
@@ -956,7 +1000,7 @@
                     });
                     var renderer = new VcfMultisampleRenderer(FEATURE_TYPES.vcf);
                     renderer.on({
-                        'feature:click': function (event) {
+                        'feature:click': function(event) {
 //                            var vcfInfo = new VCFVariantInfoWidget(null, me.genomeViewer.species, {adapter: adapter}).draw(event);
                         }
                     });
