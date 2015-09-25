@@ -5,8 +5,8 @@
     "build": "./build.sh"
   },
   "devDependencies": {
-    "crisper": "^1.0.3",
+    "crisper": "^1.0.6",
     "uglify-js": "^2.4.23",
-    "vulcanize": "1.8.1"
+    "vulcanize": "1.10.2"
   }
 }

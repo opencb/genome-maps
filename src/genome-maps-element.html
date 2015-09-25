@@ -83,6 +83,7 @@
         jso-genome-viewer-element {
             height: calc(100vh - 90px);
             box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.2);
+            overflow-y: scroll;
         }
 
         jso-opencga-upload-file {
@@ -122,7 +123,7 @@
 
         #configure {
             position: absolute;
-            top: 94px;
+            top: 60px;
             right: 0;
             width: 300px;
         }
@@ -198,6 +199,10 @@
         <div id="content" menu-option="home">
             <jso-genome-viewer-element id="gv"></jso-genome-viewer-element>
 
+            <gm-status-bar menu-option="home" id="statusBar" version="{{version}}">
+                <span style="color:#666">Created by Computational Genomics Department @ Principe Felipe Research Center, 2015</span>
+            </gm-status-bar>
+
             <div id="configure">
 
                 <jso-panel collapsible id="trackMenuPanel" on-hidden="handlePanelHidden">
@@ -243,9 +248,6 @@
                 </div>
             </jso-panel>
         </div>
-        <gm-status-bar menu-option="home" id="statusBar" version="{{version}}">
-            <span style="color:#666">Created by Computational Genomics Department @ Principe Felipe Research Center, 2015</span>
-        </gm-status-bar>
 
         <jso-panel hidden modal closable id="settingsPanel" on-hidden="handlePanelHidden">
             <div class="header">
@@ -439,6 +441,7 @@
                 }
             })
 
+//            this.region.load(firstGeneRegion);
             this.region.load(firstGeneRegion);
 
 

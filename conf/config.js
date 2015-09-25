@@ -7,12 +7,10 @@
 OPENCGA_VERSION = "v1";
 OPENCGA_HOST = "http://ws.babelomics.org/opencga";
 
-CELLBASE_VERSION = "v3";
-CELLBASE_HOST = "http://bioinfodev.hpc.cam.ac.uk/cellbase";
-
 // Development
 OPENCGA_VERSION = "v1";
 //OPENCGA_HOST = "http://test.babelomics.org/opencga";
+//OPENCGA_HOST = "http://bioinfo.hpc.cam.ac.uk/opencga";
 OPENCGA_HOST = "http://bioinfodev.hpc.cam.ac.uk/opencga";
 
 CELLBASE_VERSION = "v3";
