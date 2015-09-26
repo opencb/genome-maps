@@ -105,7 +105,6 @@
 
         #browser {
             /*width: 600px;*/
-
             height: 400px;
         }
 
@@ -128,7 +127,19 @@
             width: 300px;
         }
 
-        @media (max-width: 1100px) {
+        @media (max-width: 1250px) {
+            .option-text {
+                font-size: 0.9em;
+            }
+        }
+
+        @media (max-width: 1150px) {
+            .option-text {
+                font-size: 0.8em;
+            }
+        }
+        
+        @media (max-width: 950px) {
             .option-text {
                 display: none;
             }
@@ -149,8 +160,7 @@
         }
     </style>
     <template>
-        <jso-opencga-header id="jsoHeader" selected-option="{{selectedOption}}" user-data="{{userData}}"
-                            on-login="handleLogin" on-logout="handleLogout">
+        <jso-opencga-header id="jsoHeader" selected-option="{{selectedOption}}" user-data="{{userData}}" on-login="handleLogin" on-logout="handleLogout">
             <!--<div hidden class="icon">-->
             <!--<img src="" style="height: 0px;margin: 5px 0px 0 0;">-->
             <!--</div>-->
@@ -210,8 +220,7 @@
                         Active tracks
                     </div>
                     <div class="container flex">
-                        <gm-track-menu id="trackMenu" on-swap="handleSwapTrackMenu"
-                                       on-removetrack="handleRemoveTrack"></gm-track-menu>
+                        <gm-track-menu id="trackMenu" on-swap="handleSwapTrackMenu" on-removetrack="handleRemoveTrack"></gm-track-menu>
                     </div>
                 </jso-panel>
 
@@ -220,8 +229,7 @@
                         Add CellBase tracks
                     </div>
                     <div class="container flex">
-                        <gm-add-track id="addTrack" on-addtrack="handleAddTrack" selectedSpecies="{{selectedSpecies}}"
-                                      collapsed="true"></gm-add-track>
+                        <gm-add-track id="addTrack" on-addtrack="handleAddTrack" selectedSpecies="{{selectedSpecies}}" collapsed="true"></gm-add-track>
                     </div>
                 </jso-panel>
 
@@ -231,8 +239,7 @@
                     </div>
 
                     <div class="container flex">
-                        <gm-search id="search" selected-species="{{selectedSpecies}}" collapsed="true"
-                                   on-feature="handleResultClick"></gm-search>
+                        <gm-search id="search" selected-species="{{selectedSpecies}}" collapsed="true" on-feature="handleResultClick"></gm-search>
                     </div>
                 </jso-panel>
             </div>
@@ -242,9 +249,7 @@
                     Browse my data
                 </div>
                 <div class="container flex">
-                    <jso-opencga-browser id="browser" on-fileselect="handleFileSelect" bioformats="{{bioformats}}"
-                                         projects="{{projects}}"
-                                         on-need-refresh="handleUserNeedRefresh"></jso-opencga-browser>
+                    <jso-opencga-browser id="browser" on-fileselect="handleFileSelect" bioformats="{{bioformats}}" projects="{{projects}}" on-need-refresh="handleUserNeedRefresh"></jso-opencga-browser>
                 </div>
             </jso-panel>
         </div>
@@ -258,11 +263,9 @@
                 <input class="jso" type="text" value="{{cellBaseHost::input}}">
 
                 <div class="horizontal layout flex end-justified">
-                    <div class="jso-btn jso-btn-shdw" style="width:100px;margin:5px;"
-                         on-click="handleResetCellBaseHost">Reset
+                    <div class="jso-btn jso-btn-shdw" style="width:100px;margin:5px;" on-click="handleResetCellBaseHost">Reset
                     </div>
-                    <div class="jso-btn jso-btn-shdw" style="width:100px;margin:5px;"
-                         on-click="handleApplyCellBaseHost">Apply
+                    <div class="jso-btn jso-btn-shdw" style="width:100px;margin:5px;" on-click="handleApplyCellBaseHost">Apply
                     </div>
                 </div>
                 <br>
@@ -441,7 +444,7 @@
                 }
             })
 
-//            this.region.load(firstGeneRegion);
+            //            this.region.load(firstGeneRegion);
             this.region.load(firstGeneRegion);
 
 
@@ -497,10 +500,10 @@
                         console.log(e)
                     },
                     'species:change': function(event) {
-//                        me._setTracks();
-//                        me.setTracksMenu();
+                        //                        me._setTracks();
+                        //                        me.setTracksMenu();
                         me.set('selectedSpecies', event.species);
-//                        me._refreshInitialTracksConfig();
+                        //                        me._refreshInitialTracksConfig();
                     }
                 }
             };
@@ -613,12 +616,12 @@
                     }
                 }
             }
-//            //update tracks
-//            var tracks = [];
-//            for (var i = 0; i < this.genomeViewer.trackListPanel.tracks.length; i++) {
-//                var track = this.genomeViewer.trackListPanel.tracks[i];
-//                tracks.push(track);
-//            }
+            //            //update tracks
+            //            var tracks = [];
+            //            for (var i = 0; i < this.genomeViewer.trackListPanel.tracks.length; i++) {
+            //                var track = this.genomeViewer.trackListPanel.tracks[i];
+            //                tracks.push(track);
+            //            }
             this.$.trackMenu.tracks = this.genomeViewer.trackListPanel.tracks;
         },
         handleAddTrack: function(e) {
@@ -663,12 +666,12 @@
                                     console.log(e.feature);
                                     switch (e.featureType) {
                                         case "gene":
-//                                            new GeneInfoWidget(null, me.genomeViewer.species).draw(e);
+                                            //                                            new GeneInfoWidget(null, me.genomeViewer.species).draw(e);
                                             me.$.content.appendChild(new JsoGeneInfoPanel(e.query, e.feature, me.cellBaseHost, me.genomeViewer.species));
                                             break;
                                         case "transcript":
                                             me.$.content.appendChild(new JsoTranscriptInfoPanel(e.query, e.feature, me.cellBaseHost, me.genomeViewer.species));
-//                                            new TranscriptInfoWidget(null, me.genomeViewer.species).draw(e);
+                                            //                                            new TranscriptInfoWidget(null, me.genomeViewer.species).draw(e);
                                             break;
                                         default:
                                             break;
@@ -691,7 +694,7 @@
                     });
                     this.genomeViewer.addTrack(track);
                     break;
-                // Variation
+                    // Variation
                 case "SNP":
                     var renderer = new FeatureRenderer(FEATURE_TYPES.snp);
                     renderer.on('feature:click', function(e) {
@@ -843,7 +846,7 @@
                     });
                     this.genomeViewer.addTrack(track);
                     break;
-                // Regulatory
+                    // Regulatory
                 case "TFBS":
                     var tfbs = new FeatureTrack({
                         title: 'TFBS',
@@ -910,7 +913,7 @@
                     });
                     this.genomeViewer.addTrack(others);
                     break;
-                // Conservation
+                    // Conservation
                 case "PhastCons":
                     var phastCons = new FeatureTrack({
                         title: 'PhastCons',
@@ -955,7 +958,7 @@
                     });
                     this.genomeViewer.addTrack(phylop);
                     break;
-                // OPENCGA ALIGNMENTS AND VARIANTS
+                    // OPENCGA ALIGNMENTS AND VARIANTS
                 case "bam":
                 case "ALIGNMENT":
                     var adapter = new OpencgaAdapter({
@@ -1004,7 +1007,7 @@
                     var renderer = new VcfMultisampleRenderer(FEATURE_TYPES.vcf);
                     renderer.on({
                         'feature:click': function(event) {
-//                            var vcfInfo = new VCFVariantInfoWidget(null, me.genomeViewer.species, {adapter: adapter}).draw(event);
+                            //                            var vcfInfo = new VCFVariantInfoWidget(null, me.genomeViewer.species, {adapter: adapter}).draw(event);
                         }
                     });
                     renderer.file = object;
