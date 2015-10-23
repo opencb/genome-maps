@@ -12,6 +12,7 @@
 <link rel="import" href="../lib/jsorolla/src/lib/components/jso-panel.html">
 <link rel="import" href="../lib/jsorolla/src/lib/components/table/jso-table.html">
 <link rel="import" href="../lib/jsorolla/src/lib/components/opencga/files/jso-opencga-browser.html">
+<link rel="import" href="../lib/jsorolla/src/lib/components/opencga/files/jso-opencga-job-browser.html">
 <link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-opencga-footer.html">
 <link rel="import" href="../lib/jsorolla/src/lib/components/opencga/jso-opencga-header.html">
 
@@ -98,6 +99,13 @@
             width: 600px;
         }
 
+        #jobsPanel {
+            position: absolute;
+            top: 94px;
+            right: 0;
+            width: 600px;
+        }
+
         #settings {
             width: 400px;
             padding: 20px;
@@ -160,7 +168,7 @@
         }
     </style>
     <template>
-        <jso-opencga-header id="jsoHeader" selected-option="{{selectedOption}}" user-data="{{userData}}" on-login="handleLogin" on-logout="handleLogout">
+        <jso-opencga-header id="jsoHeader" hide-jobs hide-browse selected-option="{{selectedOption}}" user-data="{{userData}}" on-login="handleLogin" on-logout="handleLogout">
             <!--<div hidden class="icon">-->
             <!--<img src="" style="height: 0px;margin: 5px 0px 0 0;">-->
             <!--</div>-->
@@ -172,25 +180,29 @@
 
             <div id="menu" class="menu horizontal layout flex">
                 <div style="margin-left:4vw;"></div>
-                <div title="Tracks" class="option" on-click="handleMenuOption" data-panel="trackMenuPanel">
+                <div title="Tracks" class="option" on-click="handleMenuPanel" data-panel="trackMenuPanel">
                     <i class="fa fa-tasks"></i>
                     <span class="option-text">Tracks</span>
                 </div>
-                <div title="CellBase" class="option" on-click="handleMenuOption" data-panel="cellbaseTrackPanel">
+                <div title="CellBase" class="option" on-click="handleMenuPanel" data-panel="cellbaseTrackPanel">
                     <i class="fa fa-database"></i>
                     <span class="option-text">CellBase</span>
                 </div>
-                <div title="Search" class="option" on-click="handleMenuOption" data-panel="cellbaseSearchPanel">
+                <div title="Search" class="option" on-click="handleMenuPanel" data-panel="cellbaseSearchPanel">
                     <i class="fa fa-search"></i>
                     <span class="option-text">Search</span>
                 </div>
                 <div style="margin-left:2vw;"></div>
-                <div hidden title="Browse" class="option" on-click="handleBrowserOption" data-panel="browserPanel">
+                <div title="Browse my data" class="option" on-click="handleLoggedOnlyMenuPanel" data-panel="browserPanel">
                     <i class="fa fa-cloud"></i>
                     <span class="option-text">My data</span>
                 </div>
+                <div title="Browse my jobs" class="option" on-click="handleLoggedOnlyMenuPanel" data-panel="jobsPanel">
+                    <i class="fa fa-rocket"></i>
+                    <span class="option-text">My jobs</span>
+                </div>
                 <div class="flex" style="margin-left:2vw;"></div>
-                <div title="Settings" class="option" on-click="handleMenuOption" data-panel="settingsPanel">
+                <div title="Settings" class="option" on-click="handleMenuPanel" data-panel="settingsPanel">
                     <i class="fa fa-wrench"></i>
                     <span class="option-text">Settings</span>
                 </div>
@@ -246,10 +258,17 @@
 
             <jso-panel hidden collapsible movable closable id="browserPanel" on-hidden="handlePanelHidden">
                 <div class="header">
-                    Browse my data
+                    <i class="fa fa-cloud"></i>&nbsp; Browse my data
+                </div>
+                <jso-opencga-browser id="browser" class="container flex" on-fileselect="handleFileSelect" bioformats="{{bioformats}}" projects="{{projects}}" on-need-refresh="handleUserNeedRefresh"></jso-opencga-browser>
+            </jso-panel>
+
+            <jso-panel id="jobsPanel" hidden collapsible movable closable on-hidden="handlePanelHidden">
+                <div class="header">
+                    <i class="fa fa-rocket"></i>&nbsp; Browse jobs
                 </div>
                 <div class="container flex">
-                    <jso-opencga-browser id="browser" on-fileselect="handleFileSelect" bioformats="{{bioformats}}" projects="{{projects}}" on-need-refresh="handleUserNeedRefresh"></jso-opencga-browser>
+                    <jso-opencga-job-browser id="jobrowser" on-jobselect="handleJobSelect" allowed-tools="{{allowedTools}}" projects="{{projects}}" on-need-refresh="handleUserNeedRefresh"></jso-opencga-job-browser>
                 </div>
             </jso-panel>
         </div>
@@ -370,16 +389,17 @@
                 this.selectedOption = option;
             }
         },
-        handleMenuOption: function(e) {
+        handleMenuPanel: function(e) {
             var panel = this.$[e.currentTarget.dataset.panel];
             panel.hidden = !panel.hidden;
         },
-        handleBrowserOption: function(e) {
+        handleLoggedOnlyMenuPanel: function(e) {
+            var panel = this.$[e.currentTarget.dataset.panel];
             if (this.$.jsoHeader.isLogged) {
-                this.$.browserPanel.hidden = !this.$.browserPanel.hidden;
+                panel.hidden = !panel.hidden;
             } else {
                 this.selectedOption = 'login';
-                this._lastLogedRequest = this.$.browserPanel;
+                this._lastLogedRequest = panel;
             }
         },
         handlePanelHidden: function(e) {
