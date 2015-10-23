@@ -138,7 +138,7 @@
                 font-size: 0.8em;
             }
         }
-        
+
         @media (max-width: 950px) {
             .option-text {
                 display: none;
@@ -185,7 +185,7 @@
                     <span class="option-text">Search</span>
                 </div>
                 <div style="margin-left:2vw;"></div>
-                <div title="Browse" class="option" on-click="handleBrowserOption" data-panel="browserPanel">
+                <div hidden title="Browse" class="option" on-click="handleBrowserOption" data-panel="browserPanel">
                     <i class="fa fa-cloud"></i>
                     <span class="option-text">My data</span>
                 </div>
@@ -460,11 +460,11 @@
             }
             var urlGene = url.param('gene');
             if (urlGene != null && urlGene != "") {
-                this.region.load(this.getRegionByFeature(urlGene, "gene"));
+                this.region.load(this._getRegionByFeature(urlGene, "gene"));
             }
             var urlSnp = url.param('snp');
             if (urlSnp != null && urlSnp != "") {
-                this.region.load(this.getRegionByFeature(urlSnp, "snp"));
+                this.region.load(this._getRegionByFeature(urlSnp, "snp"));
             }
             var gvConfig = {
                 cellBaseHost: CELLBASE_HOST,
@@ -624,6 +624,24 @@
             //            }
             this.$.trackMenu.tracks = this.genomeViewer.trackListPanel.tracks;
         },
+        _getRegionByFeature: function(name, feature) {
+            var data = CellBaseManager.get({
+                species: this.species,
+                category: 'feature',
+                subCategory: feature,
+                query: name,
+                resource: 'info',
+                params: {
+                    include: 'chromosome,start,end'
+                },
+                async: false
+            });
+            var f = data.response[0].result[0];
+            if (f != null) {
+                return new Region(f);
+            }
+            return {};
+        },
         handleAddTrack: function(e) {
             this.addTrack(e.detail);
             this._updateTrackMenu();
@@ -730,9 +748,9 @@
                     track = new FeatureTrack({
                         title: 'Clinical Variants',
                         featureType: 'clinical',
-                        minHistogramRegionSize: 12000,
+                        minHistogramRegionSize: 30000,
                         maxLabelRegionSize: 3000,
-                        visibleRegionSize: 9000,
+                        visibleRegionSize: 30000,
                         height: 120,
                         renderer: renderer,
                         dataAdapter: new CellBaseAdapter({
