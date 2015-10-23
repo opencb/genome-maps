@@ -423,7 +423,7 @@
             this.speciesObj = DEFAULT_SPECIES;
             var urlSpecies = url.param('species');
             if (typeof urlSpecies !== 'undefined' && urlSpecies != '') {
-                this.speciesObj = Utils.getSpeciesFromAvailable(AVAILABLE_SPECIES, urlSpecies) || speciesObj;
+                this.speciesObj = Utils.getSpeciesFromAvailable(AVAILABLE_SPECIES, urlSpecies) || this.speciesObj;
             }
             this.species = this.speciesObj;
 
@@ -453,10 +453,6 @@
             var regionStr = url.param('region');
             if (regionStr != null) {
                 this.region.parse(regionStr);
-            }
-            var urlZoom = parseInt(url.param('zoom'));
-            if (isNaN(urlZoom) || urlZoom > 100 || urlZoom < 0) {
-                urlZoom = null;
             }
             var urlGene = url.param('gene');
             if (urlGene != null && urlGene != "") {
