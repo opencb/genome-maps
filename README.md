@@ -22,6 +22,9 @@ Genome Maps is versioned following the rules from [Semantic versioning](http://s
 ### Maintainers
 We recommend to contact Genome Maps developers by writing to OpenCB mailing list opencb@googlegroups.com. The main developers and maintainers are:
 * Ignacio Medina (im411@cam.ac.uk) (_Founder and Project Leader_)
+* Susi Gallego (sgaort@gmail.com)
+
+##### Former Contributors
 * Francisco Salavert (fsalavert@cipf.es)
 
 ##### Contributing
