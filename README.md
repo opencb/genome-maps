@@ -34,7 +34,7 @@ Genome Maps is an open-source and collaborative project. We appreciate any help 
 # How to build 
 Genome Maps is developed in HTML5, therefore it is mainly developed in JavaScript and makes a heavy usage of HTML and CSS. It uses [Bower](http://bower.io/) as building tool. Genome Maps also requires of [OpenCB JSorolla](https://github.com/opencb/jsorolla) to be built, this is a JavaScript library developed for several OpenCB web-based projects, this can be found as Git submodule in Genome Maps.
 
-Stable releases are merged and tagged at **_master_** branch, you are encourage to use latest stable release for production. Current active development is carried out at **_develop_** branch, only building is guaranteed and bugs are expected, use this branch for development or for testing new functionalities. The only dependency of Genome Maps from OpenCB is JSorolla. Genome Maps **_master_** branch depends on stable branches in JSorolla, while **_develop_** branch of Genome Maps depends on JSorolla **_develop_**.
+Stable releases are merged and tagged at **_master_** branch, you are encouraged to use latest stable release for production. Current active development is carried out at **_develop_** branch, only building is guaranteed and bugs are expected, use this branch for development or for testing new functionalities. The only dependency of Genome Maps from OpenCB is JSorolla. Genome Maps **_master_** branch depends on stable branches in JSorolla, while **_develop_** branch of Genome Maps depends on JSorolla **_develop_**.
 
 ### Prerequisites
 The following technologies are needed to build Genome Maps: [Node.js](https://nodejs.org/), [npm](https://www.npmjs.com/) and [Bower](http://bower.io/).
@@ -79,19 +79,19 @@ After this, in both cases, you **must** execute the following command to fetch t
 
 
 ### Build
-After install _Node.js_ and _npm_ we have to install _npm_ packages for Genome Maps, from the the root folder execute:
+After installing _Node.js_ and _npm_ we have to install _npm_ packages for Genome Maps, from the root folder execute:
 
 ```bash
 npm install
 ```
-This will make _npm_ to look at file [package.json](package.json) and install locally all the dependencies listed there.
+This will make _npm_ look at file [package.json](package.json) and install locally all the dependencies listed there.
 
 To install all _Bower_ dependencies for Genome Maps execute from the root folder:
 
 ```bash
 bower install
 ```
-This will make _Bower_ to look at file [bower.json](bower.json) and install locally all the dependencies.
+This will make _Bower_ look at file [bower.json](bower.json) and install locally all the dependencies.
 
 First, you must update JSorolla dependencies:
 ```bash
